@@ -1,3 +1,52 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "hero-mallorca",
+      "description": "A beautiful coastal view of Mallorca at sunset.",
+      "imageUrl": "https://images.unsplash.com/photo-1715073356926-c5d624f20f16?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxtYWxsb3JjYSUyMGNvYXN0fGVufDB8fHx8MTc2MjIwMTE5Mnww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "mallorca coast"
+    },
+    {
+      "id": "tour-vineyard",
+      "description": "A sunny vineyard in Mallorca.",
+      "imageUrl": "https://images.unsplash.com/photo-1681650837712-4db699f0673a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxtYWxsb3JjYSUyMHZpbmV5YXJkfGVufDB8fHx8MTc2MjIwMTE5M3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "mallorca vineyard"
+    },
+    {
+      "id": "tour-market",
+      "description": "A bustling local market in a Mallorcan town.",
+      "imageUrl": "https://images.unsplash.com/photo-1550989460-0adf9ea622e2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxsb2NhbCUyMG1hcmtldHxlbnwwfHx8fDE3NjIxODM5NTB8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "local market"
+    },
+    {
+      "id": "tour-olive-grove",
+      "description": "An ancient olive grove in the Mallorcan countryside.",
+      "imageUrl": "https://images.unsplash.com/photo-1601397702554-ce9ecbebc514?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxvbGl2ZSUyMGdyb3ZlfGVufDB8fHx8MTc2MjIwMTE5Mnww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "olive grove"
+    },
+    {
+      "id": "testimonial-avatar-1",
+      "description": "Avatar for a testimonial.",
+      "imageUrl": "https://images.unsplash.com/photo-1535295972055-1c762f4483e5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxoYXBweSUyMHBlcnNvbnxlbnwwfHx8fDE3NjIxNjI4OTN8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "happy person"
+    },
+    {
+      "id": "testimonial-avatar-2",
+      "description": "Avatar for a testimonial.",
+      "imageUrl": "https://images.unsplash.com/photo-1607529378676-a20456ee2f6b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxzbWlsaW5nJTIwcGVyc29ufGVufDB8fHx8MTc2MjE3ODQ1Mnww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "smiling person"
+    },
+    {
+      "id": "testimonial-avatar-3",
+      "description": "Avatar for a testimonial.",
+      "imageUrl": "https://images.unsplash.com/photo-1647913097114-5975d965a1ff?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxzZW5pb3IlMjBjb3VwbGV8ZW58MHx8fHwxNzYyMDk5NzM5fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "senior couple"
+    },
+    {
+      "id": "about-us-philosophy",
+      "description": "A group of friends enjoying a meal together in Mallorca.",
+      "imageUrl": "https://images.unsplash.com/photo-1530062845289-9109b2c9c868?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxvdXRkb29yJTIwZGluaW5nfGVufDB8fHx8MTc2MjE3MDgxN3ww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "outdoor dining"
+    }
+  ]
 }
