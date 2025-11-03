@@ -1,0 +1,11 @@
+<svg width="100" height="150" viewBox="0 0 109 173" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M83.9299 1H25.0699C12.4399 1 2.16992 11.27 2.16992 23.9V77.16C2.16992 89.79 12.4399 100.06 25.0699 100.06H83.9299C96.5599 100.06 106.83 89.79 106.83 77.16V23.9C106.83 11.27 96.5599 1 83.9299 1Z" stroke="#292D32" stroke-width="2" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M54.5 100.06V117.89" stroke="#292D32" stroke-width="2" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin-round"/>
+<path d="M2.16992 50.53H106.83" stroke="#292D32" stroke-width="2" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin-round"/>
+<path d="M25.0698 100.06C28.7698 87.72 39.8098 78.41 54.4998 78.41C69.1898 78.41 80.2298 87.72 83.9298 100.06" stroke="#292D32" stroke-width="2" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin-round"/>
+<path d="M2.16992 23.8999C8.36992 34.3399 22.4299 50.5399 54.5099 50.5399C86.5899 50.5399 100.65 34.3399 106.83 23.8999" stroke="#292D32" stroke-width="2" stroke-miterlimitGes: 1,
+- `Briefcase` for TravHub logo, `MapPin`, `Mail`, `Clock` for the top bar.
+- `Search` for the search icon.
+- `Menu` for the mobile menu trigger.
+
+I'll proceed with these changes.

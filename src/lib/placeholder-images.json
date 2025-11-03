@@ -47,6 +47,18 @@
       "description": "A group of friends enjoying a meal together in Mallorca.",
       "imageUrl": "https://images.unsplash.com/photo-1530062845289-9109b2c9c868?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxvdXRkb29yJTIwZGluaW5nfGVufDB8fHx8MTc2MjE3MDgxN3ww&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "outdoor dining"
+    },
+    {
+      "id": "hiker-with-backpack",
+      "description": "A hiker with a backpack in a mountainous area.",
+      "imageUrl": "https://images.unsplash.com/photo-1559506026-99862c49e223?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxoaWtlciUyMGJhY2twYWNrfGVufDB8fHx8MTc2MjIwMjExNnww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "hiker backpack"
+    },
+    {
+      "id": "girl-travel-view",
+      "description": "A woman in a pink dress and hat looking out over a stunning coastal view.",
+      "imageUrl": "https://images.unsplash.com/photo-1529260830199-42c24126f198?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHx0cmF2ZWwlMjBkZXN0aW5hdGlvbnxlbnwwfHx8fDE3NjIxNDczMzl8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "travel destination"
     }
   ]
 }
