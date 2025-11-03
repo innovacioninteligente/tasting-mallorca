@@ -3,8 +3,7 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Menu, Sprout, MapPin, Mail, Clock, Search, Briefcase } from 'lucide-react';
-import { LanguageSwitcher } from './language-switcher';
+import { Menu, MapPin, Mail, Clock, Search, Briefcase } from 'lucide-react';
 
 const navLinks = [
   { href: '/', label: 'Home' },
@@ -12,13 +11,13 @@ const navLinks = [
   { href: '#', label: 'Pages' },
   { href: '/tours', label: 'Tours' },
   { href: '#', label: 'Destination' },
-  { href: '#', label: 'News' },
+  { href: '/road-map', label: 'Road Map'},
   { href: '/contact', label: 'Contact' },
 ];
 
 export function Header() {
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background text-foreground">
+    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       {/* Top Bar */}
       <div className="bg-[var(--header-dark-background)] text-[var(--header-dark-foreground)] py-2">
         <div className="container flex items-center justify-between text-sm">
@@ -110,4 +109,6 @@ export function Header() {
           </div>
         </div>
       </div>
-    
+    </header>
+  );
+}
