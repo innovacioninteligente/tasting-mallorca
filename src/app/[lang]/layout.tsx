@@ -2,7 +2,7 @@ import '../globals.css';
 import { Toaster } from "@/components/ui/toaster";
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
-import { Poppins, Edu_NSW_ACT_Cursive } from 'next/font/google';
+import { Poppins } from 'next/font/google';
 import { getDictionary } from '@/dictionaries/get-dictionary';
 import { Locale } from '@/dictionaries/config';
 import { LanguageSwitcher } from '@/components/language-switcher';
@@ -13,13 +13,6 @@ const poppins = Poppins({
   variable: '--font-poppins',
 });
 
-const eduNswActCursive = Edu_NSW_ACT_Cursive({
-  subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
-  variable: '--font-cursive',
-});
-
-
 export default async function RootLayout({
   children,
   params,
@@ -29,7 +22,7 @@ export default async function RootLayout({
 }>) {
   const dictionary = await getDictionary(params.lang);
   return (
-    <html lang={params.lang} className={`${poppins.variable} ${eduNswActCursive.variable}`}>
+    <html lang={params.lang} className={`${poppins.variable}`}>
       <body className="font-body antialiased bg-background text-foreground">
         <div className="flex flex-col min-h-screen">
           <Header dictionary={dictionary.header} lang={params.lang} />
