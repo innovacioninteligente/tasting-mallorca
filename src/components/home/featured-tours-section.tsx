@@ -1,14 +1,20 @@
+
 'use client';
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Star, Heart, MapPin, ArrowRight } from 'lucide-react';
-import { tours } from '@/lib/tours-data';
+import { Heart, ArrowRight } from 'lucide-react';
 import { Locale } from '@/dictionaries/config';
+import { getDictionary } from '@/dictionaries/get-dictionary';
 
-export function FeaturedToursSection() {
+type FeaturedToursProps = {
+    dictionary: Awaited<ReturnType<typeof getDictionary>>;
+}
+
+export function FeaturedToursSection({ dictionary }: FeaturedToursProps) {
+    const lang = dictionary.home.welcome.includes('Bienvenido') ? 'es' : 'en'; // Simple lang detection for example
+
     return (
         <section className="py-24 bg-secondary">
             <div className="container text-center mb-12">
@@ -20,8 +26,8 @@ export function FeaturedToursSection() {
             </div>
             <div className="w-full px-4 md:px-0 md:w-[90vw] mx-auto">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                {tours.map((tour) => (
-                <Link href={`/en/tours/${tour.slug}`} key={tour.id} className="block group">
+                {dictionary.tours.map((tour) => (
+                <Link href={`/${lang}/tours/${tour.slug}`} key={tour.id} className="block group">
                     <div className="bg-card rounded-2xl overflow-hidden shadow-lg h-full flex flex-col">
                         <div className="relative h-80">
                         <Image

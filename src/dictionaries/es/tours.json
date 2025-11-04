@@ -1,0 +1,35 @@
+
+[
+    {
+      "id": 1,
+      "slug": "vistas-tramuntana-corazon-isla",
+      "title": "Vistas de Tramuntana y Corazón de la Isla",
+      "description": "Un viaje desde las icónicas montañas hasta el centro rural de Mallorca, con un almuerzo tradicional relajado.",
+      "image": "https://firebasestorage.googleapis.com/v0/b/amparo-aesthetics.firebasestorage.app/o/tasting-mallorca%2Fimages%2Fc5d58a81d94a6fcdfd038bc5b5478de7.png?alt=media&token=71dfb9c0-b58d-414d-aad7-75ba239672cf",
+      "price": 120
+    },
+    {
+      "id": 2,
+      "slug": "mercados-sabores-mediterraneos",
+      "title": "Mercados y Sabores Mediterráneos",
+      "description": "Descubre los mercados tradicionales y la vibrante cultura del este, con un auténtico almuerzo local.",
+      "image": "https://firebasestorage.googleapis.com/v0/b/amparo-aesthetics.firebasestorage.app/o/tasting-mallorca%2Fimages%2FDSC07703-Mejorado-NR.jpg?alt=media&token=ed3a2304-bcc8-4c16-88bd-1e2fe447e70a",
+      "price": 110
+    },
+    {
+      "id": 3,
+      "slug": "raices-nortenas-cultura-aceite",
+      "title": "Raíces Norteñas y Cultura del Aceite",
+      "description": "Explora los pueblos históricos y la tradición del aceite de oliva del norte, con una degustación y almuerzo local.",
+      "image": "https://firebasestorage.googleapis.com/v0/b/amparo-aesthetics.firebasestorage.app/o/tasting-mallorca%2Fimages%2Fsingle-tree-with-green-leaves-near-white-building-covered-with-fog-near-beautiful-sea.jpg?alt=media&token=b11738d0-f464-4b5f-8c26-931be98ba934",
+      "price": 130
+    },
+    {
+      "id": 4,
+      "slug": "edicion-invierno",
+      "title": "Edición de Invierno",
+      "description": "Una ruta especial para disfrutar del almendro en flor y los tranquilos pueblos del interior en temporada baja.",
+      "image": "https://firebasestorage.googleapis.com/v0/b/amparo-aesthetics.firebasestorage.app/o/tasting-mallorca%2Fimages%2Fd426bf2d8ae0b113f9a3838b59a45baa.png?alt=media&token=c98f67d3-d632-42e7-a8c6-7eb1bf287319",
+      "price": 95
+    }
+]

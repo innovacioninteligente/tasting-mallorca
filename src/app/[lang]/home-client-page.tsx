@@ -1,3 +1,4 @@
+
 'use client';
 
 import { type getDictionary } from '@/dictionaries/get-dictionary';
@@ -26,7 +27,7 @@ export default function HomeClientPage({
       <TopDestinationsSection />
       <WhatsIncludedSection dictionary={dictionary.whatsIncluded} />
       <WhyChooseUsSection dictionary={dictionary.whyChooseUs} />
-      <FeaturedToursSection />
+      <FeaturedToursSection dictionary={dictionary} />
       <GallerySection />
       <HappyCustomersSection />
       <TourGuidesSection />

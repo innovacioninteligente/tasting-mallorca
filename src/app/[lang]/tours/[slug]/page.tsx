@@ -1,7 +1,9 @@
+
 import Image from 'next/image';
-import { tours } from '@/lib/tours-data';
 import { notFound } from 'next/navigation';
 import { Locale } from '@/dictionaries/config';
+import { getDictionary } from '@/dictionaries/get-dictionary';
+import { Metadata } from 'next';
 
 type TourPageProps = {
   params: {
@@ -10,8 +12,26 @@ type TourPageProps = {
   };
 };
 
-export default function TourPage({ params }: TourPageProps) {
-  const tour = tours.find((t) => t.slug === params.slug);
+export async function generateMetadata({ params }: TourPageProps): Promise<Metadata> {
+  const dictionary = await getDictionary(params.lang);
+  const tour = dictionary.tours.find((t) => t.slug === params.slug);
+
+  if (!tour) {
+    return {
+      title: 'Tour Not Found',
+    };
+  }
+
+  return {
+    title: tour.title,
+    description: tour.description,
+  };
+}
+
+
+export default async function TourPage({ params }: TourPageProps) {
+  const dictionary = await getDictionary(params.lang);
+  const tour = dictionary.tours.find((t) => t.slug === params.slug);
 
   if (!tour) {
     notFound();

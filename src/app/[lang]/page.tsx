@@ -1,3 +1,4 @@
+
 import { getDictionary } from '@/dictionaries/get-dictionary';
 import { Locale } from '@/dictionaries/config';
 import HomeClientPage from '@/app/[lang]/home-client-page';
