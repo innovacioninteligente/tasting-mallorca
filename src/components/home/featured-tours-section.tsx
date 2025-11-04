@@ -1,52 +1,12 @@
 'use client';
 
 import Image from 'next/image';
+import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Star, Heart, MapPin } from 'lucide-react';
-
-const featuredTours = [
-  {
-    title: 'Turkish Waves',
-    location: 'US, Alaska',
-    price: 385,
-    rating: 5.0,
-    reviews: 245,
-    discount: '40% off',
-    image: 'https://picsum.photos/seed/turkey/600/800',
-    imageHint: 'turkey coast waves',
-  },
-  {
-    title: 'Rome Waves',
-    location: 'Rome',
-    price: 395,
-    rating: 5.0,
-    reviews: 245,
-    discount: '60% off',
-    image: 'https://picsum.photos/seed/rome-waves/600/800',
-    imageHint: 'rome waves',
-  },
-  {
-    title: 'United Waves',
-    location: 'US, Florida',
-    price: 365,
-    rating: 5.0,
-    reviews: 245,
-    discount: '20% off',
-    image: 'https://picsum.photos/seed/florida-waves/600/800',
-    imageHint: 'florida waves',
-  },
-  {
-    title: 'Mallorca Dreams',
-    location: 'Spain, Mallorca',
-    price: 420,
-    rating: 4.9,
-    reviews: 310,
-    discount: '30% off',
-    image: 'https://picsum.photos/seed/mallorca-dreams/600/800',
-    imageHint: 'mallorca beach',
-  },
-];
+import { Star, Heart, MapPin, ArrowRight } from 'lucide-react';
+import { tours } from '@/lib/tours-data';
+import { Locale } from '@/dictionaries/config';
 
 export function FeaturedToursSection() {
     return (
@@ -60,38 +20,33 @@ export function FeaturedToursSection() {
             </div>
             <div className="w-full px-4 md:px-0 md:w-[90vw] mx-auto">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                {featuredTours.map((tour) => (
-                <div key={tour.title} className="bg-card rounded-2xl overflow-hidden group shadow-lg">
-                    <div className="relative h-64">
-                    <Image
-                        src={tour.image}
-                        alt={tour.title}
-                        fill
-                        className="object-cover transition-transform duration-300 group-hover:scale-105"
-                        data-ai-hint={tour.imageHint}
-                    />
-                    <Badge className="absolute top-4 left-4 bg-yellow-400 text-black border-none font-bold">{tour.discount}</Badge>
-                    <Button size="icon" variant="secondary" className="absolute top-4 right-4 rounded-full h-9 w-9 bg-white/20 backdrop-blur-sm border-0 text-white hover:bg-white/30">
-                        <Heart className="h-5 w-5" />
-                    </Button>
-                    </div>
-                    <div className="p-5">
-                    <Badge variant="outline" className="border-primary text-primary mb-3">Featured</Badge>
-                    <h3 className="text-xl font-bold">Over {tour.title}</h3>
-                    <p className="text-2xl font-extrabold text-primary mb-4">${tour.price.toFixed(2)}</p>
-                    <div className="flex items-center text-sm text-muted-foreground gap-4">
-                        <div className="flex items-center gap-1">
-                        <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
-                        <span className="font-bold">{tour.rating}</span> 
-                        <span>({tour.reviews} Rating)</span>
+                {tours.map((tour) => (
+                <Link href={`/en/tours/${tour.slug}`} key={tour.id} className="block group">
+                    <div className="bg-card rounded-2xl overflow-hidden shadow-lg h-full flex flex-col">
+                        <div className="relative h-80">
+                        <Image
+                            src={tour.image}
+                            alt={tour.title}
+                            fill
+                            className="object-cover transition-transform duration-300 group-hover:scale-105"
+                            style={{ viewTransitionName: `tour-image-${tour.slug}` }}
+                        />
+                        <Button size="icon" variant="secondary" className="absolute top-4 right-4 rounded-full h-9 w-9 bg-white/20 backdrop-blur-sm border-0 text-white hover:bg-white/30">
+                            <Heart className="h-5 w-5" />
+                        </Button>
                         </div>
-                        <div className="flex items-center gap-1">
-                            <MapPin className="w-4 h-4" />
-                            <span>{tour.location}</span>
+                        <div className="p-5 flex flex-col flex-grow">
+                            <h3 className="text-xl font-bold mb-2">{tour.title}</h3>
+                            <p className="text-muted-foreground text-sm mb-4 flex-grow">{tour.description}</p>
+                            <div className="flex justify-between items-center mt-auto">
+                                <span className="text-xl font-extrabold text-primary">${tour.price}</span>
+                                <Button size="icon" className="rounded-full bg-primary/10 text-primary hover:bg-primary/20">
+                                    <ArrowRight className="h-5 w-5" />
+                                </Button>
+                            </div>
                         </div>
                     </div>
-                    </div>
-                </div>
+                </Link>
                 ))}
             </div>
             </div>
