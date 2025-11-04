@@ -14,7 +14,7 @@ const images = [
 
 export function TourGallerySection() {
     return (
-        <div className="container mx-auto mt-8">
+        <div className="w-full md:w-[90vw] mx-auto px-4 mt-8">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2 h-[50vh]">
                 {/* Main Image */}
                 <div className="col-span-1 md:col-span-2 lg:col-span-2 row-span-2 relative rounded-lg overflow-hidden">

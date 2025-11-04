@@ -22,7 +22,7 @@ interface TourHeaderSectionProps {
 export function TourHeaderSection({ tour, dictionary }: TourHeaderSectionProps) {
     return (
         <header className="bg-secondary/50 py-8">
-            <div className="container mx-auto">
+            <div className="w-full md:w-[90vw] mx-auto px-4">
                 <div className="flex items-center text-sm text-muted-foreground mb-4">
                     <span>{dictionary.explore}</span>
                     <ChevronRight className="w-4 h-4 mx-1" />

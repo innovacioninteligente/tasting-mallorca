@@ -35,7 +35,6 @@ export async function generateMetadata({ params }: TourPageProps): Promise<Metad
   };
 }
 
-
 export default async function TourPage({ params }: TourPageProps) {
   const dictionary = await getDictionary(params.lang);
   const tour = dictionary.tours.find((t) => t.slug === params.slug);
@@ -50,7 +49,7 @@ export default async function TourPage({ params }: TourPageProps) {
         <TourHeaderSection tour={tour} dictionary={tourDict.header} />
         <TourGallerySection />
 
-        <main className="container mx-auto py-16 grid grid-cols-1 lg:grid-cols-3 gap-12">
+        <main className="w-full md:w-[90vw] mx-auto px-4 py-16 grid grid-cols-1 lg:grid-cols-3 gap-12">
             <div className="lg:col-span-2 space-y-12">
               <TourOverviewSection dictionary={tourDict.overview} />
               <TourHighlightsSection dictionary={tourDict.highlights} />
@@ -64,4 +63,3 @@ export default async function TourPage({ params }: TourPageProps) {
     </div>
   );
 }
-
