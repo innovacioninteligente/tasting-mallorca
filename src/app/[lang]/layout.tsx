@@ -6,6 +6,7 @@ import { Poppins } from 'next/font/google';
 import { getDictionary } from '@/dictionaries/get-dictionary';
 import { Locale } from '@/dictionaries/config';
 import { LanguageSwitcher } from '@/components/language-switcher';
+import Page from './page';
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -26,7 +27,9 @@ export default async function RootLayout({
       <div className="font-body antialiased bg-background text-foreground">
         <div className="flex flex-col min-h-screen">
           <Header dictionary={dictionary.header} lang={params.lang} />
-          <main className="flex-grow">{children}</main>
+          <main className="flex-grow">
+            {children}
+          </main>
           <Footer />
         </div>
         <Toaster />
