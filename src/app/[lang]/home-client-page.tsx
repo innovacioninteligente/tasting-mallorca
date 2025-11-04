@@ -181,7 +181,7 @@ export default function HomeClientPage({
     offset: ['start end', 'end start'],
   });
 
-  const y = useTransform(scrollYProgress, [0, 1], ['-20%', '20%']);
+  const y = useTransform(scrollYProgress, [0, 1], ['-40%', '40%']);
 
   return (
     <div className="flex flex-col bg-background overflow-hidden">
