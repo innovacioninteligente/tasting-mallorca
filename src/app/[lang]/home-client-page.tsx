@@ -193,8 +193,8 @@ export default function HomeClientPage({
               <h1 className="text-5xl md:text-7xl font-extrabold tracking-tighter leading-tight">
                 {dictionary.title}
               </h1>
-              <p className="mt-6 text-lg text-muted-foreground max-w-md mx-auto">
-                The leap into electronic typesetting, remaining essentially unchanged. It was popularised, trust with our company
+              <p className="mt-6 text-lg text-muted-foreground max-w-xl mx-auto">
+                {dictionary.subtitle}
               </p>
             </div>
 

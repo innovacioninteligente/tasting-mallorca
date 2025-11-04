@@ -12,24 +12,29 @@ const dictionaries = {
     home: () => import('./es/home.json').then((module) => module.default),
     header: () => import('./es/header.json').then((module) => module.default),
   },
-  // ca: ...
-  // fr: ...
-  // de: ...
-  // nl: ...
+  ca: {
+    home: () => import('./ca/home.json').then((module) => module.default),
+    header: () => import('./en/header.json').then((module) => module.default), // Fallback for now
+  },
+  fr: {
+    home: () => import('./fr/home.json').then((module) => module.default),
+    header: () => import('./en/header.json').then((module) => module.default), // Fallback for now
+  },
+  de: {
+    home: () => import('./de/home.json').then((module) => module.default),
+    header: () => import('./en/header.json').then((module) => module.default), // Fallback for now
+  },
+  nl: {
+    home: () => import('./nl/home.json').then((module) => module.default),
+    header: () => import('./en/header.json').then((module) => module.default), // Fallback for now
+  },
 };
 
 // A helper function to get the correct dictionary based on the locale
-// This is temporary, we will add more languages and modularize it better.
 const getSection = async (locale: Locale, section: keyof (typeof dictionaries)['en']) => {
-    switch(locale) {
-        case 'en':
-            return dictionaries.en[section]();
-        case 'es':
-            // Fallback to english if spanish translation is not available
-            return dictionaries.es[section]?.() ?? dictionaries.en[section]();
-        default:
-            return dictionaries.en[section]();
-    }
+    const langDict = dictionaries[locale] ?? dictionaries.en;
+    const mod = await (langDict[section]?.() ?? dictionaries.en[section]());
+    return mod;
 }
 
 export const getDictionary = async (locale: Locale) => {
