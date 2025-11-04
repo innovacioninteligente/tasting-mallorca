@@ -73,10 +73,34 @@
       "imageHint": "sea cliff"
     },
     {
-      "id": "whats-included-picnic",
-      "description": "A delicious Mallorcan picnic spread out on a blanket in the countryside.",
-      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/amparo-aesthetics.firebasestorage.app/o/tasting-mallorca%2Fimages%2FDSC07736-Mejorado-NR.jpg?alt=media&token=1ddb3c48-fa8a-448a-a2f0-3c8e6a4e785a",
-      "imageHint": "mallorca picnic"
+      "id": "included-pickup",
+      "description": "A comfortable tour van for pickup.",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/amparo-aesthetics.firebasestorage.app/o/tasting-mallorca%2Fimages%2FDSC08209-Mejorado-NR.jpg?alt=media&token=8a7cc553-da67-4ee8-acc1-5dc87836fcc8",
+      "imageHint": "tour van"
+    },
+    {
+      "id": "included-guide",
+      "description": "An expert local guide explaining something.",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/amparo-aesthetics.firebasestorage.app/o/tasting-mallorca%2Fimages%2Fe2ac9a089633f30f6efd1faf38fe7e4973a7767989315e1b1bafb10dff40fd18.avif?alt=media&token=9538e80e-1783-4326-9114-42d7801eba2a",
+      "imageHint": "local guide"
+    },
+    {
+      "id": "included-lunch",
+      "description": "A table set with a delicious traditional Mallorcan lunch.",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/amparo-aesthetics.firebasestorage.app/o/tasting-mallorca%2Fimages%2FDSC08018-Mejorado-NR.jpg?alt=media&token=576322eb-77a9-4186-973f-b713ba7e47ad",
+      "imageHint": "mallorcan food"
+    },
+    {
+      "id": "included-landscape",
+      "description": "A stunning, expansive landscape view in Mallorca.",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/amparo-aesthetics.firebasestorage.app/o/tasting-mallorca%2Fimages%2FDJI_0376-Mejorado-NR.jpg?alt=media&token=48d15e2b-0fad-444c-ba76-86345c32696a",
+      "imageHint": "mallorca landscape"
+    },
+    {
+      "id": "included-sites",
+      "description": "A charming and historic site in a Mallorcan village.",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/amparo-aesthetics.firebasestorage.app/o/tasting-mallorca%2Fimages%2FDSC07888-Mejorado-NR.jpg?alt=media&token=7ce0fa0b-dcdf-466e-9184-d82c30469c5e",
+      "imageHint": "historic village"
     }
   ]
 }
