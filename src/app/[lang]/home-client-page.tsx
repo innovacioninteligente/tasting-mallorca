@@ -202,7 +202,7 @@ export default function HomeClientPage({
 
       {/* Immersive Carousel Section */}
       <section ref={carouselContainerRef} className='w-full min-h-screen overflow-hidden'>
-        <motion.div style={{ y }} className="w-full h-full">
+        <motion.div style={{ y }} className="h-full">
             <Carousel
                 plugins={[immersiveAutoplayPlugin.current]}
                 className="w-full h-full"
@@ -210,7 +210,7 @@ export default function HomeClientPage({
                     loop: true,
                 }}
             >
-                <CarouselContent className='h-full'>
+                <CarouselContent className='h-screen'>
                     {immersiveCarouselImages.map((img) => (
                         <CarouselItem key={img.id} className='h-full relative'>
                             <Image
