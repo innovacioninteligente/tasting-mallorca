@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Badge } from '@/components/ui/badge';
-import { ArrowUpRight, Sprout, Briefcase, Map, CheckCircle, Heart, Star, MapPin, Camera } from 'lucide-react';
+import { ArrowUpRight, Sprout, Briefcase, Map, CheckCircle, Heart, Star, MapPin, Camera, Twitter, Facebook, Instagram } from 'lucide-react';
 
 const hikerImage = PlaceHolderImages.find(img => img.id === 'hiker-with-backpack');
 const travelGirlImage = PlaceHolderImages.find(img => img.id === 'girl-travel-view');
@@ -95,6 +95,13 @@ const galleryImages = [
   { src: 'https://picsum.photos/seed/gallery9/500/500', hint: 'hiker looking at cliffs' },
   { src: 'https://picsum.photos/seed/gallery10/600/900', hint: 'woman yellow dress beach' },
   { src: 'https://picsum.photos/seed/gallery11/500/700', hint: 'couple walking city' },
+];
+
+const tourGuides = [
+  { name: 'Mike Hardson', image: 'https://picsum.photos/seed/guide1/200/200', hint: 'male guide portrait' },
+  { name: 'Leslie Alexander', image: 'https://picsum.photos/seed/guide2/200/200', hint: 'female guide portrait' },
+  { name: 'Annette Black', image: 'https://picsum.photos/seed/guide3/200/200', hint: 'female guide smiling' },
+  { name: 'Guy Hawkins', image: 'https://picsum.photos/seed/guide4/200/200', hint: 'male guide casual' },
 ];
 
 
@@ -367,7 +374,7 @@ export default function Home() {
       </section>
       
       {/* Happy Customers Section */}
-      <section className="py-24 bg-primary text-primary-foreground">
+      <section className="py-24 bg-primary-dark text-primary-foreground">
         <div className="container w-full px-4 md:px-0 md:w-[90vw] mx-auto">
           <div className="relative grid md:grid-cols-2 gap-16 items-center">
             {/* Image collage */}
@@ -375,13 +382,13 @@ export default function Home() {
               <div className="absolute w-[70%] h-[70%] top-0 left-0 overflow-hidden rounded-full">
                 <Image src="https://picsum.photos/seed/happy-cust1/800/800" alt="Tropical boat view" fill objectFit="cover" data-ai-hint="thailand boat beach" />
               </div>
-              <div className="absolute w-[40%] h-[40%] top-10 right-0 bg-gray-700 overflow-hidden rounded-full border-4 border-primary">
+              <div className="absolute w-[40%] h-[40%] top-10 right-0 bg-gray-700 overflow-hidden rounded-full border-4 border-primary-dark">
                 <Image src="https://picsum.photos/seed/happy-cust2/400/400" alt="Woman in pink dress" fill objectFit="cover" data-ai-hint="woman hat travel"/>
               </div>
-              <div className="absolute w-[45%] h-[45%] bottom-0 right-1/4 bg-gray-700 overflow-hidden rounded-full border-4 border-primary">
+              <div className="absolute w-[45%] h-[45%] bottom-0 right-1/4 bg-gray-700 overflow-hidden rounded-full border-4 border-primary-dark">
                  <Image src="https://picsum.photos/seed/happy-cust3/400/400" alt="Moscow cathedral" fill objectFit="cover" data-ai-hint="moscow cathedral" />
               </div>
-              <div className="absolute w-[35%] h-[35%] bottom-0 left-5 bg-gray-700 overflow-hidden rounded-full border-4 border-primary">
+              <div className="absolute w-[35%] h-[35%] bottom-0 left-5 bg-gray-700 overflow-hidden rounded-full border-4 border-primary-dark">
                 <Image src="https://picsum.photos/seed/happy-cust4/400/400" alt="Hiker looking at view" fill objectFit="cover" data-ai-hint="hiker cliff view" />
               </div>
             </div>
@@ -416,6 +423,51 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Tour Guides Section */}
+      <section className="py-24 bg-secondary">
+        <div className="container text-center mb-16">
+          <p className="text-primary font-semibold text-lg">Meet With Our Guide</p>
+          <h2 className="text-4xl md:text-5xl font-extrabold mt-2">Tour Guide</h2>
+          <p className="mt-4 text-lg text-muted-foreground max-w-xl mx-auto">
+            Content of a page when looking at layout the point of using lorem the is Ipsum less
+          </p>
+        </div>
+
+        <div className="container relative">
+           <div className="hidden md:block absolute top-1/2 -left-24">
+              <Image src="/balloon-doodle.svg" alt="Hot air balloon doodle" width={100} height={150} className="object-contain" />
+           </div>
+           <div className="hidden md:block absolute top-1/2 -right-24">
+              <Image src="/airplane-doodle.svg" alt="Airplane doodle" width={150} height={75} className="object-contain" />
+           </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            {tourGuides.map((guide) => (
+              <div key={guide.name} className="flex flex-col items-center text-center">
+                <div className="relative mb-4">
+                  <div className="relative w-40 h-40">
+                    <Image
+                      src={guide.image}
+                      alt={guide.name}
+                      fill
+                      className="rounded-full object-cover border-4 border-background shadow-lg"
+                      data-ai-hint={guide.hint}
+                    />
+                  </div>
+                </div>
+                <div className="bg-card rounded-2xl p-6 pt-24 -mt-20 w-full shadow-lg">
+                  <h3 className="text-xl font-bold">{guide.name}</h3>
+                  <p className="text-primary">Tourist Guide</p>
+                  <div className="flex justify-center gap-3 mt-4">
+                      <Button variant="outline" size="icon" className="rounded-full"><Facebook className="h-5 w-5"/></Button>
+                      <Button variant="outline" size="icon" className="rounded-full"><Twitter className="h-5 w-5"/></Button>
+                      <Button variant="outline" size="icon" className="rounded-full"><Instagram className="h-5 w-5"/></Button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
     </div>
   );
 }

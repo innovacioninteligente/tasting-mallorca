@@ -15,6 +15,7 @@
 
     --primary: 172 70% 40%; /* Teal */
     --primary-foreground: 0 0% 98%; /* Light text on Teal */
+    --primary-dark: 172 100% 9%;
 
     --secondary: 240 4.8% 95.9%; /* Light Gray */
     --secondary-foreground: 240 5.9% 10%;
@@ -57,6 +58,7 @@
 
     --primary: 172 70% 45%;
     --primary-foreground: 0 0% 98%;
+    --primary-dark: 172 100% 9%;
 
     --secondary: 240 3.7% 15.9%;
     --secondary-foreground: 0 0% 98%;
