@@ -30,11 +30,14 @@ const dictionaries = {
   },
 };
 
+type Dictionaries = typeof dictionaries;
+type DictionarySections = keyof Dictionaries['en'];
+
 // A helper function to get the correct dictionary based on the locale
-const getSection = async (locale: Locale, section: keyof (typeof dictionaries)['en']) => {
+const getSection = async <T extends DictionarySections>(locale: Locale, section: T): Promise<Awaited<ReturnType<Dictionaries[Locale][T]>>> => {
     const langDict = dictionaries[locale] ?? dictionaries.en;
-    const mod = await (langDict[section]?.() ?? dictionaries.en[section]());
-    return mod;
+    const modLoader = langDict[section] ?? dictionaries.en[section];
+    return await modLoader();
 }
 
 export const getDictionary = async (locale: Locale) => {

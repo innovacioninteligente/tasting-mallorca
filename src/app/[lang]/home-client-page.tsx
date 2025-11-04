@@ -170,10 +170,10 @@ const immersiveCarouselImages = [
 export default function HomeClientPage({
   dictionary,
 }: {
-  dictionary: Awaited<ReturnType<typeof getDictionary>>['home'];
+  dictionary: Awaited<ReturnType<typeof getDictionary>>["home"];
 }) {
   const autoplayPlugin = useRef(Autoplay({ delay: 5000, stopOnInteraction: true }));
-  const immersiveAutoplayPlugin = useRef(Autoplay({ delay: 3000, stopOnInteraction: false }));
+  const immersiveAutoplayPlugin = useRef(Autoplay({ delay: 3000, stopOnInteraction: false }))
 
   const carouselContainerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
