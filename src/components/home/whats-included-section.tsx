@@ -5,7 +5,7 @@ import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Bus, Users, UtensilsCrossed, Mountain, Landmark } from 'lucide-react';
 import { type getDictionary } from '@/dictionaries/get-dictionary';
 import { useRef, useState, useEffect } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion, useScroll } from 'framer-motion';
 
 type WhatsIncludedDictionary = Awaited<ReturnType<typeof getDictionary>>['whatsIncluded'];
 
@@ -74,8 +74,6 @@ export function WhatsIncludedSection({ dictionary }: { dictionary: WhatsIncluded
         });
     }, [scrollYProgress, includedItems.length, activeIndex]);
     
-    const activeImage = includedItems[activeIndex]?.image;
-
     return (
         <section ref={sectionRef} className="py-24 bg-background overflow-hidden relative">
             <div className="container mx-auto w-full md:w-[90vw] px-4 md:px-0">
