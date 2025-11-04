@@ -6,7 +6,6 @@ import { Heart, ArrowRight } from 'lucide-react';
 import { type Locale } from '@/dictionaries/config';
 import { type getDictionary } from '@/dictionaries/get-dictionary';
 import { useRouter } from 'next/navigation';
-import { useTransition } from 'react';
 
 type FeaturedToursProps = {
     dictionary: Awaited<ReturnType<typeof getDictionary>>;
@@ -15,12 +14,9 @@ type FeaturedToursProps = {
 
 export function FeaturedToursSection({ dictionary, lang }: FeaturedToursProps) {
     const router = useRouter();
-    const [isPending, startTransition] = useTransition();
 
     const handleTourClick = (slug: string) => {
-        startTransition(() => {
-            router.push(`/${lang}/tours/${slug}`);
-        });
+        router.push(`/${lang}/tours/${slug}`);
     };
 
     return (
