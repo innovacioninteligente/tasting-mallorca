@@ -4,8 +4,8 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Menu, MapPin, Mail, Clock, Search, Sprout } from 'lucide-react';
-import { getDictionary } from '@/dictionaries/get-dictionary';
-import { Locale } from '@/dictionaries/config';
+import { type Locale } from '@/dictionaries/config';
+import { type getDictionary } from '@/dictionaries/get-dictionary';
 
 type HeaderProps = {
     dictionary: Awaited<ReturnType<typeof getDictionary>>['header'];

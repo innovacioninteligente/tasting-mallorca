@@ -10,6 +10,7 @@ import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carouse
 import Autoplay from "embla-carousel-autoplay";
 import { useRef } from 'react';
 import { getDictionary } from '@/dictionaries/get-dictionary';
+import { Locale } from '@/dictionaries/config';
 
 
 const hikerImage = PlaceHolderImages.find(img => img.id === 'hiker-with-backpack');
@@ -99,7 +100,7 @@ const galleryImages = [
   { src: 'https://picsum.photos/seed/gallery6/600/400', hint: 'woman pink dress cliff' },
   { src: 'https://picsum.photos/seed/gallery7/500/600', hint: 'happy man beach' },
   { src: 'https://picsum.photos/seed/gallery8/600/800', hint: 'family airport travel' },
-  { src, 'https://picsum.photos/seed/gallery9/500/500', hint: 'hiker looking at cliffs' },
+  { src: 'https://picsum.photos/seed/gallery9/500/500', hint: 'hiker looking at cliffs' },
   { src: 'https://picsum.photos/seed/gallery10/600/900', hint: 'woman yellow dress beach' },
   { src: 'https://picsum.photos/seed/gallery11/500/700', hint: 'couple walking city' },
 ];
@@ -156,8 +157,7 @@ const testimonials = [
     },
   ];
 
-
-export default function Home({
+function Home({
     dictionary
 } : {
     dictionary: Awaited<ReturnType<typeof getDictionary>>['home']
@@ -614,7 +614,7 @@ export default function Home({
                                 <div className="flex items-center gap-2">
                                     <CalendarDays className="w-4 h-4" />
                                     <span>{post.date}</span>
-                                ходи
+                                </div>
                                 <div className="flex items-center gap-2">
                                     <MessageCircle className="w-4 h-4" />
                                     <span>{post.comments} Comments</span>
@@ -629,4 +629,9 @@ export default function Home({
 
     </div>
   );
+}
+
+export default async function Page({ params: { lang } }: { params: { lang: Locale } }) {
+    const dictionary = await getDictionary(lang);
+    return <Home dictionary={dictionary.home} />
 }
