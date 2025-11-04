@@ -212,17 +212,15 @@ export default function HomeClientPage({
             >
                 <CarouselContent className='h-full'>
                     {immersiveCarouselImages.map((img) => (
-                        <CarouselItem key={img.id} className='h-full'>
-                            <div className="w-full h-full relative">
-                                <Image
-                                    src={img.imageUrl}
-                                    alt={img.description}
-                                    fill
-                                    className="object-cover"
-                                    data-ai-hint={img.imageHint}
-                                />
-                                <div className="absolute inset-0 bg-black/20"></div>
-                            </div>
+                        <CarouselItem key={img.id} className='h-full relative'>
+                            <Image
+                                src={img.imageUrl}
+                                alt={img.description}
+                                fill
+                                className="object-cover"
+                                data-ai-hint={img.imageHint}
+                            />
+                            <div className="absolute inset-0 bg-black/20"></div>
                         </CarouselItem>
                     ))}
                 </CarouselContent>
