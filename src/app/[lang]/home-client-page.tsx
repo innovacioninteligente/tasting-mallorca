@@ -158,12 +158,21 @@ const testimonials = [
     },
   ];
 
+const immersiveCarouselImages = [
+    hikerImage,
+    travelGirlImage,
+    heroImage3,
+    heroImage4,
+].filter(Boolean) as (typeof PlaceHolderImages[0])[];
+
+
 export default function HomeClientPage({
   dictionary,
 }: {
   dictionary: Awaited<ReturnType<typeof getDictionary>>['home'];
 }) {
   const autoplayPlugin = useRef(Autoplay({ delay: 5000, stopOnInteraction: true }));
+  const immersiveAutoplayPlugin = useRef(Autoplay({ delay: 3000, stopOnInteraction: false }))
   return (
     <div className="flex flex-col bg-background overflow-hidden">
       {/* Hero Section */}
@@ -179,6 +188,34 @@ export default function HomeClientPage({
             </p>
           </div>
         </div>
+      </section>
+
+      {/* Immersive Carousel Section */}
+      <section className='w-full'>
+        <Carousel
+            plugins={[immersiveAutoplayPlugin.current]}
+            className="w-full"
+            opts={{
+                loop: true,
+            }}
+        >
+            <CarouselContent>
+                {immersiveCarouselImages.map((img) => (
+                    <CarouselItem key={img.id}>
+                        <div className="w-full h-[60vh] relative">
+                            <Image
+                                src={img.imageUrl}
+                                alt={img.description}
+                                fill
+                                className="object-cover"
+                                data-ai-hint={img.imageHint}
+                            />
+                             <div className="absolute inset-0 bg-black/20"></div>
+                        </div>
+                    </CarouselItem>
+                ))}
+            </CarouselContent>
+        </Carousel>
       </section>
       
       {/* Top Destinations Section */}
@@ -589,7 +626,3 @@ export default function HomeClientPage({
     </div>
   );
 }
-
-    
-
-    
