@@ -167,81 +167,17 @@ export default function HomeClientPage({
   return (
     <div className="flex flex-col bg-background overflow-hidden">
       {/* Hero Section */}
-      <section className="relative w-full overflow-hidden min-h-screen flex items-center justify-center">
+      <section className="relative w-full h-[80vh] flex items-center justify-center text-center">
         <div className="container px-4">
-            <div className="relative max-w-7xl mx-auto h-[60vh] flex items-center justify-center">
-
-              {/* Top-left image */}
-              {hikerImage && (
-                  <div className="hidden md:block absolute top-0 left-0 transform -translate-x-1/4 -translate-y-1/4">
-                      <div className="relative w-72 h-72">
-                          <Image
-                              src={hikerImage.imageUrl}
-                              alt={hikerImage.description}
-                              fill
-                              className="object-cover rounded-full"
-                              data-ai-hint={hikerImage.imageHint}
-                          />
-                      </div>
-                  </div>
-              )}
-
-              {/* Top-right image */}
-              {heroImage4 && (
-                  <div className="hidden md:block absolute top-0 right-0 transform translate-x-1/4 -translate-y-1/4">
-                      <div className="relative w-56 h-56">
-                           <Image
-                              src={heroImage4.imageUrl}
-                              alt={heroImage4.description}
-                              fill
-                              className="object-cover rounded-full"
-                              data-ai-hint={heroImage4.imageHint}
-                          />
-                      </div>
-                  </div>
-              )}
-
-              {/* Center Text Content */}
-              <div className="relative z-10 flex flex-col items-center justify-center text-center max-w-2xl">
-                <h2 className="text-lg font-semibold text-primary mb-2">{dictionary.welcome}</h2>
-                <h1 className="text-5xl md:text-7xl font-extrabold tracking-tighter leading-tight">
-                  {dictionary.title}
-                </h1>
-                <p className="mt-6 text-lg text-muted-foreground max-w-xl mx-auto">
-                  {dictionary.subtitle}
-                </p>
-              </div>
-
-              {/* Bottom-left image */}
-              {heroImage3 && (
-                  <div className="hidden md:block absolute bottom-0 left-0 transform -translate-x-1/4 translate-y-1/4">
-                      <div className="relative w-56 h-56">
-                           <Image
-                              src={heroImage3.imageUrl}
-                              alt={heroImage3.description}
-                              fill
-                              className="object-cover rounded-full"
-                              data-ai-hint={heroImage3.imageHint}
-                          />
-                      </div>
-                  </div>
-              )}
-
-              {/* Bottom-right image */}
-              {travelGirlImage && (
-                  <div className="hidden md:block absolute bottom-0 right-0 transform translate-x-1/4 translate-y-1/4">
-                      <div className="relative w-72 h-72">
-                          <Image
-                              src={travelGirlImage.imageUrl}
-                              alt={travelGirlImage.description}
-                              fill
-                              className="object-cover rounded-full"
-                              data-ai-hint={travelGirlImage.imageHint}
-                          />
-                      </div>
-                  </div>
-              )}
-            </div>
+          <div className="max-w-2xl mx-auto">
+            <h2 className="text-lg font-semibold text-primary mb-2">{dictionary.welcome}</h2>
+            <h1 className="text-5xl md:text-7xl font-extrabold tracking-tighter leading-tight">
+              {dictionary.title}
+            </h1>
+            <p className="mt-6 text-lg text-muted-foreground max-w-xl mx-auto">
+              {dictionary.subtitle}
+            </p>
+          </div>
         </div>
       </section>
       
@@ -464,7 +400,7 @@ export default function HomeClientPage({
                 <Image src="https://picsum.photos/seed/happy-cust1/800/800" alt="Tropical boat view" fill objectFit="cover" data-ai-hint="thailand boat beach" />
               </div>
               <div className="absolute w-[40%] h-[40%] top-10 right-0 bg-gray-700 overflow-hidden rounded-full border-4 border-primary-dark">
-                <Image src="https://picsum.photos/seed/happy-cust2/400/400" alt="Woman in pink dress" fill objectFit="cover" data-ai-hint="woman hat travel"/>
+                <Image src="https://picsum.photos/seed/happy-cust2/400/400" alt="Woman in hat" fill objectFit="cover" data-ai-hint="woman hat travel"/>
               </div>
               <div className="absolute w-[45%] h-[45%] bottom-0 right-1/4 bg-gray-700 overflow-hidden rounded-full border-4 border-primary-dark">
                  <Image src="https://picsum.photos/seed/happy-cust3/400/400" alt="Moscow cathedral" fill objectFit="cover" data-ai-hint="moscow cathedral" />
@@ -653,5 +589,7 @@ export default function HomeClientPage({
     </div>
   );
 }
+
+    
 
     
