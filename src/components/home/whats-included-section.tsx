@@ -4,8 +4,8 @@ import Image from 'next/image';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Bus, Users, UtensilsCrossed, Mountain, Landmark } from 'lucide-react';
 import { type getDictionary } from '@/dictionaries/get-dictionary';
-import React, { useState, useRef } from 'react';
-import { motion, useInView } from 'framer-motion';
+import React, { useRef } from 'react';
+import { motion, useScroll, useTransform } from 'framer-motion';
 
 type WhatsIncludedDictionary = Awaited<ReturnType<typeof getDictionary>>['whatsIncluded'];
 
@@ -37,61 +37,16 @@ const includedItemsData = [
     },
 ];
 
-const IncludedItemContent = ({
-    id,
-    icon,
-    dictionary,
-    onInView
-}: {
-    id: string;
-    icon: React.ReactNode;
-    dictionary: any;
-    onInView: (id: string) => void;
-}) => {
-    const ref = useRef(null);
-    const isInView = useInView(ref, { margin: "-50% 0px -50% 0px" });
-
-    React.useEffect(() => {
-        if (isInView) {
-            onInView(id);
-        }
-    }, [isInView, id, onInView]);
-
-    const itemImage = includedItemsData.find(p => p.id === id)?.image;
-
-    return (
-        <div ref={ref} className="flex items-center min-h-[60vh] py-12 md:py-0">
-             <div>
-                {itemImage && (
-                    <div className="relative w-full aspect-video rounded-xl overflow-hidden mb-6 md:hidden shadow-lg">
-                        <Image
-                            src={itemImage.imageUrl}
-                            alt={dictionary.title}
-                            fill
-                            className="object-cover"
-                            data-ai-hint={itemImage.imageHint}
-                        />
-                    </div>
-                )}
-                <div className="flex items-start gap-6">
-                    <div className="flex-shrink-0 w-14 h-14 bg-primary/10 text-primary rounded-xl flex items-center justify-center">
-                        {icon}
-                    </div>
-                    <div>
-                        <h3 className="text-2xl font-bold">{dictionary.title}</h3>
-                        <p className="mt-2 text-muted-foreground">
-                            {dictionary.description}
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    );
-};
-
-
 export function WhatsIncludedSection({ dictionary }: { dictionary: WhatsIncludedDictionary }) {
-    const [activeIndex, setActiveIndex] = useState(includedItemsData[0].id);
+    const sectionRef = useRef(null);
+    const { scrollYProgress } = useScroll({
+        target: sectionRef,
+        offset: ["start center", "end end"]
+    });
+
+    const activeIndex = useTransform(scrollYProgress, (pos) => {
+        return Math.floor(pos * includedItemsData.length);
+    });
 
     const items = [
         { id: 'pickup', dictionary: dictionary.pickup, icon: <Bus className="w-7 h-7" /> },
@@ -102,7 +57,7 @@ export function WhatsIncludedSection({ dictionary }: { dictionary: WhatsIncluded
     ];
     
     return (
-        <section className="py-24 bg-background overflow-hidden">
+        <section ref={sectionRef} className="py-24 bg-background overflow-hidden">
              <div className="container mx-auto w-full md:w-[90vw] px-4 md:px-0">
                 <div className="max-w-xl mb-16">
                     <p className="text-primary font-cursive font-bold text-lg">{dictionary.subtitle}</p>
@@ -113,28 +68,31 @@ export function WhatsIncludedSection({ dictionary }: { dictionary: WhatsIncluded
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-start">
                     {/* Left Scrolling Column */}
-                    <div className="w-full">
+                    <div className="w-full space-y-16">
                         {items.map((item) => (
-                           <IncludedItemContent 
-                             key={item.id}
-                             id={item.id}
-                             icon={item.icon}
-                             dictionary={item.dictionary}
-                             onInView={setActiveIndex}
-                           />
+                           <div key={item.id} className="flex items-start gap-6">
+                                <div className="flex-shrink-0 w-14 h-14 bg-primary/10 text-primary rounded-xl flex items-center justify-center">
+                                    {item.icon}
+                                </div>
+                                <div>
+                                    <h3 className="text-2xl font-bold">{item.dictionary.title}</h3>
+                                    <p className="mt-2 text-muted-foreground">
+                                        {item.dictionary.description}
+                                    </p>
+                                </div>
+                           </div>
                         ))}
                     </div>
 
                     {/* Right Sticky Column */}
-                    <div className="w-full h-screen sticky top-0 hidden md:flex items-center">
-                        <div className="relative w-full aspect-[4/5] rounded-3xl overflow-hidden shadow-2xl">
-                             {includedItemsData.map(item => (
+                    <div className="w-full h-[70vh] sticky top-24 hidden md:flex items-center">
+                        <div className="relative w-full h-full rounded-3xl overflow-hidden shadow-2xl">
+                             {includedItemsData.map((item, index) => (
                                 item.image && (
                                     <motion.div
                                         key={item.id}
-                                        initial={false}
-                                        animate={{
-                                            opacity: activeIndex === item.id ? 1 : 0,
+                                        style={{
+                                            opacity: useTransform(activeIndex, (latest) => latest === index ? 1 : 0),
                                         }}
                                         transition={{ duration: 0.5, ease: "easeInOut" }}
                                         className="absolute inset-0"
