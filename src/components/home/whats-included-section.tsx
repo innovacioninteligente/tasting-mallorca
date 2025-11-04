@@ -44,10 +44,6 @@ export function WhatsIncludedSection({ dictionary }: { dictionary: WhatsIncluded
         offset: ["start center", "end end"]
     });
 
-    const activeIndex = useTransform(scrollYProgress, (pos) => {
-        return Math.floor(pos * includedItemsData.length);
-    });
-
     const items = [
         { id: 'pickup', dictionary: dictionary.pickup, icon: <Bus className="w-14 h-14" /> },
         { id: 'guides', dictionary: dictionary.guides, icon: <Users className="w-14 h-14" /> },
@@ -55,6 +51,10 @@ export function WhatsIncludedSection({ dictionary }: { dictionary: WhatsIncluded
         { id: 'landscapes', dictionary: dictionary.landscapes, icon: <Mountain className="w-14 h-14" /> },
         { id: 'sites', dictionary: dictionary.sites, icon: <Landmark className="w-14 h-14" /> },
     ];
+
+    const activeIndex = useTransform(scrollYProgress, (pos) => {
+        return Math.floor(pos * items.length);
+    });
     
     return (
         <section ref={sectionRef} className="py-24 bg-background">
@@ -87,13 +87,18 @@ export function WhatsIncludedSection({ dictionary }: { dictionary: WhatsIncluded
                     {/* Right Sticky Column */}
                     <div className="w-full h-[calc(100vh-6rem)] sticky top-24 hidden md:flex items-center">
                         <div className="relative w-full h-full rounded-3xl overflow-hidden shadow-2xl">
-                             {includedItemsData.map((item, index) => (
-                                item.image && (
+                             {includedItemsData.map((item, index) => {
+                                const opacity = useTransform(activeIndex, (latest) => {
+                                    const isLastItem = index === items.length - 1;
+                                    const isActive = latest === index;
+                                    const isPastLast = isLastItem && latest >= items.length;
+                                    return isActive || isPastLast ? 1 : 0;
+                                });
+                                
+                                return item.image && (
                                     <motion.div
                                         key={item.id}
-                                        style={{
-                                            opacity: useTransform(activeIndex, (latest) => latest === index ? 1 : 0),
-                                        }}
+                                        style={{ opacity }}
                                         transition={{ duration: 0.5, ease: "easeInOut" }}
                                         className="absolute inset-0"
                                     >
@@ -105,8 +110,8 @@ export function WhatsIncludedSection({ dictionary }: { dictionary: WhatsIncluded
                                             data-ai-hint={item.image.imageHint}
                                         />
                                     </motion.div>
-                                )
-                            ))}
+                                );
+                            })}
                         </div>
                     </div>
                 </div>
