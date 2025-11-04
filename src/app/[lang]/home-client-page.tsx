@@ -166,12 +166,12 @@ export default function HomeClientPage({
     <div className="flex flex-col bg-background overflow-hidden">
       {/* Hero Section */}
       <section className="relative w-full overflow-hidden">
-        <div className="container py-20 md:py-32">
+        <div className="container py-20 md:py-24">
           <div className="grid grid-cols-12 gap-8 items-center">
             {/* Left Image */}
             <div className="col-span-3 hidden md:flex flex-col items-center justify-end h-full">
               {hikerImage && (
-                <div className="relative w-56 h-56">
+                <div className="relative w-72 h-72">
                   <Image
                     src={hikerImage.imageUrl}
                     alt={hikerImage.description}
@@ -185,17 +185,6 @@ export default function HomeClientPage({
 
             {/* Main Content */}
             <div className="col-span-12 md:col-span-6 text-center z-10">
-              <div className="flex justify-center items-center gap-4 mb-4">
-                  <div className="relative w-32 h-32">
-                      <Image
-                          src={'https://firebasestorage.googleapis.com/v0/b/amparo-aesthetics.firebasestorage.app/o/tasting-mallorca%2Fimages%2FDSC07762-Mejorado-NR.jpg?alt=media&token=f7c4d121-a97f-4103-95b1-c70702fccd5f'}
-                          alt="Tasting Mallorca experience"
-                          fill
-                          className="object-cover rounded-full"
-                          data-ai-hint="mallorca experience"
-                      />
-                  </div>
-              </div>
               <h2 className="text-lg font-semibold text-primary mb-2">{dictionary.welcome}</h2>
               <h1 className="text-5xl md:text-7xl font-extrabold tracking-tighter leading-tight">
                 {dictionary.title}
@@ -203,23 +192,12 @@ export default function HomeClientPage({
               <p className="mt-6 text-lg text-muted-foreground max-w-xl mx-auto">
                 {dictionary.subtitle}
               </p>
-               <div className="flex justify-center items-center gap-4 mt-4">
-                  <div className="relative w-32 h-32">
-                      <Image
-                          src={'https://firebasestorage.googleapis.com/v0/b/amparo-aesthetics.firebasestorage.app/o/tasting-mallorca%2Fimages%2FDSC08080-Mejorado-NR.jpg?alt=media&token=aec8e49c-de55-4828-9667-4788f8f6c306'}
-                          alt="Tasting Mallorca tour"
-                          fill
-                          className="object-cover rounded-full"
-                          data-ai-hint="mallorca tour"
-                      />
-                  </div>
-              </div>
             </div>
 
             {/* Right Image */}
             <div className="col-span-3 hidden md:flex flex-col items-center justify-start h-full">
                {travelGirlImage && (
-                <div className="relative w-56 h-56">
+                <div className="relative w-72 h-72">
                   <Image
                     src={travelGirlImage.imageUrl}
                     alt={travelGirlImage.description}
@@ -231,6 +209,33 @@ export default function HomeClientPage({
               )}
             </div>
           </div>
+          
+          {/* Bottom decorative image */}
+          <div className="hidden md:flex justify-end absolute bottom-[-5rem] right-[20%] w-full">
+            <div className="relative w-72 h-72">
+              <Image
+                src={'https://firebasestorage.googleapis.com/v0/b/amparo-aesthetics.firebasestorage.app/o/tasting-mallorca%2Fimages%2FDSC08080-Mejorado-NR.jpg?alt=media&token=aec8e49c-de55-4828-9667-4788f8f6c306'}
+                alt="Tasting Mallorca tour"
+                fill
+                className="object-cover rounded-full"
+                data-ai-hint="mallorca tour"
+              />
+            </div>
+          </div>
+          
+          {/* Top decorative image */}
+           <div className="hidden md:flex justify-start absolute top-[-2rem] left-[20%] w-full">
+             <div className="relative w-72 h-72">
+               <Image
+                 src={'https://firebasestorage.googleapis.com/v0/b/amparo-aesthetics.firebasestorage.app/o/tasting-mallorca%2Fimages%2FDSC07762-Mejorado-NR.jpg?alt=media&token=f7c4d121-a97f-4103-95b1-c70702fccd5f'}
+                 alt="Tasting Mallorca experience"
+                 fill
+                 className="object-cover rounded-full"
+                 data-ai-hint="mallorca experience"
+               />
+             </div>
+           </div>
+
         </div>
       </section>
       
