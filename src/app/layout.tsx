@@ -1,5 +1,5 @@
-import { i18n } from '@/dictionaries/config';
 import type { Metadata } from 'next';
+import { i18n } from '@/dictionaries/config';
 
 export async function generateStaticParams() {
   return i18n.locales.map((locale) => ({ lang: locale }));
@@ -12,14 +12,8 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-  params,
 }: {
   children: React.ReactNode;
-  params: { lang: string };
 }) {
-  return (
-    <html lang={params.lang}>
-      <body>{children}</body>
-    </html>
-  );
+  return children;
 }
