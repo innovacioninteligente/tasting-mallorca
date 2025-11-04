@@ -8,9 +8,9 @@ import { Menu, MapPin, Mail, Clock, Search, Briefcase } from 'lucide-react';
 const navLinks = [
   { href: '/', label: 'Home' },
   { href: '/about', label: 'About' },
-  { href: '#', label: 'Pages' },
+  { href: '/pages', label: 'Pages' },
   { href: '/tours', label: 'Tours' },
-  { href: '#', label: 'Destination' },
+  { href: '/destination', label: 'Destination' },
   { href: '/road-map', label: 'Road Map'},
   { href: '/contact', label: 'Contact' },
 ];
