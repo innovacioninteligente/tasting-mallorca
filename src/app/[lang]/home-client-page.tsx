@@ -186,7 +186,7 @@ export default function HomeClientPage({
   return (
     <div className="flex flex-col bg-background overflow-hidden">
       {/* Hero Section */}
-      <section className="relative w-full h-[80vh] flex items-center justify-center text-center">
+      <section className="relative w-full h-screen flex items-center justify-center text-center">
         <div className="container">
           <div className="max-w-2xl mx-auto">
             <h2 className="text-lg font-cursive text-primary mb-2">{dictionary.welcome}</h2>
@@ -196,6 +196,14 @@ export default function HomeClientPage({
             <p className="mt-6 text-lg text-muted-foreground max-w-xl mx-auto">
               {dictionary.subtitle}
             </p>
+            <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
+              <Button asChild size="lg" className="font-bold text-base rounded-full px-8 py-7 bg-primary hover:bg-primary/90 text-primary-foreground">
+                <Link href="/tours">Reservar Ahora</Link>
+              </Button>
+              <Button asChild size="lg" variant="outline" className="font-bold text-base rounded-full px-8 py-7">
+                <Link href="/tours">Ver Todos los Tours</Link>
+              </Button>
+            </div>
           </div>
         </div>
       </section>
@@ -636,3 +644,5 @@ export default function HomeClientPage({
     </div>
   );
 }
+
+    
