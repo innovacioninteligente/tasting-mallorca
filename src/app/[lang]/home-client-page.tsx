@@ -164,7 +164,7 @@ const immersiveCarouselImages = [
     travelGirlImage,
     heroImage3,
     heroImage4,
-].filter(Boolean) as (typeof PlaceHolderImages[0])[];
+].filter(img => img !== undefined) as (typeof PlaceHolderImages[0])[];
 
 
 export default function HomeClientPage({
