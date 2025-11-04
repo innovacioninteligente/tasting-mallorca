@@ -165,8 +165,8 @@ export default function HomeClientPage({
   return (
     <div className="flex flex-col bg-background overflow-hidden">
       {/* Hero Section */}
-      <section className="relative w-full overflow-hidden">
-        <div className="container py-20 md:py-24">
+      <section className="relative w-full overflow-hidden min-h-screen flex items-center">
+        <div className="container">
           <div className="grid grid-cols-12 gap-8 items-center">
             {/* Left Image */}
             <div className="col-span-3 hidden md:flex flex-col items-center justify-end h-full">
