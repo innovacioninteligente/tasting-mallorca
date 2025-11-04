@@ -1,0 +1,30 @@
+
+{
+    "title": "Geplante Reiseroute",
+    "stops": [
+        {
+            "title": "Abholung vom Hotel",
+            "duration": "30 Min"
+        },
+        {
+            "title": "Besuch in Valldemossa",
+            "duration": "2 Stunden"
+        },
+        {
+            "title": "Aussichtspunkt Sa Foradada",
+            "duration": "30 Min"
+        },
+        {
+            "title": "Mittagessen in einem lokalen Restaurant",
+            "duration": "1,5 Stunden"
+        },
+        {
+            "title": "Spaziergang durch Deià",
+            "duration": "1 Stunde"
+        },
+        {
+            "title": "Rückkehr zum Hotel",
+            "duration": "45 Min"
+        }
+    ]
+}

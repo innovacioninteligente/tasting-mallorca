@@ -1,9 +1,16 @@
 
-import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { Locale } from '@/dictionaries/config';
 import { getDictionary } from '@/dictionaries/get-dictionary';
 import { Metadata } from 'next';
+import { TourHeaderSection } from '@/components/tours/tour-header-section';
+import { TourGallerySection } from '@/components/tours/tour-gallery-section';
+import { TourOverviewSection } from '@/components/tours/tour-overview-section';
+import { TourHighlightsSection } from '@/components/tours/tour-highlights-section';
+import { TourIncludesSection } from '@/components/tours/tour-includes-section';
+import { TourItinerarySection } from '@/components/tours/tour-itinerary-section';
+import { TourBookingSection } from '@/components/tours/tour-booking-section';
+
 
 type TourPageProps = {
   params: {
@@ -32,34 +39,29 @@ export async function generateMetadata({ params }: TourPageProps): Promise<Metad
 export default async function TourPage({ params }: TourPageProps) {
   const dictionary = await getDictionary(params.lang);
   const tour = dictionary.tours.find((t) => t.slug === params.slug);
+  const tourDict = dictionary.tourDetail;
 
   if (!tour) {
     notFound();
   }
 
   return (
-    <div>
-      <header className="relative h-[60vh] w-full">
-        <Image
-          src={tour.image}
-          alt={tour.title}
-          fill
-          className="object-cover view-transition"
-          priority
-          style={{ '--view-transition-name': `tour-image-${tour.slug}` } as React.CSSProperties}
-        />
-        <div className="absolute inset-0 bg-black/30" />
-        <div className="absolute inset-0 flex items-center justify-center">
-            <h1 className="text-4xl md:text-6xl font-extrabold text-white text-center">
-                {tour.title}
-            </h1>
-        </div>
-      </header>
+    <div className="bg-background">
+        <TourHeaderSection tour={tour} dictionary={tourDict.header} />
+        <TourGallerySection />
 
-      <main className="container mx-auto py-16">
-        <p className="text-lg text-muted-foreground">{tour.description}</p>
-        {/* More tour details will go here in future steps */}
-      </main>
+        <main className="container mx-auto py-16 grid grid-cols-1 lg:grid-cols-3 gap-12">
+            <div className="lg:col-span-2 space-y-12">
+              <TourOverviewSection dictionary={tourDict.overview} />
+              <TourHighlightsSection dictionary={tourDict.highlights} />
+              <TourIncludesSection dictionary={tourDict.includes} />
+              <TourItinerarySection dictionary={tourDict.itinerary} />
+            </div>
+            <aside className="lg:col-span-1">
+              <TourBookingSection dictionary={tourDict.booking} price={tour.price} />
+            </aside>
+        </main>
     </div>
   );
 }
+

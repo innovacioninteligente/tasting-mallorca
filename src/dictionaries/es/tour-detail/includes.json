@@ -1,0 +1,16 @@
+
+{
+    "title": "Qué Incluye",
+    "included": [
+        "Guía local experto",
+        "Transporte en vehículo con aire acondicionado",
+        "Almuerzo completo con bebidas",
+        "Recogida y regreso al hotel",
+        "Seguro de viaje"
+    ],
+    "notIncluded": [
+        "Propinas (opcional)",
+        "Compras personales",
+        "Entradas a museos no especificados"
+    ]
+}

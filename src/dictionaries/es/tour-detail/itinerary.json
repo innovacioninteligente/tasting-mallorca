@@ -1,0 +1,30 @@
+
+{
+    "title": "Itinerario Previsto",
+    "stops": [
+        {
+            "title": "Recogida en el Hotel",
+            "duration": "30 min"
+        },
+        {
+            "title": "Visita a Valldemossa",
+            "duration": "2 horas"
+        },
+        {
+            "title": "Mirador de Sa Foradada",
+            "duration": "30 min"
+        },
+        {
+            "title": "Almuerzo en Restaurante Local",
+            "duration": "1.5 horas"
+        },
+        {
+            "title": "Paseo por Deià",
+            "duration": "1 hora"
+        },
+        {
+            "title": "Regreso al Hotel",
+            "duration": "45 min"
+        }
+    ]
+}

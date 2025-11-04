@@ -1,0 +1,16 @@
+
+{
+    "title": "Ce qui est inclus",
+    "included": [
+        "Guide local expert",
+        "Transport en véhicule climatisé",
+        "Déjeuner complet avec boissons",
+        "Prise en charge et retour à l'hôtel",
+        "Assurance voyage"
+    ],
+    "notIncluded": [
+        "Pourboires (facultatif)",
+        "Achats personnels",
+        "Frais d'entrée aux musées non spécifiés"
+    ]
+}

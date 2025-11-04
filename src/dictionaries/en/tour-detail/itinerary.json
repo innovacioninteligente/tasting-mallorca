@@ -1,0 +1,30 @@
+
+{
+    "title": "Planned Itinerary",
+    "stops": [
+        {
+            "title": "Hotel Pickup",
+            "duration": "30 min"
+        },
+        {
+            "title": "Visit to Valldemossa",
+            "duration": "2 hours"
+        },
+        {
+            "title": "Sa Foradada Viewpoint",
+            "duration": "30 min"
+        },
+        {
+            "title": "Lunch at a Local Restaurant",
+            "duration": "1.5 hours"
+        },
+        {
+            "title": "Stroll through Deià",
+            "duration": "1 hour"
+        },
+        {
+            "title": "Return to Hotel",
+            "duration": "45 min"
+        }
+    ]
+}

@@ -1,0 +1,30 @@
+
+{
+    "title": "Geplande Route",
+    "stops": [
+        {
+            "title": "Ophalen bij hotel",
+            "duration": "30 min"
+        },
+        {
+            "title": "Bezoek aan Valldemossa",
+            "duration": "2 uur"
+        },
+        {
+            "title": "Uitzichtpunt Sa Foradada",
+            "duration": "30 min"
+        },
+        {
+            "title": "Lunch in een lokaal restaurant",
+            "duration": "1,5 uur"
+        },
+        {
+            "title": "Wandeling door Deià",
+            "duration": "1 uur"
+        },
+        {
+            "title": "Terugkeer naar hotel",
+            "duration": "45 min"
+        }
+    ]
+}
