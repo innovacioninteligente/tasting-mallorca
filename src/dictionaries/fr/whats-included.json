@@ -1,25 +1,25 @@
 {
     "subtitle": "Tout Compris",
     "title": "Ce qui est inclus dans chaque visite",
-    "description": "Nous nous occupons de chaque détail pour que vous puissiez vous immerger dans une expérience majorquine authentique et sans souci.",
+    "description": "Nous nous occupons de chaque détail pour que vous puissiez vous immerger dans une expérience majorquine authentique et sans souci. Oubliez la logistique et concentrez-vous sur le plaisir du voyage.",
     "pickup": {
         "title": "Prise en charge et retour à l'hôtel",
-        "description": "Nous venons vous chercher et vous déposons près de votre hébergement. Pas de tracas, pas de stress."
+        "description": "Nous venons vous chercher et vous déposons près de votre hébergement. Pas de tracas, pas de stress. Nos véhicules confortables et climatisés assurent un début et une fin de journée agréables."
     },
     "guides": {
         "title": "Guides locaux experts",
-        "description": "Nos guides locaux passionnés vous révèlent la face cachée de Majorque avec des histoires, des anecdotes et des perspectives personnelles."
+        "description": "Nos guides locaux passionnés vous révèlent la face cachée de Majorque avec des histoires, des anecdotes et des perspectives personnelles. Ce ne sont pas seulement des guides, ils sont votre lien personnel avec la culture de l'île."
     },
     "lunch": {
         "title": "Déjeuner traditionnel majorquin",
-        "description": "Profitez d'un repas local complet dans un cadre champêtre charmant, incluant du vin régional ou de la sangria."
+        "description": "Profitez d'un repas local complet dans un cadre champêtre charmant, incluant du vin régional ou de la sangria. Nous répondons aux besoins alimentaires, garantissant que chacun profite de l'authentique cuisine majorquine."
     },
     "landscapes": {
         "title": "Paysages époustouflants",
-        "description": "Explorez les points de vue les plus pittoresques et les coins ruraux de Majorque, parfaits pour des photos inoubliables."
+        "description": "Explorez les points de vue les plus pittoresques et les coins ruraux de Majorque, parfaits pour des photos inoubliables. Nous vous emmenons hors des sentiers battus pour une perspective vraiment unique."
     },
     "sites": {
         "title": "Sites culturels et historiques",
-        "description": "Visitez des villages paisibles, d'anciens monastères et découvrez le riche patrimoine de l'île au-delà des plages."
+        "description": "Visitez des villages paisibles, d'anciens monastères et découvrez le riche patrimoine de l'île au-delà des plages. Nous fournissons le contexte et les histoires qui donnent vie à ces lieux historiques."
     }
 }

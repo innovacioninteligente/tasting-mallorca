@@ -12,27 +12,27 @@ type WhatsIncludedDictionary = Awaited<ReturnType<typeof getDictionary>>['whatsI
 const includedItemsData = [
     {
         id: 'pickup',
-        icon: <Bus className="w-7 h-7" />,
+        icon: <Bus className="w-14 h-14" />,
         image: PlaceHolderImages.find(img => img.id === 'included-pickup'),
     },
     {
         id: 'guides',
-        icon: <Users className="w-7 h-7" />,
+        icon: <Users className="w-14 h-14" />,
         image: PlaceHolderImages.find(img => img.id === 'included-guide'),
     },
     {
         id: 'lunch',
-        icon: <UtensilsCrossed className="w-7 h-7" /> ,
+        icon: <UtensilsCrossed className="w-14 h-14" /> ,
         image: PlaceHolderImages.find(img => img.id === 'included-lunch'),
     },
     {
         id: 'landscapes',
-        icon: <Mountain className="w-7 h-7" />,
+        icon: <Mountain className="w-14 h-14" />,
         image: PlaceHolderImages.find(img => img.id === 'included-landscape'),
     },
     {
         id: 'sites',
-        icon: <Landmark className="w-7 h-7" />,
+        icon: <Landmark className="w-14 h-14" />,
         image: PlaceHolderImages.find(img => img.id === 'included-sites'),
     },
 ];
@@ -49,11 +49,11 @@ export function WhatsIncludedSection({ dictionary }: { dictionary: WhatsIncluded
     });
 
     const items = [
-        { id: 'pickup', dictionary: dictionary.pickup, icon: <Bus className="w-7 h-7" /> },
-        { id: 'guides', dictionary: dictionary.guides, icon: <Users className="w-7 h-7" /> },
-        { id: 'lunch', dictionary: dictionary.lunch, icon: <UtensilsCrossed className="w-7 h-7" /> },
-        { id: 'landscapes', dictionary: dictionary.landscapes, icon: <Mountain className="w-7 h-7" /> },
-        { id: 'sites', dictionary: dictionary.sites, icon: <Landmark className="w-7 h-7" /> },
+        { id: 'pickup', dictionary: dictionary.pickup, icon: <Bus className="w-14 h-14" /> },
+        { id: 'guides', dictionary: dictionary.guides, icon: <Users className="w-14 h-14" /> },
+        { id: 'lunch', dictionary: dictionary.lunch, icon: <UtensilsCrossed className="w-14 h-14" /> },
+        { id: 'landscapes', dictionary: dictionary.landscapes, icon: <Mountain className="w-14 h-14" /> },
+        { id: 'sites', dictionary: dictionary.sites, icon: <Landmark className="w-14 h-14" /> },
     ];
     
     return (
@@ -68,10 +68,10 @@ export function WhatsIncludedSection({ dictionary }: { dictionary: WhatsIncluded
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-start">
                     {/* Left Scrolling Column */}
-                    <div className="w-full space-y-16">
+                    <div className="w-full">
                         {items.map((item) => (
-                           <div key={item.id} className="flex items-start gap-6">
-                                <div className="flex-shrink-0 w-14 h-14 bg-primary/10 text-primary rounded-xl flex items-center justify-center">
+                           <div key={item.id} className="flex flex-col items-start gap-4 mb-16">
+                                <div className="flex-shrink-0 w-20 h-20 bg-primary/10 text-primary rounded-xl flex items-center justify-center">
                                     {item.icon}
                                 </div>
                                 <div>

@@ -1,25 +1,25 @@
 {
     "subtitle": "All-Inclusive",
     "title": "What's Included in Every Tour",
-    "description": "We handle every detail so you can immerse yourself in an authentic, worry-free Mallorcan experience.",
+    "description": "We handle every detail so you can immerse yourself in an authentic, worry-free Mallorcan experience. Forget about logistics and focus on enjoying the journey.",
     "pickup": {
         "title": "Hotel Pickup & Drop-off",
-        "description": "We pick you up and drop you off near your accommodation. No hassle, no stress."
+        "description": "We pick you up and drop you off near your accommodation. No hassle, no stress. Our comfortable, air-conditioned vehicles ensure a pleasant start and end to your day."
     },
     "guides": {
         "title": "Local Expert Guides",
-        "description": "Our passionate local guides reveal the hidden side of Mallorca with stories, history, and personal insights."
+        "description": "Our passionate local guides reveal the hidden side of Mallorca with stories, history, and personal insights. They are not just guides; they are your personal connection to the island's culture."
     },
     "lunch": {
         "title": "Traditional Mallorcan Lunch",
-        "description": "Enjoy a full local meal in a charming countryside setting, including regional wine or sangria."
+        "description": "Enjoy a full local meal in a charming countryside setting, including regional wine or sangria. We cater to dietary needs, ensuring everyone enjoys a taste of authentic Mallorcan cuisine."
     },
     "landscapes": {
         "title": "Stunning Landscapes",
-        "description": "Explore Mallorca’s most scenic viewpoints and rural corners, perfect for unforgettable photos."
+        "description": "Explore Mallorca’s most scenic viewpoints and rural corners, perfect for unforgettable photos. We take you to places off the beaten path for a truly unique perspective."
     },
     "sites": {
         "title": "Cultural & Historic Sites",
-        "description": "Visit peaceful villages, ancient monasteries, and discover the island’s rich heritage beyond the beaches."
+        "description": "Visit peaceful villages, ancient monasteries, and discover the island’s rich heritage beyond the beaches. We provide context and stories that bring these historic locations to life."
     }
 }

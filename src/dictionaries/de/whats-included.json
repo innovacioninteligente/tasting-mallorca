@@ -1,25 +1,25 @@
 {
     "subtitle": "Alles Inklusive",
     "title": "Was in jeder Tour enthalten ist",
-    "description": "Wir kümmern uns um jedes Detail, damit Sie in ein authentisches, sorgenfreies mallorquinisches Erlebnis eintauchen können.",
+    "description": "Wir kümmern uns um jedes Detail, damit Sie in ein authentisches, sorgenfreies mallorquinisches Erlebnis eintauchen können. Vergessen Sie die Logistik und konzentrieren Sie sich darauf, die Reise zu genießen.",
     "pickup": {
         "title": "Abholung und Rücktransport vom Hotel",
-        "description": "Wir holen Sie in der Nähe Ihrer Unterkunft ab und bringen Sie wieder zurück. Kein Ärger, kein Stress."
+        "description": "Wir holen Sie in der Nähe Ihrer Unterkunft ab und bringen Sie wieder zurück. Kein Ärger, kein Stress. Unsere komfortablen, klimatisierten Fahrzeuge sorgen für einen angenehmen Start und Abschluss Ihres Tages."
     },
     "guides": {
         "title": "Lokale Expertenführer",
-        "description": "Unsere leidenschaftlichen lokalen Führer zeigen Ihnen die verborgene Seite Mallorcas mit Geschichten, Anekdoten und persönlichen Einblicken."
+        "description": "Unsere leidenschaftlichen lokalen Führer zeigen Ihnen die verborgene Seite Mallorcas mit Geschichten, Anekdoten und persönlichen Einblicken. Sie sind nicht nur Führer, sie sind Ihre persönliche Verbindung zur Kultur der Insel."
     },
     "lunch": {
         "title": "Traditionelles mallorquinisches Mittagessen",
-        "description": "Genießen Sie eine vollständige lokale Mahlzeit in einer charmanten ländlichen Umgebung, inklusive regionalem Wein oder Sangria."
+        "description": "Genießen Sie eine vollständige lokale Mahlzeit in einer charmanten ländlichen Umgebung, inklusive regionalem Wein oder Sangria. Wir berücksichtigen diätetische Bedürfnisse, damit jeder die authentische mallorquinische Küche genießen kann."
     },
     "landscapes": {
         "title": "Atemberaubende Landschaften",
-        "description": "Erkunden Sie die malerischsten Aussichtspunkte und ländlichen Ecken Mallorcas, perfekt für unvergessliche Fotos."
+        "description": "Erkunden Sie die malerischsten Aussichtspunkte und ländlichen Ecken Mallorcas, perfekt für unvergessliche Fotos. Wir bringen Sie abseits der ausgetretenen Pfade für eine wirklich einzigartige Perspektive."
     },
     "sites": {
         "title": "Kulturelle & Historische Stätten",
-        "description": "Besuchen Sie friedliche Dörfer, alte Klöster und entdecken Sie das reiche Erbe der Insel jenseits der Strände."
+        "description": "Besuchen Sie friedliche Dörfer, alte Klöster und entdecken Sie das reiche Erbe der Insel jenseits der Strände. Wir liefern Kontext und Geschichten, die diese historischen Orte zum Leben erwecken."
     }
 }
