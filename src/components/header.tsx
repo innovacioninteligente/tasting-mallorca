@@ -4,18 +4,25 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Menu, MapPin, Mail, Clock, Search, Sprout } from 'lucide-react';
+import { getDictionary } from '@/dictionaries/get-dictionary';
+import { Locale } from '@/dictionaries/config';
 
-const navLinks = [
-  { href: '/', label: 'Home' },
-  { href: '/about', label: 'About' },
-  { href: '/pages', label: 'Pages' },
-  { href: '/tours', label: 'Tours' },
-  { href: '/destination', label: 'Destination' },
-  { href: '/road-map', label: 'Road Map'},
-  { href: '/contact', label: 'Contact' },
-];
+type HeaderProps = {
+    dictionary: Awaited<ReturnType<typeof getDictionary>>['header'];
+    lang: Locale;
+}
 
-export function Header() {
+export function Header({ dictionary, lang }: HeaderProps) {
+  const navLinks = [
+    { href: `/${lang}/`, label: dictionary.home },
+    { href: `/${lang}/about`, label: dictionary.about },
+    { href: `/${lang}/pages`, label: dictionary.pages },
+    { href: `/${lang}/tours`, label: dictionary.tours },
+    { href: `/${lang}/destination`, label: dictionary.destination },
+    { href: `/${lang}/road-map`, label: dictionary.roadMap },
+    { href: `/${lang}/contact`, label: dictionary.contact },
+  ];
+
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       {/* Top Bar */}
@@ -41,7 +48,7 @@ export function Header() {
       {/* Main Header */}
       <div className="bg-background">
         <div className="w-full md:w-[90vw] mx-auto px-4 flex h-24 items-center justify-between">
-          <Link href="/" className="flex items-center gap-3 -ml-4" prefetch={false}>
+          <Link href={`/${lang}/`} className="flex items-center gap-3 -ml-4" prefetch={false}>
             <div className="bg-primary text-primary-foreground h-24 w-24 flex items-center justify-center rounded-br-3xl">
               <Sprout className="h-10 w-10" />
             </div>
@@ -66,7 +73,7 @@ export function Header() {
           <div className="hidden items-center gap-4 lg:flex">
              <Search className="h-5 w-5 text-foreground/80 cursor-pointer hover:text-primary" />
              <Button asChild size="lg" className="font-bold text-base rounded-full px-6 py-6 bg-primary hover:bg-primary/90 text-primary-foreground">
-                <Link href="/tours">Start Booking</Link>
+                <Link href={`/${lang}/tours`}>{dictionary.startBooking}</Link>
              </Button>
           </div>
 
@@ -80,7 +87,7 @@ export function Header() {
               </SheetTrigger>
               <SheetContent side="right" className="w-[300px]">
                 <div className="flex flex-col gap-6 p-6">
-                  <Link href="/" className="flex items-center gap-2" prefetch={false}>
+                  <Link href={`/${lang}/`} className="flex items-center gap-2" prefetch={false}>
                      <Sprout className="h-8 w-8 text-primary" />
                     <span className="font-headline text-2xl font-bold">
                       Tasting Mallorca
@@ -100,7 +107,7 @@ export function Header() {
                   </nav>
                   <div className="flex flex-col gap-4">
                      <Button asChild size="lg" className="font-bold text-lg bg-primary hover:bg-primary/90 text-primary-foreground">
-                        <Link href="/tours">Start Booking</Link>
+                        <Link href={`/${lang}/tours`}>{dictionary.startBooking}</Link>
                      </Button>
                   </div>
                 </div>

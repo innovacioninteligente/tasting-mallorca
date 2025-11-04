@@ -8,25 +8,43 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Globe, ChevronDown } from 'lucide-react';
-import { useState } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
+import { i18n, type Locale } from '@/dictionaries/config';
+import { useState, useEffect } from 'react';
 
 type Language = {
-  code: string;
+  code: Locale;
   name: string;
   flag: string;
 };
 
 const languages: Language[] = [
-  { code: 'EN', name: 'English', flag: '🇬🇧' },
-  { code: 'ES', name: 'Español', flag: '🇪🇸' },
-  { code: 'CA', name: 'Català', flag: '🇦🇩' }, // Andorra flag for Catalan
-  { code: 'FR', name: 'Français', flag: '🇫🇷' },
-  { code: 'DE', name: 'Deutsch', flag: '🇩🇪' },
-  { code: 'NL', name: 'Nederlands', flag: '🇳🇱' },
+  { code: 'en', name: 'English', flag: '🇬🇧' },
+  { code: 'es', name: 'Español', flag: '🇪🇸' },
+  { code: 'ca', name: 'Català', flag: '🇦🇩' }, // Andorra flag for Catalan
+  { code: 'fr', name: 'Français', flag: '🇫🇷' },
+  { code: 'de', name: 'Deutsch', flag: '🇩🇪' },
+  { code: 'nl', name: 'Nederlands', flag: '🇳🇱' },
 ];
 
-export function LanguageSwitcher() {
-  const [selectedLanguage, setSelectedLanguage] = useState(languages[0]);
+export function LanguageSwitcher({ currentLocale }: { currentLocale: Locale }) {
+  const pathname = usePathname();
+  const router = useRouter();
+  const [selectedLanguage, setSelectedLanguage] = useState<Language>(
+    languages.find(l => l.code === currentLocale) || languages[0]
+  );
+  
+  useEffect(() => {
+    const lang = languages.find(l => l.code === currentLocale) || languages[0];
+    setSelectedLanguage(lang);
+  }, [currentLocale]);
+
+
+  const handleLanguageChange = (lang: Language) => {
+    setSelectedLanguage(lang);
+    const newPath = pathname.replace(`/${currentLocale}`, `/${lang.code}`);
+    router.push(newPath);
+  };
 
   return (
     <DropdownMenu>
@@ -34,7 +52,7 @@ export function LanguageSwitcher() {
         <Button variant="outline" className="flex items-center gap-2 text-lg">
           <Globe className="h-5 w-5" />
           <span>{selectedLanguage.flag}</span>
-          <span>{selectedLanguage.code}</span>
+          <span>{selectedLanguage.code.toUpperCase()}</span>
           <ChevronDown className="h-5 w-5 opacity-70" />
         </Button>
       </DropdownMenuTrigger>
@@ -42,7 +60,7 @@ export function LanguageSwitcher() {
         {languages.map((lang) => (
           <DropdownMenuItem
             key={lang.code}
-            onSelect={() => setSelectedLanguage(lang)}
+            onSelect={() => handleLanguageChange(lang)}
             className="flex items-center gap-3 text-lg cursor-pointer"
           >
             <span className="w-6">{lang.flag}</span>

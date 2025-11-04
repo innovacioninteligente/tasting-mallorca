@@ -1,0 +1,162 @@
+'use client';
+
+import { CheckCircle, Clock, Construction, Rocket, Milestone } from 'lucide-react';
+
+const phases = [
+  {
+    name: 'Fase 1: Fundación y Lanzamiento (Completado)',
+    status: 'completed',
+    milestones: [
+      {
+        name: 'Diseño de UI y Experiencia de Usuario (UX)',
+        description: 'Creación de una interfaz clara, atractiva y fácil de usar, especialmente para personas mayores.',
+        status: 'completed',
+      },
+      {
+        name: 'Listado de Tours y Fichas de Detalle',
+        description: 'Implementación de la visualización de los tours disponibles con imágenes, descripciones y precios.',
+        status: 'completed',
+      },
+      {
+        name: 'Soporte Multi-idioma (Frontend)',
+        description: 'Componente para cambio de idioma y estructura preparada para la traducción de contenidos.',
+        status: 'completed',
+      },
+      {
+        name: 'Integración Inicial de Firestore',
+        description: 'Configuración de la base de datos para almacenar y gestionar la información de los tours.',
+        status: 'completed',
+      },
+    ],
+  },
+  {
+    name: 'Fase 2: Funcionalidad Core de Reservas',
+    status: 'in-progress',
+    milestones: [
+      {
+        name: 'Flujo de Reserva Simplificado',
+        description: 'Proceso de reserva en 3 pasos: Tour -> Fecha/Idioma -> Pago. Conectado a una pasarela de pago segura (Stripe/RedSys).',
+        status: 'in-progress',
+      },
+      {
+        name: 'Generación de Tickets con Código QR',
+        description: 'Creación de un ticket digital único por reserva con un QR para validación. Se enviará por email al cliente.',
+        status: 'todo',
+      },
+      {
+        name: 'Geocodificación de Puntos de Encuentro',
+        description: 'Sistema que sugiere el punto de recogida más cercano basado en la ubicación del hotel del cliente.',
+        status: 'todo',
+      },
+    ],
+  },
+  {
+    name: 'Fase 3: Herramientas de Gestión y Optimización',
+    status: 'todo',
+    milestones: [
+      {
+        name: 'Panel de Administración Seguro (Admin Dashboard)',
+        description: 'Interfaz para gestionar tours, precios, horarios, y contenidos en 6 idiomas de forma centralizada.',
+        status: 'todo',
+      },
+      {
+        name: 'Herramienta de Optimización de Rutas (IA)',
+        description: 'Función para que los guías calculen la ruta de recogida más eficiente para cada día, minimizando tiempos.',
+        status: 'todo',
+      },
+      {
+        name: 'Sistema de Validación de Tickets QR',
+        description: 'App sencilla o web-app para que los guías escaneen los QR y validen los tickets, marcándolos como usados.',
+        status: 'todo',
+      },
+    ],
+  },
+  {
+    name: 'Fase 4: Crecimiento y Experiencia de Usuario',
+    status: 'todo',
+    milestones: [
+      {
+        name: 'Sistema de Cuentas de Usuario',
+        description: 'Portal para que los clientes vean su historial de reservas, gestionen sus datos y accedan a sus tickets.',
+        status: 'todo',
+      },
+      {
+        name: 'Sistema de Reseñas y Valoraciones',
+        description: 'Permitir a los usuarios dejar valoraciones y comentarios después de un tour para generar confianza y feedback.',
+        status: 'todo',
+      },
+      {
+        name: 'Blog y Contenido SEO',
+        description: 'Desarrollo de un blog para publicar artículos sobre Mallorca y mejorar el posicionamiento en buscadores.',
+        status: 'todo',
+      },
+    ],
+  },
+];
+
+const statusIcons = {
+  completed: <CheckCircle className="h-6 w-6 text-green-500" />,
+  'in-progress': <Construction className="h-6 w-6 text-yellow-500 animate-pulse" />,
+  todo: <Clock className="h-6 w-6 text-gray-500" />,
+};
+
+const statusText = {
+  completed: 'Completado',
+  'in-progress': 'En Progreso',
+  todo: 'Pendiente',
+};
+
+export default function RoadMapPage() {
+  return (
+    <div className="bg-background text-foreground">
+      <div className="container mx-auto px-4 py-16">
+        <div className="text-center mb-16">
+          <Rocket className="mx-auto h-16 w-16 text-primary mb-4" />
+          <h1 className="text-5xl md:text-6xl font-bold font-headline">Nuestra Hoja de Ruta</h1>
+          <p className="mt-4 text-xl text-muted-foreground max-w-3xl mx-auto">
+            Creemos en la transparencia. Aquí puedes ver el progreso de nuestra plataforma y las futuras características que estamos construyendo para mejorar tu experiencia.
+          </p>
+        </div>
+
+        <div className="relative border-l-2 border-primary/20 ml-6 md:ml-0">
+          {phases.map((phase, phaseIndex) => (
+            <div key={phase.name} className="mb-12 relative">
+              <div className="absolute -left-[30px] md:left-1/2 md:-translate-x-1/2 top-1 bg-primary text-primary-foreground rounded-full h-14 w-14 flex items-center justify-center">
+                 <Milestone className="h-8 w-8" />
+              </div>
+              <div className="md:flex md:justify-center">
+                <div className={`md:w-1/2 ${phaseIndex % 2 === 0 ? 'md:pr-8 md:text-right' : 'md:pl-8 md:text-left'}`}>
+                  <div className="bg-card p-6 rounded-lg shadow-lg border border-border/50 ml-10 md:ml-0">
+                    <h2 className="text-2xl font-bold font-headline text-primary mb-2">{phase.name}</h2>
+                     <span className={`inline-flex items-center gap-2 text-sm font-medium px-3 py-1 rounded-full mb-4 ${
+                       phase.status === 'completed' ? 'bg-green-100 text-green-800' :
+                       phase.status === 'in-progress' ? 'bg-yellow-100 text-yellow-800' : 'bg-gray-100 text-gray-800'
+                     }`}>
+                       {statusIcons[phase.status as keyof typeof statusIcons]}
+                       {statusText[phase.status as keyof typeof statusText]}
+                    </span>
+                    <ul className="space-y-4">
+                      {phase.milestones.map((milestone) => (
+                        <li key={milestone.name} className="flex items-start gap-3">
+                          <div>
+                            {statusIcons[milestone.status as keyof typeof statusIcons]}
+                          </div>
+                          <div>
+                            <h3 className="font-bold text-lg">{milestone.name}</h3>
+                            <p className="text-muted-foreground text-sm">{milestone.description}</p>
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+                {/* Empty div for timeline structure on larger screens */}
+                <div className="hidden md:block md:w-1/2"></div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
