@@ -27,7 +27,7 @@ export function ImmersiveCarouselSection() {
         offset: ['start end', 'end start'],
     });
 
-    const y = useTransform(scrollYProgress, [0, 1], ['-20%', '20%']);
+    const y = useTransform(scrollYProgress, [0, 1], ['-50%', '50%']);
 
     return (
         <section ref={carouselContainerRef} className='w-full min-h-screen overflow-hidden'>

@@ -25,7 +25,7 @@ export default function HomeClientPage({
       <ImmersiveCarouselSection />
       <TopDestinationsSection />
       <WhatsIncludedSection dictionary={dictionary.whatsIncluded} />
-      <WhyChooseUsSection />
+      <WhyChooseUsSection dictionary={dictionary.whyChooseUs} />
       <FeaturedToursSection />
       <GallerySection />
       <HappyCustomersSection />

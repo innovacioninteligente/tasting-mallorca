@@ -1,0 +1,15 @@
+{
+    "title": "Pourquoi Choisir Tasting Mallorca?",
+    "subtitle": "Nous croyons en un voyage qui vous connecte à l'âme d'un lieu. Oubliez les bus bondés et les pièges à touristes. Nous proposons des expériences authentiques en petits groupes, où vous pourrez savourer la vraie Majorque, sa culture, ses habitants et ses traditions.",
+    "item1": {
+        "title": "Au-delà des Sentiers Battus",
+        "description": "Nos itinéraires sont conçus pour vous montrer les trésors cachés de l'île. Nous vous emmenons dans des vignobles familiaux, des oliveraies centenaires et des villages où le temps semble s'être arrêté."
+    },
+    "item2": {
+        "title": "Petits Groupes, Grandes Expériences",
+        "description": "Avec un maximum de 8 personnes par visite, nous garantissons une atmosphère personnelle et intime. Cela permet de vraies conversations, des arrêts spontanés et une connexion plus profonde avec votre guide et vos compagnons de voyage."
+    },
+    "bookingButton": "Commencer la Réservation",
+    "travelerCount": "18k+",
+    "travelerDescription": "Voyageur Individuel"
+}

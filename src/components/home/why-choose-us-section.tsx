@@ -4,14 +4,17 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Button } from '@/components/ui/button';
-import { Briefcase, Map, CheckCircle, ArrowUpRight } from 'lucide-react';
+import { Briefcase, Map, CheckCircle, ArrowUpRight, Users } from 'lucide-react';
+import { type getDictionary } from '@/dictionaries/get-dictionary';
 
 const aboutUsImage = PlaceHolderImages.find(img => img.id === 'about-us-philosophy');
 const testimonialAvatar1 = PlaceHolderImages.find(img => img.id === 'testimonial-avatar-1');
 const testimonialAvatar2 = PlaceHolderImages.find(img => img.id === 'testimonial-avatar-2');
 const testimonialAvatar3 = PlaceHolderImages.find(img => img.id === 'testimonial-avatar-3');
 
-export function WhyChooseUsSection() {
+type WhyChooseUsDictionary = Awaited<ReturnType<typeof getDictionary>>['whyChooseUs'];
+
+export function WhyChooseUsSection({ dictionary }: { dictionary: WhyChooseUsDictionary }) {
     return (
         <section className="py-24 bg-secondary overflow-hidden">
             <div className="container mx-auto w-full md:w-[90vw] px-4 md:px-0">
@@ -49,31 +52,31 @@ export function WhyChooseUsSection() {
 
                 {/* Right Side - Content */}
                 <div className="md:pr-8">
-                <h2 className="text-4xl md:text-5xl font-extrabold">Why Choose Us</h2>
+                <h2 className="text-4xl md:text-5xl font-extrabold">{dictionary.title}</h2>
                 <p className="mt-4 text-lg text-muted-foreground max-w-xl">
-                    Content of a page when looking at layout the point of using lorem the is Ipsum less
+                    {dictionary.subtitle}
                 </p>
 
                 <div className="mt-10 space-y-8">
                     <div className="flex items-start gap-6">
                     <div className="flex-shrink-0 w-14 h-14 bg-primary/10 text-primary rounded-xl flex items-center justify-center">
-                        <Briefcase className="w-7 h-7" />
+                        <Map className="w-7 h-7" />
                     </div>
                     <div>
-                        <h3 className="text-2xl font-bold">Personalized Trips</h3>
+                        <h3 className="text-2xl font-bold">{dictionary.item1.title}</h3>
                         <p className="mt-2 text-muted-foreground">
-                        Content of a page when looking at layout the point of using lorem the is Ipsum less normal
+                            {dictionary.item1.description}
                         </p>
                     </div>
                     </div>
                     <div className="flex items-start gap-6">
                     <div className="flex-shrink-0 w-14 h-14 bg-primary/10 text-primary rounded-xl flex items-center justify-center">
-                        <Map className="w-7 h-7" />
+                        <Users className="w-7 h-7" />
                     </div>
                     <div>
-                        <h3 className="text-2xl font-bold">Trusted Travel Guide</h3>
+                        <h3 className="text-2xl font-bold">{dictionary.item2.title}</h3>
                         <p className="mt-2 text-muted-foreground">
-                        Content of a page when looking at layout the point of using lorem the is Ipsum less normal
+                            {dictionary.item2.description}
                         </p>
                     </div>
                     </div>
@@ -81,7 +84,7 @@ export function WhyChooseUsSection() {
 
                 <div className="mt-12 flex flex-col sm:flex-row items-center gap-6">
                     <Button asChild size="lg" className="font-bold text-base rounded-full px-8 py-7 bg-primary hover:bg-primary/90 text-primary-foreground">
-                    <Link href="/tours">Start Booking</Link>
+                    <Link href="/tours">{dictionary.bookingButton}</Link>
                     </Button>
                     <div className="flex items-center">
                     <div className="flex -space-x-4">
@@ -93,8 +96,8 @@ export function WhyChooseUsSection() {
                         </div>
                     </div>
                     <div className="ml-4">
-                        <p className="font-bold text-xl">18k+</p>
-                        <p className="text-sm text-muted-foreground">Individual Traveller</p>
+                        <p className="font-bold text-xl">{dictionary.travelerCount}</p>
+                        <p className="text-sm text-muted-foreground">{dictionary.travelerDescription}</p>
                     </div>
                     </div>
                 </div>
