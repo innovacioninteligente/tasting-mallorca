@@ -275,14 +275,14 @@ export default function Home() {
 
       {/* Featured Tours Section */}
       <section className="py-24 bg-secondary">
-        <div className="container">
-          <div className="text-center mb-12">
+        <div className="container text-center mb-12">
             <p className="text-primary font-semibold text-lg">Featured Tours</p>
             <h2 className="text-4xl md:text-5xl font-extrabold mt-2">Amazing Tours</h2>
             <p className="mt-4 text-lg text-muted-foreground max-w-xl mx-auto">
               Discover our handpicked selection of the most popular and breathtaking tours.
             </p>
-          </div>
+        </div>
+        <div className="w-[90vw] mx-auto">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {featuredTours.map((tour) => (
               <div key={tour.title} className="bg-card rounded-2xl overflow-hidden group shadow-lg">
