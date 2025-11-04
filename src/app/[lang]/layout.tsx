@@ -29,8 +29,8 @@ export default async function RootLayout({
 }>) {
   const dictionary = await getDictionary(params.lang);
   return (
-    <div className={`!scroll-smooth ${poppins.variable} ${eduNswActCursive.variable}`}>
-      <div className="font-body antialiased bg-background text-foreground">
+    <html lang={params.lang} className={`${poppins.variable} ${eduNswActCursive.variable}`}>
+      <body className="font-body antialiased bg-background text-foreground">
         <div className="flex flex-col min-h-screen">
           <Header dictionary={dictionary.header} lang={params.lang} />
           <main className="flex-grow">
@@ -42,7 +42,7 @@ export default async function RootLayout({
         <div className="fixed bottom-4 right-4 z-50">
           <LanguageSwitcher currentLocale={params.lang} />
         </div>
-      </div>
-    </div>
+      </body>
+    </html>
   );
 }
