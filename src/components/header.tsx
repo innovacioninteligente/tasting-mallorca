@@ -25,28 +25,8 @@ export function Header({ dictionary, lang }: HeaderProps) {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      {/* Top Bar */}
-      <div className="bg-[var(--header-dark-background)] text-[var(--header-dark-foreground)] py-2">
-        <div className="w-full md:w-[90vw] mx-auto px-4 flex items-center justify-between text-sm">
-          <div className="flex items-center gap-6">
-            <div className="flex items-center gap-2">
-              <MapPin className="h-4 w-4" />
-              <span>6391 Elgin St. Celina, Delaware 10299</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Mail className="h-4 w-4" />
-              <span>exam126@gmail.com</span>
-            </div>
-          </div>
-          <div className="flex items-center gap-2">
-            <Clock className="h-4 w-4" />
-            <span>Opening Hour 9:00am - 10:00pm</span>
-          </div>
-        </div>
-      </div>
-
       {/* Main Header */}
-      <div className="bg-background">
+      <div className="bg-background/80 backdrop-blur-sm">
         <div className="w-full md:w-[90vw] mx-auto px-4 flex h-24 items-center justify-between">
           <Link href={`/${lang}/`} className="flex items-center gap-3 -ml-4" prefetch={false}>
             <div className="bg-primary text-primary-foreground h-24 w-24 flex items-center justify-center rounded-br-3xl">

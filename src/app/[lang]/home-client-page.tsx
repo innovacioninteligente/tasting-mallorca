@@ -186,7 +186,7 @@ export default function HomeClientPage({
             {/* Main Content */}
             <div className="col-span-12 md:col-span-6 text-center z-10">
               <div className="flex justify-center items-center gap-4 mb-4">
-                  <div className="relative w-24 h-24">
+                  <div className="relative w-32 h-32">
                       <Image
                           src={'https://firebasestorage.googleapis.com/v0/b/amparo-aesthetics.firebasestorage.app/o/tasting-mallorca%2Fimages%2FDSC07762-Mejorado-NR.jpg?alt=media&token=f7c4d121-a97f-4103-95b1-c70702fccd5f'}
                           alt="Tasting Mallorca experience"
@@ -204,7 +204,7 @@ export default function HomeClientPage({
                 {dictionary.subtitle}
               </p>
                <div className="flex justify-center items-center gap-4 mt-4">
-                  <div className="relative w-24 h-24">
+                  <div className="relative w-32 h-32">
                       <Image
                           src={'https://firebasestorage.googleapis.com/v0/b/amparo-aesthetics.firebasestorage.app/o/tasting-mallorca%2Fimages%2FDSC08080-Mejorado-NR.jpg?alt=media&token=aec8e49c-de55-4828-9667-4788f8f6c306'}
                           alt="Tasting Mallorca tour"
