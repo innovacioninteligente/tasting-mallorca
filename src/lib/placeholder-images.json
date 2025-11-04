@@ -59,6 +59,18 @@
       "description": "A woman in a pink dress and hat looking out over a stunning coastal view.",
       "imageUrl": "https://firebasestorage.googleapis.com/v0/b/amparo-aesthetics.firebasestorage.app/o/tasting-mallorca%2Fimages%2FDSC07852-Mejorado-NR.jpg?alt=media&token=998eb000-2ed9-410b-b9e1-c56aa67965b0",
       "imageHint": "travel destination"
+    },
+    {
+      "id": "hero-image-3",
+      "description": "A person smiling.",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/amparo-aesthetics.firebasestorage.app/o/tasting-mallorca%2Fimages%2FDSC08080-Mejorado-NR.jpg?alt=media&token=aec8e49c-de55-4828-9667-4788f8f6c306",
+      "imageHint": "person smiling"
+    },
+    {
+      "id": "hero-image-4",
+      "description": "A view of the sea from a cliff.",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/amparo-aesthetics.firebasestorage.app/o/tasting-mallorca%2Fimages%2FDSC08058-Mejorado-NR.jpg?alt=media&token=05b72378-1c9a-4016-8f95-2cdd1ea6b2f6",
+      "imageHint": "sea cliff"
     }
   ]
 }

@@ -18,6 +18,8 @@ const aboutUsImage = PlaceHolderImages.find(img => img.id === 'about-us-philosop
 const testimonialAvatar1 = PlaceHolderImages.find(img => img.id === 'testimonial-avatar-1');
 const testimonialAvatar2 = PlaceHolderImages.find(img => img.id === 'testimonial-avatar-2');
 const testimonialAvatar3 = PlaceHolderImages.find(img => img.id === 'testimonial-avatar-3');
+const heroImage3 = PlaceHolderImages.find(img => img.id === 'hero-image-3');
+const heroImage4 = PlaceHolderImages.find(img => img.id === 'hero-image-4');
 
 
 const destinations = [
@@ -167,18 +169,36 @@ export default function HomeClientPage({
       {/* Hero Section */}
       <section className="relative w-full overflow-hidden min-h-screen flex items-center justify-center">
         <div className="container px-4">
-          <div className="relative flex items-center justify-center">
-              {/* Left Image */}
+            <div className="relative max-w-7xl mx-auto h-[60vh] flex items-center justify-center">
+
+              {/* Top-left image */}
               {hikerImage && (
-                <div className="hidden md:block relative w-72 h-72 lg:w-80 lg:h-80 -mr-16">
-                  <Image
-                    src={hikerImage.imageUrl}
-                    alt={hikerImage.description}
-                    fill
-                    className="object-cover rounded-full"
-                    data-ai-hint={hikerImage.imageHint}
-                  />
-                </div>
+                  <div className="hidden md:block absolute top-0 left-0 transform -translate-x-1/4 -translate-y-1/4">
+                      <div className="relative w-72 h-72">
+                          <Image
+                              src={hikerImage.imageUrl}
+                              alt={hikerImage.description}
+                              fill
+                              className="object-cover rounded-full"
+                              data-ai-hint={hikerImage.imageHint}
+                          />
+                      </div>
+                  </div>
+              )}
+
+              {/* Top-right image */}
+              {heroImage4 && (
+                  <div className="hidden md:block absolute top-0 right-0 transform translate-x-1/4 -translate-y-1/4">
+                      <div className="relative w-56 h-56">
+                           <Image
+                              src={heroImage4.imageUrl}
+                              alt={heroImage4.description}
+                              fill
+                              className="object-cover rounded-full"
+                              data-ai-hint={heroImage4.imageHint}
+                          />
+                      </div>
+                  </div>
               )}
 
               {/* Center Text Content */}
@@ -192,19 +212,36 @@ export default function HomeClientPage({
                 </p>
               </div>
 
-              {/* Right Image */}
-              {travelGirlImage && (
-                <div className="hidden md:block relative w-72 h-72 lg:w-80 lg:h-80 -ml-16">
-                  <Image
-                    src={travelGirlImage.imageUrl}
-                    alt={travelGirlImage.description}
-                    fill
-                    className="object-cover rounded-full"
-                    data-ai-hint={travelGirlImage.imageHint}
-                  />
-                </div>
+              {/* Bottom-left image */}
+              {heroImage3 && (
+                  <div className="hidden md:block absolute bottom-0 left-0 transform -translate-x-1/4 translate-y-1/4">
+                      <div className="relative w-56 h-56">
+                           <Image
+                              src={heroImage3.imageUrl}
+                              alt={heroImage3.description}
+                              fill
+                              className="object-cover rounded-full"
+                              data-ai-hint={heroImage3.imageHint}
+                          />
+                      </div>
+                  </div>
               )}
-          </div>
+
+              {/* Bottom-right image */}
+              {travelGirlImage && (
+                  <div className="hidden md:block absolute bottom-0 right-0 transform translate-x-1/4 translate-y-1/4">
+                      <div className="relative w-72 h-72">
+                          <Image
+                              src={travelGirlImage.imageUrl}
+                              alt={travelGirlImage.description}
+                              fill
+                              className="object-cover rounded-full"
+                              data-ai-hint={travelGirlImage.imageHint}
+                          />
+                      </div>
+                  </div>
+              )}
+            </div>
         </div>
       </section>
       
@@ -616,3 +653,5 @@ export default function HomeClientPage({
     </div>
   );
 }
+
+    
