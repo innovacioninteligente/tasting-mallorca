@@ -13,12 +13,15 @@ import { HappyCustomersSection } from '@/components/home/happy-customers-section
 import { TourGuidesSection } from '@/components/home/tour-guides-section';
 import { TestimonialsSection } from '@/components/home/testimonials-section';
 import { BlogSection } from '@/components/home/blog-section';
+import { type Locale } from '@/dictionaries/config';
 
 
 export default function HomeClientPage({
   dictionary,
+  lang,
 }: {
   dictionary: Awaited<ReturnType<typeof getDictionary>>;
+  lang: Locale;
 }) {
   return (
     <div className="flex flex-col bg-background">
@@ -27,7 +30,7 @@ export default function HomeClientPage({
       <TopDestinationsSection />
       <WhatsIncludedSection dictionary={dictionary.whatsIncluded} />
       <WhyChooseUsSection dictionary={dictionary.whyChooseUs} />
-      <FeaturedToursSection dictionary={dictionary} />
+      <FeaturedToursSection dictionary={dictionary} lang={lang} />
       <GallerySection />
       <HappyCustomersSection />
       <TourGuidesSection />

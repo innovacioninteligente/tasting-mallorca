@@ -5,15 +5,15 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Heart, ArrowRight } from 'lucide-react';
-import { Locale } from '@/dictionaries/config';
-import { getDictionary } from '@/dictionaries/get-dictionary';
+import { type Locale } from '@/dictionaries/config';
+import { type getDictionary } from '@/dictionaries/get-dictionary';
 
 type FeaturedToursProps = {
     dictionary: Awaited<ReturnType<typeof getDictionary>>;
+    lang: Locale;
 }
 
-export function FeaturedToursSection({ dictionary }: FeaturedToursProps) {
-    const lang = dictionary.home.welcome.includes('Bienvenido') ? 'es' : 'en'; // Simple lang detection for example
+export function FeaturedToursSection({ dictionary, lang }: FeaturedToursProps) {
 
     return (
         <section className="py-24 bg-secondary">
