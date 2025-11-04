@@ -3,10 +3,15 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Badge } from '@/components/ui/badge';
-import { ArrowUpRight, Sprout } from 'lucide-react';
+import { ArrowUpRight, Sprout, Briefcase, Map, CheckCircle, CircleUser } from 'lucide-react';
 
 const hikerImage = PlaceHolderImages.find(img => img.id === 'hiker-with-backpack');
 const travelGirlImage = PlaceHolderImages.find(img => img.id === 'girl-travel-view');
+const aboutUsImage = PlaceHolderImages.find(img => img.id === 'hiker-with-backpack');
+const testimonialAvatar1 = PlaceHolderImages.find(img => img.id === 'testimonial-avatar-1');
+const testimonialAvatar2 = PlaceHolderImages.find(img => img.id === 'testimonial-avatar-2');
+const testimonialAvatar3 = PlaceHolderImages.find(img => img.id === 'testimonial-avatar-3');
+
 
 const destinations = [
   {
@@ -97,8 +102,7 @@ export default function Home() {
       
       {/* Top Destinations Section */}
       <section className="py-24 bg-background">
-        <div className="container">
-          <div className="text-center mb-12">
+        <div className="container text-center mb-12">
             <div className='flex justify-center items-center gap-2'>
               <Sprout className="w-6 h-6 text-primary" />
               <p className="text-primary font-semibold text-lg">Destinations</p>
@@ -108,30 +112,123 @@ export default function Home() {
               Content of a page when looking at layout the point of using lorem the is Ipsum less
             </p>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {destinations.map((dest) => (
-              <div key={dest.name} className="relative rounded-2xl overflow-hidden group h-[400px]">
-                <Image
-                  src={dest.image}
-                  alt={dest.name}
-                  fill
-                  className="object-cover transition-transform duration-300 group-hover:scale-105"
-                  data-ai-hint={dest.imageHint}
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
-                <div className="absolute bottom-0 left-0 p-6 text-white">
-                  <h3 className="text-2xl font-bold">{dest.name}</h3>
-                  <Badge variant="secondary" className="mt-2 bg-white/30 text-white backdrop-blur-sm border-0">
-                    {dest.listings} Listing
-                  </Badge>
+          <div className="w-[90vw] mx-auto">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+              {destinations.map((dest) => (
+                <div key={dest.name} className="relative rounded-2xl overflow-hidden group h-[400px]">
+                  <Image
+                    src={dest.image}
+                    alt={dest.name}
+                    fill
+                    className="object-cover transition-transform duration-300 group-hover:scale-105"
+                    data-ai-hint={dest.imageHint}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+                  <div className="absolute bottom-0 left-0 p-6 text-white">
+                    <h3 className="text-2xl font-bold">{dest.name}</h3>
+                    <Badge variant="secondary" className="mt-2 bg-white/30 text-white backdrop-blur-sm border-0">
+                      {dest.listings} Listing
+                    </Badge>
+                  </div>
+                  {dest.featured && (
+                     <div className="absolute top-4 right-4 h-12 w-12 bg-primary rounded-full flex items-center justify-center transform transition-transform duration-300 group-hover:rotate-45">
+                       <ArrowUpRight className="h-6 w-6 text-primary-foreground" />
+                     </div>
+                  )}
                 </div>
-                {dest.featured && (
-                   <div className="absolute top-4 right-4 h-12 w-12 bg-primary rounded-full flex items-center justify-center transform transition-transform duration-300 group-hover:rotate-45">
-                     <ArrowUpRight className="h-6 w-6 text-primary-foreground" />
-                   </div>
-                )}
+              ))}
+            </div>
+        </div>
+      </section>
+
+       {/* Why Choose Us Section */}
+       <section className="py-24 bg-background overflow-hidden">
+        <div className="container mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+            {/* Left Side - Image */}
+            <div className="relative">
+              <div className="absolute -top-4 -left-4 w-24 h-24">
+                <Image src="/doodle-arrow.svg" alt="Doodle arrow" fill className="object-contain" />
               </div>
-            ))}
+               {aboutUsImage && (
+                <div className="relative aspect-[3/4] rounded-3xl overflow-hidden shadow-2xl max-w-md mx-auto">
+                   <Image
+                     src={aboutUsImage.imageUrl}
+                     alt={aboutUsImage.description}
+                     fill
+                     className="object-cover"
+                     data-ai-hint={aboutUsImage.imageHint}
+                   />
+                   <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+                </div>
+               )}
+               <div className="absolute bottom-8 -left-12 bg-card p-4 rounded-xl shadow-lg flex items-center gap-3">
+                  <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center">
+                    <CheckCircle className="w-6 h-6 text-primary-foreground" />
+                  </div>
+                  <div>
+                    <p className="font-bold">Trusted by</p>
+                    <p className="text-sm text-muted-foreground">Trustpilot & rating</p>
+                  </div>
+               </div>
+                <div className="absolute bottom-8 -right-8 h-20 w-20 bg-primary rounded-full flex items-center justify-center transform transition-transform duration-300 hover:scale-110 cursor-pointer">
+                    <ArrowUpRight className="h-10 w-10 text-primary-foreground" />
+                </div>
+            </div>
+
+            {/* Right Side - Content */}
+            <div className="md:pr-8">
+              <h2 className="text-4xl md:text-5xl font-extrabold">Why Choose Us</h2>
+              <p className="mt-4 text-lg text-muted-foreground max-w-xl">
+                Content of a page when looking at layout the point of using lorem the is Ipsum less
+              </p>
+
+              <div className="mt-10 space-y-8">
+                <div className="flex items-start gap-6">
+                  <div className="flex-shrink-0 w-14 h-14 bg-primary/10 text-primary rounded-xl flex items-center justify-center">
+                    <Briefcase className="w-7 h-7" />
+                  </div>
+                  <div>
+                    <h3 className="text-2xl font-bold">Personalized Trips</h3>
+                    <p className="mt-2 text-muted-foreground">
+                      Content of a page when looking at layout the point of using lorem the is Ipsum less normal
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-6">
+                  <div className="flex-shrink-0 w-14 h-14 bg-primary/10 text-primary rounded-xl flex items-center justify-center">
+                    <Map className="w-7 h-7" />
+                  </div>
+                  <div>
+                    <h3 className="text-2xl font-bold">Trusted Travel Guide</h3>
+                    <p className="mt-2 text-muted-foreground">
+                      Content of a page when looking at layout the point of using lorem the is Ipsum less normal
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-12 flex flex-col sm:flex-row items-center gap-6">
+                <Button asChild size="lg" className="font-bold text-base rounded-full px-8 py-7 bg-primary hover:bg-primary/90 text-primary-foreground">
+                   <Link href="/tours">Start Booking</Link>
+                </Button>
+                <div className="flex items-center">
+                  <div className="flex -space-x-4">
+                    {testimonialAvatar1 && <Image className="inline-block h-12 w-12 rounded-full ring-2 ring-background" src={testimonialAvatar1.imageUrl} alt="User 1" data-ai-hint={testimonialAvatar1.imageHint} width={48} height={48} />}
+                    {testimonialAvatar2 && <Image className="inline-block h-12 w-12 rounded-full ring-2 ring-background" src={testimonialAvatar2.imageUrl} alt="User 2" data-ai-hint={testimonialAvatar2.imageHint} width={48} height={48}/>}
+                    {testimonialAvatar3 && <Image className="inline-block h-12 w-12 rounded-full ring-2 ring-background" src={testimonialAvatar3.imageUrl} alt="User 3" data-ai-hint={testimonialAvatar3.imageHint} width={48} height={48}/>}
+                     <div className="h-12 w-12 rounded-full bg-muted flex items-center justify-center ring-2 ring-background">
+                       <span className="text-muted-foreground font-bold text-lg">+</span>
+                     </div>
+                  </div>
+                  <div className="ml-4">
+                    <p className="font-bold text-xl">18k+</p>
+                    <p className="text-sm text-muted-foreground">Individual Traveller</p>
+                  </div>
+                </div>
+              </div>
+
+            </div>
           </div>
         </div>
       </section>
