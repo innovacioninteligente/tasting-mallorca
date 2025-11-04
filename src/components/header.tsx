@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { Menu, MapPin, Mail, Clock, Search, Sprout } from 'lucide-react';
 import { type Locale } from '@/dictionaries/config';
 import { type getDictionary } from '@/dictionaries/get-dictionary';
@@ -86,6 +86,9 @@ export function Header({ dictionary, lang }: HeaderProps) {
                 </Button>
               </SheetTrigger>
               <SheetContent side="right" className="w-[300px]">
+                <SheetHeader>
+                  <SheetTitle className="sr-only">Menu</SheetTitle>
+                </SheetHeader>
                 <div className="flex flex-col gap-6 p-6">
                   <Link href={`/${lang}/`} className="flex items-center gap-2" prefetch={false}>
                      <Sprout className="h-8 w-8 text-primary" />
