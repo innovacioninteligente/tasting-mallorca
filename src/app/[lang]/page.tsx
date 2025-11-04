@@ -9,8 +9,7 @@ import { ArrowUpRight, Sprout, Briefcase, Map, CheckCircle, Heart, Star, MapPin,
 import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel';
 import Autoplay from "embla-carousel-autoplay";
 import { useRef } from 'react';
-import { getDictionary } from '@/dictionaries/get-dictionary';
-import { Locale } from '@/dictionaries/config';
+import { type getDictionary } from '@/dictionaries/get-dictionary';
 
 
 const hikerImage = PlaceHolderImages.find(img => img.id === 'hiker-with-backpack');
@@ -157,11 +156,12 @@ const testimonials = [
     },
   ];
 
-function Home({
-    dictionary
-} : {
-    dictionary: Awaited<ReturnType<typeof getDictionary>>['home']
+export default function Page({
+  params,
+}: {
+  params: { dictionary: Awaited<ReturnType<typeof getDictionary>>['home'] };
 }) {
+  const { dictionary } = params;
   const autoplayPlugin = useRef(Autoplay({ delay: 5000, stopOnInteraction: true }));
   return (
     <div className="flex flex-col bg-background overflow-hidden">
@@ -626,12 +626,6 @@ function Home({
             </div>
         </div>
       </section>
-
     </div>
   );
-}
-
-export default async function Page({ params: { lang } }: { params: { lang: Locale } }) {
-    const dictionary = await getDictionary(lang);
-    return <Home dictionary={dictionary.home} />
 }
