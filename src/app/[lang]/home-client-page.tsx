@@ -201,7 +201,7 @@ export default function HomeClientPage({
       </section>
 
       {/* Immersive Carousel Section */}
-      <section ref={carouselContainerRef} className='w-full h-[70vh] overflow-hidden'>
+      <section ref={carouselContainerRef} className='w-full min-h-screen overflow-hidden'>
         <motion.div style={{ y }} className="w-full h-full">
             <Carousel
                 plugins={[immersiveAutoplayPlugin.current]}
