@@ -12,6 +12,7 @@ export default {
       fontFamily: {
         body: ['var(--font-poppins)', 'sans-serif'],
         headline: ['var(--font-poppins)', 'sans-serif'],
+        cursive: ['"Edu NSW ACT Cursive"', 'cursive'],
         code: ['monospace'],
       },
       colors: {

@@ -181,15 +181,15 @@ export default function HomeClientPage({
     offset: ['start end', 'end start'],
   });
 
-  const y = useTransform(scrollYProgress, [0, 1], ['-40%', '40%']);
+  const y = useTransform(scrollYProgress, [0, 1], ['-50%', '50%']);
 
   return (
     <div className="flex flex-col bg-background overflow-hidden">
       {/* Hero Section */}
       <section className="relative w-full h-[80vh] flex items-center justify-center text-center">
-        <div className="container px-4">
+        <div className="container">
           <div className="max-w-2xl mx-auto">
-            <h2 className="text-lg font-semibold text-primary mb-2">{dictionary.welcome}</h2>
+            <h2 className="text-lg font-cursive text-primary mb-2">{dictionary.welcome}</h2>
             <h1 className="text-5xl md:text-7xl font-extrabold tracking-tighter leading-tight">
               {dictionary.title}
             </h1>
@@ -233,7 +233,7 @@ export default function HomeClientPage({
         <div className="container text-center mb-12">
             <div className='flex justify-center items-center gap-2'>
               <Sprout className="w-6 h-6 text-primary" />
-              <p className="text-primary font-semibold text-lg">Destinations</p>
+              <p className="text-primary font-cursive text-lg">Destinations</p>
             </div>
             <h2 className="text-4xl md:text-5xl font-extrabold mt-2">Top Destinations</h2>
             <p className="mt-4 text-lg text-muted-foreground max-w-xl mx-auto">
@@ -362,7 +362,7 @@ export default function HomeClientPage({
       {/* Featured Tours Section */}
       <section className="py-24 bg-secondary">
         <div className="container text-center mb-12">
-            <p className="text-primary font-semibold text-lg">Featured Tours</p>
+            <p className="text-primary font-cursive text-lg">Featured Tours</p>
             <h2 className="text-4xl md:text-5xl font-extrabold mt-2">Amazing Tours</h2>
             <p className="mt-4 text-lg text-muted-foreground max-w-xl mx-auto">
               Discover our handpicked selection of the most popular and breathtaking tours.
@@ -412,7 +412,7 @@ export default function HomeClientPage({
         <div className="container text-center mb-12">
             <div className='flex justify-center items-center gap-2'>
               <Camera className="w-6 h-6 text-primary" />
-              <p className="text-primary font-semibold text-lg">Our beautiful moment</p>
+              <p className="text-primary font-cursive text-lg">Our beautiful moment</p>
             </div>
             <h2 className="text-4xl md:text-5xl font-extrabold mt-2">Recent Gallery</h2>
             <p className="mt-4 text-lg text-muted-foreground max-w-xl mx-auto">
@@ -490,7 +490,7 @@ export default function HomeClientPage({
       {/* Tour Guides Section */}
       <section className="py-24 bg-secondary">
         <div className="container text-center mb-16">
-          <p className="text-primary font-semibold text-lg">Meet With Our Guide</p>
+          <p className="text-primary font-cursive text-lg">Meet With Our Guide</p>
           <h2 className="text-4xl md:text-5xl font-extrabold mt-2">Tour Guide</h2>
           <p className="mt-4 text-lg text-muted-foreground max-w-xl mx-auto">
             Content of a page when looking at layout the point of using lorem the is Ipsum less
@@ -596,7 +596,7 @@ export default function HomeClientPage({
         <div className="container text-center mb-12">
             <div className='flex justify-center items-center gap-2'>
               <Sprout className="w-6 h-6 text-primary" />
-              <p className="text-primary font-semibold text-lg">Blog Post</p>
+              <p className="text-primary font-cursive text-lg">Blog Post</p>
             </div>
             <h2 className="text-4xl md:text-5xl font-extrabold mt-2">Our Latest Blog Post</h2>
             <p className="mt-4 text-lg text-muted-foreground max-w-xl mx-auto">
