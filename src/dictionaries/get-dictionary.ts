@@ -14,35 +14,27 @@ const dictionaries = {
   },
   ca: {
     home: () => import('./ca/home.json').then((module) => module.default),
-    header: () => import('./en/header.json').then((module) => module.default), // Fallback for now
+    header: () => import('./ca/header.json').then((module) => module.default),
   },
   fr: {
     home: () => import('./fr/home.json').then((module) => module.default),
-    header: () => import('./en/header.json').then((module) => module.default), // Fallback for now
+    header: () => import('./fr/header.json').then((module) => module.default),
   },
   de: {
     home: () => import('./de/home.json').then((module) => module.default),
-    header: () => import('./en/header.json').then((module) => module.default), // Fallback for now
+    header: () => import('./de/header.json').then((module) => module.default),
   },
   nl: {
     home: () => import('./nl/home.json').then((module) => module.default),
-    header: () => import('./en/header.json').then((module) => module.default), // Fallback for now
+    header: () => import('./nl/header.json').then((module) => module.default),
   },
 };
 
-type Dictionaries = typeof dictionaries;
-type DictionarySections = keyof Dictionaries['en'];
-
-// A helper function to get the correct dictionary based on the locale
-const getSection = async <T extends DictionarySections>(locale: Locale, section: T): Promise<Awaited<ReturnType<Dictionaries[Locale][T]>>> => {
-    const langDict = dictionaries[locale] ?? dictionaries.en;
-    const modLoader = langDict[section] ?? dictionaries.en[section];
-    return await modLoader();
-}
-
 export const getDictionary = async (locale: Locale) => {
+    const lang = dictionaries[locale] ?? dictionaries.en;
+    
     return {
-        home: await getSection(locale, 'home'),
-        header: await getSection(locale, 'header'),
+        home: await lang.home(),
+        header: await lang.header(),
     }
 }

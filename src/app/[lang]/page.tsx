@@ -4,5 +4,5 @@ import HomeClientPage from '@/app/[lang]/home-client-page';
 
 export default async function Page({ params }: { params: { lang: Locale } }) {
   const dictionary = await getDictionary(params.lang);
-  return <HomeClientPage dictionary={dictionary.home} />;
+  return <HomeClientPage dictionary={dictionary} />;
 }
