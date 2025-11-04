@@ -34,8 +34,8 @@ export function FeaturedToursSection({ dictionary, lang }: FeaturedToursProps) {
                             src={tour.image}
                             alt={tour.title}
                             fill
-                            className="object-cover transition-transform duration-300 group-hover:scale-105"
-                            style={{ viewTransitionName: `tour-image-${tour.slug}` }}
+                            className="object-cover transition-transform duration-300 group-hover:scale-105 view-transition"
+                            style={{ '--view-transition-name': `tour-image-${tour.slug}` } as React.CSSProperties}
                         />
                         <Button size="icon" variant="secondary" className="absolute top-4 right-4 rounded-full h-9 w-9 bg-white/20 backdrop-blur-sm border-0 text-white hover:bg-white/30">
                             <Heart className="h-5 w-5" />

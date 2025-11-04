@@ -44,9 +44,9 @@ export default async function TourPage({ params }: TourPageProps) {
           src={tour.image}
           alt={tour.title}
           fill
-          className="object-cover"
+          className="object-cover view-transition"
           priority
-          style={{ viewTransitionName: `tour-image-${tour.slug}` }}
+          style={{ '--view-transition-name': `tour-image-${tour.slug}` } as React.CSSProperties}
         />
         <div className="absolute inset-0 bg-black/30" />
         <div className="absolute inset-0 flex items-center justify-center">

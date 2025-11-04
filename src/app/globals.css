@@ -100,3 +100,9 @@
     @apply font-headline;
   }
 }
+
+@layer utilities {
+  .view-transition {
+    view-transition-name: var(--view-transition-name);
+  }
+}
