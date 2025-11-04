@@ -71,6 +71,12 @@
       "description": "A view of the sea from a cliff.",
       "imageUrl": "https://firebasestorage.googleapis.com/v0/b/amparo-aesthetics.firebasestorage.app/o/tasting-mallorca%2Fimages%2FDSC08058-Mejorado-NR.jpg?alt=media&token=05b72378-1c9a-4016-8f95-2cdd1ea6b2f6",
       "imageHint": "sea cliff"
+    },
+    {
+      "id": "whats-included-picnic",
+      "description": "A delicious Mallorcan picnic spread out on a blanket in the countryside.",
+      "imageUrl": "https://images.unsplash.com/photo-1594998893922-26511b8b2671?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxtYWxsb3JjYSUyMHBpY25pY3xlbnwwfHx8fDE3NjIyMDExOTV8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "mallorca picnic"
     }
   ]
 }
