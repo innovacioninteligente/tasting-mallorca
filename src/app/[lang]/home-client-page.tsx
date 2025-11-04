@@ -20,7 +20,7 @@ export default function HomeClientPage({
   dictionary: Awaited<ReturnType<typeof getDictionary>>;
 }) {
   return (
-    <div className="flex flex-col bg-background overflow-hidden">
+    <div className="flex flex-col bg-background">
       <HeroSection dictionary={dictionary.home} />
       <ImmersiveCarouselSection />
       <TopDestinationsSection />

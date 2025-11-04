@@ -57,7 +57,7 @@ export function WhatsIncludedSection({ dictionary }: { dictionary: WhatsIncluded
     ];
     
     return (
-        <section ref={sectionRef} className="py-24 bg-background overflow-hidden">
+        <section ref={sectionRef} className="py-24 bg-background">
              <div className="container mx-auto w-full md:w-[90vw] px-4 md:px-0">
                 <div className="max-w-xl mb-16">
                     <p className="text-primary font-cursive font-bold text-lg">{dictionary.subtitle}</p>
@@ -85,7 +85,7 @@ export function WhatsIncludedSection({ dictionary }: { dictionary: WhatsIncluded
                     </div>
 
                     {/* Right Sticky Column */}
-                    <div className="w-full h-[70vh] sticky top-24 hidden md:flex items-center">
+                    <div className="w-full h-[calc(100vh-6rem)] sticky top-24 hidden md:flex items-center">
                         <div className="relative w-full h-full rounded-3xl overflow-hidden shadow-2xl">
                              {includedItemsData.map((item, index) => (
                                 item.image && (
