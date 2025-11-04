@@ -10,6 +10,7 @@ import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carouse
 import Autoplay from "embla-carousel-autoplay";
 import { useRef } from 'react';
 import { type getDictionary } from '@/dictionaries/get-dictionary';
+import { motion, useScroll, useTransform } from 'framer-motion';
 
 
 const hikerImage = PlaceHolderImages.find(img => img.id === 'hiker-with-backpack');
@@ -173,6 +174,15 @@ export default function HomeClientPage({
 }) {
   const autoplayPlugin = useRef(Autoplay({ delay: 5000, stopOnInteraction: true }));
   const immersiveAutoplayPlugin = useRef(Autoplay({ delay: 3000, stopOnInteraction: false }))
+
+  const carouselContainerRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: carouselContainerRef,
+    offset: ['start end', 'end start'],
+  });
+
+  const y = useTransform(scrollYProgress, [0, 1], ['-20%', '20%']);
+
   return (
     <div className="flex flex-col bg-background overflow-hidden">
       {/* Hero Section */}
@@ -191,31 +201,33 @@ export default function HomeClientPage({
       </section>
 
       {/* Immersive Carousel Section */}
-      <section className='w-full'>
-        <Carousel
-            plugins={[immersiveAutoplayPlugin.current]}
-            className="w-full"
-            opts={{
-                loop: true,
-            }}
-        >
-            <CarouselContent>
-                {immersiveCarouselImages.map((img) => (
-                    <CarouselItem key={img.id}>
-                        <div className="w-full h-[60vh] relative">
-                            <Image
-                                src={img.imageUrl}
-                                alt={img.description}
-                                fill
-                                className="object-cover"
-                                data-ai-hint={img.imageHint}
-                            />
-                             <div className="absolute inset-0 bg-black/20"></div>
-                        </div>
-                    </CarouselItem>
-                ))}
-            </CarouselContent>
-        </Carousel>
+      <section ref={carouselContainerRef} className='w-full h-[70vh] overflow-hidden'>
+        <motion.div style={{ y }} className="w-full h-full">
+            <Carousel
+                plugins={[immersiveAutoplayPlugin.current]}
+                className="w-full h-full"
+                opts={{
+                    loop: true,
+                }}
+            >
+                <CarouselContent className='h-full'>
+                    {immersiveCarouselImages.map((img) => (
+                        <CarouselItem key={img.id} className='h-full'>
+                            <div className="w-full h-full relative">
+                                <Image
+                                    src={img.imageUrl}
+                                    alt={img.description}
+                                    fill
+                                    className="object-cover"
+                                    data-ai-hint={img.imageHint}
+                                />
+                                <div className="absolute inset-0 bg-black/20"></div>
+                            </div>
+                        </CarouselItem>
+                    ))}
+                </CarouselContent>
+            </Carousel>
+        </motion.div>
       </section>
       
       {/* Top Destinations Section */}
