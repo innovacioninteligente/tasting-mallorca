@@ -162,9 +162,9 @@ const testimonials = [
 const immersiveCarouselImages = [
     hikerImage,
     travelGirlImage,
+    testimonialAvatar2,
     heroImage3,
-    heroImage4,
-].filter(img => img !== undefined) as (typeof PlaceHolderImages[0])[];
+].filter(Boolean) as (typeof PlaceHolderImages[0])[];
 
 
 export default function HomeClientPage({
