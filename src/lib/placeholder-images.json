@@ -27,7 +27,7 @@
     {
       "id": "testimonial-avatar-1",
       "description": "Avatar for a testimonial.",
-      "imageUrl": "https://images.unsplash.com/photo-1535295972055-1c762f4483e5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxoYXBweSUyMHBlcnNvbnxlbnwwfHx8fDE3NjIxNjI4OTN8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/amparo-aesthetics.firebasestorage.app/o/tasting-mallorca%2Fimages%2FDSC08080-Mejorado-NR.jpg?alt=media&token=aec8e49c-de55-4828-9667-4788f8f6c306",
       "imageHint": "happy person"
     },
     {
@@ -51,13 +51,13 @@
     {
       "id": "hiker-with-backpack",
       "description": "A hiker with a backpack in a mountainous area.",
-      "imageUrl": "https://images.unsplash.com/photo-1559506026-99862c49e223?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxoaWtlciUyMGJhY2twYWNrfGVufDB8fHx8MTc2MjIwMjExNnww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/amparo-aesthetics.firebasestorage.app/o/tasting-mallorca%2Fimages%2FDSC07640-Mejorado-NR.jpg?alt=media&token=6b0e1717-9cdf-4d7e-ad36-533f80258433",
       "imageHint": "hiker backpack"
     },
     {
       "id": "girl-travel-view",
       "description": "A woman in a pink dress and hat looking out over a stunning coastal view.",
-      "imageUrl": "https://images.unsplash.com/photo-1529260830199-42c24126f198?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHx0cmF2ZWwlMjBkZXN0aW5hdGlvbnxlbnwwfHx8fDE3NjIxNDczMzl8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://firebasestorage.googleapis.com/v0/b/amparo-aesthetics.firebasestorage.app/o/tasting-mallorca%2Fimages%2FDSC07852-Mejorado-NR.jpg?alt=media&token=998eb000-2ed9-410b-b9e1-c56aa67965b0",
       "imageHint": "travel destination"
     }
   ]

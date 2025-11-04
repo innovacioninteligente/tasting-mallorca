@@ -14,7 +14,7 @@ import { type getDictionary } from '@/dictionaries/get-dictionary';
 
 const hikerImage = PlaceHolderImages.find(img => img.id === 'hiker-with-backpack');
 const travelGirlImage = PlaceHolderImages.find(img => img.id === 'girl-travel-view');
-const aboutUsImage = PlaceHolderImages.find(img => img.id === 'hiker-with-backpack');
+const aboutUsImage = PlaceHolderImages.find(img => img.id === 'about-us-philosophy');
 const testimonialAvatar1 = PlaceHolderImages.find(img => img.id === 'testimonial-avatar-1');
 const testimonialAvatar2 = PlaceHolderImages.find(img => img.id === 'testimonial-avatar-2');
 const testimonialAvatar3 = PlaceHolderImages.find(img => img.id === 'testimonial-avatar-3');
@@ -271,7 +271,7 @@ export default function HomeClientPage({
                {aboutUsImage && (
                 <div className="relative aspect-[3/4] rounded-3xl overflow-hidden shadow-2xl max-w-md mx-auto">
                    <Image
-                     src={aboutUsImage.imageUrl}
+                     src={"https://firebasestorage.googleapis.com/v0/b/amparo-aesthetics.firebasestorage.app/o/tasting-mallorca%2Fimages%2FDSC07762-Mejorado-NR.jpg?alt=media&token=f7c4d121-a97f-4103-95b1-c70702fccd5f"}
                      alt={aboutUsImage.description}
                      fill
                      className="object-cover"
@@ -332,7 +332,7 @@ export default function HomeClientPage({
                 </Button>
                 <div className="flex items-center">
                   <div className="flex -space-x-4">
-                    {testimonialAvatar1 && <Image className="inline-block h-12 w-12 rounded-full ring-2 ring-background" src={testimonialAvatar1.imageUrl} alt="User 1" data-ai-hint={testimonialAvatar1.imageHint} width={48} height={48} />}
+                    {testimonialAvatar1 && <Image className="inline-block h-12 w-12 rounded-full ring-2 ring-background object-cover" src={testimonialAvatar1.imageUrl} alt="User 1" data-ai-hint={testimonialAvatar1.imageHint} width={48} height={48} />}
                     {testimonialAvatar2 && <Image className="inline-block h-12 w-12 rounded-full ring-2 ring-background" src={testimonialAvatar2.imageUrl} alt="User 2" data-ai-hint={testimonialAvatar2.imageHint} width={48} height={48}/>}
                     {testimonialAvatar3 && <Image className="inline-block h-12 w-12 rounded-full ring-2 ring-background" src={testimonialAvatar3.imageUrl} alt="User 3" data-ai-hint={testimonialAvatar3.imageHint} width={48} height={48}/>}
                      <div className="h-12 w-12 rounded-full bg-muted flex items-center justify-center ring-2 ring-background">
