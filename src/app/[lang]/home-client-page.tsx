@@ -166,53 +166,19 @@ export default function HomeClientPage({
     <div className="flex flex-col bg-background overflow-hidden">
       {/* Hero Section */}
       <section className="relative w-full overflow-hidden min-h-screen flex items-center">
-        <div className="container">
-          <div className="grid grid-cols-12 gap-8 items-center">
-            {/* Left Image */}
-            <div className="col-span-3 hidden md:flex flex-col items-center justify-end h-full">
-              {hikerImage && (
-                <div className="relative w-72 h-72">
-                  <Image
-                    src={hikerImage.imageUrl}
-                    alt={hikerImage.description}
-                    fill
-                    className="object-cover rounded-full"
-                    data-ai-hint={hikerImage.imageHint}
-                  />
-                </div>
-              )}
+        <div className="container relative h-full">
+           {/* Decorative Images */}
+            <div className="hidden md:block absolute top-[-2rem] left-[10%] w-72 h-72">
+              <Image
+                src={'https://firebasestorage.googleapis.com/v0/b/amparo-aesthetics.firebasestorage.app/o/tasting-mallorca%2Fimages%2FDSC07762-Mejorado-NR.jpg?alt=media&token=f7c4d121-a97f-4103-95b1-c70702fccd5f'}
+                alt="Tasting Mallorca experience"
+                fill
+                className="object-cover rounded-full"
+                data-ai-hint="mallorca experience"
+              />
             </div>
 
-            {/* Main Content */}
-            <div className="col-span-12 md:col-span-6 text-center z-10">
-              <h2 className="text-lg font-semibold text-primary mb-2">{dictionary.welcome}</h2>
-              <h1 className="text-5xl md:text-7xl font-extrabold tracking-tighter leading-tight">
-                {dictionary.title}
-              </h1>
-              <p className="mt-6 text-lg text-muted-foreground max-w-xl mx-auto">
-                {dictionary.subtitle}
-              </p>
-            </div>
-
-            {/* Right Image */}
-            <div className="col-span-3 hidden md:flex flex-col items-center justify-start h-full">
-               {travelGirlImage && (
-                <div className="relative w-72 h-72">
-                  <Image
-                    src={travelGirlImage.imageUrl}
-                    alt={travelGirlImage.description}
-                    fill
-                    className="object-cover rounded-full"
-                    data-ai-hint={travelGirlImage.imageHint}
-                  />
-                </div>
-              )}
-            </div>
-          </div>
-          
-          {/* Bottom decorative image */}
-          <div className="hidden md:flex justify-end absolute bottom-[-5rem] right-[20%] w-full">
-            <div className="relative w-72 h-72">
+             <div className="hidden md:block absolute bottom-[-5rem] right-[10%] w-72 h-72">
               <Image
                 src={'https://firebasestorage.googleapis.com/v0/b/amparo-aesthetics.firebasestorage.app/o/tasting-mallorca%2Fimages%2FDSC08080-Mejorado-NR.jpg?alt=media&token=aec8e49c-de55-4828-9667-4788f8f6c306'}
                 alt="Tasting Mallorca tour"
@@ -221,21 +187,16 @@ export default function HomeClientPage({
                 data-ai-hint="mallorca tour"
               />
             </div>
-          </div>
           
-          {/* Top decorative image */}
-           <div className="hidden md:flex justify-start absolute top-[-2rem] left-[20%] w-full">
-             <div className="relative w-72 h-72">
-               <Image
-                 src={'https://firebasestorage.googleapis.com/v0/b/amparo-aesthetics.firebasestorage.app/o/tasting-mallorca%2Fimages%2FDSC07762-Mejorado-NR.jpg?alt=media&token=f7c4d121-a97f-4103-95b1-c70702fccd5f'}
-                 alt="Tasting Mallorca experience"
-                 fill
-                 className="object-cover rounded-full"
-                 data-ai-hint="mallorca experience"
-               />
-             </div>
-           </div>
-
+          <div className="relative z-10 flex flex-col items-center justify-center h-full text-center">
+              <h2 className="text-lg font-semibold text-primary mb-2">{dictionary.welcome}</h2>
+              <h1 className="text-5xl md:text-7xl font-extrabold tracking-tighter leading-tight">
+                {dictionary.title}
+              </h1>
+              <p className="mt-6 text-lg text-muted-foreground max-w-xl mx-auto">
+                {dictionary.subtitle}
+              </p>
+          </div>
         </div>
       </section>
       
@@ -290,7 +251,7 @@ export default function HomeClientPage({
                {aboutUsImage && (
                 <div className="relative aspect-[3/4] rounded-3xl overflow-hidden shadow-2xl max-w-md mx-auto">
                    <Image
-                     src={"https://firebasestorage.googleapis.com/v0/b/amparo-aesthetics.firebasestorage.app/o/tasting-mallorca%2Fimages%2FDSC07762-Mejorado-NR.jpg?alt=media&token=f7c4d121-a97f-4103-95b1-c70702fccd5f"}
+                     src={aboutUsImage.imageUrl}
                      alt={aboutUsImage.description}
                      fill
                      className="object-cover"
