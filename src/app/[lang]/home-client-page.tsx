@@ -168,12 +168,8 @@ export default function HomeClientPage({
       <section className="relative w-full overflow-hidden">
         <div className="container py-20 md:py-32">
           <div className="grid grid-cols-12 gap-8 items-center">
-            {/* Left Image & Doodles */}
+            {/* Left Image */}
             <div className="col-span-3 hidden md:flex flex-col items-center justify-end h-full">
-              {/* Airplane Doodle */}
-              <div className="w-48 h-24 relative self-start -mb-8 ml-4">
-                  <Image src="/airplane-doodle.svg" alt="Airplane doodle" fill className="object-contain"/>
-              </div>
               {hikerImage && (
                 <div className="relative w-56 h-56">
                   <Image
@@ -189,6 +185,17 @@ export default function HomeClientPage({
 
             {/* Main Content */}
             <div className="col-span-12 md:col-span-6 text-center z-10">
+              <div className="flex justify-center items-center gap-4 mb-4">
+                  <div className="relative w-24 h-24">
+                      <Image
+                          src={'https://firebasestorage.googleapis.com/v0/b/amparo-aesthetics.firebasestorage.app/o/tasting-mallorca%2Fimages%2FDSC07762-Mejorado-NR.jpg?alt=media&token=f7c4d121-a97f-4103-95b1-c70702fccd5f'}
+                          alt="Tasting Mallorca experience"
+                          fill
+                          className="object-cover rounded-full"
+                          data-ai-hint="mallorca experience"
+                      />
+                  </div>
+              </div>
               <h2 className="text-lg font-semibold text-primary mb-2">{dictionary.welcome}</h2>
               <h1 className="text-5xl md:text-7xl font-extrabold tracking-tighter leading-tight">
                 {dictionary.title}
@@ -196,9 +203,20 @@ export default function HomeClientPage({
               <p className="mt-6 text-lg text-muted-foreground max-w-xl mx-auto">
                 {dictionary.subtitle}
               </p>
+               <div className="flex justify-center items-center gap-4 mt-4">
+                  <div className="relative w-24 h-24">
+                      <Image
+                          src={'https://firebasestorage.googleapis.com/v0/b/amparo-aesthetics.firebasestorage.app/o/tasting-mallorca%2Fimages%2FDSC08080-Mejorado-NR.jpg?alt=media&token=aec8e49c-de55-4828-9667-4788f8f6c306'}
+                          alt="Tasting Mallorca tour"
+                          fill
+                          className="object-cover rounded-full"
+                          data-ai-hint="mallorca tour"
+                      />
+                  </div>
+              </div>
             </div>
 
-            {/* Right Image & Doodles */}
+            {/* Right Image */}
             <div className="col-span-3 hidden md:flex flex-col items-center justify-start h-full">
                {travelGirlImage && (
                 <div className="relative w-56 h-56">
@@ -211,10 +229,6 @@ export default function HomeClientPage({
                   />
                 </div>
               )}
-              {/* Balloon Doodle */}
-              <div className="w-32 h-48 relative self-end -mt-8 mr-4">
-                <Image src="/balloon-doodle.svg" alt="Hot air balloon doodle" fill className="object-contain" />
-              </div>
             </div>
           </div>
         </div>
