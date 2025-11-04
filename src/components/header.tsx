@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Menu, MapPin, Mail, Clock, Search, Briefcase } from 'lucide-react';
+import { Menu, MapPin, Mail, Clock, Search, Sprout } from 'lucide-react';
 
 const navLinks = [
   { href: '/', label: 'Home' },
@@ -43,10 +43,10 @@ export function Header() {
         <div className="container flex h-24 items-center justify-between">
           <Link href="/" className="flex items-center gap-3 -ml-4" prefetch={false}>
             <div className="bg-primary text-primary-foreground h-24 w-24 flex items-center justify-center rounded-br-3xl">
-              <Briefcase className="h-10 w-10" />
+              <Sprout className="h-10 w-10" />
             </div>
             <span className="font-headline text-3xl font-bold -ml-2">
-              TravHub
+              Tasting Mallorca
             </span>
           </Link>
 
@@ -81,9 +81,9 @@ export function Header() {
               <SheetContent side="right" className="w-[300px]">
                 <div className="flex flex-col gap-6 p-6">
                   <Link href="/" className="flex items-center gap-2" prefetch={false}>
-                     <Briefcase className="h-8 w-8 text-primary" />
+                     <Sprout className="h-8 w-8 text-primary" />
                     <span className="font-headline text-2xl font-bold">
-                      TravHub
+                      Tasting Mallorca
                     </span>
                   </Link>
                   <nav className="flex flex-col gap-4 text-lg">
