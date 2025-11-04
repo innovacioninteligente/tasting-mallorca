@@ -1,0 +1,25 @@
+{
+    "subtitle": "Alles Inklusive",
+    "title": "Was in jeder Tour enthalten ist",
+    "description": "Wir kümmern uns um jedes Detail, damit Sie in ein authentisches, sorgenfreies mallorquinisches Erlebnis eintauchen können.",
+    "pickup": {
+        "title": "Abholung und Rücktransport vom Hotel",
+        "description": "Wir holen Sie in der Nähe Ihrer Unterkunft ab und bringen Sie wieder zurück. Kein Ärger, kein Stress."
+    },
+    "guides": {
+        "title": "Lokale Expertenführer",
+        "description": "Unsere leidenschaftlichen lokalen Führer zeigen Ihnen die verborgene Seite Mallorcas mit Geschichten, Anekdoten und persönlichen Einblicken."
+    },
+    "lunch": {
+        "title": "Traditionelles mallorquinisches Mittagessen",
+        "description": "Genießen Sie eine vollständige lokale Mahlzeit in einer charmanten ländlichen Umgebung, inklusive regionalem Wein oder Sangria."
+    },
+    "landscapes": {
+        "title": "Atemberaubende Landschaften",
+        "description": "Erkunden Sie die malerischsten Aussichtspunkte und ländlichen Ecken Mallorcas, perfekt für unvergessliche Fotos."
+    },
+    "sites": {
+        "title": "Kulturelle & Historische Stätten",
+        "description": "Besuchen Sie friedliche Dörfer, alte Klöster und entdecken Sie das reiche Erbe der Insel jenseits der Strände."
+    }
+}

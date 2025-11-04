@@ -24,7 +24,7 @@ export default function HomeClientPage({
       <HeroSection dictionary={dictionary.home} />
       <ImmersiveCarouselSection />
       <TopDestinationsSection />
-      <WhatsIncludedSection />
+      <WhatsIncludedSection dictionary={dictionary.whatsIncluded} />
       <WhyChooseUsSection />
       <FeaturedToursSection />
       <GallerySection />

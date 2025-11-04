@@ -1,0 +1,25 @@
+{
+    "subtitle": "Tout Compris",
+    "title": "Ce qui est inclus dans chaque visite",
+    "description": "Nous nous occupons de chaque détail pour que vous puissiez vous immerger dans une expérience majorquine authentique et sans souci.",
+    "pickup": {
+        "title": "Prise en charge et retour à l'hôtel",
+        "description": "Nous venons vous chercher et vous déposons près de votre hébergement. Pas de tracas, pas de stress."
+    },
+    "guides": {
+        "title": "Guides locaux experts",
+        "description": "Nos guides locaux passionnés vous révèlent la face cachée de Majorque avec des histoires, des anecdotes et des perspectives personnelles."
+    },
+    "lunch": {
+        "title": "Déjeuner traditionnel majorquin",
+        "description": "Profitez d'un repas local complet dans un cadre champêtre charmant, incluant du vin régional ou de la sangria."
+    },
+    "landscapes": {
+        "title": "Paysages époustouflants",
+        "description": "Explorez les points de vue les plus pittoresques et les coins ruraux de Majorque, parfaits pour des photos inoubliables."
+    },
+    "sites": {
+        "title": "Sites culturels et historiques",
+        "description": "Visitez des villages paisibles, d'anciens monastères et découvrez le riche patrimoine de l'île au-delà des plages."
+    }
+}

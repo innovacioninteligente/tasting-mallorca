@@ -3,79 +3,69 @@
 import Image from 'next/image';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Bus, Users, UtensilsCrossed, Mountain, Landmark, CheckCircle } from 'lucide-react';
+import { type getDictionary } from '@/dictionaries/get-dictionary';
 
 const whatsIncludedImage = PlaceHolderImages.find(img => img.id === 'whats-included-picnic');
 
-export function WhatsIncludedSection() {
+type WhatsIncludedDictionary = Awaited<ReturnType<typeof getDictionary>>['whatsIncluded'];
+
+export function WhatsIncludedSection({ dictionary }: { dictionary: WhatsIncludedDictionary }) {
+    
+    const includedItems = [
+        {
+            icon: <Bus className="w-7 h-7" />,
+            title: dictionary.pickup.title,
+            description: dictionary.pickup.description,
+        },
+        {
+            icon: <Users className="w-7 h-7" />,
+            title: dictionary.guides.title,
+            description: dictionary.guides.description,
+        },
+        {
+            icon: <UtensilsCrossed className="w-7 h-7" /> ,
+            title: dictionary.lunch.title,
+            description: dictionary.lunch.description,
+        },
+        {
+            icon: <Mountain className="w-7 h-7" />,
+            title: dictionary.landscapes.title,
+            description: dictionary.landscapes.description,
+        },
+        {
+            icon: <Landmark className="w-7 h-7" />,
+            title: dictionary.sites.title,
+            description: dictionary.sites.description,
+        },
+    ];
+
     return (
         <section className="py-24 bg-background overflow-hidden">
             <div className="container mx-auto w-full md:w-[90vw] px-4 md:px-0">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
                     {/* Left Side - Content */}
                     <div className="md:pl-8">
-                    <p className="text-primary font-cursive font-bold text-lg">All-Inclusive</p>
-                    <h2 className="text-4xl md:text-5xl font-extrabold mt-2">What's Included in Every Tour</h2>
-                    <p className="mt-4 text-lg text-muted-foreground max-w-xl">
-                        We handle every detail so you can immerse yourself in an authentic, worry-free Mallorcan experience.
-                    </p>
+                        <p className="text-primary font-cursive font-bold text-lg">{dictionary.subtitle}</p>
+                        <h2 className="text-4xl md:text-5xl font-extrabold mt-2">{dictionary.title}</h2>
+                        <p className="mt-4 text-lg text-muted-foreground max-w-xl">
+                           {dictionary.description}
+                        </p>
 
-                    <div className="mt-10 space-y-8">
-                        <div className="flex items-start gap-6">
-                        <div className="flex-shrink-0 w-14 h-14 bg-primary/10 text-primary rounded-xl flex items-center justify-center">
-                            <Bus className="w-7 h-7" />
+                        <div className="mt-10 space-y-8">
+                            {includedItems.map((item, index) => (
+                                <div key={index} className="flex items-start gap-6">
+                                    <div className="flex-shrink-0 w-14 h-14 bg-primary/10 text-primary rounded-xl flex items-center justify-center">
+                                        {item.icon}
+                                    </div>
+                                    <div>
+                                        <h3 className="text-2xl font-bold">{item.title}</h3>
+                                        <p className="mt-2 text-muted-foreground">
+                                            {item.description}
+                                        </p>
+                                    </div>
+                                </div>
+                            ))}
                         </div>
-                        <div>
-                            <h3 className="text-2xl font-bold">Hotel Pickup & Drop-off</h3>
-                            <p className="mt-2 text-muted-foreground">
-                            We pick you up and drop you off near your accommodation. No hassle, no stress.
-                            </p>
-                        </div>
-                        </div>
-                        <div className="flex items-start gap-6">
-                        <div className="flex-shrink-0 w-14 h-14 bg-primary/10 text-primary rounded-xl flex items-center justify-center">
-                            <Users className="w-7 h-7" />
-                        </div>
-                        <div>
-                            <h3 className="text-2xl font-bold">Local Expert Guides</h3>
-                            <p className="mt-2 text-muted-foreground">
-                            Our passionate local guides reveal the hidden side of Mallorca with stories, history, and personal insights.
-                            </p>
-                        </div>
-                        </div>
-                        <div className="flex items-start gap-6">
-                        <div className="flex-shrink-0 w-14 h-14 bg-primary/10 text-primary rounded-xl flex items-center justify-center">
-                            <UtensilsCrossed className="w-7 h-7" />
-                        </div>
-                        <div>
-                            <h3 className="text-2xl font-bold">Traditional Mallorcan Lunch</h3>
-                            <p className="mt-2 text-muted-foreground">
-                            Enjoy a full local meal in a charming countryside setting, including regional wine or sangria.
-                            </p>
-                        </div>
-                        </div>
-                        <div className="flex items-start gap-6">
-                        <div className="flex-shrink-0 w-14 h-14 bg-primary/10 text-primary rounded-xl flex items-center justify-center">
-                            <Mountain className="w-7 h-7" />
-                        </div>
-                        <div>
-                            <h3 className="text-2xl font-bold">Stunning Landscapes</h3>
-                            <p className="mt-2 text-muted-foreground">
-                            Explore Mallorca’s most scenic viewpoints and rural corners, perfect for unforgettable photos.
-                            </p>
-                        </div>
-                        </div>
-                        <div className="flex items-start gap-6">
-                        <div className="flex-shrink-0 w-14 h-14 bg-primary/10 text-primary rounded-xl flex items-center justify-center">
-                            <Landmark className="w-7 h-7" />
-                        </div>
-                        <div>
-                            <h3 className="text-2xl font-bold">Cultural & Historic Sites</h3>
-                            <p className="mt-2 text-muted-foreground">
-                            Visit peaceful villages, ancient monasteries, and discover the island’s rich heritage beyond the beaches.
-                            </p>
-                        </div>
-                        </div>
-                    </div>
                     </div>
                     
                     {/* Right Side - Image */}

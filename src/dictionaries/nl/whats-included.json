@@ -1,0 +1,25 @@
+{
+    "subtitle": "All-inclusive",
+    "title": "Wat is inbegrepen in elke tour",
+    "description": "Wij regelen elk detail, zodat u zich kunt onderdompelen in een authentieke, zorgeloze Mallorcaanse ervaring.",
+    "pickup": {
+        "title": "Ophalen en afzetten bij het hotel",
+        "description": "We halen je op en zetten je af in de buurt van je accommodatie. Geen gedoe, geen stress."
+    },
+    "guides": {
+        "title": "Lokale deskundige gidsen",
+        "description": "Onze gepassioneerde lokale gidsen onthullen de verborgen kant van Mallorca met verhalen, geschiedenis en persoonlijke inzichten."
+    },
+    "lunch": {
+        "title": "Traditionele Mallorcaanse lunch",
+        "description": "Geniet van een volledige lokale maaltijd in een charmante landelijke omgeving, inclusief regionale wijn of sangria."
+    },
+    "landscapes": {
+        "title": "Adembenemende landschappen",
+        "description": "Verken de meest schilderachtige uitzichtpunten en landelijke hoekjes van Mallorca, perfect voor onvergetelijke foto's."
+    },
+    "sites": {
+        "title": "Culturele en historische bezienswaardigheden",
+        "description": "Bezoek vredige dorpjes, oude kloosters en ontdek het rijke erfgoed van het eiland buiten de stranden."
+    }
+}
