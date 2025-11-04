@@ -1,12 +1,12 @@
-
 'use client';
 
 import Image from 'next/image';
-import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Heart, ArrowRight } from 'lucide-react';
 import { type Locale } from '@/dictionaries/config';
 import { type getDictionary } from '@/dictionaries/get-dictionary';
+import { useRouter } from 'next/navigation';
+import { useTransition } from 'react';
 
 type FeaturedToursProps = {
     dictionary: Awaited<ReturnType<typeof getDictionary>>;
@@ -14,6 +14,14 @@ type FeaturedToursProps = {
 }
 
 export function FeaturedToursSection({ dictionary, lang }: FeaturedToursProps) {
+    const router = useRouter();
+    const [isPending, startTransition] = useTransition();
+
+    const handleTourClick = (slug: string) => {
+        startTransition(() => {
+            router.push(`/${lang}/tours/${slug}`);
+        });
+    };
 
     return (
         <section className="py-24 bg-secondary">
@@ -27,7 +35,11 @@ export function FeaturedToursSection({ dictionary, lang }: FeaturedToursProps) {
             <div className="w-full px-4 md:px-0 md:w-[90vw] mx-auto">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                 {dictionary.tours.map((tour) => (
-                <Link href={`/${lang}/tours/${tour.slug}`} key={tour.id} className="block group">
+                <div 
+                    key={tour.id} 
+                    className="block group cursor-pointer"
+                    onClick={() => handleTourClick(tour.slug)}
+                >
                     <div className="bg-card rounded-2xl overflow-hidden shadow-lg h-full flex flex-col">
                         <div className="relative h-80">
                         <Image
@@ -52,7 +64,7 @@ export function FeaturedToursSection({ dictionary, lang }: FeaturedToursProps) {
                             </div>
                         </div>
                     </div>
-                </Link>
+                </div>
                 ))}
             </div>
             </div>
