@@ -13,7 +13,7 @@ type HeroDictionary = {
 
 export function HeroSection({ dictionary }: { dictionary: HeroDictionary }) {
   return (
-    <section className="relative w-full h-screen flex items-center justify-center text-center">
+    <section className="relative w-full min-h-screen flex items-center justify-center text-center pb-20">
       <div className="container">
         <div className="max-w-2xl mx-auto">
           <h2 className="text-lg font-cursive font-bold text-primary mb-2">{dictionary.welcome}</h2>
