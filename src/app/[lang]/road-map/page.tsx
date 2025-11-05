@@ -92,6 +92,32 @@ const phases = [
       },
     ],
   },
+  {
+    name: 'Fase 5: Sistema de Moneda Dinámico',
+    status: 'todo',
+    milestones: [
+      {
+        name: 'Definir Estrategia de Precios y Monedas',
+        description: 'Establecer el Euro (EUR) como precio base y asignar monedas secundarias (ej. GBP) según el idioma del usuario.',
+        status: 'todo',
+      },
+      {
+        name: 'Integración con API de Tasas de Cambio',
+        description: 'Conectar con la API de Stripe para obtener tasas de cambio actualizadas y cachearlas en el backend para optimizar el rendimiento.',
+        status: 'todo',
+      },
+      {
+        name: 'Lógica de Conversión y Visualización',
+        description: 'Crear un hook (useCurrency) y un proveedor de contexto en React para mostrar los precios convertidos y formateados correctamente en toda la web.',
+        status: 'todo',
+      },
+      {
+        name: 'Integración Segura con Pasarela de Pago',
+        description: 'Asegurar que, aunque los precios se muestren en varias monedas, el pago final se procese siempre en EUR a través de Stripe para garantizar la consistencia.',
+        status: 'todo',
+      },
+    ],
+  },
 ];
 
 const statusIcons = {
