@@ -12,6 +12,14 @@ import { usePathname, useRouter } from 'next/navigation';
 import { i18n, type Locale } from '@/dictionaries/config';
 import { useState, useEffect } from 'react';
 
+// Import all tour dictionaries
+import toursCa from '@/dictionaries/ca/tours.json';
+import toursDe from '@/dictionaries/de/tours.json';
+import toursEn from '@/dictionaries/en/tours.json';
+import toursEs from '@/dictionaries/es/tours.json';
+import toursFr from '@/dictionaries/fr/tours.json';
+import toursNl from '@/dictionaries/nl/tours.json';
+
 type Language = {
   code: Locale;
   name: string;
@@ -21,11 +29,20 @@ type Language = {
 const languages: Language[] = [
   { code: 'en', name: 'English', flag: '🇬🇧' },
   { code: 'es', name: 'Español', flag: '🇪🇸' },
-  { code: 'ca', name: 'Català', flag: '🇦🇩' }, // Andorra flag for Catalan
+  { code: 'ca', name: 'Català', flag: '🇦🇩' },
   { code: 'fr', name: 'Français', flag: '🇫🇷' },
   { code: 'de', name: 'Deutsch', flag: '🇩🇪' },
   { code: 'nl', name: 'Nederlands', flag: '🇳🇱' },
 ];
+
+const allTours = {
+  ca: toursCa,
+  de: toursDe,
+  en: toursEn,
+  es: toursEs,
+  fr: toursFr,
+  nl: toursNl,
+};
 
 export function LanguageSwitcher({ currentLocale }: { currentLocale: Locale }) {
   const pathname = usePathname();
@@ -40,19 +57,41 @@ export function LanguageSwitcher({ currentLocale }: { currentLocale: Locale }) {
   }, [currentLocale]);
 
 
-  const handleLanguageChange = (lang: Language) => {
-    setSelectedLanguage(lang);
-    const newPath = pathname.replace(`/${currentLocale}`, `/${lang.code}`);
+  const handleLanguageChange = (newLang: Language) => {
+    const newLocale = newLang.code;
+    const pathSegments = pathname.split('/').filter(Boolean);
+    
+    // Check if we are on a tour detail page
+    if (pathSegments.length === 3 && pathSegments[1] === 'tours') {
+      const currentSlug = pathSegments[2];
+      
+      // Find the current tour by its slug in the current language's dictionary
+      const currentTour = allTours[currentLocale]?.find(t => t.slug === currentSlug);
+
+      if (currentTour) {
+        // Find the corresponding tour in the new language's dictionary using the ID
+        const newTour = allTours[newLocale]?.find(t => t.id === currentTour.id);
+        
+        if (newTour) {
+          // If found, redirect to the new URL with the correct slug
+          router.push(`/${newLocale}/tours/${newTour.slug}`);
+          return;
+        }
+      }
+    }
+    
+    // Fallback for non-tour pages or if the tour isn't found
+    const newPath = pathname.replace(`/${currentLocale}`, `/${newLocale}`);
     router.push(newPath);
   };
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" className="flex items-center gap-2 text-lg">
+        <Button variant="ghost" className="flex items-center gap-2 text-base px-2">
           <Globe className="h-5 w-5" />
           <span>{selectedLanguage.flag}</span>
-          <span>{selectedLanguage.code.toUpperCase()}</span>
+          <span className='hidden sm:inline'>{selectedLanguage.code.toUpperCase()}</span>
           <ChevronDown className="h-5 w-5 opacity-70" />
         </Button>
       </DropdownMenuTrigger>

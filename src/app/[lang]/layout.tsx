@@ -5,7 +5,6 @@ import { Footer } from '@/components/footer';
 import { Poppins } from 'next/font/google';
 import { getDictionary } from '@/dictionaries/get-dictionary';
 import { Locale } from '@/dictionaries/config';
-import { LanguageSwitcher } from '@/components/language-switcher';
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -32,9 +31,6 @@ export default async function RootLayout({
           <Footer />
         </div>
         <Toaster />
-        <div className="fixed bottom-4 right-4 z-50">
-          <LanguageSwitcher currentLocale={params.lang} />
-        </div>
       </body>
     </html>
   );
