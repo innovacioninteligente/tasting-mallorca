@@ -87,7 +87,7 @@ export function TestimonialsSection() {
     
     return (
         <section className="py-24 bg-secondary overflow-hidden">
-            <div className="container w-full px-0 md:px-4 md:w-[90vw] mx-auto">
+            <div className="container w-full md:w-[90vw] mx-auto">
                 <div className="text-center mb-12 px-4">
                     <p className="text-primary font-cursive font-bold text-lg">Testimonials</p>
                     <h2 className="text-4xl md:text-5xl font-extrabold mt-2">What Our Customers Say</h2>
@@ -113,7 +113,7 @@ export function TestimonialsSection() {
                     </div>
 
                     {/* Testimonial Carousel */}
-                    <div className="relative">
+                    <div className="relative overflow-hidden">
                         <Carousel
                             plugins={[autoplayPlugin.current]}
                             className="w-full"
