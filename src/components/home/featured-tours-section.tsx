@@ -1,3 +1,4 @@
+
 'use client';
 
 import Image from 'next/image';
@@ -48,7 +49,7 @@ export function FeaturedToursSection({ dictionary, lang }: FeaturedToursProps) {
                                 <h3 className="text-xl font-bold mb-2">{tour.title}</h3>
                                 <p className="text-muted-foreground text-sm mb-4 flex-grow">{tour.description}</p>
                                 <div className="flex justify-between items-center mt-auto">
-                                    <span className="text-xl font-extrabold text-primary">${tour.price}</span>
+                                    <span className="text-xl font-extrabold text-primary">€{tour.price}</span>
                                     <div className="rounded-full bg-primary/10 text-primary h-10 w-10 flex items-center justify-center group-hover:bg-primary/20">
                                         <ArrowRight className="h-5 w-5" />
                                     </div>
