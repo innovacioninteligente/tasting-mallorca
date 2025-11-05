@@ -10,6 +10,7 @@ import {
   Icon,
 } from 'lucide-react';
 import React from 'react';
+import { cn } from '@/lib/utils';
 
 // Define a type for the icon names for better type safety
 type IconName = 'CalendarX' | 'CreditCard' | 'Clock' | 'Languages' | 'Bus';
@@ -41,8 +42,16 @@ export function TourInfoSection({ dictionary }: TourInfoSectionProps) {
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-6">
         {dictionary.infoPoints.map((point, index) => {
           const IconComponent = iconMap[point.icon];
+          const isLastItem = index === dictionary.infoPoints.length - 1;
+          const isBusIcon = point.icon === 'Bus';
+          
           return (
-            <div key={index} className="flex items-start gap-4">
+            <div
+              key={index}
+              className={cn('flex items-start gap-4', {
+                'sm:col-span-2 border-t border-border pt-6': isLastItem && isBusIcon,
+              })}
+            >
               <div className="flex-shrink-0 mt-1">
                 {IconComponent && (
                   <IconComponent className="w-6 h-6 text-primary" />
