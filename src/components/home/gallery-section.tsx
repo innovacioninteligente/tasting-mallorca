@@ -6,6 +6,7 @@ import { useState } from 'react';
 import {
   Dialog,
   DialogContent,
+  DialogTitle,
 } from "@/components/ui/dialog";
 import {
   Carousel,
@@ -72,6 +73,7 @@ export function GallerySection() {
 
              <Dialog open={isLightboxOpen} onOpenChange={setIsLightboxOpen}>
                 <DialogContent className="max-w-none w-screen h-screen p-0 bg-black/90 border-0 flex items-center justify-center">
+                    <DialogTitle className="sr-only">Image Gallery Lightbox</DialogTitle>
                     <Carousel
                         opts={{
                             loop: true,
