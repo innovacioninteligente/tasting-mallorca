@@ -1,3 +1,4 @@
+
 'use client';
 
 import Image from 'next/image';
@@ -122,7 +123,7 @@ export function TestimonialsSection() {
                     <CarouselContent>
                     {testimonials.map((testimonial, index) => (
                         <CarouselItem key={index}>
-                        <div className="px-4">
+                        <div className="px-1">
                             <Quote className="w-16 h-16 text-primary" />
                             <div className="flex my-4">
                                 {Array.from({ length: 5 }).map((_, i) => (
@@ -150,3 +151,4 @@ export function TestimonialsSection() {
         </section>
     );
 }
+
