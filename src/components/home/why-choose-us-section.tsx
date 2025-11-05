@@ -33,7 +33,7 @@ export function WhyChooseUsSection({ dictionary }: { dictionary: WhyChooseUsDict
                     <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
                     </div>
                 )}
-                <div className="absolute bottom-8 -left-12 bg-card p-4 rounded-xl shadow-lg flex items-center gap-3">
+                <div className="absolute bottom-8 left-4 md:-left-12 bg-card p-4 rounded-xl shadow-lg flex items-center gap-3">
                     <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center">
                         <CheckCircle className="w-6 h-6 text-primary-foreground" />
                     </div>
@@ -42,7 +42,7 @@ export function WhyChooseUsSection({ dictionary }: { dictionary: WhyChooseUsDict
                         <p className="text-sm text-muted-foreground">Trustpilot & rating</p>
                     </div>
                 </div>
-                    <div className="absolute bottom-8 -right-8 h-20 w-20 bg-primary rounded-full flex items-center justify-center transform transition-transform duration-300 hover:scale-110 cursor-pointer">
+                    <div className="absolute bottom-8 right-4 md:-right-8 h-20 w-20 bg-primary rounded-full flex items-center justify-center transform transition-transform duration-300 hover:scale-110 cursor-pointer">
                         <ArrowUpRight className="h-10 w-10 text-primary-foreground" />
                     </div>
                 </div>
