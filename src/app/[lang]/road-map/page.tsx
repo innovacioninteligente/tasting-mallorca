@@ -144,14 +144,24 @@ export default function RoadMapPage() {
           </p>
         </div>
 
-        <div className="relative border-l-2 border-primary/20 ml-6 md:ml-0">
+        <div className="relative">
+          {/* Central timeline line */}
+          <div className="absolute left-6 md:left-1/2 top-0 h-full w-0.5 bg-primary/20 -translate-x-1/2"></div>
+          
           {phases.map((phase, phaseIndex) => (
-            <div key={phase.name} className="mb-12 relative">
-              <div className="absolute -left-[30px] md:left-1/2 md:-translate-x-1/2 top-1 bg-primary text-primary-foreground rounded-full h-14 w-14 flex items-center justify-center">
-                 <Milestone className="h-8 w-8" />
+            <div key={phase.name} className="relative mb-12">
+              <div className="absolute -left-[6px] md:left-1/2 md:-translate-x-1/2 top-1 z-10">
+                <div className="bg-primary text-primary-foreground rounded-full h-14 w-14 flex items-center justify-center ring-8 ring-background">
+                  <Milestone className="h-8 w-8" />
+                </div>
               </div>
-              <div className="md:flex md:justify-center">
-                <div className={`md:w-1/2 ${phaseIndex % 2 === 0 ? 'md:pr-8 md:text-right' : 'md:pl-8 md:text-left'}`}>
+
+              <div className={`flex flex-col md:flex-row items-center w-full ${phaseIndex % 2 === 0 ? 'md:flex-row-reverse' : ''}`}>
+                 {/* Empty div for spacing on one side */}
+                <div className="w-full md:w-1/2"></div>
+                
+                 {/* Card content */}
+                <div className="w-full md:w-1/2 px-4 md:px-8">
                   <div className="bg-card p-6 rounded-lg shadow-lg border border-border/50 ml-10 md:ml-0">
                     <h2 className="text-2xl font-bold font-headline text-primary mb-2">{phase.name}</h2>
                      <span className={`inline-flex items-center gap-2 text-sm font-medium px-3 py-1 rounded-full mb-4 ${
@@ -161,7 +171,7 @@ export default function RoadMapPage() {
                        {statusIcons[phase.status as keyof typeof statusIcons]}
                        {statusText[phase.status as keyof typeof statusText]}
                     </span>
-                    <ul className="space-y-4">
+                    <ul className="space-y-4 text-left">
                       {phase.milestones.map((milestone) => (
                         <li key={milestone.name} className="flex items-start gap-3">
                           <div>
@@ -176,8 +186,6 @@ export default function RoadMapPage() {
                     </ul>
                   </div>
                 </div>
-                {/* Empty div for timeline structure on larger screens */}
-                <div className="hidden md:block md:w-1/2"></div>
               </div>
             </div>
           ))}
