@@ -7,25 +7,79 @@ import { useRef } from 'react';
 import { Quote, Star } from 'lucide-react';
 
 const testimonials = [
-    {
-      quote: "Tasting Mallorca's work helped us save a significant percentage of our tour plan. We are happy with all experiences & all services.",
-      author: "Tomas Widdin",
-      role: "Web Developer",
-      rating: 5,
-    },
-    {
-      quote: "An absolutely unforgettable experience. The guides were knowledgeable and friendly, and the landscapes were breathtaking. Highly recommended!",
-      author: "Sarah Johnson",
-      role: "Travel Blogger",
-      rating: 5,
-    },
-    {
-      quote: "The best way to see the real Mallorca. We avoided the crowds and discovered hidden gems we would have never found on our own. Will book again!",
-      author: "David & Emily",
-      role: "Tourists",
-      rating: 4,
-    },
-  ];
+  {
+    quote: "Jako was very enthusiastic and welcoming. The trip was well planned. It would have been nice to be able to buy water on the bus.",
+    author: "Winnie Petersen",
+    role: "Danish - 09/02/2025",
+    rating: 5,
+  },
+  {
+    quote: "Very interesting excursion, accompanied by Clément, a friendly and competent guide. A must-do.",
+    author: "Alain",
+    role: "French - 08/27/2025",
+    rating: 5,
+  },
+  {
+    quote: "Wonderful excursion with an excellent guide. Complete information (historical, geographical and cultural), interaction with the group. Clément is very professional and led the day with many anecdotes and humor. We had an excellent day.",
+    author: "Soldera",
+    role: "French - 08/26/2025",
+    rating: 5,
+  },
+  {
+    quote: "A very good day wonderfully animated by Clément, who captivated us with his historical and geographical knowledge. Highly recommended.",
+    author: "Fardel",
+    role: "French - 08/26/2025",
+    rating: 5,
+  },
+  {
+    quote: "A beautiful discovery.",
+    author: "Etienne",
+    role: "French - 08/26/2025",
+    rating: 5,
+  },
+  {
+    quote: "Excellent, congratulations.",
+    author: "Letourmy",
+    role: "French - 08/26/2025",
+    rating: 5,
+  },
+  {
+    quote: "Lovely experience today around the market and the Aloe Vera farm, and our very first tapas was delightful.",
+    author: "Ian & Lorraine Archibald",
+    role: "British - 08/26/2025",
+    rating: 5,
+  },
+  {
+    quote: "Very comprehensive and interesting. Especially enjoyed the Tramuntana mountains.",
+    author: "Toews",
+    role: "German - 08/22/2025",
+    rating: 5,
+  },
+  {
+    quote: "Excellent, varied and enriching. I recommend it.",
+    author: "Dese",
+    role: "French - 08/12/2025",
+    rating: 5,
+  },
+  {
+    quote: "Jako was a funny and approachable guide, we were very satisfied with him. We experienced a really great trip, exactly what we imagined.",
+    author: "Schultz Andras",
+    role: "Hungarian - 08/08/2025",
+    rating: 5,
+  },
+  {
+    quote: "It was beautiful, interesting, and delicious.",
+    author: "Elisabeth Schmidt",
+    role: "German - 08/08/2025",
+    rating: 5,
+  },
+  {
+    quote: "Thank you for this wonderful day of discovery. Our guide and driver really did an excellent job, with outstanding knowledge of the island. We truly learned a lot about Mallorca. Well done!",
+    author: "Berlendis",
+    role: "French - 07/25/2025",
+    rating: 5,
+  },
+];
 
 export function TestimonialsSection() {
     const autoplayPlugin = useRef(Autoplay({ delay: 5000, stopOnInteraction: true }));
@@ -71,7 +125,7 @@ export function TestimonialsSection() {
                                     />
                                 ))}
                             </div>
-                            <p className="text-2xl md:text-3xl font-medium text-foreground/80 leading-relaxed">
+                            <p className="text-xl md:text-3xl font-medium text-foreground/80 leading-relaxed">
                             {testimonial.quote}
                             </p>
                             <div className="mt-6">
