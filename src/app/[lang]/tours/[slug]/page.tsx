@@ -1,4 +1,5 @@
 
+import React from 'react';
 import { notFound } from 'next/navigation';
 import { Locale } from '@/dictionaries/config';
 import { getDictionary } from '@/dictionaries/get-dictionary';
