@@ -20,14 +20,14 @@ import { Button } from '../ui/button';
 import Link from 'next/link';
 
 const galleryImages = [
-  { src: 'https://firebasestorage.googleapis.com/v0/b/amparo-aesthetics.firebasestorage.app/o/tasting-mallorca%2Fimages%2FDSC07636-Mejorado-NR.jpg?alt=media&token=083f05f7-cddb-498a-a044-056ee1834adc', hint: 'happy couple travel', className: 'col-span-1 md:col-span-2 md:row-span-2' },
-  { src: 'https://firebasestorage.googleapis.com/v0/b/amparo-aesthetics.firebasestorage.app/o/tasting-mallorca%2Fimages%2FDSC07689-Mejorado-NR.jpg?alt=media&token=4ed4a450-a529-4e29-80a9-c74962bfc760', hint: 'hiker mountain view', className: 'row-span-2' },
-  { src: 'https://firebasestorage.googleapis.com/v0/b/amparo-aesthetics.firebasestorage.app/o/tasting-mallorca%2Fimages%2FDSC07701-Mejorado-NR.jpg?alt=media&token=ad6a33ad-3b8e-48bb-bb27-b745f3ed03d4', hint: 'tropical huts water', className: 'col-span-1' },
-  { src: 'https://firebasestorage.googleapis.com/v0/b/amparo-aesthetics.firebasestorage.app/o/tasting-mallorca%2Fimages%2FDSC07697-Mejorado-NR.jpg?alt=media&token=59d167ee-edc9-4021-ba8a-bcfbe6342d1c', hint: 'traveler city skyline', className: 'col-span-1' },
-  { src: 'https://firebasestorage.googleapis.com/v0/b/amparo-aesthetics.firebasestorage.app/o/tasting-mallorca%2Fimages%2Farta.webp?alt=media&token=d0bd894c-736e-4f72-8f4c-0506ce26e4f0', hint: 'woman pink dress cliff', className: 'row-span-2' },
-  { src: 'https://firebasestorage.googleapis.com/v0/b/amparo-aesthetics.firebasestorage.app/o/tasting-mallorca%2Fimages%2FDSC07927-Mejorado-NR.jpg?alt=media&token=3cd8ed5c-69a8-4268-b73c-7948dc6eaa34', hint: 'hiker looking at cliffs', className: 'col-span-1' },
-  { src: 'https://firebasestorage.googleapis.com/v0/b/amparo-aesthetics.firebasestorage.app/o/tasting-mallorca%2Fimages%2FDSC07715-Mejorado-NR.jpg?alt=media&token=9c653a7e-ed1d-41e9-8bf6-19f5b554d1b4', hint: 'happy man beach', className: 'col-span-1 md:col-span-2' },
-  { src: 'https://firebasestorage.googleapis.com/v0/b/amparo-aesthetics.firebasestorage.app/o/tasting-mallorca%2Fimages%2FDSC07651-Mejorado-NR.jpg?alt=media&token=e14dbbb0-7221-4bc4-b47a-8b01915e16b1', hint: 'woman travel backpack', className: 'col-span-1' },
+    { src: 'https://firebasestorage.googleapis.com/v0/b/amparo-aesthetics.firebasestorage.app/o/tasting-mallorca%2Fimages%2FDSC07636-Mejorado-NR.jpg?alt=media&token=083f05f7-cddb-498a-a044-056ee1834adc', hint: 'happy couple travel', className: 'col-span-1 md:col-span-2 md:row-span-2' },
+    { src: 'https://firebasestorage.googleapis.com/v0/b/amparo-aesthetics.firebasestorage.app/o/tasting-mallorca%2Fimages%2FDSC07689-Mejorado-NR.jpg?alt=media&token=4ed4a450-a529-4e29-80a9-c74962bfc760', hint: 'hiker mountain view', className: 'row-span-2' },
+    { src: 'https://firebasestorage.googleapis.com/v0/b/amparo-aesthetics.firebasestorage.app/o/tasting-mallorca%2Fimages%2FDSC07701-Mejorado-NR.jpg?alt=media&token=ad6a33ad-3b8e-48bb-bb27-b745f3ed03d4', hint: 'tropical huts water', className: 'col-span-1' },
+    { src: 'https://firebasestorage.googleapis.com/v0/b/amparo-aesthetics.firebasestorage.app/o/tasting-mallorca%2Fimages%2FDSC07697-Mejorado-NR.jpg?alt=media&token=59d167ee-edc9-4021-ba8a-bcfbe6342d1c', hint: 'traveler city skyline', className: 'col-span-1' },
+    { src: 'https://firebasestorage.googleapis.com/v0/b/amparo-aesthetics.firebasestorage.app/o/tasting-mallorca%2Fimages%2Farta.webp?alt=media&token=d0bd894c-736e-4f72-8f4c-0506ce26e4f0', hint: 'woman pink dress cliff', className: 'row-span-2' },
+    { src: 'https://firebasestorage.googleapis.com/v0/b/amparo-aesthetics.firebasestorage.app/o/tasting-mallorca%2Fimages%2FDSC07927-Mejorado-NR.jpg?alt=media&token=3cd8ed5c-69a8-4268-b73c-7948dc6eaa34', hint: 'hiker looking at cliffs', className: 'col-span-1' },
+    { src: 'https://firebasestorage.googleapis.com/v0/b/amparo-aesthetics.firebasestorage.app/o/tasting-mallorca%2Fimages%2FDSC07715-Mejorado-NR.jpg?alt=media&token=9c653a7e-ed1d-41e9-8bf6-19f5b554d1b4', hint: 'happy man beach', className: 'col-span-1 md:col-span-2' },
+    { src: 'https://firebasestorage.googleapis.com/v0/b/amparo-aesthetics.firebasestorage.app/o/tasting-mallorca%2Fimages%2FDSC07651-Mejorado-NR.jpg?alt=media&token=e14dbbb0-7221-4bc4-b47a-8b01915e16b1', hint: 'woman travel backpack', className: 'col-span-1' },
 ];
 
 
@@ -67,7 +67,7 @@ export function GallerySection() {
                              <div className="absolute inset-0 bg-black/10 transition-colors group-hover:bg-black/20"></div>
                         </div>
                     ))}
-                     <div className="md:col-span-2 p-8 rounded-xl bg-secondary flex flex-col items-center justify-center text-center">
+                     <div className="col-span-2 md:col-span-2 p-8 rounded-xl bg-secondary flex flex-col items-center justify-center text-center">
                         <h3 className="text-3xl font-extrabold text-foreground">Tu Aventura te Espera</h3>
                         <p className="mt-2 text-muted-foreground">Vive la Mallorca auténtica. Plazas limitadas.</p>
                         <Button asChild size="lg" className="mt-6 font-bold rounded-full group">
