@@ -1,10 +1,9 @@
+
 {
     "home": "Home",
     "about": "About",
-    "pages": "Pages",
     "tours": "Tours",
-    "destination": "Destination",
-    "roadMap": "Road Map",
+    "blog": "Blog",
     "contact": "Contact",
     "startBooking": "Start Booking"
 }

@@ -14,7 +14,7 @@ type FeaturedToursProps = {
 
 export function FeaturedToursSection({ dictionary, lang }: FeaturedToursProps) {
     return (
-        <section className="py-24 bg-secondary">
+        <section id="featured-tours" className="py-24 bg-secondary">
             <div className="container text-center mb-12">
                 <p className="text-primary font-cursive font-bold text-lg">Featured Tours</p>
                 <h2 className="text-4xl md:text-5xl font-extrabold mt-2">Amazing Tours</h2>

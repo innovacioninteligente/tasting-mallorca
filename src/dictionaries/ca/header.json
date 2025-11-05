@@ -2,10 +2,8 @@
 {
     "home": "Inici",
     "about": "Nosaltres",
-    "pages": "Pàgines",
     "tours": "Tours",
-    "destination": "Destinacions",
-    "roadMap": "Full de Ruta",
+    "blog": "Blog",
     "contact": "Contacte",
     "startBooking": "Reserva Ara"
 }

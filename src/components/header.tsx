@@ -17,10 +17,8 @@ export function Header({ dictionary, lang }: HeaderProps) {
   const navLinks = [
     { href: `/${lang}/`, label: dictionary.home },
     { href: `/${lang}/about`, label: dictionary.about },
-    { href: `/${lang}/pages`, label: dictionary.pages },
-    { href: `/${lang}/tours`, label: dictionary.tours },
-    { href: `/${lang}/destination`, label: dictionary.destination },
-    { href: `/${lang}/road-map`, label: dictionary.roadMap },
+    { href: `/${lang}/#featured-tours`, label: dictionary.tours },
+    { href: `/${lang}/blog`, label: "Blog" },
     { href: `/${lang}/contact`, label: dictionary.contact },
   ];
 

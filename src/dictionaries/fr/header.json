@@ -2,10 +2,8 @@
 {
     "home": "Accueil",
     "about": "À propos",
-    "pages": "Pages",
     "tours": "Tours",
-    "destination": "Destinations",
-    "roadMap": "Feuille de Route",
+    "blog": "Blog",
     "contact": "Contact",
     "startBooking": "Réserver"
 }

@@ -2,10 +2,8 @@
 {
     "home": "Home",
     "about": "Over ons",
-    "pages": "Pagina's",
     "tours": "Tours",
-    "destination": "Bestemmingen",
-    "roadMap": "Routekaart",
+    "blog": "Blog",
     "contact": "Contact",
     "startBooking": "Boek nu"
 }
