@@ -1,16 +1,46 @@
 
 {
-    "title": "Ce qui est inclus",
+    "detailTitle": "En détail",
+    "detailContent": [
+        "Échappez aux foules de touristes et découvrez le côté authentique de Majorque lors de cette visite guidée d'une journée au cœur du sud de l'île.",
+        "Commencez par une route panoramique le long des superbes falaises côtières, en vous arrêtant au point de vue emblématique de Ricardo Roca pour une vue imprenable sur la mer Méditerranée. De là, dirigez-vous vers le charmant village de Valldemossa, où vous aurez du temps libre pour flâner dans ses rues pavées, parcourir les boutiques d'artisanat ou savourer un café dans un cadre tranquille.",
+        "Ensuite, savourez un déjeuner traditionnel majorquin à la campagne, avec des plats typiques servis avec du vin régional et de la sangria.",
+        "Dans l'après-midi, visitez Petra, le lieu de naissance de Fray Junípero Serra. Explorez sa maison d'enfance et l'église du village où il a été baptisé. Continuez jusqu'à l'ermitage de Bonany, un sanctuaire paisible au sommet d'une colline avec une vue panoramique sur la plaine centrale (si le temps le permet).",
+        "Terminez la journée dans une usine de perles locale, où vous en apprendrez davantage sur les célèbres perles artisanales de l'île et aurez l'occasion de parcourir la collection."
+    ],
+    "includesTitle": "Ce qui est inclus",
     "included": [
-        "Guide local expert",
-        "Transport en véhicule climatisé",
-        "Déjeuner complet avec boissons",
-        "Prise en charge et retour à l'hôtel",
-        "Assurance voyage"
+        "Route panoramique le long des falaises côtières.",
+        "Visite de la Torre des Verger.",
+        "Temps libre à Valldemossa.",
+        "Déjeuner traditionnel majorquin.",
+        "Visite de Petra et du lieu de naissance de Fray Junípero Serra.",
+        "Visite de l'ermitage de Bonany (si le temps le permet).",
+        "Visite d'une usine de perles locale."
     ],
     "notIncluded": [
-        "Pourboires (facultatif)",
-        "Achats personnels",
-        "Frais d'entrée aux musées non spécifiés"
+        "Dépenses personnelles",
+        "Pourboires"
+    ],
+    "notSuitableTitle": "Ne convient pas pour",
+    "notSuitableItems": [
+        "Personnes à mobilité réduite",
+        "Personnes souffrant du mal des transports"
+    ],
+    "importantInfoTitle": "Informations importantes",
+    "whatToBringTitle": "Quoi apporter",
+    "whatToBringItems": [
+        "Chaussures confortables",
+        "Appareil photo",
+        "Crème solaire",
+        "Eau"
+    ],
+    "beforeYouGoTitle": "Avant de partir",
+    "beforeYouGoItems": [
+        "Portez des chaussures confortables pour la marche.",
+        "Apportez un appareil photo pour prendre des photos.",
+        "La crème solaire est recommandée.",
+        "Il est également recommandé d'apporter de l'eau.",
+        "Si vous avez des difficultés à trouver votre logement pendant le processus de réservation, veuillez nous envoyer un message WhatsApp. Nous serons heureux de vous aider."
     ]
 }

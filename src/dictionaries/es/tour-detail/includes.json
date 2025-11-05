@@ -1,16 +1,46 @@
 
 {
-    "title": "Qué Incluye",
+    "detailTitle": "En detalle",
+    "detailContent": [
+        "Escapa de las multitudes de turistas y descubre el lado auténtico de Mallorca en este tour guiado de un día por el corazón del sur de la isla.",
+        "Empieza con un paseo panorámico por los impresionantes acantilados costeros, parando en el emblemático mirador de Ricardo Roca para disfrutar de unas vistas impresionantes del mar Mediterráneo. Desde allí, dirígete al encantador pueblo de Valldemossa, donde tendrás tiempo libre para pasear por sus calles adoquinadas, echar un vistazo a las tiendas de artesanía o disfrutar de un café en un entorno tranquilo.",
+        "Luego, disfruta de un almuerzo tradicional mallorquín en el campo, con platos típicos servidos con sangría y vino de la región.",
+        "Por la tarde, visita Petra, el lugar donde nació Fray Junípero Serra. Explora la casa de su infancia y la iglesia del pueblo donde fue bautizado. Continúa hasta la ermita de Bonany, un santuario tranquilo en la cima de una colina con vistas panorámicas de la llanura central (si el tiempo lo permite).",
+        "Termina el día en una fábrica de perlas local, donde aprenderás sobre las famosas perlas artesanales de la isla y tendrás la oportunidad de ver la colección."
+    ],
+    "includesTitle": "Qué incluye",
     "included": [
-        "Guía local experto",
-        "Transporte en vehículo con aire acondicionado",
-        "Almuerzo completo con bebidas",
-        "Recogida y regreso al hotel",
-        "Seguro de viaje"
+        "Recorrido panorámico por los acantilados costeros.",
+        "Visita a la Torre des Verger.",
+        "Tiempo libre en Valldemossa.",
+        "Almuerzo tradicional mallorquín.",
+        "Visita a Petra y a la casa natal de Fray Junípero Serra.",
+        "Visita a la ermita de Bonany (si el tiempo lo permite).",
+        "Visita a una fábrica local de perlas."
     ],
     "notIncluded": [
-        "Propinas (opcional)",
-        "Compras personales",
-        "Entradas a museos no especificados"
+        "Gastos personales",
+        "Propinas"
+    ],
+    "notSuitableTitle": "No apto para",
+    "notSuitableItems": [
+        "Personas con problemas de movilidad",
+        "Personas que sufren de mareos por movimiento"
+    ],
+    "importantInfoTitle": "Información importante",
+    "whatToBringTitle": "Qué llevar",
+    "whatToBringItems": [
+        "Calzado cómodo",
+        "Cámara",
+        "Protector solar",
+        "Agua"
+    ],
+    "beforeYouGoTitle": "Antes de viajar",
+    "beforeYouGoItems": [
+        "Lleve calzado cómodo para caminar.",
+        "Traiga una cámara para hacer fotos.",
+        "Se recomienda llevar protector solar.",
+        "También se recomienda llevar agua.",
+        "Si tiene problemas para encontrar su alojamiento durante el proceso de reserva, envíenos un mensaje de WhatsApp. Estaremos encantados de ayudarle."
     ]
 }

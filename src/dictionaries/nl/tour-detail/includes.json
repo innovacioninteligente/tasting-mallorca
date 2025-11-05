@@ -1,16 +1,46 @@
 
 {
-    "title": "Wat is inbegrepen",
+    "detailTitle": "In detail",
+    "detailContent": [
+        "Ontsnap aan de toeristische drukte en ontdek de authentieke kant van Mallorca tijdens deze begeleide dagtocht door het hart van het zuiden van het eiland.",
+        "Begin met een schilderachtige rit langs de prachtige kustkliffen, met een stop bij het iconische uitkijkpunt Ricardo Roca voor een adembenemend uitzicht op de Middellandse Zee. Ga vanaf daar naar het charmante dorpje Valldemossa, waar je vrije tijd hebt om door de geplaveide straatjes te dwalen, ambachtelijke winkels te bekijken of te genieten van een kopje koffie in een rustige omgeving.",
+        "Geniet vervolgens van een traditionele Mallorcaanse lunch op het platteland, met typische gerechten geserveerd met regionale wijn en sangria.",
+        "Bezoek 's middags Petra, de geboorteplaats van Fray Junípero Serra. Verken zijn ouderlijk huis en de dorpskerk waar hij werd gedoopt. Ga verder naar de hermitage van Bonany, een vredig heiligdom op een heuveltop met panoramisch uitzicht over de centrale vlakte (als het weer het toelaat).",
+        "Sluit de dag af in een lokale parelfabriek, waar je leert over de beroemde ambachtelijke parels van het eiland en de kans krijgt om de collectie te bekijken."
+    ],
+    "includesTitle": "Wat is inbegrepen",
     "included": [
-        "Deskundige lokale gids",
-        "Vervoer per voertuig met airconditioning",
-        "Volledige lunch met drankjes",
-        "Ophalen en afzetten bij hotel",
-        "Reisverzekering"
+        "Schilderachtige rit langs de kustkliffen.",
+        "Bezoek aan Torre des Verger.",
+        "Vrije tijd in Valldemossa.",
+        "Traditionele Mallorcaanse lunch.",
+        "Bezoek aan Petra en de geboorteplaats van Fray Junípero Serra.",
+        "Bezoek aan de hermitage van Bonany (als het weer het toelaat).",
+        "Bezoek aan een lokale parelfabriek."
     ],
     "notIncluded": [
-        "Fooien (optioneel)",
-        "Persoonlijke aankopen",
-        "Toegangsprijzen voor niet-gespecificeerde musea"
+        "Persoonlijke uitgaven",
+        "Fooien"
+    ],
+    "notSuitableTitle": "Niet geschikt voor",
+    "notSuitableItems": [
+        "Mensen met mobiliteitsproblemen",
+        "Mensen die last hebben van reisziekte"
+    ],
+    "importantInfoTitle": "Belangrijke informatie",
+    "whatToBringTitle": "Wat mee te nemen",
+    "whatToBringItems": [
+        "Comfortabele schoenen",
+        "Camera",
+        "Zonnebrandcrème",
+        "Water"
+    ],
+    "beforeYouGoTitle": "Voordat je gaat",
+    "beforeYouGoItems": [
+        "Draag comfortabele schoenen om te wandelen.",
+        "Neem een camera mee om foto's te maken.",
+        "Zonnebrandcrème wordt aanbevolen.",
+        "Het wordt ook aanbevolen om water mee te nemen.",
+        "Als u problemen ondervindt bij het vinden van uw accommodatie tijdens het boekingsproces, stuur ons dan een WhatsApp-bericht. We helpen u graag verder."
     ]
 }

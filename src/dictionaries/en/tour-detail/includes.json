@@ -1,16 +1,46 @@
 
 {
-    "title": "What's Included",
+    "detailTitle": "In detail",
+    "detailContent": [
+        "Escape the tourist crowds and discover the authentic side of Mallorca on this guided day tour through the heart of the island's south.",
+        "Start with a scenic drive along the stunning coastal cliffs, stopping at the iconic Ricardo Roca viewpoint for breathtaking views of the Mediterranean Sea. From there, head to the charming village of Valldemossa, where you'll have free time to wander its cobbled streets, browse artisan shops, or enjoy a coffee in a tranquil setting.",
+        "Next, enjoy a traditional Mallorcan lunch in the countryside, featuring typical dishes served with regional wine and sangria.",
+        "In the afternoon, visit Petra, the birthplace of Fray Junípero Serra. Explore his childhood home and the village church where he was baptized. Continue to the hermitage of Bonany, a peaceful hilltop sanctuary with panoramic views over the central plain (weather permitting).",
+        "End the day at a local pearl factory, where you'll learn about the island's famous artisan pearls and have a chance to browse the collection."
+    ],
+    "includesTitle": "What's included",
     "included": [
-        "Expert local guide",
-        "Transport by air-conditioned vehicle",
-        "Full lunch with drinks",
-        "Hotel pickup and drop-off",
-        "Travel insurance"
+        "Scenic drive along the coastal cliffs.",
+        "Visit to Torre des Verger.",
+        "Free time in Valldemossa.",
+        "Traditional Mallorcan lunch.",
+        "Visit to Petra and Fray Junípero Serra's birthplace.",
+        "Visit to the hermitage of Bonany (weather permitting).",
+        "Visit to a local pearl factory."
     ],
     "notIncluded": [
-        "Gratuities (optional)",
-        "Personal purchases",
-        "Entrance fees to unspecified museums"
+        "Personal expenses",
+        "Gratuities"
+    ],
+    "notSuitableTitle": "Not suitable for",
+    "notSuitableItems": [
+        "People with mobility impairments",
+        "People who suffer from motion sickness"
+    ],
+    "importantInfoTitle": "Important information",
+    "whatToBringTitle": "What to bring",
+    "whatToBringItems": [
+        "Comfortable shoes",
+        "Camera",
+        "Sunscreen",
+        "Water"
+    ],
+    "beforeYouGoTitle": "Before you go",
+    "beforeYouGoItems": [
+        "Wear comfortable shoes for walking.",
+        "Bring a camera to take photos.",
+        "Sunscreen is recommended.",
+        "Bringing water is also recommended.",
+        "If you have trouble finding your accommodation during the booking process, please send us a WhatsApp message. We will be happy to assist you."
     ]
 }

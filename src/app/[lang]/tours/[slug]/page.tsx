@@ -54,9 +54,9 @@ export default async function TourPage({ params }: TourPageProps) {
             <div className="lg:col-span-2 space-y-12">
               <TourOverviewSection dictionary={tourDict.overview} />
               <TourInfoSection dictionary={tourDict.tourInfo} />
+              <TourItinerarySection dictionary={tourDict.itinerary} />
               <TourHighlightsSection dictionary={tourDict.highlights} />
               <TourIncludesSection dictionary={tourDict.includes} />
-              <TourItinerarySection dictionary={tourDict.itinerary} />
             </div>
             <aside className="lg:col-span-1">
               <TourBookingSection dictionary={tourDict.booking} price={tour.price} />

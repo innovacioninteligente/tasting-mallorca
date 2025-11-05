@@ -1,16 +1,46 @@
 
 {
-    "title": "Què Inclou",
+    "detailTitle": "En detall",
+    "detailContent": [
+        "Escapa de les multituds de turistes i descobreix el costat autèntic de Mallorca en aquest tour guiat d'un dia pel cor del sud de l'illa.",
+        "Comença amb un passeig panoràmic pels impressionants penya-segats costaners, parant a l'emblemàtic mirador de Ricardo Roca per gaudir d'unes vistes impressionants del mar Mediterrani. Des d'allà, dirigeix-te a l'encantador poble de Valldemossa, on tindràs temps lliure per passejar pels seus carrers empedrats, fer una ullada a les botigues d'artesania o gaudir d'un cafè en un entorn tranquil.",
+        "Després, gaudeix d'un dinar tradicional mallorquí al camp, amb plats típics servits amb sangria i vi de la regió.",
+        "A la tarda, visita Petra, el lloc on va néixer Fra Juníper Serra. Explora la casa de la seva infància i l'església del poble on va ser batejat. Continua fins a l'ermita de Bonany, un santuari tranquil al cim d'un turó amb vistes panoràmiques de la plana central (si el temps ho permet).",
+        "Acaba el dia en una fàbrica de perles local, on aprendràs sobre les famoses perles artesanals de l'illa i tindràs l'oportunitat de veure la col·lecció."
+    ],
+    "includesTitle": "Què inclou",
     "included": [
-        "Guia local expert",
-        "Transport en vehicle amb aire condicionat",
-        "Dinar complet amb begudes",
-        "Recollida i retorn a l'hotel",
-        "Assegurança de viatge"
+        "Recorregut panoràmic pels penya-segats costaners.",
+        "Visita a la Torre des Verger.",
+        "Temps lliure a Valldemossa.",
+        "Dinar tradicional mallorquí.",
+        "Visita a Petra i a la casa natal de Fra Juníper Serra.",
+        "Visita a l'ermita de Bonany (si el temps ho permet).",
+        "Visita a una fàbrica local de perles."
     ],
     "notIncluded": [
-        "Propines (opcional)",
-        "Compres personals",
-        "Entrades a museus no especificats"
+        "Despeses personals",
+        "Propines"
+    ],
+    "notSuitableTitle": "No apte per a",
+    "notSuitableItems": [
+        "Persones amb problemes de mobilitat",
+        "Persones que pateixen de marejos per moviment"
+    ],
+    "importantInfoTitle": "Informació important",
+    "whatToBringTitle": "Què portar",
+    "whatToBringItems": [
+        "Calçat còmode",
+        "Càmera",
+        "Protector solar",
+        "Aigua"
+    ],
+    "beforeYouGoTitle": "Abans de viatjar",
+    "beforeYouGoItems": [
+        "Porteu calçat còmode per caminar.",
+        "Porteu una càmera per fer fotos.",
+        "Es recomana portar protector solar.",
+        "També es recomana portar aigua.",
+        "Si teniu problemes per trobar el vostre allotjament durant el procés de reserva, envieu-nos un missatge de WhatsApp. Estarem encantats d'ajudar-vos."
     ]
 }

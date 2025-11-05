@@ -1,16 +1,46 @@
 
 {
-    "title": "Was ist inbegriffen",
+    "detailTitle": "Im Detail",
+    "detailContent": [
+        "Entfliehen Sie den Touristenmassen und entdecken Sie die authentische Seite Mallorcas auf dieser geführten Tagestour durch das Herz des Südens der Insel.",
+        "Beginnen Sie mit einer malerischen Fahrt entlang der atemberaubenden Küstenklippen und halten Sie am ikonischen Aussichtspunkt Ricardo Roca, um einen atemberaubenden Blick auf das Mittelmeer zu genießen. Von dort aus geht es weiter in das bezaubernde Dorf Valldemossa, wo Sie freie Zeit haben, um durch die kopfsteingepflasterten Gassen zu schlendern, in den Kunsthandwerksläden zu stöbern oder einen Kaffee in ruhiger Umgebung zu genießen.",
+        "Genießen Sie anschließend ein traditionelles mallorquinisches Mittagessen auf dem Land mit typischen Gerichten, serviert mit Sangria und regionalem Wein.",
+        "Am Nachmittag besuchen Sie Petra, den Geburtsort von Fray Junípero Serra. Erkunden Sie sein Geburtshaus und die Dorfkirche, in der er getauft wurde. Weiter geht es zur Einsiedelei Bonany, einem ruhigen Heiligtum auf einem Hügel mit Panoramablick über die zentrale Ebene (wetterabhängig).",
+        "Beenden Sie den Tag in einer lokalen Perlenfabrik, wo Sie mehr über die berühmten handgefertigten Perlen der Insel erfahren und die Gelegenheit haben, die Kollektion zu besichtigen."
+    ],
+    "includesTitle": "Was inbegriffen ist",
     "included": [
-        "Lokaler Expertenführer",
-        "Transport im klimatisierten Fahrzeug",
-        "Vollständiges Mittagessen mit Getränken",
-        "Abholung und Rücktransport vom Hotel",
-        "Reiseversicherung"
+        "Malerische Fahrt entlang der Küstenklippen.",
+        "Besuch des Torre des Verger.",
+        "Freizeit in Valldemossa.",
+        "Traditionelles mallorquinisches Mittagessen.",
+        "Besuch von Petra und dem Geburtshaus von Fray Junípero Serra.",
+        "Besuch der Einsiedelei Bonany (wetterabhängig).",
+        "Besuch einer lokalen Perlenfabrik."
     ],
     "notIncluded": [
-        "Trinkgelder (optional)",
-        "Persönliche Einkäufe",
-        "Eintrittsgelder für nicht angegebene Museen"
+        "Persönliche Ausgaben",
+        "Trinkgelder"
+    ],
+    "notSuitableTitle": "Nicht geeignet für",
+    "notSuitableItems": [
+        "Personen mit Mobilitätsproblemen",
+        "Personen, die unter Reisekrankheit leiden"
+    ],
+    "importantInfoTitle": "Wichtige Informationen",
+    "whatToBringTitle": "Was Sie mitbringen sollten",
+    "whatToBringItems": [
+        "Bequeme Schuhe",
+        "Kamera",
+        "Sonnenschutz",
+        "Wasser"
+    ],
+    "beforeYouGoTitle": "Bevor Sie reisen",
+    "beforeYouGoItems": [
+        "Tragen Sie bequeme Schuhe zum Gehen.",
+        "Bringen Sie eine Kamera mit, um Fotos zu machen.",
+        "Sonnenschutz wird empfohlen.",
+        "Es wird auch empfohlen, Wasser mitzubringen.",
+        "Wenn Sie Probleme haben, Ihre Unterkunft während des Buchungsvorgangs zu finden, senden Sie uns bitte eine WhatsApp-Nachricht. Wir helfen Ihnen gerne weiter."
     ]
 }
