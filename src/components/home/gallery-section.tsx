@@ -79,12 +79,12 @@ export function GallerySection() {
                             loop: true,
                             startIndex: selectedImageIndex,
                         }}
-                        className="w-full h-full max-w-7xl max-h-[90vh]"
+                        className="w-full h-full max-w-7xl"
                     >
-                        <CarouselContent>
+                        <CarouselContent className="h-full">
                             {galleryImages.map((img, index) => (
-                                <CarouselItem key={index} className="flex items-center justify-center">
-                                    <div className="relative w-full h-full">
+                                <CarouselItem key={index} className="flex items-center justify-center p-4">
+                                    <div className="relative w-full h-[90vh]">
                                         <Image
                                             src={img.src}
                                             alt={`Gallery image ${index + 1}`}
