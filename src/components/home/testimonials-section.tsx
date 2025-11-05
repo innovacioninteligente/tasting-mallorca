@@ -87,6 +87,13 @@ export function TestimonialsSection() {
     return (
         <section className="py-24 bg-secondary overflow-hidden">
             <div className="container w-full px-4 md:px-0 md:w-[90vw] mx-auto">
+            <div className="text-center mb-12">
+                <p className="text-primary font-cursive font-bold text-lg">Testimonials</p>
+                <h2 className="text-4xl md:text-5xl font-extrabold mt-2">What Our Customers Say</h2>
+                <p className="mt-4 text-lg text-muted-foreground max-w-xl mx-auto">
+                    Real stories from travelers who have discovered the authentic Mallorca with us.
+                </p>
+            </div>
             <div className="grid md:grid-cols-2 gap-16 items-center">
                 {/* Image collage */}
                 <div className="relative h-[500px] hidden md:block">
@@ -115,7 +122,7 @@ export function TestimonialsSection() {
                     <CarouselContent>
                     {testimonials.map((testimonial, index) => (
                         <CarouselItem key={index}>
-                        <div className="pl-4">
+                        <div className="px-4">
                             <Quote className="w-16 h-16 text-primary" />
                             <div className="flex my-4">
                                 {Array.from({ length: 5 }).map((_, i) => (
@@ -125,7 +132,7 @@ export function TestimonialsSection() {
                                     />
                                 ))}
                             </div>
-                            <p className="text-xl md:text-3xl font-medium text-foreground/80 leading-relaxed">
+                            <p className="text-xl md:text-2xl font-medium text-foreground/80 leading-relaxed">
                             {testimonial.quote}
                             </p>
                             <div className="mt-6">
