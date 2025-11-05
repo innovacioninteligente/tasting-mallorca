@@ -27,12 +27,13 @@ export default function HomeClientPage({
     <div className="flex flex-col bg-background">
       <HeroSection dictionary={dictionary.home} />
       <ImmersiveCarouselSection />
-      <TopDestinationsSection />
+      <FeaturedToursSection dictionary={dictionary} lang={lang} />
       <WhatsIncludedSection dictionary={dictionary.whatsIncluded} />
       <WhyChooseUsSection dictionary={dictionary.whyChooseUs} />
-      <FeaturedToursSection dictionary={dictionary} lang={lang} />
       <GallerySection />
       <HappyCustomersSection />
+      <TopDestinationsSection />
+      <FeaturedToursSection dictionary={dictionary} lang={lang} />
       <TourGuidesSection />
       <TestimonialsSection />
       <BlogSection />

@@ -24,10 +24,10 @@ export function HeroSection({ dictionary }: { dictionary: HeroDictionary }) {
             {dictionary.subtitle}
           </p>
           <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Button asChild size="lg" className="font-bold text-base rounded-full px-8 py-7 bg-primary hover:bg-primary/90 text-primary-foreground">
+            <Button asChild size="lg" className="font-bold text-base rounded-full px-8 py-7 bg-primary hover:bg-primary/90 text-primary-foreground w-full sm:w-auto">
               <Link href="/tours">{dictionary.bookNow}</Link>
             </Button>
-            <Button asChild size="lg" variant="outline" className="font-bold text-base rounded-full px-8 py-7">
+            <Button asChild size="lg" variant="outline" className="font-bold text-base rounded-full px-8 py-7 w-full sm:w-auto">
               <Link href="/tours">{dictionary.viewAllTours}</Link>
             </Button>
           </div>
