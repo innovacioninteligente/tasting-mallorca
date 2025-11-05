@@ -10,6 +10,7 @@ import { TourHighlightsSection } from '@/components/tours/tour-highlights-sectio
 import { TourIncludesSection } from '@/components/tours/tour-includes-section';
 import { TourItinerarySection } from '@/components/tours/tour-itinerary-section';
 import { TourBookingSection } from '@/components/tours/tour-booking-section';
+import { TourOverviewSection } from '@/components/tours/tour-overview-section';
 
 
 type TourPageProps = {
@@ -51,6 +52,7 @@ export default async function TourPage({ params }: TourPageProps) {
 
         <main className="w-full md:w-[90vw] mx-auto px-4 py-16 grid grid-cols-1 lg:grid-cols-3 gap-12">
             <div className="lg:col-span-2 space-y-12">
+              <TourOverviewSection dictionary={tourDict.overview} />
               <TourInfoSection dictionary={tourDict.tourInfo} />
               <TourHighlightsSection dictionary={tourDict.highlights} />
               <TourIncludesSection dictionary={tourDict.includes} />
