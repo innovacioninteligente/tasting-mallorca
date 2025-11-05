@@ -1,12 +1,13 @@
 'use client';
 
 import Image from 'next/image';
-import { Camera } from 'lucide-react';
+import { Camera, X } from 'lucide-react';
 import { useState } from 'react';
 import {
   Dialog,
   DialogContent,
   DialogTitle,
+  DialogClose,
 } from "@/components/ui/dialog";
 import {
   Carousel,
@@ -98,6 +99,10 @@ export function GallerySection() {
                         <CarouselPrevious className="absolute left-4 top-1/2 -translate-y-1/2 text-white bg-black/50 hover:bg-black/70 border-white/50 h-12 w-12" />
                         <CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2 text-white bg-black/50 hover:bg-black/70 border-white/50 h-12 w-12" />
                     </Carousel>
+                     <DialogClose className="absolute right-4 top-4 rounded-full p-2 bg-black/50 text-white opacity-80 hover:opacity-100 transition-opacity focus:outline-none focus:ring-2 focus:ring-white">
+                        <X className="h-8 w-8" />
+                        <span className="sr-only">Close</span>
+                    </DialogClose>
                 </DialogContent>
             </Dialog>
       </section>
