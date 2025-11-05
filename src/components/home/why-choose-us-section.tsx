@@ -21,9 +21,6 @@ export function WhyChooseUsSection({ dictionary }: { dictionary: WhyChooseUsDict
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
                 {/* Left Side - Image */}
                 <div className="relative">
-                <div className="absolute -top-4 -left-4 w-24 h-24">
-                    <Image src="/doodle-arrow.svg" alt="Doodle arrow" fill className="object-contain" />
-                </div>
                 {aboutUsImage && (
                     <div className="relative aspect-[3/4] rounded-3xl overflow-hidden shadow-2xl max-w-md mx-auto">
                     <Image

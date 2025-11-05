@@ -23,12 +23,6 @@ export function TourGuidesSection() {
             </div>
 
             <div className="container relative w-full px-4 md:px-0 md:w-[90vw] mx-auto">
-            <div className="hidden md:block absolute top-1/2 -left-24">
-                <Image src="/balloon-doodle.svg" alt="Hot air balloon doodle" width={100} height={150} className="object-contain" />
-            </div>
-            <div className="hidden md:block absolute top-1/2 -right-24">
-                <Image src="/airplane-doodle.svg" alt="Airplane doodle" width={150} height={75} className="object-contain" />
-            </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                 {tourGuides.map((guide) => (
                 <div key={guide.name} className="flex flex-col items-center text-center">
