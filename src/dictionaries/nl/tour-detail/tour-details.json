@@ -1,5 +1,12 @@
 
 {
+    "highlightsTitle": "Wat je gaat doen",
+    "highlights": [
+        "Geniet van een traditionele Mallorcaanse lunch met lokale gerechten en sangria.",
+        "Verken het charmante dorp Valldemossa en zijn geplaveide straatjes.",
+        "Bezoek de geboorteplaats van Fray Junípero Serra in het dorp Petra.",
+        "Ontdek de kunst van het parelmaken in een lokale fabriek en bekijk de collectie."
+    ],
     "detailTitle": "In detail",
     "detailContent": [
         "Ontsnap aan de toeristische drukte en ontdek de authentieke kant van Mallorca tijdens deze begeleide dagtocht door het hart van het zuiden van het eiland.",
@@ -22,12 +29,12 @@
         "Persoonlijke uitgaven",
         "Fooien"
     ],
+    "importantInfoTitle": "Belangrijke informatie",
     "notSuitableTitle": "Niet geschikt voor",
     "notSuitableItems": [
         "Mensen met mobiliteitsproblemen",
         "Mensen die last hebben van reisziekte"
     ],
-    "importantInfoTitle": "Belangrijke informatie",
     "whatToBringTitle": "Wat mee te nemen",
     "whatToBringItems": [
         "Comfortabele schoenen",

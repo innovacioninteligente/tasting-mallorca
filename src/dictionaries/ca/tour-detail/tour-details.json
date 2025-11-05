@@ -1,5 +1,12 @@
 
 {
+    "highlightsTitle": "Què faràs",
+    "highlights": [
+        "Gaudeix d'un dinar tradicional mallorquí amb plats locals i sangria.",
+        "Explora l'encantador poble de Valldemossa i els seus carrers empedrats.",
+        "Visita el lloc de naixement de Fra Juníper Serra al poble de Petra.",
+        "Descobreix l'art de la fabricació de perles en una fàbrica local i fes una ullada a la col·lecció."
+    ],
     "detailTitle": "En detall",
     "detailContent": [
         "Escapa de les multituds de turistes i descobreix el costat autèntic de Mallorca en aquest tour guiat d'un dia pel cor del sud de l'illa.",
@@ -22,12 +29,12 @@
         "Despeses personals",
         "Propines"
     ],
+    "importantInfoTitle": "Informació important",
     "notSuitableTitle": "No apte per a",
     "notSuitableItems": [
         "Persones amb problemes de mobilitat",
         "Persones que pateixen de marejos per moviment"
     ],
-    "importantInfoTitle": "Informació important",
     "whatToBringTitle": "Què portar",
     "whatToBringItems": [
         "Calçat còmode",

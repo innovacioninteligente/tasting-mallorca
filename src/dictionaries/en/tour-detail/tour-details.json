@@ -1,5 +1,12 @@
 
 {
+    "highlightsTitle": "What you'll do",
+    "highlights": [
+        "Enjoy a traditional Mallorcan lunch with local dishes and sangria.",
+        "Explore the charming village of Valldemossa and its cobbled streets.",
+        "Visit the birthplace of Fray Junípero Serra in the village of Petra.",
+        "Discover the art of pearl manufacturing at a local factory and browse the collection."
+    ],
     "detailTitle": "In detail",
     "detailContent": [
         "Escape the tourist crowds and discover the authentic side of Mallorca on this guided day tour through the heart of the island's south.",
@@ -22,12 +29,12 @@
         "Personal expenses",
         "Gratuities"
     ],
+    "importantInfoTitle": "Important information",
     "notSuitableTitle": "Not suitable for",
     "notSuitableItems": [
         "People with mobility impairments",
         "People who suffer from motion sickness"
     ],
-    "importantInfoTitle": "Important information",
     "whatToBringTitle": "What to bring",
     "whatToBringItems": [
         "Comfortable shoes",

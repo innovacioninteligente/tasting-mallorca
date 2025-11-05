@@ -1,5 +1,12 @@
 
 {
+    "highlightsTitle": "Ce que vous ferez",
+    "highlights": [
+        "Profitez d'un déjeuner traditionnel majorquin avec des plats locaux et de la sangria.",
+        "Explorez le charmant village de Valldemossa et ses rues pavées.",
+        "Visitez le lieu de naissance de Fray Junípero Serra dans le village de Petra.",
+        "Découvrez l'art de la fabrication de perles dans une usine locale et parcourez la collection."
+    ],
     "detailTitle": "En détail",
     "detailContent": [
         "Échappez aux foules de touristes et découvrez le côté authentique de Majorque lors de cette visite guidée d'une journée au cœur du sud de l'île.",
@@ -22,12 +29,12 @@
         "Dépenses personnelles",
         "Pourboires"
     ],
+    "importantInfoTitle": "Informations importantes",
     "notSuitableTitle": "Ne convient pas pour",
     "notSuitableItems": [
         "Personnes à mobilité réduite",
         "Personnes souffrant du mal des transports"
     ],
-    "importantInfoTitle": "Informations importantes",
     "whatToBringTitle": "Quoi apporter",
     "whatToBringItems": [
         "Chaussures confortables",

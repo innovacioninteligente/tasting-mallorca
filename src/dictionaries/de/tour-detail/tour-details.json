@@ -1,5 +1,12 @@
 
 {
+    "highlightsTitle": "Was Sie tun werden",
+    "highlights": [
+        "Genießen Sie ein traditionelles mallorquinisches Mittagessen mit lokalen Gerichten und Sangria.",
+        "Erkunden Sie das charmante Dorf Valldemossa und seine kopfsteingepflasterten Straßen.",
+        "Besuchen Sie den Geburtsort von Fray Junípero Serra im Dorf Petra.",
+        "Entdecken Sie die Kunst der Perlenherstellung in einer lokalen Fabrik und werfen Sie einen Blick auf die Kollektion."
+    ],
     "detailTitle": "Im Detail",
     "detailContent": [
         "Entfliehen Sie den Touristenmassen und entdecken Sie die authentische Seite Mallorcas auf dieser geführten Tagestour durch das Herz des Südens der Insel.",
@@ -22,12 +29,12 @@
         "Persönliche Ausgaben",
         "Trinkgelder"
     ],
+    "importantInfoTitle": "Wichtige Informationen",
     "notSuitableTitle": "Nicht geeignet für",
     "notSuitableItems": [
         "Personen mit Mobilitätsproblemen",
         "Personen, die unter Reisekrankheit leiden"
     ],
-    "importantInfoTitle": "Wichtige Informationen",
     "whatToBringTitle": "Was Sie mitbringen sollten",
     "whatToBringItems": [
         "Bequeme Schuhe",

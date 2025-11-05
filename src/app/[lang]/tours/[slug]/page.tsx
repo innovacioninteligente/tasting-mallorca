@@ -6,11 +6,10 @@ import { Metadata } from 'next';
 import { TourHeaderSection } from '@/components/tours/tour-header-section';
 import { TourGallerySection } from '@/components/tours/tour-gallery-section';
 import { TourInfoSection } from '@/components/tours/tour-info-section';
-import { TourHighlightsSection } from '@/components/tours/tour-highlights-section';
-import { TourIncludesSection } from '@/components/tours/tour-includes-section';
 import { TourItinerarySection } from '@/components/tours/tour-itinerary-section';
 import { TourBookingSection } from '@/components/tours/tour-booking-section';
 import { TourOverviewSection } from '@/components/tours/tour-overview-section';
+import { TourDetailsAccordion } from '@/components/tours/tour-details-accordion';
 
 
 type TourPageProps = {
@@ -55,8 +54,7 @@ export default async function TourPage({ params }: TourPageProps) {
               <TourOverviewSection dictionary={tourDict.overview} />
               <TourInfoSection dictionary={tourDict.tourInfo} />
               <TourItinerarySection dictionary={tourDict.itinerary} />
-              <TourHighlightsSection dictionary={tourDict.highlights} />
-              <TourIncludesSection dictionary={tourDict.includes} />
+              <TourDetailsAccordion dictionary={tourDict.tourDetails} />
             </div>
             <aside className="lg:col-span-1">
               <TourBookingSection dictionary={tourDict.booking} price={tour.price} />

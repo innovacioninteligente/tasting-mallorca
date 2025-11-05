@@ -1,5 +1,12 @@
 
 {
+    "highlightsTitle": "Qué harás",
+    "highlights": [
+        "Disfruta de un almuerzo tradicional mallorquín con platos locales y sangría.",
+        "Explora el encantador pueblo de Valldemossa y sus calles empedradas.",
+        "Visita el lugar de nacimiento de Fray Junípero Serra en el pueblo de Petra.",
+        "Descubre el arte de la fabricación de perlas en una fábrica local y echa un vistazo a la colección."
+    ],
     "detailTitle": "En detalle",
     "detailContent": [
         "Escapa de las multitudes de turistas y descubre el lado auténtico de Mallorca en este tour guiado de un día por el corazón del sur de la isla.",
@@ -22,12 +29,12 @@
         "Gastos personales",
         "Propinas"
     ],
+    "importantInfoTitle": "Información importante",
     "notSuitableTitle": "No apto para",
     "notSuitableItems": [
         "Personas con problemas de movilidad",
         "Personas que sufren de mareos por movimiento"
     ],
-    "importantInfoTitle": "Información importante",
     "whatToBringTitle": "Qué llevar",
     "whatToBringItems": [
         "Calzado cómodo",
