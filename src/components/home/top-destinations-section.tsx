@@ -1,33 +1,28 @@
 'use client';
 
 import Image from 'next/image';
-import { Badge } from '@/components/ui/badge';
 import { ArrowUpRight, Sprout } from 'lucide-react';
 
 const destinations = [
   {
-    name: 'New York',
-    listings: 12,
-    image: 'https://picsum.photos/seed/ny/400/600',
-    imageHint: 'new york city',
+    name: 'Valldemosa',
+    image: 'https://firebasestorage.googleapis.com/v0/b/amparo-aesthetics.firebasestorage.app/o/tasting-mallorca%2Fimages%2Fthe-royal-carthusian-monastery-valldemossa-valldemossa-698.webp?alt=media&token=ef1d3230-df85-4f5c-9c77-ff44d2ec64d5',
+    imageHint: 'Valldemossa monastery',
   },
   {
-    name: 'London',
-    listings: 22,
-    image: 'https://picsum.photos/seed/london/400/600',
-    imageHint: 'london city',
+    name: 'Torre de Verger',
+    image: 'https://firebasestorage.googleapis.com/v0/b/amparo-aesthetics.firebasestorage.app/o/tasting-mallorca%2Fimages%2Ftorre-de-verger.webp?alt=media&token=4971c9fe-3696-49e9-a397-c7a2cb85fbac',
+    imageHint: 'Torre de Verger coast',
   },
   {
-    name: 'San Francisco',
-    listings: 10,
-    image: 'https://picsum.photos/seed/sf/400/600',
-    imageHint: 'san francisco bridge',
+    name: 'Petra',
+    image: 'https://firebasestorage.googleapis.com/v0/b/amparo-aesthetics.firebasestorage.app/o/tasting-mallorca%2Fimages%2FIglesia-de-Sant-Pere.webp?alt=media&token=a3620cfb-c25f-4e91-b4e5-640df2fb8f99',
+    imageHint: 'Petra church',
   },
   {
-    name: 'Paris',
-    listings: 12,
-    image: 'https://picsum.photos/seed/paris/400/600',
-    imageHint: 'paris eiffel tower',
+    name: 'Artà',
+    image: 'https://firebasestorage.googleapis.com/v0/b/amparo-aesthetics.firebasestorage.app/o/tasting-mallorca%2Fimages%2FArt%C3%A0_Sant_Salvador_01.webp?alt=media&token=30217468-6904-4f6a-b5a4-8fa32fe79cb6',
+    imageHint: 'Artà Sant Salvador',
   },
 ];
 
@@ -58,9 +53,6 @@ export function TopDestinationsSection() {
                     <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
                     <div className="absolute bottom-0 left-0 p-6 text-white">
                         <h3 className="text-2xl font-bold">{dest.name}</h3>
-                        <Badge variant="secondary" className="mt-2 bg-white/30 text-white backdrop-blur-sm border-0">
-                        {dest.listings} Listing
-                        </Badge>
                     </div>
                     <div className="absolute top-4 right-4 h-12 w-12 bg-primary rounded-full flex items-center justify-center transform transition-transform duration-300 group-hover:rotate-45">
                         <ArrowUpRight className="h-6 w-6 text-primary-foreground" />
