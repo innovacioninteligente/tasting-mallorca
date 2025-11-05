@@ -7,6 +7,7 @@ import { Menu, Search, Sprout } from 'lucide-react';
 import { type Locale } from '@/dictionaries/config';
 import { type getDictionary } from '@/dictionaries/get-dictionary';
 import { LanguageSwitcher } from './language-switcher';
+import { useState } from 'react';
 
 type HeaderProps = {
     dictionary: Awaited<ReturnType<typeof getDictionary>>['header'];
@@ -14,6 +15,8 @@ type HeaderProps = {
 }
 
 export function Header({ dictionary, lang }: HeaderProps) {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
   const navLinks = [
     { href: `/${lang}/`, label: dictionary.home },
     { href: `/${lang}/about`, label: dictionary.about },
@@ -57,7 +60,7 @@ export function Header({ dictionary, lang }: HeaderProps) {
         </div>
 
         <div className="lg:hidden">
-          <Sheet>
+          <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon">
                 <Menu className="h-8 w-8" />
@@ -69,7 +72,7 @@ export function Header({ dictionary, lang }: HeaderProps) {
                 <SheetTitle className="sr-only">Menu</SheetTitle>
               </SheetHeader>
               <div className="flex flex-col gap-6 p-6">
-                <Link href={`/${lang}/`} className="flex items-center gap-2" prefetch={false}>
+                <Link href={`/${lang}/`} className="flex items-center gap-2" prefetch={false} onClick={() => setIsMobileMenuOpen(false)}>
                    <Sprout className="h-8 w-8 text-primary" />
                   <span className="font-headline text-2xl font-bold">
                     Tasting Mallorca
@@ -82,6 +85,7 @@ export function Header({ dictionary, lang }: HeaderProps) {
                       href={link.href}
                       className="font-medium text-foreground/80 transition-colors hover:text-primary"
                       prefetch={false}
+                      onClick={() => setIsMobileMenuOpen(false)}
                     >
                       {link.label}
                     </Link>
@@ -92,7 +96,7 @@ export function Header({ dictionary, lang }: HeaderProps) {
                 </div>
                 <div className="flex flex-col gap-4 mt-4">
                    <Button asChild size="lg" className="font-bold text-lg bg-primary hover:bg-primary/90 text-primary-foreground">
-                      <Link href={`/${lang}/tours`}>{dictionary.startBooking}</Link>
+                      <Link href={`/${lang}/tours`} onClick={() => setIsMobileMenuOpen(false)}>{dictionary.startBooking}</Link>
                    </Button>
                 </div>
               </div>
