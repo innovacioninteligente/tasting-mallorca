@@ -1,0 +1,31 @@
+
+{
+    "mainTitle": "Algemene informatie",
+    "infoPoints": [
+        {
+            "icon": "CalendarX",
+            "title": "Gratis annuleren",
+            "description": "Annuleer tot 24 uur van tevoren voor een volledige terugbetaling"
+        },
+        {
+            "icon": "CreditCard",
+            "title": "Reserveer nu en betaal later",
+            "description": "Flexibele plannen: boek je plek onmiddellijk, zonder vandaag te betalen."
+        },
+        {
+            "icon": "Clock",
+            "title": "Duur 8 uur",
+            "description": "Controleer de beschikbaarheid om de starttijden te zien."
+        },
+        {
+            "icon": "Languages",
+            "title": "Gids",
+            "description": "Engels, Duits, Frans, Nederlands"
+        },
+        {
+            "icon": "Bus",
+            "title": "Ophaalservice inbegrepen",
+            "description": "De ophaalservice is inbegrepen. Bij het boeken hoeft u alleen de naam van uw hotel op te geven. Het systeem toont u automatisch het dichtstbijzijnde beschikbare ontmoetingspunt uit onze lijst met locaties. De ophaalservice dekt de belangrijkste gebieden in het zuiden en zuidwesten van Mallorca, van S'Arenal en Playa de Palma tot Camp de Mar (inclusief Palma, Cala Major, Illetas, Palmanova, Magaluf, Santa Ponsa, Paguera en nabijgelegen toeristische centra). Zodra de reservering is bevestigd, neemt ons team rechtstreeks contact met u op om de exacte ophaaltijd te bevestigen. Wees ten minste 10 minuten voor de afgesproken tijd op het ontmoetingspunt."
+        }
+    ]
+}

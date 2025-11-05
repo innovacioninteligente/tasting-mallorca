@@ -1,0 +1,31 @@
+
+{
+    "mainTitle": "Informations générales",
+    "infoPoints": [
+        {
+            "icon": "CalendarX",
+            "title": "Annulation gratuite",
+            "description": "Annulez jusqu'à 24 heures à l'avance pour un remboursement complet"
+        },
+        {
+            "icon": "CreditCard",
+            "title": "Réservez maintenant et payez plus tard",
+            "description": "Plans flexibles : réservez votre place immédiatement, sans être débité aujourd'hui."
+        },
+        {
+            "icon": "Clock",
+            "title": "Durée 8 heures",
+            "description": "Vérifiez la disponibilité pour voir les heures de départ."
+        },
+        {
+            "icon": "Languages",
+            "title": "Guide",
+            "description": "Anglais, Allemand, Français, Néerlandais"
+        },
+        {
+            "icon": "Bus",
+            "title": "Service de prise en charge inclus",
+            "description": "Le service de prise en charge est inclus. Lors de la réservation, il vous suffit d'indiquer le nom de votre hôtel. Le système vous montrera automatiquement le point de rendez-vous le plus proche disponible dans notre liste d'emplacements. Le service de prise en charge couvre les principales zones du sud et du sud-ouest de Majorque, de S'Arenal et Playa de Palma à Camp de Mar (y compris Palma, Cala Major, Illetas, Palmanova, Magaluf, Santa Ponsa, Paguera et les centres touristiques à proximité). Une fois la réservation confirmée, notre équipe vous contactera directement pour confirmer l'heure exacte de prise en charge. Veuillez vous présenter au point de rendez-vous au moins 10 minutes avant l'heure convenue."
+        }
+    ]
+}

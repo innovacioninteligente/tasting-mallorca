@@ -1,0 +1,31 @@
+
+{
+    "mainTitle": "General Information",
+    "infoPoints": [
+        {
+            "icon": "CalendarX",
+            "title": "Free cancellation",
+            "description": "Cancel up to 24 hours in advance for a full refund"
+        },
+        {
+            "icon": "CreditCard",
+            "title": "Reserve now & pay later",
+            "description": "Flexible plans: book your spot immediately, without being charged today."
+        },
+        {
+            "icon": "Clock",
+            "title": "Duration 8 hours",
+            "description": "Check availability to see starting times."
+        },
+        {
+            "icon": "Languages",
+            "title": "Guide",
+            "description": "English, German, French, Dutch"
+        },
+        {
+            "icon": "Bus",
+            "title": "Pickup service included",
+            "description": "Pickup service is included. When booking, you just need to indicate the name of your hotel. The system will automatically show you the nearest available meeting point from our list of locations. The pickup service covers the main areas of the south and southwest of Mallorca, from S'Arenal and Playa de Palma to Camp de Mar (including Palma, Cala Major, Illetas, Palmanova, Magaluf, Santa Ponsa, Paguera, and nearby tourist centers). Once the reservation is confirmed, our team will contact you directly to confirm the exact pickup time. Please be at the meeting point at least 10 minutes before the agreed time."
+        }
+    ]
+}

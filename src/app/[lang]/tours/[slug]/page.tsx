@@ -5,7 +5,7 @@ import { getDictionary } from '@/dictionaries/get-dictionary';
 import { Metadata } from 'next';
 import { TourHeaderSection } from '@/components/tours/tour-header-section';
 import { TourGallerySection } from '@/components/tours/tour-gallery-section';
-import { TourOverviewSection } from '@/components/tours/tour-overview-section';
+import { TourInfoSection } from '@/components/tours/tour-info-section';
 import { TourHighlightsSection } from '@/components/tours/tour-highlights-section';
 import { TourIncludesSection } from '@/components/tours/tour-includes-section';
 import { TourItinerarySection } from '@/components/tours/tour-itinerary-section';
@@ -51,7 +51,7 @@ export default async function TourPage({ params }: TourPageProps) {
 
         <main className="w-full md:w-[90vw] mx-auto px-4 py-16 grid grid-cols-1 lg:grid-cols-3 gap-12">
             <div className="lg:col-span-2 space-y-12">
-              <TourOverviewSection dictionary={tourDict.overview} />
+              <TourInfoSection dictionary={tourDict.tourInfo} />
               <TourHighlightsSection dictionary={tourDict.highlights} />
               <TourIncludesSection dictionary={tourDict.includes} />
               <TourItinerarySection dictionary={tourDict.itinerary} />

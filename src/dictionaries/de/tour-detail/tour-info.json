@@ -1,0 +1,31 @@
+
+{
+    "mainTitle": "Allgemeine Informationen",
+    "infoPoints": [
+        {
+            "icon": "CalendarX",
+            "title": "Kostenlose Stornierung",
+            "description": "Stornieren Sie bis zu 24 Stunden im Voraus für eine vollständige Rückerstattung"
+        },
+        {
+            "icon": "CreditCard",
+            "title": "Jetzt reservieren & später bezahlen",
+            "description": "Flexible Pläne: Buchen Sie Ihren Platz sofort, ohne dass Ihnen heute Kosten entstehen."
+        },
+        {
+            "icon": "Clock",
+            "title": "Dauer 8 Stunden",
+            "description": "Überprüfen Sie die Verfügbarkeit, um die Startzeiten zu sehen."
+        },
+        {
+            "icon": "Languages",
+            "title": "Reiseführer",
+            "description": "Englisch, Deutsch, Französisch, Niederländisch"
+        },
+        {
+            "icon": "Bus",
+            "title": "Abholservice inbegriffen",
+            "description": "Der Abholservice ist inbegriffen. Bei der Buchung müssen Sie nur den Namen Ihres Hotels angeben. Das System zeigt Ihnen automatisch den nächstgelegenen verfügbaren Treffpunkt aus unserer Standortliste. Der Abholservice deckt die Hauptgebiete im Süden und Südwesten von Mallorca ab, von S'Arenal und Playa de Palma bis nach Camp de Mar (einschließlich Palma, Cala Major, Illetas, Palmanova, Magaluf, Santa Ponsa, Paguera und den nahegelegenen Ferienorten). Sobald die Buchung bestätigt ist, wird sich unser Team direkt mit Ihnen in Verbindung setzen, um die genaue Abholzeit zu bestätigen. Bitte seien Sie mindestens 10 Minuten vor der vereinbarten Zeit am Treffpunkt."
+        }
+    ]
+}
