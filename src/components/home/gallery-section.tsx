@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { Camera, X } from 'lucide-react';
+import { Camera, X, ArrowRight } from 'lucide-react';
 import { useState } from 'react';
 import {
   Dialog,
@@ -16,6 +16,8 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import { Button } from '../ui/button';
+import Link from 'next/link';
 
 const galleryImages = [
   { src: 'https://firebasestorage.googleapis.com/v0/b/amparo-aesthetics.firebasestorage.app/o/tasting-mallorca%2Fimages%2FDSC07636-Mejorado-NR.jpg?alt=media&token=083f05f7-cddb-498a-a044-056ee1834adc', hint: 'happy couple travel', className: 'col-span-1 md:col-span-2 md:row-span-2' },
@@ -26,10 +28,6 @@ const galleryImages = [
   { src: 'https://firebasestorage.googleapis.com/v0/b/amparo-aesthetics.firebasestorage.app/o/tasting-mallorca%2Fimages%2FDSC07927-Mejorado-NR.jpg?alt=media&token=3cd8ed5c-69a8-4268-b73c-7948dc6eaa34', hint: 'hiker looking at cliffs', className: 'col-span-1' },
   { src: 'https://firebasestorage.googleapis.com/v0/b/amparo-aesthetics.firebasestorage.app/o/tasting-mallorca%2Fimages%2FDSC07715-Mejorado-NR.jpg?alt=media&token=9c653a7e-ed1d-41e9-8bf6-19f5b554d1b4', hint: 'happy man beach', className: 'col-span-1 md:col-span-2' },
   { src: 'https://firebasestorage.googleapis.com/v0/b/amparo-aesthetics.firebasestorage.app/o/tasting-mallorca%2Fimages%2FDSC07651-Mejorado-NR.jpg?alt=media&token=e14dbbb0-7221-4bc4-b47a-8b01915e16b1', hint: 'woman travel backpack', className: 'col-span-1' },
-  { src: 'https://firebasestorage.googleapis.com/v0/b/amparo-aesthetics.firebasestorage.app/o/tasting-mallorca%2Fimages%2FDSC07923-Mejorado-NR.jpg?alt=media&token=3220a405-18af-4354-8e2e-1d6138137922', hint: 'family airport travel', className: 'col-span-1' },
-  { src: 'https://firebasestorage.googleapis.com/v0/b/amparo-aesthetics.firebasestorage.app/o/tasting-mallorca%2Fimages%2FDSC08000-Mejorado-NR.jpg?alt=media&token=49f4cd5e-6528-4c41-8438-e76afec57e6b', hint: 'woman yellow dress beach', className: 'col-span-1' },
-  { src: 'https://firebasestorage.googleapis.com/v0/b/amparo-aesthetics.firebasestorage.app/o/tasting-mallorca%2Fimages%2FDSC07842-Mejorado-NR.jpg?alt=media&token=1fda44e7-fd51-456a-8a2a-abd405c91613', hint: 'couple walking city', className: 'col-span-1' },
-  { src: 'https://firebasestorage.googleapis.com/v0/b/amparo-aesthetics.firebasestorage.app/o/tasting-mallorca%2Fimages%2FDSC07852-Mejorado-NR.jpg?alt=media&token=998eb000-2ed9-410b-b9e1-c56aa67965b0', hint: 'couple walking city', className: 'col-span-1 md:col-span-2' },
 ];
 
 
@@ -56,7 +54,7 @@ export function GallerySection() {
             </div>
             <div className="w-full px-4 md:px-0 md:w-[90vw] mx-auto">
                 <div className="grid grid-cols-2 md:grid-cols-4 auto-rows-[250px] gap-2 md:gap-4">
-                    {galleryImages.slice(0, 7).map((img, index) => (
+                    {galleryImages.map((img, index) => (
                         <div key={index} className={`relative rounded-xl overflow-hidden group cursor-pointer ${img.className}`} onClick={() => openLightbox(index)}>
                             <Image
                                 src={img.src}
@@ -69,6 +67,16 @@ export function GallerySection() {
                              <div className="absolute inset-0 bg-black/10 transition-colors group-hover:bg-black/20"></div>
                         </div>
                     ))}
+                     <div className="md:col-span-2 p-8 rounded-xl bg-secondary flex flex-col items-center justify-center text-center">
+                        <h3 className="text-3xl font-extrabold text-foreground">Tu Aventura te Espera</h3>
+                        <p className="mt-2 text-muted-foreground">Vive la Mallorca auténtica. Plazas limitadas.</p>
+                        <Button asChild size="lg" className="mt-6 font-bold rounded-full group">
+                            <Link href="/tours">
+                                Ver Todos los Tours
+                                <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
+                            </Link>
+                        </Button>
+                    </div>
                 </div>
             </div>
 
@@ -99,7 +107,7 @@ export function GallerySection() {
                         <CarouselPrevious className="absolute left-4 top-1/2 -translate-y-1/2 text-white bg-black/50 hover:bg-black/70 border-white/50 h-12 w-12" />
                         <CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2 text-white bg-black/50 hover:bg-black/70 border-white/50 h-12 w-12" />
                     </Carousel>
-                     <DialogClose className="absolute right-4 top-4 rounded-full p-2 bg-black/50 text-white opacity-80 hover:opacity-100 transition-opacity focus:outline-none focus:ring-2 focus:ring-white">
+                    <DialogClose className="absolute right-4 top-4 rounded-full p-2 bg-black/50 text-white opacity-80 hover:opacity-100 transition-opacity focus:outline-none focus:ring-2 focus:ring-white">
                         <X className="h-8 w-8" />
                         <span className="sr-only">Close</span>
                     </DialogClose>
