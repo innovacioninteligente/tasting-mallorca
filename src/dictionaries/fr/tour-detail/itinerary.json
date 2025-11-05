@@ -1,30 +1,86 @@
 
 {
-    "title": "Itinéraire Prévu",
+    "title": "Itinéraire Complet",
+    "pickupTitle": "41 options de lieu de prise en charge",
+    "pickupPoints": [
+        "Porsche Destination Charging Station", "Globales Mimosa", "Av. Europa 2 (31130)", "Carrer Gran Via Puig Major, 4", "Carrer del Llaüt, 37", "Son Caliu 2 (11023)", "432-ses Fontanelles", "Globales Palmanova Palace", "Meeting Point Parque Infantil", "313-Amèrica - ctra. Militar", "Av. d'Amèrica, 0", "Via Francisca Capllonch Plomer, 1", "Camí de les Meravelles, 7", "Avinguda del Golf, 1", "Autopista de Poniente, 4A", "Globales Maioris", "Paseo Marítimo, 18", "HOTEL TAURUS PARK TUI STOP", "Carrer del Moll, 10", "Marineland 2 (11020)", "Carrer dels Pinzons, 11", "Carrer de La Savina, 1", "H. Linda", "Ctra. Andratx - Vaquer 2 (11015)", "Carrer de La Savina, 16", "Carrer Trencadors, 50", "Sun Club El Dorado", "Avinguda de Fra Joan Llabrés, 18", "Apartamentos Ben-Hur", "Avinguda de Son Rigo, 8", "Avinguda de Son Maties, 12", "La Hacienda STEAK HOUSE", "Cala Major 2 (40014)", "951-Balneari 10 - Sometimes", "Carrer de Marbella, 35", "Globales Cala Viñas Hotel", "Notari Alemany 1 (11043)", "Carrer Mallorca, 3", "Carrer del Llaüt, 24", "Punta Marroig 2 (11028)", "Meeting Point Bq.Paguera Boutique"
+    ],
+    "seeMore": "Voir plus",
+    "seeLess": "Voir moins",
     "stops": [
         {
-            "title": "Prise en charge à l'hôtel",
-            "duration": "30 min"
+            "type": "travel",
+            "icon": "Bus",
+            "title": "Voyage en bus/autocar",
+            "duration": "1 heure",
+            "activities": []
         },
         {
-            "title": "Visite de Valldemossa",
-            "duration": "2 heures"
+            "type": "stop",
+            "icon": "Camera",
+            "title": "Torre del Verger",
+            "duration": "45 minutes",
+            "activities": ["Arrêt photo", "Temps libre", "Promenade", "Vues panoramiques en chemin"]
         },
         {
-            "title": "Point de vue de Sa Foradada",
-            "duration": "30 min"
+            "type": "travel",
+            "icon": "Bus",
+            "title": "Voyage en bus/autocar",
+            "duration": "1 heure",
+            "activities": []
         },
         {
-            "title": "Déjeuner dans un restaurant local",
-            "duration": "1,5 heures"
+            "type": "stop",
+            "icon": "MapPin",
+            "title": "Valldemossa",
+            "duration": "1 heure",
+            "activities": ["Arrêt photo", "Visite", "Temps libre", "Shopping", "Promenade", "Vues panoramiques en chemin"]
         },
         {
-            "title": "Promenade à Deià",
-            "duration": "1 heure"
+            "type": "travel",
+            "icon": "Bus",
+            "title": "Voyage en bus/autocar",
+            "duration": "45 minutes",
+            "activities": []
         },
         {
-            "title": "Retour à l'hôtel",
-            "duration": "45 min"
+            "type": "stop",
+            "icon": "UtensilsCrossed",
+            "title": "Petra, Espagne",
+            "duration": "2 heures",
+            "activities": ["Déjeuner"]
+        },
+        {
+            "type": "travel",
+            "icon": "Bus",
+            "title": "Voyage en bus/autocar",
+            "duration": "20 minutes",
+            "activities": []
+        },
+        {
+            "type": "stop",
+            "icon": "MapPin",
+            "title": "Petra, Espagne",
+            "duration": "1 heure",
+            "activities": ["Arrêt photo", "Visite", "Visite guidée", "Tourisme", "Promenade", "Vues panoramiques en chemin"]
+        },
+        {
+            "type": "travel",
+            "icon": "Bus",
+            "title": "Voyage en bus/autocar",
+            "duration": "30 minutes",
+            "activities": []
+        },
+        {
+            "type": "stop",
+            "icon": "ShoppingBag",
+            "title": "Manacor",
+            "duration": "1 heure",
+            "activities": ["Visite", "Shopping"]
         }
+    ],
+    "dropoffTitle": "41 lieux de dépose",
+    "dropoffPoints": [
+        "Via Francisca Capllonch Plomer, 1", "Camí de les Meravelles, 7", "Carrer de Marbella, 35", "Paseo Marítimo, 18", "Autopista de Poniente, 4A", "Marineland 2 (11020)", "Punta Marroig 2 (11028)", "Avinguda del Golf, 1", "Globales Maioris", "Son Caliu 2 (11023)", "La Hacienda STEAK HOUSE", "432-ses Fontanelles", "313-Amèrica - ctra. Militar", "951-Balneari 10 - Sometimes", "Globales Mimosa", "Carrer Gran Via Puig Major, 4", "Meeting Point Bq.Paguera Boutique", "Carrer de La Savina, 16", "Globales Palmanova Palace", "Avinguda de Fra Joan Llabrés, 18", "Carrer del Llaüt, 24", "Notari Alemany 1 (11043)", "Carrer Mallorca, 3", "Carrer Trencadors, 50", "Globales Cala Viñas Hotel", "Av. d'Amèrica, 0", "Meeting Point Parque Infantil", "Apartamentos Ben-Hur", "Carrer del Llaüt, 37", "Avinguda de Son Maties, 12", "Avinguda de Son Rigo, 8", "Cala Major 2 (40014)", "Porsche Destination Charging Station", "Ctra. Andratx - Vaquer 2 (11015)", "Sun Club El Dorado", "Av. Europa 2 (31130)", "Carrer del Moll, 10", "H. Linda", "HOTEL TAURUS PARK TUI STOP", "Carrer dels Pinzons, 11", "Carrer de La Savina, 1"
     ]
 }

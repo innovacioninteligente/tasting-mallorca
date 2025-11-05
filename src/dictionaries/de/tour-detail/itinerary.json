@@ -1,30 +1,86 @@
 
 {
-    "title": "Geplante Reiseroute",
+    "title": "Vollständige Reiseroute",
+    "pickupTitle": "41 Abholortoptionen",
+    "pickupPoints": [
+        "Porsche Destination Charging Station", "Globales Mimosa", "Av. Europa 2 (31130)", "Carrer Gran Via Puig Major, 4", "Carrer del Llaüt, 37", "Son Caliu 2 (11023)", "432-ses Fontanelles", "Globales Palmanova Palace", "Meeting Point Parque Infantil", "313-Amèrica - ctra. Militar", "Av. d'Amèrica, 0", "Via Francisca Capllonch Plomer, 1", "Camí de les Meravelles, 7", "Avinguda del Golf, 1", "Autopista de Poniente, 4A", "Globales Maioris", "Paseo Marítimo, 18", "HOTEL TAURUS PARK TUI STOP", "Carrer del Moll, 10", "Marineland 2 (11020)", "Carrer dels Pinzons, 11", "Carrer de La Savina, 1", "H. Linda", "Ctra. Andratx - Vaquer 2 (11015)", "Carrer de La Savina, 16", "Carrer Trencadors, 50", "Sun Club El Dorado", "Avinguda de Fra Joan Llabrés, 18", "Apartamentos Ben-Hur", "Avinguda de Son Rigo, 8", "Avinguda de Son Maties, 12", "La Hacienda STEAK HOUSE", "Cala Major 2 (40014)", "951-Balneari 10 - Sometimes", "Carrer de Marbella, 35", "Globales Cala Viñas Hotel", "Notari Alemany 1 (11043)", "Carrer Mallorca, 3", "Carrer del Llaüt, 24", "Punta Marroig 2 (11028)", "Meeting Point Bq.Paguera Boutique"
+    ],
+    "seeMore": "Mehr sehen",
+    "seeLess": "Weniger sehen",
     "stops": [
         {
-            "title": "Abholung vom Hotel",
-            "duration": "30 Min"
+            "type": "travel",
+            "icon": "Bus",
+            "title": "Bus-/Reisebusfahrt",
+            "duration": "1 Stunde",
+            "activities": []
         },
         {
-            "title": "Besuch in Valldemossa",
-            "duration": "2 Stunden"
+            "type": "stop",
+            "icon": "Camera",
+            "title": "Torre del Verger",
+            "duration": "45 Minuten",
+            "activities": ["Fotostopp", "Freizeit", "Spaziergang", "Malerische Ausblicke unterwegs"]
         },
         {
-            "title": "Aussichtspunkt Sa Foradada",
-            "duration": "30 Min"
+            "type": "travel",
+            "icon": "Bus",
+            "title": "Bus-/Reisebusfahrt",
+            "duration": "1 Stunde",
+            "activities": []
         },
         {
-            "title": "Mittagessen in einem lokalen Restaurant",
-            "duration": "1,5 Stunden"
+            "type": "stop",
+            "icon": "MapPin",
+            "title": "Valldemossa",
+            "duration": "1 Stunde",
+            "activities": ["Fotostopp", "Besuch", "Freizeit", "Einkaufen", "Spaziergang", "Malerische Ausblicke unterwegs"]
         },
         {
-            "title": "Spaziergang durch Deià",
-            "duration": "1 Stunde"
+            "type": "travel",
+            "icon": "Bus",
+            "title": "Bus-/Reisebusfahrt",
+            "duration": "45 Minuten",
+            "activities": []
         },
         {
-            "title": "Rückkehr zum Hotel",
-            "duration": "45 Min"
+            "type": "stop",
+            "icon": "UtensilsCrossed",
+            "title": "Petra, Spanien",
+            "duration": "2 Stunden",
+            "activities": ["Mittagessen"]
+        },
+        {
+            "type": "travel",
+            "icon": "Bus",
+            "title": "Bus-/Reisebusfahrt",
+            "duration": "20 Minuten",
+            "activities": []
+        },
+        {
+            "type": "stop",
+            "icon": "MapPin",
+            "title": "Petra, Spanien",
+            "duration": "1 Stunde",
+            "activities": ["Fotostopp", "Besuch", "Geführte Tour", "Besichtigung", "Spaziergang", "Malerische Ausblicke unterwegs"]
+        },
+        {
+            "type": "travel",
+            "icon": "Bus",
+            "title": "Bus-/Reisebusfahrt",
+            "duration": "30 Minuten",
+            "activities": []
+        },
+        {
+            "type": "stop",
+            "icon": "ShoppingBag",
+            "title": "Manacor",
+            "duration": "1 Stunde",
+            "activities": ["Besuch", "Einkaufen"]
         }
+    ],
+    "dropoffTitle": "41 Absetzorte",
+    "dropoffPoints": [
+        "Via Francisca Capllonch Plomer, 1", "Camí de les Meravelles, 7", "Carrer de Marbella, 35", "Paseo Marítimo, 18", "Autopista de Poniente, 4A", "Marineland 2 (11020)", "Punta Marroig 2 (11028)", "Avinguda del Golf, 1", "Globales Maioris", "Son Caliu 2 (11023)", "La Hacienda STEAK HOUSE", "432-ses Fontanelles", "313-Amèrica - ctra. Militar", "951-Balneari 10 - Sometimes", "Globales Mimosa", "Carrer Gran Via Puig Major, 4", "Meeting Point Bq.Paguera Boutique", "Carrer de La Savina, 16", "Globales Palmanova Palace", "Avinguda de Fra Joan Llabrés, 18", "Carrer del Llaüt, 24", "Notari Alemany 1 (11043)", "Carrer Mallorca, 3", "Carrer Trencadors, 50", "Globales Cala Viñas Hotel", "Av. d'Amèrica, 0", "Meeting Point Parque Infantil", "Apartamentos Ben-Hur", "Carrer del Llaüt, 37", "Avinguda de Son Maties, 12", "Avinguda de Son Rigo, 8", "Cala Major 2 (40014)", "Porsche Destination Charging Station", "Ctra. Andratx - Vaquer 2 (11015)", "Sun Club El Dorado", "Av. Europa 2 (31130)", "Carrer del Moll, 10", "H. Linda", "HOTEL TAURUS PARK TUI STOP", "Carrer dels Pinzons, 11", "Carrer de La Savina, 1"
     ]
 }
