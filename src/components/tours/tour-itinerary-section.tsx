@@ -1,4 +1,3 @@
-
 'use client';
 import {
   MapPin,
@@ -51,14 +50,16 @@ export function TourItinerarySection({
     <section>
       <h2 className="text-3xl font-bold mb-8">{dictionary.title}</h2>
       <div className="relative">
+        <div className="absolute left-6 top-0 h-full w-0.5 bg-border -translate-x-1/2"></div>
+        
         {/* Pickup Point */}
-        <div className="relative flex items-start gap-6">
-          <div className="flex flex-col items-center">
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
+        <div className="relative flex items-start gap-6 pb-8">
+          <div className="z-10 flex flex-col items-center">
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 ring-8 ring-background">
               {iconMap['CircleUser']}
             </div>
           </div>
-          <div className="flex-1 pb-10">
+          <div className="flex-1 pt-2.5">
             <h3 className="text-xl font-bold">{dictionary.pickupTitle}</h3>
             <Collapsible>
               <CollapsibleContent className="mt-2 text-muted-foreground text-sm">
@@ -75,14 +76,13 @@ export function TourItinerarySection({
 
         {/* Itinerary Stops */}
         {dictionary.stops.map((stop, index) => (
-          <div key={index} className="relative flex items-start gap-6">
-            <div className="absolute left-6 top-0 h-full w-0.5 bg-border -translate-x-1/2"></div>
+          <div key={index} className="relative flex items-start gap-6 pb-8">
             <div className="z-10 flex flex-col items-center">
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 ring-8 ring-background">
                 {iconMap[stop.icon as keyof typeof iconMap]}
               </div>
             </div>
-            <div className="flex-1 pb-12">
+            <div className="flex-1">
               {stop.type === 'travel' ? (
                 <div className="pt-3">
                   <p className="font-semibold text-muted-foreground">
@@ -90,12 +90,12 @@ export function TourItinerarySection({
                   </p>
                 </div>
               ) : (
-                <Card className="shadow-md">
-                  <CardContent className="p-6">
-                    <p className="font-semibold text-primary">
+                <Card className="shadow-md border border-border/80">
+                  <CardContent className="p-4">
+                    <p className="font-semibold text-primary text-sm">
                       {stop.duration}
                     </p>
-                    <h3 className="text-xl font-bold mt-1">{stop.title}</h3>
+                    <h3 className="text-lg font-bold mt-1">{stop.title}</h3>
                     <div className="mt-4 flex flex-wrap gap-2">
                       {stop.activities.map((activity, i) => (
                         <span
@@ -115,13 +115,12 @@ export function TourItinerarySection({
         
         {/* Dropoff Point */}
         <div className="relative flex items-start gap-6">
-            <div className="absolute left-6 bottom-full h-12 w-0.5 bg-border -translate-x-1/2"></div>
             <div className="z-10 flex flex-col items-center">
-                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
+                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 ring-8 ring-background">
                 {iconMap['CircleUser']}
                 </div>
             </div>
-            <div className="flex-1">
+            <div className="flex-1 pt-2.5">
                 <h3 className="text-xl font-bold">{dictionary.dropoffTitle}</h3>
                 <Collapsible>
                 <CollapsibleContent className="mt-2 text-muted-foreground text-sm">
