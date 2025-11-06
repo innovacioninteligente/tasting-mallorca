@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import {
   Sprout,
@@ -12,7 +12,6 @@ import {
   LogOut,
 } from 'lucide-react';
 import { useAuth } from '@/firebase';
-import { useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
 
 const navItems = [
@@ -22,11 +21,13 @@ const navItems = [
   { href: '/dashboard/settings', label: 'Settings' },
 ];
 
-export function DashboardSidebar({ lang }: { lang: string }) {
+export function DashboardSidebar() {
   const pathname = usePathname();
   const auth = useAuth();
   const router = useRouter();
   
+  const lang = pathname.split('/')[1] || 'en';
+
   const handleSignOut = async () => {
     if (auth) {
       await auth.signOut();
