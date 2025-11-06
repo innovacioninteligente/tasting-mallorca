@@ -18,7 +18,7 @@ function BookingSuccessContent() {
   const pickupPoint = searchParams.get('pickupPoint');
   const name = searchParams.get('name');
 
-  const destination = "Meeting Point - Parque Infantil de Tráfico, Palma, Illes Balears";
+  const destination = "Pl. d'Espanya, s/n, Nord, 07002 Palma, Illes Balears, España";
 
   return (
     <div className="bg-background text-foreground min-h-screen flex items-center justify-center py-12">
