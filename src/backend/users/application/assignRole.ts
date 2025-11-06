@@ -4,20 +4,20 @@ import { UserRole } from '../domain/user.model';
 import { FirestoreUserRepository } from '../infrastructure/firestore-user.repository';
 
 export async function assignRole(
-  email: string,
+  uid: string,
   role: UserRole
 ): Promise<void> {
 
   const userRepository = new FirestoreUserRepository();
-  const user = await userRepository.findByEmail(email);
+  const user = await userRepository.findById(uid);
 
   if (!user) {
-    throw new Error(`User with email ${email} not found.`);
+    throw new Error(`User with uid ${uid} not found in Firestore.`);
   }
 
   // Set custom claims on Firebase Auth
-  await getAuth().setCustomUserClaims(user.id, { role });
+  await getAuth().setCustomUserClaims(uid, { role });
 
   // Update role in Firestore document for consistency
-  await userRepository.update({ id: user.id, role });
+  await userRepository.update({ id: uid, role });
 }
