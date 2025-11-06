@@ -40,16 +40,16 @@ function Directions({
   useEffect(() => {
       const geocodeAddress = (
         geocoder: google.maps.Geocoder,
-        address: string,
-        setter: (result: GeocodedResult) => void,
-        onError: (status: google.maps.GeocoderStatus) => void
-      ) => {
-        geocoder.geocode({ address: address }, (results, status) => {
-          if (status === 'OK' && results) {
-            setter(results[0].geometry.location.toJSON());
-          } else {
-            onError(status);
-          }
+        address: string
+      ): Promise<GeocodedResult> => {
+        return new Promise((resolve, reject) => {
+            geocoder.geocode({ address: address }, (results, status) => {
+              if (status === 'OK' && results) {
+                resolve(results[0].geometry.location.toJSON());
+              } else {
+                reject(new Error(`Geocoding failed for "${address}" with status: ${status}`));
+              }
+            });
         });
       };
       
@@ -58,13 +58,12 @@ function Directions({
       const geocoder = new window.google.maps.Geocoder();
 
       Promise.all([
-        new Promise<void>((resolve, reject) => 
-          geocodeAddress(geocoder, originAddress, setOrigin, (status) => reject(new Error(`Origin geocoding failed: ${status}`)))
-        ),
-        new Promise<void>((resolve, reject) => 
-          geocodeAddress(geocoder, destinationAddress, setDestination, (status) => reject(new Error(`Destination geocoding failed: ${status}`)))
-        ),
-      ]).catch((error) => {
+        geocodeAddress(geocoder, originAddress),
+        geocodeAddress(geocoder, destinationAddress)
+      ]).then(([originResult, destinationResult]) => {
+          setOrigin(originResult);
+          setDestination(destinationResult);
+      }).catch((error) => {
           console.error(error);
           setError(error.message);
       });
@@ -73,8 +72,7 @@ function Directions({
 
 
   useEffect(() => {
-    if (!directionsService || !directionsRenderer || !origin || !destination)
-      return;
+    if (!directionsService || !directionsRenderer || !origin || !destination) return;
 
     directionsService
       .route({
@@ -85,17 +83,25 @@ function Directions({
       .then((response) => {
         directionsRenderer.setDirections(response);
       })
-      .catch((e) => console.error('Directions request failed', e));
+      .catch((e) => {
+        console.error('Directions request failed', e);
+        setError("No se pudo calcular la ruta. Comprueba los permisos de la API de Google Maps.");
+      });
 
   }, [directionsService, directionsRenderer, origin, destination]);
   
-  if (error) {
+  if (error && (!origin || !destination)) {
       return <div className="flex items-center justify-center h-full bg-destructive text-destructive-foreground p-4 text-center">{error}</div>;
   }
 
   return <>
     {origin && <Marker position={origin} title="Tu hotel" />}
     {destination && <Marker position={destination} title="Punto de encuentro" />}
+    {error && (
+       <div className="absolute top-2 left-1/2 -translate-x-1/2 bg-destructive text-destructive-foreground p-2 rounded-md shadow-lg text-sm">
+         {error}
+       </div>
+     )}
   </>;
 }
 
