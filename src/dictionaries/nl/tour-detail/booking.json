@@ -8,5 +8,13 @@
     "adults": "Volwassenen",
     "children": "Kinderen",
     "date": "Datum",
-    "language": "Taal"
+    "language": "Taal",
+    "bookingSummary": "Boekingsoverzicht",
+    "pickupPoint": "Ophaalpunt",
+    "searchHotel": "Zoek uw hotel...",
+    "suggestedPickup": "Voorgestelde ophaalplaats",
+    "yourName": "Uw Naam",
+    "yourEmail": "Uw E-mail",
+    "continueToPayment": "Ga door naar betaling",
+    "goBack": "Ga Terug"
 }

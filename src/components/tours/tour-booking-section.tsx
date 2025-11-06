@@ -1,14 +1,18 @@
 'use client';
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Calendar as CalendarIcon, Users, DollarSign, Minus, Plus, Languages } from "lucide-react";
+import { Calendar as CalendarIcon, Users, DollarSign, Minus, Plus, Languages, ArrowLeft, Hotel, CheckCircle, MapPin, Search } from "lucide-react";
 import { useState } from "react";
 import { Calendar } from "@/components/ui/calendar";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { format } from "date-fns";
+import { AnimatePresence, motion } from "framer-motion";
+import { es } from 'date-fns/locale';
 
 interface TourBookingSectionProps {
     dictionary: {
@@ -21,20 +25,63 @@ interface TourBookingSectionProps {
         children: string;
         date: string;
         language: string;
+        bookingSummary: string;
+        pickupPoint: string;
+        searchHotel: string;
+        suggestedPickup: string;
+        yourName: string;
+        yourEmail: string;
+        continueToPayment: string;
+        goBack: string;
     };
     price: number;
+    lang: string;
 }
 
-export function TourBookingSection({ dictionary, price }: TourBookingSectionProps) {
+const mockHotels = [
+  "Iberostar Selection Llaüt Palma",
+  "Hipotels Gran Playa de Palma",
+  "Secrets Mallorca Villamil Resort & Spa",
+  "St. Regis Mardavall Mallorca Resort",
+  "Zafiro Palace Palmanova",
+  "Pure Salt Port Adriano",
+  "Cap Rocat",
+  "Castell Son Claret"
+];
+
+export function TourBookingSection({ dictionary, price, lang }: TourBookingSectionProps) {
     const [isSheetOpen, setIsSheetOpen] = useState(false);
+    const [step, setStep] = useState(1);
+    
+    // Step 1 State
     const [adults, setAdults] = useState(2);
     const [children, setChildren] = useState(0);
     const [date, setDate] = useState<Date | undefined>(new Date());
+    const [language, setLanguage] = useState(lang);
+    
+    // Step 2 State
+    const [openHotelSearch, setOpenHotelSearch] = useState(false);
+    const [selectedHotel, setSelectedHotel] = useState("");
+    const [name, setName] = useState("");
+    const [email, setEmail] = useState("");
 
     const totalParticipants = adults + children;
 
-    const BookingForm = (
-        <div className="space-y-6">
+    const handleNextStep = () => setStep(step + 1);
+    const handlePrevStep = () => setStep(step - 1);
+
+    const locale = lang === 'es' ? es : undefined;
+    const formattedDate = date ? format(date, "PPP", { locale }) : "Pick a date";
+
+    const Step1 = (
+        <motion.div
+            key="step1"
+            initial={{ opacity: 0, x: -10 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: 10 }}
+            transition={{ duration: 0.3 }}
+            className="space-y-6"
+        >
             <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                     <DollarSign className="w-6 h-6 text-primary" />
@@ -92,7 +139,7 @@ export function TourBookingSection({ dictionary, price }: TourBookingSectionProp
                         <PopoverTrigger asChild>
                            <Button variant="outline" className="w-full justify-start text-left font-normal mt-1">
                                 <CalendarIcon className="mr-2 h-4 w-4" />
-                                {date ? format(date, "PPP") : <span>Pick a date</span>}
+                                {formattedDate}
                             </Button>
                         </PopoverTrigger>
                         <PopoverContent className="w-auto p-0">
@@ -109,10 +156,12 @@ export function TourBookingSection({ dictionary, price }: TourBookingSectionProp
                  {/* Language Selector */}
                 <div>
                      <label className="text-sm font-medium text-muted-foreground">{dictionary.language}</label>
-                     <Select defaultValue="en">
+                     <Select value={language} onValueChange={setLanguage}>
                         <SelectTrigger className="w-full mt-1">
-                            <Languages className="mr-2 h-4 w-4 text-muted-foreground" />
-                            <SelectValue placeholder="Select a language" />
+                            <div className="flex items-center gap-2">
+                                <Languages className="h-4 w-4 text-muted-foreground" />
+                                <SelectValue placeholder="Select a language" />
+                            </div>
                         </SelectTrigger>
                         <SelectContent>
                             <SelectItem value="en">English</SelectItem>
@@ -126,10 +175,108 @@ export function TourBookingSection({ dictionary, price }: TourBookingSectionProp
                 </div>
             </div>
 
-            <Button size="lg" className="w-full font-bold text-lg py-7" onClick={() => setIsSheetOpen(false)}>
+            <Button size="lg" className="w-full font-bold text-lg py-7" onClick={handleNextStep}>
                 {dictionary.checkAvailability}
             </Button>
-        </div>
+        </motion.div>
+    );
+
+    const Step2 = (
+         <motion.div
+            key="step2"
+            initial={{ opacity: 0, x: 10 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -10 }}
+            transition={{ duration: 0.3 }}
+            className="space-y-6"
+        >
+             <div className="border border-border bg-secondary/50 rounded-lg p-3 text-sm">
+                <h4 className="font-bold mb-2">{dictionary.bookingSummary}</h4>
+                <div className="flex justify-between items-center text-muted-foreground">
+                    <span>{formattedDate}</span>
+                    <span>{totalParticipants} {dictionary.participants.toLowerCase()}</span>
+                </div>
+            </div>
+            
+            <div className="space-y-4">
+                 <div>
+                    <label className="text-sm font-medium text-muted-foreground">{dictionary.pickupPoint}</label>
+                    <Popover open={openHotelSearch} onOpenChange={setOpenHotelSearch}>
+                        <PopoverTrigger asChild>
+                            <Button
+                            variant="outline"
+                            role="combobox"
+                            aria-expanded={openHotelSearch}
+                            className="w-full justify-between font-normal mt-1"
+                            >
+                            <div className="flex items-center gap-2">
+                                <Hotel className="h-4 w-4" />
+                                <span className="truncate">{selectedHotel || dictionary.searchHotel}</span>
+                            </div>
+                            <Search className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                            </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-[300px] p-0">
+                            <Command>
+                                <CommandInput placeholder={dictionary.searchHotel} />
+                                <CommandList>
+                                    <CommandEmpty>No hotel found.</CommandEmpty>
+                                    <CommandGroup>
+                                        {mockHotels.map((hotel) => (
+                                        <CommandItem
+                                            key={hotel}
+                                            value={hotel}
+                                            onSelect={(currentValue) => {
+                                                setSelectedHotel(currentValue === selectedHotel ? "" : currentValue)
+                                                setOpenHotelSearch(false)
+                                            }}
+                                        >
+                                            <CheckCircle
+                                                className={`mr-2 h-4 w-4 ${selectedHotel === hotel ? "opacity-100" : "opacity-0"}`}
+                                            />
+                                            {hotel}
+                                        </CommandItem>
+                                        ))}
+                                    </CommandGroup>
+                                </CommandList>
+                            </Command>
+                        </PopoverContent>
+                    </Popover>
+                    {selectedHotel && (
+                        <div className="mt-2 text-xs text-muted-foreground flex items-center gap-2 p-2 bg-secondary/30 rounded-md">
+                            <MapPin className="h-4 w-4 text-primary"/>
+                            <span>{dictionary.suggestedPickup}: Meeting Point Parque Infantil</span>
+                        </div>
+                    )}
+                </div>
+
+                <div>
+                    <label htmlFor="name" className="text-sm font-medium text-muted-foreground">{dictionary.yourName}</label>
+                    <Input id="name" placeholder="John Doe" value={name} onChange={(e) => setName(e.target.value)} className="mt-1" />
+                </div>
+                 <div>
+                    <label htmlFor="email" className="text-sm font-medium text-muted-foreground">{dictionary.yourEmail}</label>
+                    <Input id="email" type="email" placeholder="john.doe@example.com" value={email} onChange={(e) => setEmail(e.target.value)} className="mt-1" />
+                </div>
+            </div>
+
+            <div className="space-y-3">
+                 <Button size="lg" className="w-full font-bold text-lg py-7">
+                    {dictionary.continueToPayment}
+                </Button>
+                 <Button variant="ghost" size="lg" className="w-full" onClick={handlePrevStep}>
+                    <ArrowLeft className="mr-2 h-4 w-4" />
+                    {dictionary.goBack}
+                </Button>
+            </div>
+        </motion.div>
+    );
+
+    const BookingForm = (
+        <AnimatePresence mode="wait">
+            {step === 1 && Step1}
+            {step === 2 && Step2}
+        </AnimatePresence>
     );
 
     return (
@@ -158,7 +305,7 @@ export function TourBookingSection({ dictionary, price }: TourBookingSectionProp
                             </Button>
                         </SheetTrigger>
                         <SheetContent side="bottom" className="rounded-t-2xl max-h-[90vh] overflow-y-auto">
-                            <SheetHeader className="mb-4">
+                            <SheetHeader className="mb-4 text-left">
                                 <SheetTitle className="text-2xl font-bold">{dictionary.title}</SheetTitle>
                             </SheetHeader>
                             <div className="p-1">

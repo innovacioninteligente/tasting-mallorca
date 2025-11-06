@@ -8,5 +8,13 @@
     "adults": "Adultos",
     "children": "Niños",
     "date": "Fecha",
-    "language": "Idioma"
+    "language": "Idioma",
+    "bookingSummary": "Resumen de tu reserva",
+    "pickupPoint": "Punto de recogida",
+    "searchHotel": "Busca tu hotel...",
+    "suggestedPickup": "Recogida sugerida",
+    "yourName": "Tu Nombre",
+    "yourEmail": "Tu Email",
+    "continueToPayment": "Continuar al Pago",
+    "goBack": "Volver"
 }

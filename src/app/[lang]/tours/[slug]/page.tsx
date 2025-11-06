@@ -58,7 +58,7 @@ export default async function TourPage({ params }: TourPageProps) {
               <TourDetailsAccordion dictionary={tourDict.tourDetails} />
             </div>
             <aside className="lg:col-span-1">
-              <TourBookingSection dictionary={tourDict.booking} price={tour.price} />
+              <TourBookingSection dictionary={tourDict.booking} price={tour.price} lang={params.lang} />
             </aside>
         </main>
     </div>
