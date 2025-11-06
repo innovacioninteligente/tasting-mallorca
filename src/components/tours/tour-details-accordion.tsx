@@ -31,7 +31,7 @@ export function TourDetailsAccordion({ dictionary }: TourDetailsAccordionProps) 
     return (
         <Accordion type="multiple" defaultValue={['item-1']} className="w-full">
             <AccordionItem value="item-1">
-                <AccordionTrigger className="text-3xl font-bold">{dictionary.highlightsTitle}</AccordionTrigger>
+                <AccordionTrigger className="text-3xl font-bold text-left">{dictionary.highlightsTitle}</AccordionTrigger>
                 <AccordionContent>
                     <ul className="space-y-4 text-lg text-muted-foreground pt-4">
                         {dictionary.highlights.map((highlight, index) => (
@@ -44,7 +44,7 @@ export function TourDetailsAccordion({ dictionary }: TourDetailsAccordionProps) 
                 </AccordionContent>
             </AccordionItem>
             <AccordionItem value="item-2">
-                <AccordionTrigger className="text-3xl font-bold">{dictionary.detailTitle}</AccordionTrigger>
+                <AccordionTrigger className="text-3xl font-bold text-left">{dictionary.detailTitle}</AccordionTrigger>
                 <AccordionContent>
                     <div className="space-y-4 text-lg text-muted-foreground pt-4">
                         {dictionary.detailContent.map((paragraph, index) => (
@@ -54,7 +54,7 @@ export function TourDetailsAccordion({ dictionary }: TourDetailsAccordionProps) 
                 </AccordionContent>
             </AccordionItem>
             <AccordionItem value="item-3">
-                <AccordionTrigger className="text-3xl font-bold">{dictionary.includesTitle}</AccordionTrigger>
+                <AccordionTrigger className="text-3xl font-bold text-left">{dictionary.includesTitle}</AccordionTrigger>
                 <AccordionContent>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-lg text-muted-foreground pt-4">
                         <div>
@@ -81,7 +81,7 @@ export function TourDetailsAccordion({ dictionary }: TourDetailsAccordionProps) 
                 </AccordionContent>
             </AccordionItem>
             <AccordionItem value="item-4">
-                <AccordionTrigger className="text-3xl font-bold">{dictionary.importantInfoTitle}</AccordionTrigger>
+                <AccordionTrigger className="text-3xl font-bold text-left">{dictionary.importantInfoTitle}</AccordionTrigger>
                 <AccordionContent>
                      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-4">
                         <div>
