@@ -1,9 +1,10 @@
+import 'dotenv/config';
 import { assignRole } from '@/backend/users/application/assignRole';
 import { UserRole } from '@/backend/users/domain/user.model';
 import { adminApp } from '@/firebase/server/config';
 
-// Initialize Firebase Admin SDK to ensure it's ready
-// The environment variables are loaded by the `load-env.ts` script via the package.json command.
+// Initialize Firebase Admin SDK to ensure it's ready.
+// The environment variables are loaded by 'dotenv/config' at the top of the file.
 adminApp;
 
 async function setAdminRole() {

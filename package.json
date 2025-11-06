@@ -10,7 +10,7 @@
     "start": "next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
-    "set-admin": "tsx -r src/scripts/load-env.ts src/scripts/set-admin-role.ts"
+    "set-admin": "tsx src/scripts/set-admin-role.ts"
   },
   "dependencies": {
     "@formatjs/intl-localematcher": "^0.5.4",
