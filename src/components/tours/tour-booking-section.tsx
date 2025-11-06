@@ -40,6 +40,7 @@ interface TourBookingSectionProps {
     };
     price: number;
     lang: string;
+    tourTitle: string;
 }
 
 const mockHotels = [
@@ -55,7 +56,7 @@ const mockHotels = [
 
 const locales: { [key: string]: Locale } = { es, ca, fr, de, nl };
 
-export function TourBookingSection({ dictionary, price, lang }: TourBookingSectionProps) {
+export function TourBookingSection({ dictionary, price, lang, tourTitle }: TourBookingSectionProps) {
     const [isSheetOpen, setIsSheetOpen] = useState(false);
     const [step, setStep] = useState(1);
     
@@ -88,6 +89,21 @@ export function TourBookingSection({ dictionary, price, lang }: TourBookingSecti
 
     const locale = locales[lang] || es;
     const formattedDate = date ? format(date, "PPP", { locale }) : "Pick a date";
+
+    const getReturnUrl = () => {
+        if (typeof window === 'undefined') return '';
+        const baseUrl = `${window.location.origin}/${lang}/booking-success`;
+        const params = new URLSearchParams({
+            tourTitle: tourTitle,
+            date: formattedDate,
+            participants: totalParticipants.toString(),
+            totalPrice: totalPrice.toString(),
+            pickupPoint: selectedHotel,
+            name: name,
+        });
+        return `${baseUrl}?${params.toString()}`;
+    }
+
 
     const Step1 = (
         <motion.div
@@ -228,9 +244,6 @@ export function TourBookingSection({ dictionary, price, lang }: TourBookingSecti
                                     setSearchQuery("");
                                 }}
                             >
-                                <CheckCircle
-                                    className={`mr-2 h-4 w-4 ${selectedHotel === hotel ? "opacity-100" : "opacity-0"}`}
-                                />
                                 {hotel}
                             </button>
                         ))
@@ -323,7 +336,7 @@ export function TourBookingSection({ dictionary, price, lang }: TourBookingSecti
             </div>
 
             <StripeProvider amount={totalPrice} name={name} email={email}>
-                <CheckoutForm dictionary={dictionary} handlePrevStep={handlePrevStep} />
+                <CheckoutForm dictionary={dictionary} handlePrevStep={handlePrevStep} returnUrl={getReturnUrl()} />
             </StripeProvider>
         </motion.div>
     );

@@ -16,10 +16,11 @@ interface CheckoutFormProps {
         goBack: string;
     };
     handlePrevStep: () => void;
+    returnUrl: string;
 }
 
 
-export default function CheckoutForm({ dictionary, handlePrevStep }: CheckoutFormProps) {
+export default function CheckoutForm({ dictionary, handlePrevStep, returnUrl }: CheckoutFormProps) {
   const stripe = useStripe();
   const elements = useElements();
   const { toast } = useToast();
@@ -39,7 +40,7 @@ export default function CheckoutForm({ dictionary, handlePrevStep }: CheckoutFor
     const { error } = await stripe.confirmPayment({
       elements,
       confirmParams: {
-        return_url: `${window.location.origin}/booking-success`,
+        return_url: returnUrl,
       },
     });
 
