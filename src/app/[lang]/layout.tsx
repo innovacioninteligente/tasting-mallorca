@@ -5,6 +5,7 @@ import { Footer } from '@/components/footer';
 import { Poppins } from 'next/font/google';
 import { getDictionary } from '@/dictionaries/get-dictionary';
 import { Locale } from '@/dictionaries/config';
+import { FirebaseClientProvider } from '@/firebase/client-provider';
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -23,14 +24,16 @@ export default async function RootLayout({
   return (
     <html lang={params.lang} className={`${poppins.variable}`}>
       <body className="font-body antialiased bg-background text-foreground">
-        <div className="flex flex-col min-h-screen">
-          <Header dictionary={dictionary.header} lang={params.lang} />
-          <main className="flex-grow">
-            {children}
-          </main>
-          <Footer />
-        </div>
-        <Toaster />
+        <FirebaseClientProvider>
+          <div className="flex flex-col min-h-screen">
+            <Header dictionary={dictionary.header} lang={params.lang} />
+            <main className="flex-grow">
+              {children}
+            </main>
+            <Footer />
+          </div>
+          <Toaster />
+        </FirebaseClientProvider>
       </body>
     </html>
   );
