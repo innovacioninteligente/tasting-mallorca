@@ -18,6 +18,11 @@ import {
 } from "@/components/ui/carousel";
 import { Button } from '../ui/button';
 import Link from 'next/link';
+import { type getDictionary } from '@/dictionaries/get-dictionary';
+
+type GallerySectionProps = {
+    dictionary: Awaited<ReturnType<typeof getDictionary>>['gallery'];
+}
 
 const galleryImages = [
     { src: 'https://firebasestorage.googleapis.com/v0/b/amparo-aesthetics.firebasestorage.app/o/tasting-mallorca%2Fimages%2FDSC07636-Mejorado-NR.jpg?alt=media&token=083f05f7-cddb-498a-a044-056ee1834adc', hint: 'happy couple travel', className: 'col-span-1 md:col-span-2 md:row-span-2' },
@@ -31,7 +36,7 @@ const galleryImages = [
 ];
 
 
-export function GallerySection() {
+export function GallerySection({ dictionary }: GallerySectionProps) {
     const [isLightboxOpen, setIsLightboxOpen] = useState(false);
     const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
@@ -45,11 +50,11 @@ export function GallerySection() {
             <div className="container text-center mb-12">
                 <div className='flex justify-center items-center gap-2'>
                 <Camera className="w-6 h-6 text-primary" />
-                <p className="text-primary font-cursive font-bold text-lg">Our beautiful moment</p>
+                <p className="text-primary font-cursive font-bold text-lg">{dictionary.subtitle}</p>
                 </div>
-                <h2 className="text-4xl md:text-5xl font-extrabold mt-2">Recent Gallery</h2>
+                <h2 className="text-4xl md:text-5xl font-extrabold mt-2">{dictionary.title}</h2>
                 <p className="mt-4 text-lg text-muted-foreground max-w-xl mx-auto">
-                Content of a page when looking at layout the point of using lorem the is Ipsum less
+                {dictionary.description}
                 </p>
             </div>
             <div className="w-full px-4 md:px-0 md:w-[90vw] mx-auto">
@@ -68,11 +73,11 @@ export function GallerySection() {
                         </div>
                     ))}
                      <div className="col-span-2 md:col-span-2 p-8 rounded-xl bg-secondary flex flex-col items-center justify-center text-center">
-                        <h3 className="text-3xl font-extrabold text-foreground">Tu Aventura te Espera</h3>
-                        <p className="mt-2 text-muted-foreground">Vive la Mallorca auténtica. Plazas limitadas.</p>
+                        <h3 className="text-3xl font-extrabold text-foreground">{dictionary.ctaTitle}</h3>
+                        <p className="mt-2 text-muted-foreground">{dictionary.ctaSubtitle}</p>
                         <Button asChild size="lg" className="mt-6 font-bold rounded-full group">
                             <Link href="/tours">
-                                Ver Todos los Tours
+                                {dictionary.ctaButton}
                                 <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
                             </Link>
                         </Button>

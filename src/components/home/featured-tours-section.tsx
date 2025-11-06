@@ -17,10 +17,10 @@ export function FeaturedToursSection({ dictionary, lang }: FeaturedToursProps) {
     return (
         <section id="featured-tours" className="py-24 bg-secondary">
             <div className="container text-center mb-12">
-                <p className="text-primary font-cursive font-bold text-lg">Featured Tours</p>
-                <h2 className="text-4xl md:text-5xl font-extrabold mt-2">Amazing Tours</h2>
+                <p className="text-primary font-cursive font-bold text-lg">{dictionary.featuredTours.subtitle}</p>
+                <h2 className="text-4xl md:text-5xl font-extrabold mt-2">{dictionary.featuredTours.title}</h2>
                 <p className="mt-4 text-lg text-muted-foreground max-w-xl mx-auto">
-                Discover our handpicked selection of the most popular and breathtaking tours.
+                {dictionary.featuredTours.description}
                 </p>
             </div>
             <div className="w-full px-4 md:px-0 md:w-[90vw] mx-auto">

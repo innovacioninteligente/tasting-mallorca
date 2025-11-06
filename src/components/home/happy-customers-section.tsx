@@ -1,8 +1,13 @@
 'use client';
 
 import Image from 'next/image';
+import { type getDictionary } from '@/dictionaries/get-dictionary';
 
-export function HappyCustomersSection() {
+type HappyCustomersProps = {
+    dictionary: Awaited<ReturnType<typeof getDictionary>>['happyCustomers'];
+}
+
+export function HappyCustomersSection({ dictionary }: HappyCustomersProps) {
     return (
         <section className="bg-primary-dark text-primary-foreground py-24 relative overflow-hidden">
             <div className="container w-full px-4 md:px-0 md:w-[90vw] mx-auto">
@@ -28,19 +33,19 @@ export function HappyCustomersSection() {
                 <div className="grid grid-cols-2 gap-x-8 gap-y-12">
                     <div className="text-left border-b border-primary-foreground/30 pb-6">
                     <p className="text-5xl font-extrabold">10k</p>
-                    <p className="text-primary-foreground/80 mt-2">Our happy Customers around the world</p>
+                    <p className="text-primary-foreground/80 mt-2">{dictionary.stat1}</p>
                     </div>
                     <div className="text-left border-b border-primary-foreground/30 pb-6">
                     <p className="text-5xl font-extrabold">178</p>
-                    <p className="text-primary-foreground/80 mt-2">Our happy Customers around the world</p>
+                    <p className="text-primary-foreground/80 mt-2">{dictionary.stat2}</p>
                     </div>
                     <div className="text-left pt-6">
                     <p className="text-5xl font-extrabold">24M</p>
-                    <p className="text-primary-foreground/80 mt-2">Our happy Customers around the word</p>
+                    <p className="text-primary-foreground/80 mt-2">{dictionary.stat3}</p>
                     </div>
                     <div className="text-left pt-6">
                     <p className="text-5xl font-extrabold">125</p>
-                    <p className="text-primary-foreground/80 mt-2">Our happy Customers around the world</p>
+                    <p className="text-primary-foreground/80 mt-2">{dictionary.stat4}</p>
                     </div>
                 </div>
                 </div>

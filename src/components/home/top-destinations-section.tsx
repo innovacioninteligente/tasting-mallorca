@@ -2,6 +2,11 @@
 
 import Image from 'next/image';
 import { ArrowUpRight, Sprout } from 'lucide-react';
+import { type getDictionary } from '@/dictionaries/get-dictionary';
+
+type TopDestinationsProps = {
+    dictionary: Awaited<ReturnType<typeof getDictionary>>['destinations'];
+}
 
 const destinations = [
   {
@@ -26,17 +31,17 @@ const destinations = [
   },
 ];
 
-export function TopDestinationsSection() {
+export function TopDestinationsSection({ dictionary }: TopDestinationsProps) {
     return (
         <section className="py-24 bg-background">
             <div className="container text-center mb-12">
                 <div className='flex justify-center items-center gap-2'>
                 <Sprout className="w-6 h-6 text-primary" />
-                <p className="text-primary font-cursive font-bold text-lg">Destinations</p>
+                <p className="text-primary font-cursive font-bold text-lg">{dictionary.subtitle}</p>
                 </div>
-                <h2 className="text-4xl md:text-5xl font-extrabold mt-2">Top Destinations</h2>
+                <h2 className="text-4xl md:text-5xl font-extrabold mt-2">{dictionary.title}</h2>
                 <p className="mt-4 text-lg text-muted-foreground max-w-xl mx-auto">
-                Content of a page when looking at layout the point of using lorem the is Ipsum less
+                {dictionary.description}
                 </p>
             </div>
             <div className="w-full px-4 md:px-0 md:w-[90vw] mx-auto">

@@ -3,6 +3,11 @@
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Twitter, Facebook, Instagram } from 'lucide-react';
+import { type getDictionary } from '@/dictionaries/get-dictionary';
+
+type TourGuidesSectionProps = {
+    dictionary: Awaited<ReturnType<typeof getDictionary>>['tourGuides'];
+}
 
 const tourGuides = [
   { name: 'Mike Hardson', image: 'https://picsum.photos/seed/guide1/200/200', hint: 'male guide portrait' },
@@ -11,14 +16,14 @@ const tourGuides = [
   { name: 'Guy Hawkins', image: 'https://picsum.photos/seed/guide4/200/200', hint: 'male guide casual' },
 ];
 
-export function TourGuidesSection() {
+export function TourGuidesSection({ dictionary }: TourGuidesSectionProps) {
     return (
         <section className="py-24 bg-secondary">
             <div className="container text-center mb-16">
-            <p className="text-primary font-cursive font-bold text-lg">Meet With Our Guide</p>
-            <h2 className="text-4xl md:text-5xl font-extrabold mt-2">Tour Guide</h2>
+            <p className="text-primary font-cursive font-bold text-lg">{dictionary.subtitle}</p>
+            <h2 className="text-4xl md:text-5xl font-extrabold mt-2">{dictionary.title}</h2>
             <p className="mt-4 text-lg text-muted-foreground max-w-xl mx-auto">
-                Content of a page when looking at layout the point of using lorem the is Ipsum less
+                {dictionary.description}
             </p>
             </div>
 
@@ -39,7 +44,7 @@ export function TourGuidesSection() {
                     </div>
                     <div className="bg-card rounded-2xl p-6 pt-24 -mt-20 w-full shadow-lg">
                     <h3 className="text-xl font-bold">{guide.name}</h3>
-                    <p className="text-primary">Tourist Guide</p>
+                    <p className="text-primary">{dictionary.guideRole}</p>
                     <div className="flex justify-center gap-3 mt-4">
                         <Button variant="outline" size="icon" className="rounded-full"><Facebook className="h-5 w-5"/></Button>
                         <Button variant="outline" size="icon" className="rounded-full"><Twitter className="h-5 w-5"/></Button>

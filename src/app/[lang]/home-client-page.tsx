@@ -30,13 +30,12 @@ export default function HomeClientPage({
       <FeaturedToursSection dictionary={dictionary} lang={lang} />
       <WhatsIncludedSection dictionary={dictionary.whatsIncluded} />
       <WhyChooseUsSection dictionary={dictionary.whyChooseUs} />
-      <GallerySection />
-      <HappyCustomersSection />
-      <TopDestinationsSection />
-      <FeaturedToursSection dictionary={dictionary} lang={lang} />
-      <TourGuidesSection />
-      <TestimonialsSection />
-      <BlogSection />
+      <GallerySection dictionary={dictionary.gallery} />
+      <HappyCustomersSection dictionary={dictionary.happyCustomers} />
+      <TopDestinationsSection dictionary={dictionary.destinations} />
+      <TourGuidesSection dictionary={dictionary.tourGuides} />
+      <TestimonialsSection dictionary={dictionary.testimonials} />
+      <BlogSection dictionary={dictionary.blog} />
     </div>
   );
 }

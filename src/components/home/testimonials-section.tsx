@@ -6,6 +6,11 @@ import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carouse
 import Autoplay from "embla-carousel-autoplay";
 import { useRef } from 'react';
 import { Quote, Star } from 'lucide-react';
+import { type getDictionary } from '@/dictionaries/get-dictionary';
+
+type TestimonialsSectionProps = {
+    dictionary: Awaited<ReturnType<typeof getDictionary>>['testimonials'];
+}
 
 const testimonials = [
   {
@@ -82,17 +87,17 @@ const testimonials = [
   },
 ];
 
-export function TestimonialsSection() {
+export function TestimonialsSection({ dictionary }: TestimonialsSectionProps) {
     const autoplayPlugin = useRef(Autoplay({ delay: 5000, stopOnInteraction: true }));
     
     return (
-        <section className="py-24 bg-secondary overflow-hidden">
-            <div className="container w-full md:w-[90vw] mx-auto">
+        <section className="py-24 bg-secondary">
+            <div className="container mx-auto w-full md:w-[90vw]">
                 <div className="text-center mb-12 px-4">
-                    <p className="text-primary font-cursive font-bold text-lg">Testimonials</p>
-                    <h2 className="text-4xl md:text-5xl font-extrabold mt-2">What Our Customers Say</h2>
+                    <p className="text-primary font-cursive font-bold text-lg">{dictionary.subtitle}</p>
+                    <h2 className="text-4xl md:text-5xl font-extrabold mt-2">{dictionary.title}</h2>
                     <p className="mt-4 text-lg text-muted-foreground max-w-xl mx-auto">
-                        Real stories from travelers who have discovered the authentic Mallorca with us.
+                        {dictionary.description}
                     </p>
                 </div>
                 <div className="grid md:grid-cols-2 gap-16 items-center">
