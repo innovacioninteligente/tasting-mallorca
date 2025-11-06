@@ -58,10 +58,13 @@ function Directions({
     const geocoder = new window.google.maps.Geocoder();
 
     const geocodeAddress = (
-      geocoder: google.maps.Geocoder,
       address: string
     ): Promise<google.maps.LatLngLiteral> => {
       return new Promise((resolve, reject) => {
+        if (!window.google || !window.google.maps) {
+          reject(new Error('Google Maps scripts are not loaded yet.'));
+          return;
+        }
         geocoder.geocode({ address: address }, (results, status) => {
           if (status === 'OK' && results?.[0]) {
             resolve(results[0].geometry.location.toJSON());
@@ -75,8 +78,8 @@ function Directions({
     };
 
     Promise.all([
-      geocodeAddress(geocoder, originAddress),
-      geocodeAddress(geocoder, destinationAddress),
+      geocodeAddress(originAddress),
+      geocodeAddress(destinationAddress),
     ])
       .then(([originResult, destinationResult]) => {
         setOrigin(originResult);
@@ -155,7 +158,7 @@ function Directions({
           <Bike className="h-5 w-5" />
         </Button>
         <Button 
-            variant="ghost" G
+            variant="ghost"
             size="icon" 
             onClick={() => setTravelMode('TRANSIT')} 
             className={cn("h-10 w-10", travelMode === 'TRANSIT' && 'bg-primary/20 text-primary')}
