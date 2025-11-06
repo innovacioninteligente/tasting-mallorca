@@ -9,7 +9,6 @@ import { useState } from "react";
 import { Calendar } from "@/components/ui/calendar";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { format } from "date-fns";
 import { AnimatePresence, motion } from "framer-motion";
 import { es, ca, fr, de, nl } from 'date-fns/locale';
@@ -66,6 +65,7 @@ export function TourBookingSection({ dictionary, price, lang }: TourBookingSecti
     const [selectedHotel, setSelectedHotel] = useState("");
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
+    const [searchQuery, setSearchQuery] = useState("");
 
     const totalParticipants = adults + children;
 
@@ -77,8 +77,12 @@ export function TourBookingSection({ dictionary, price, lang }: TourBookingSecti
             setStep(step - 1);
         }
     };
+    
+    const filteredHotels = mockHotels.filter(hotel =>
+        hotel.toLowerCase().includes(searchQuery.toLowerCase())
+    );
 
-    const locale = locales[lang];
+    const locale = locales[lang] || es;
     const formattedDate = date ? format(date, "PPP", { locale }) : "Pick a date";
 
     const Step1 = (
@@ -204,30 +208,39 @@ export function TourBookingSection({ dictionary, price, lang }: TourBookingSecti
                     <X className="h-5 w-5" />
                  </Button>
             </div>
-             <Command className="p-2">
-                <CommandInput placeholder={dictionary.searchHotel} className="h-11 text-base"/>
-                <CommandList>
-                    <CommandEmpty>No hotel found.</CommandEmpty>
-                    <CommandGroup>
-                        {mockHotels.map((hotel) => (
-                        <CommandItem
+             <div className="p-2">
+                <div className="flex items-center border-b px-3">
+                     <Search className="mr-2 h-4 w-4 shrink-0 opacity-50" />
+                     <Input 
+                        placeholder={dictionary.searchHotel} 
+                        className="h-11 text-base border-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                    />
+                </div>
+                <div className="max-h-[300px] overflow-y-auto overflow-x-hidden p-1">
+                    {filteredHotels.length > 0 ? (
+                        filteredHotels.map((hotel) => (
+                        <button
                             key={hotel}
-                            value={hotel}
-                            className="text-base py-3 cursor-pointer"
+                            className="relative flex w-full cursor-default select-none items-center rounded-sm px-2 py-3 text-base outline-none hover:bg-accent hover:text-accent-foreground"
                             onClick={() => {
                                 setSelectedHotel(hotel)
                                 setIsSearchingHotel(false)
+                                setSearchQuery("")
                             }}
                         >
                             <CheckCircle
                                 className={`mr-2 h-4 w-4 ${selectedHotel === hotel ? "opacity-100" : "opacity-0"}`}
                             />
                             {hotel}
-                        </CommandItem>
-                        ))}
-                    </CommandGroup>
-                </CommandList>
-            </Command>
+                        </button>
+                        ))
+                    ) : (
+                        <p className="py-6 text-center text-sm">No hotel found.</p>
+                    )}
+                </div>
+            </div>
         </motion.div>
     );
 
@@ -257,8 +270,8 @@ export function TourBookingSection({ dictionary, price, lang }: TourBookingSecti
                         className="w-full justify-between font-normal mt-1 text-base h-11"
                         onClick={() => setIsSearchingHotel(true)}
                         >
-                        <div className="flex items-center gap-2">
-                            <Hotel className="h-4 w-4" />
+                        <div className="flex items-center gap-2 text-left">
+                            <Hotel className="h-4 w-4 flex-shrink-0" />
                             <span className="truncate">{selectedHotel || dictionary.searchHotel}</span>
                         </div>
                         <Search className="ml-2 h-4 w-4 shrink-0 opacity-50" />
