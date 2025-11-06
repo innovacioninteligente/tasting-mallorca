@@ -15,17 +15,18 @@ import { useAuth } from '@/firebase';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 
 const formSchema = z.object({
   email: z.string().email({ message: 'Please enter a valid email address.' }),
   password: z.string().min(1, { message: 'Password is required.' }),
 });
 
-export default function SignInPage({ params }: { params: { lang: string }}) {
+export default function SignInPage() {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const router = useRouter();
+  const pathname = usePathname();
   const auth = useAuth();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -38,6 +39,7 @@ export default function SignInPage({ params }: { params: { lang: string }}) {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     if (!auth) return;
+    const lang = pathname.split('/')[1];
     setIsLoading(true);
     try {
       await signInWithEmailAndPassword(auth, values.email, values.password);
@@ -45,7 +47,7 @@ export default function SignInPage({ params }: { params: { lang: string }}) {
         title: 'Signed in successfully!',
         description: "You're now logged in.",
       });
-      router.push(`/${params.lang}/dashboard`);
+      router.push(`/${lang}/dashboard`);
     } catch (error: any) {
       console.error(error);
       toast({

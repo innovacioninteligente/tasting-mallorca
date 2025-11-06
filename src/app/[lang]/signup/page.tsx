@@ -15,7 +15,7 @@ import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
 import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 
 const formSchema = z.object({
   name: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
@@ -23,10 +23,11 @@ const formSchema = z.object({
   password: z.string().min(6, { message: 'Password must be at least 6 characters.' }),
 });
 
-export default function SignUpPage({ params }: { params: { lang: string }}) {
+export default function SignUpPage() {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const router = useRouter();
+  const pathname = usePathname();
   const auth = useAuth();
   const firestore = useFirestore();
 
@@ -41,6 +42,8 @@ export default function SignUpPage({ params }: { params: { lang: string }}) {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     if (!auth || !firestore) return;
+
+    const lang = pathname.split('/')[1];
 
     setIsLoading(true);
     try {
@@ -59,7 +62,7 @@ export default function SignUpPage({ params }: { params: { lang: string }}) {
         description: "You've been successfully signed up.",
       });
 
-      router.push(`/${params.lang}/dashboard`);
+      router.push(`/${lang}/dashboard`);
 
     } catch (error: any) {
       console.error('Error signing up:', error);
