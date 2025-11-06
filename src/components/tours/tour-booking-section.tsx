@@ -213,9 +213,9 @@ export function TourBookingSection({ dictionary, price, lang }: TourBookingSecti
                         <CommandItem
                             key={hotel}
                             value={hotel}
-                            className="text-base py-3"
-                            onSelect={(currentValue) => {
-                                setSelectedHotel(currentValue === selectedHotel ? "" : currentValue)
+                            className="text-base py-3 cursor-pointer"
+                            onClick={() => {
+                                setSelectedHotel(hotel)
                                 setIsSearchingHotel(false)
                             }}
                         >
