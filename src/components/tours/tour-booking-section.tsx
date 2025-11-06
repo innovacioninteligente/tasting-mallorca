@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar as CalendarIcon, Users, DollarSign, Minus, Plus, Languages, ArrowLeft, Hotel, CheckCircle, MapPin, Search } from "lucide-react";
 import { useState } from "react";
@@ -12,7 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { format } from "date-fns";
 import { AnimatePresence, motion } from "framer-motion";
-import { es } from 'date-fns/locale';
+import { es, ca, fr, de, nl } from 'date-fns/locale';
 
 interface TourBookingSectionProps {
     dictionary: {
@@ -49,6 +50,8 @@ const mockHotels = [
   "Castell Son Claret"
 ];
 
+const locales: { [key: string]: Locale } = { es, ca, fr, de, nl };
+
 export function TourBookingSection({ dictionary, price, lang }: TourBookingSectionProps) {
     const [isSheetOpen, setIsSheetOpen] = useState(false);
     const [step, setStep] = useState(1);
@@ -70,7 +73,7 @@ export function TourBookingSection({ dictionary, price, lang }: TourBookingSecti
     const handleNextStep = () => setStep(step + 1);
     const handlePrevStep = () => setStep(step - 1);
 
-    const locale = lang === 'es' ? es : undefined;
+    const locale = locales[lang];
     const formattedDate = date ? format(date, "PPP", { locale }) : "Pick a date";
 
     const Step1 = (
@@ -201,22 +204,25 @@ export function TourBookingSection({ dictionary, price, lang }: TourBookingSecti
             <div className="space-y-4">
                  <div>
                     <label className="text-base font-medium text-muted-foreground">{dictionary.pickupPoint}</label>
-                    <Popover open={openHotelSearch} onOpenChange={setOpenHotelSearch}>
-                        <PopoverTrigger asChild>
-                            <Button
-                            variant="outline"
-                            role="combobox"
-                            aria-expanded={openHotelSearch}
-                            className="w-full justify-between font-normal mt-1 text-base h-11"
-                            >
-                            <div className="flex items-center gap-2">
-                                <Hotel className="h-4 w-4" />
-                                <span className="truncate">{selectedHotel || dictionary.searchHotel}</span>
-                            </div>
-                            <Search className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                            </Button>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-[300px] p-0">
+                     <Dialog open={openHotelSearch} onOpenChange={setOpenHotelSearch}>
+                        <DialogTrigger asChild>
+                             <Button
+                                variant="outline"
+                                role="combobox"
+                                aria-expanded={openHotelSearch}
+                                className="w-full justify-between font-normal mt-1 text-base h-11"
+                                >
+                                <div className="flex items-center gap-2">
+                                    <Hotel className="h-4 w-4" />
+                                    <span className="truncate">{selectedHotel || dictionary.searchHotel}</span>
+                                </div>
+                                <Search className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                                </Button>
+                        </DialogTrigger>
+                        <DialogContent className="sm:max-w-[425px]">
+                             <DialogHeader>
+                                <DialogTitle>{dictionary.searchHotel}</DialogTitle>
+                            </DialogHeader>
                             <Command>
                                 <CommandInput placeholder={dictionary.searchHotel} />
                                 <CommandList>
@@ -240,8 +246,8 @@ export function TourBookingSection({ dictionary, price, lang }: TourBookingSecti
                                     </CommandGroup>
                                 </CommandList>
                             </Command>
-                        </PopoverContent>
-                    </Popover>
+                        </DialogContent>
+                    </Dialog>
                     {selectedHotel && (
                         <div className="mt-2 text-sm text-muted-foreground flex items-start gap-3 p-3 bg-secondary/30 rounded-md border border-primary/20">
                             <MapPin className="h-5 w-5 text-primary flex-shrink-0 mt-0.5"/>
