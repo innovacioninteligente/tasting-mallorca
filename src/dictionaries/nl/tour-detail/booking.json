@@ -16,5 +16,8 @@
     "yourName": "Uw Naam",
     "yourEmail": "Uw E-mail",
     "continueToPayment": "Ga door naar betaling",
-    "goBack": "Ga Terug"
+    "goBack": "Ga Terug",
+    "confirmAndPay": "Bevestig en Betaal",
+    "finalSummary": "Eindoverzicht",
+    "total": "Totaal"
 }

@@ -16,5 +16,8 @@
     "yourName": "Tu Nombre",
     "yourEmail": "Tu Email",
     "continueToPayment": "Continuar al Pago",
-    "goBack": "Volver"
+    "goBack": "Volver",
+    "confirmAndPay": "Confirmar y Pagar",
+    "finalSummary": "Resumen Final",
+    "total": "Total"
 }

@@ -1,17 +1,19 @@
 'use client';
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Input } from "@/components/ui/input";
 import { Calendar as CalendarIcon, Users, DollarSign, Minus, Plus, Languages, ArrowLeft, Hotel, CheckCircle, MapPin, Search, X } from "lucide-react";
 import { useState } from "react";
 import { Calendar } from "@/components/ui/calendar";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { format } from "date-fns";
 import { AnimatePresence, motion } from "framer-motion";
 import { es, ca, fr, de, nl } from 'date-fns/locale';
+import { StripeProvider } from '@/components/stripe-provider';
+import CheckoutForm from '@/components/checkout-form';
 
 interface TourBookingSectionProps {
     dictionary: {
@@ -32,6 +34,9 @@ interface TourBookingSectionProps {
         yourEmail: string;
         continueToPayment: string;
         goBack: string;
+        confirmAndPay: string;
+        finalSummary: string;
+        total: string;
     };
     price: number;
     lang: string;
@@ -54,20 +59,19 @@ export function TourBookingSection({ dictionary, price, lang }: TourBookingSecti
     const [isSheetOpen, setIsSheetOpen] = useState(false);
     const [step, setStep] = useState(1);
     
-    // Step 1 State
     const [adults, setAdults] = useState(2);
     const [children, setChildren] = useState(0);
     const [date, setDate] = useState<Date | undefined>(new Date());
     const [language, setLanguage] = useState(lang);
     
-    // Step 2 State
     const [isSearchingHotel, setIsSearchingHotel] = useState(false);
+    const [searchQuery, setSearchQuery] = useState("");
     const [selectedHotel, setSelectedHotel] = useState("");
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
-    const [searchQuery, setSearchQuery] = useState("");
 
     const totalParticipants = adults + children;
+    const totalPrice = price * totalParticipants;
 
     const handleNextStep = () => setStep(step + 1);
     const handlePrevStep = () => {
@@ -88,9 +92,9 @@ export function TourBookingSection({ dictionary, price, lang }: TourBookingSecti
     const Step1 = (
         <motion.div
             key="step1"
-            initial={{ opacity: 0, x: -10 }}
+            initial={{ opacity: 0, x: 0 }}
             animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: 10 }}
+            exit={{ opacity: 0, x: -20 }}
             transition={{ duration: 0.3 }}
             className="space-y-6"
         >
@@ -103,7 +107,6 @@ export function TourBookingSection({ dictionary, price, lang }: TourBookingSecti
             </div>
 
             <div className="space-y-4">
-                {/* Participants Popover */}
                 <div>
                      <label className="text-sm font-medium text-muted-foreground">{dictionary.participants}</label>
                      <Popover>
@@ -143,8 +146,6 @@ export function TourBookingSection({ dictionary, price, lang }: TourBookingSecti
                         </PopoverContent>
                      </Popover>
                 </div>
-
-                {/* Date Picker */}
                 <div>
                     <label className="text-sm font-medium text-muted-foreground">{dictionary.date}</label>
                      <Popover>
@@ -164,8 +165,6 @@ export function TourBookingSection({ dictionary, price, lang }: TourBookingSecti
                         </PopoverContent>
                     </Popover>
                 </div>
-                
-                 {/* Language Selector */}
                 <div>
                      <label className="text-sm font-medium text-muted-foreground">{dictionary.language}</label>
                      <Select value={language} onValueChange={setLanguage}>
@@ -186,7 +185,6 @@ export function TourBookingSection({ dictionary, price, lang }: TourBookingSecti
                     </Select>
                 </div>
             </div>
-
             <Button size="lg" className="w-full font-bold text-lg py-7" onClick={handleNextStep}>
                 {dictionary.checkAvailability}
             </Button>
@@ -194,7 +192,7 @@ export function TourBookingSection({ dictionary, price, lang }: TourBookingSecti
     );
 
     const HotelSearchView = (
-         <motion.div
+        <motion.div
             key="hotel-search"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -203,38 +201,38 @@ export function TourBookingSection({ dictionary, price, lang }: TourBookingSecti
             className="flex flex-col h-full"
         >
             <div className="flex items-center justify-between p-4 border-b">
-                 <h3 className="text-lg font-bold">{dictionary.searchHotel}</h3>
-                 <Button variant="ghost" size="icon" onClick={() => setIsSearchingHotel(false)}>
+                <h3 className="text-lg font-bold">{dictionary.searchHotel}</h3>
+                <Button variant="ghost" size="icon" onClick={() => setIsSearchingHotel(false)}>
                     <X className="h-5 w-5" />
-                 </Button>
+                </Button>
             </div>
-             <div className="p-2">
-                <div className="flex items-center border-b px-3">
-                     <Search className="mr-2 h-4 w-4 shrink-0 opacity-50" />
-                     <Input 
-                        placeholder={dictionary.searchHotel} 
-                        className="h-11 text-base border-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+            <div className="p-2">
+                <div className="relative">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <Input
+                        placeholder={dictionary.searchHotel}
+                        className="h-11 text-base pl-10"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                     />
                 </div>
-                <div className="max-h-[300px] overflow-y-auto overflow-x-hidden p-1">
+                <div className="max-h-[300px] overflow-y-auto overflow-x-hidden p-1 mt-2">
                     {filteredHotels.length > 0 ? (
                         filteredHotels.map((hotel) => (
-                        <button
-                            key={hotel}
-                            className="relative flex w-full cursor-default select-none items-center rounded-sm px-2 py-3 text-base outline-none hover:bg-accent hover:text-accent-foreground"
-                            onClick={() => {
-                                setSelectedHotel(hotel)
-                                setIsSearchingHotel(false)
-                                setSearchQuery("")
-                            }}
-                        >
-                            <CheckCircle
-                                className={`mr-2 h-4 w-4 ${selectedHotel === hotel ? "opacity-100" : "opacity-0"}`}
-                            />
-                            {hotel}
-                        </button>
+                            <button
+                                key={hotel}
+                                className="relative flex w-full cursor-default select-none items-center rounded-sm px-2 py-3 text-base outline-none hover:bg-accent hover:text-accent-foreground"
+                                onClick={() => {
+                                    setSelectedHotel(hotel);
+                                    setIsSearchingHotel(false);
+                                    setSearchQuery("");
+                                }}
+                            >
+                                <CheckCircle
+                                    className={`mr-2 h-4 w-4 ${selectedHotel === hotel ? "opacity-100" : "opacity-0"}`}
+                                />
+                                {hotel}
+                            </button>
                         ))
                     ) : (
                         <p className="py-6 text-center text-sm">No hotel found.</p>
@@ -245,11 +243,11 @@ export function TourBookingSection({ dictionary, price, lang }: TourBookingSecti
     );
 
     const Step2 = (
-         <motion.div
+        <motion.div
             key="step2"
-            initial={{ opacity: 0, x: 10 }}
+            initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -10 }}
+            exit={{ opacity: 0, x: -20 }}
             transition={{ duration: 0.3 }}
             className="space-y-6"
         >
@@ -260,7 +258,6 @@ export function TourBookingSection({ dictionary, price, lang }: TourBookingSecti
                     <span>{totalParticipants} {dictionary.participants.toLowerCase()}</span>
                 </div>
             </div>
-            
             <div className="space-y-4">
                  <div>
                     <label className="text-base font-medium text-muted-foreground">{dictionary.pickupPoint}</label>
@@ -269,14 +266,13 @@ export function TourBookingSection({ dictionary, price, lang }: TourBookingSecti
                         role="combobox"
                         className="w-full justify-between font-normal mt-1 text-base h-11"
                         onClick={() => setIsSearchingHotel(true)}
-                        >
+                    >
                         <div className="flex items-center gap-2 text-left">
                             <Hotel className="h-4 w-4 flex-shrink-0" />
                             <span className="truncate">{selectedHotel || dictionary.searchHotel}</span>
                         </div>
                         <Search className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                     </Button>
-                    
                     {selectedHotel && (
                         <div className="mt-2 text-sm text-muted-foreground flex items-start gap-3 p-3 bg-secondary/30 rounded-md border border-primary/20">
                             <MapPin className="h-5 w-5 text-primary flex-shrink-0 mt-0.5"/>
@@ -287,7 +283,6 @@ export function TourBookingSection({ dictionary, price, lang }: TourBookingSecti
                         </div>
                     )}
                 </div>
-
                 <div>
                     <label htmlFor="name" className="text-base font-medium text-muted-foreground">{dictionary.yourName}</label>
                     <Input id="name" placeholder="John Doe" value={name} onChange={(e) => setName(e.target.value)} className="mt-1 text-base h-11" />
@@ -297,9 +292,8 @@ export function TourBookingSection({ dictionary, price, lang }: TourBookingSecti
                     <Input id="email" type="email" placeholder="john.doe@example.com" value={email} onChange={(e) => setEmail(e.target.value)} className="mt-1 text-base h-11" />
                 </div>
             </div>
-
             <div className="space-y-3">
-                 <Button size="lg" className="w-full font-bold text-lg py-7">
+                 <Button size="lg" className="w-full font-bold text-lg py-7" onClick={handleNextStep}>
                     {dictionary.continueToPayment}
                 </Button>
                  <Button variant="ghost" size="lg" className="w-full" onClick={handlePrevStep}>
@@ -310,25 +304,53 @@ export function TourBookingSection({ dictionary, price, lang }: TourBookingSecti
         </motion.div>
     );
 
-    const BookingForm = (
-        <AnimatePresence mode="wait">
-            {isSearchingHotel ? HotelSearchView : (step === 1 ? Step1 : Step2)}
-        </AnimatePresence>
+    const Step3 = (
+         <motion.div
+            key="step3"
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.3 }}
+            className="space-y-6"
+        >
+             <div className="border border-border bg-secondary/50 rounded-lg p-4 text-base">
+                <h4 className="font-bold mb-3">{dictionary.finalSummary}</h4>
+                <div className="space-y-2 text-muted-foreground">
+                    <div className="flex justify-between"><span>{dictionary.date}:</span> <span className="font-medium text-foreground">{formattedDate}</span></div>
+                    <div className="flex justify-between"><span>{dictionary.participants}:</span> <span className="font-medium text-foreground">{totalParticipants}</span></div>
+                    <div className="flex justify-between"><span>{dictionary.pickupPoint}:</span> <span className="font-medium text-foreground truncate max-w-[150px]">{selectedHotel}</span></div>
+                     <div className="flex justify-between text-lg font-bold text-foreground pt-2 border-t mt-2"><span>{dictionary.total}:</span> <span>€{totalPrice}</span></div>
+                </div>
+            </div>
+
+            <StripeProvider amount={totalPrice} name={name} email={email}>
+                <CheckoutForm dictionary={dictionary} handlePrevStep={handlePrevStep} />
+            </StripeProvider>
+        </motion.div>
     );
+
+    const renderStep = () => {
+        if (isSearchingHotel) return HotelSearchView;
+        switch (step) {
+            case 1: return Step1;
+            case 2: return Step2;
+            case 3: return Step3;
+            default: return Step1;
+        }
+    }
 
     return (
         <>
-            {/* Desktop View */}
             <Card className="sticky top-28 shadow-lg hidden lg:block">
                 <CardHeader>
                     <CardTitle className="text-2xl font-bold">{dictionary.title}</CardTitle>
                 </CardHeader>
                 <CardContent>
-                    {BookingForm}
+                    <AnimatePresence mode="wait">
+                        {renderStep()}
+                    </AnimatePresence>
                 </CardContent>
             </Card>
 
-            {/* Mobile View */}
             <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-background border-t border-border p-4 shadow-[0_-4px_10px_rgba(0,0,0,0.05)] z-40">
                 <div className="flex items-center justify-between gap-4">
                      <div>
@@ -342,15 +364,17 @@ export function TourBookingSection({ dictionary, price, lang }: TourBookingSecti
                             </Button>
                         </SheetTrigger>
                         <SheetContent side="bottom" className="rounded-t-2xl max-h-[90vh] overflow-y-auto p-0">
-                           {isSearchingHotel ? (
-                                <div className="h-full"> {HotelSearchView} </div>
+                           {isSearchingHotel || step === 3 ? (
+                                <div className="h-full"> {renderStep()} </div>
                            ) : (
                              <>
                                 <SheetHeader className="p-6 pb-4 text-left">
                                     <SheetTitle className="text-2xl font-bold">{dictionary.title}</SheetTitle>
                                 </SheetHeader>
                                 <div className="p-6 pt-0">
-                                {step === 1 ? Step1 : Step2}
+                                    <AnimatePresence mode="wait">
+                                        {renderStep()}
+                                    </AnimatePresence>
                                 </div>
                              </>
                            )}

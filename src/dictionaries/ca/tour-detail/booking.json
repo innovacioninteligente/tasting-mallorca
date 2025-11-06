@@ -16,5 +16,8 @@
     "yourName": "El Teu Nom",
     "yourEmail": "El Teu Email",
     "continueToPayment": "Continuar al Pagament",
-    "goBack": "Tornar"
+    "goBack": "Tornar",
+    "confirmAndPay": "Confirmar i Pagar",
+    "finalSummary": "Resum Final",
+    "total": "Total"
 }
