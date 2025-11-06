@@ -96,7 +96,7 @@ export function TourBookingSection({ dictionary, price, lang }: TourBookingSecti
                      <label className="text-sm font-medium text-muted-foreground">{dictionary.participants}</label>
                      <Popover>
                         <PopoverTrigger asChild>
-                            <Button variant="outline" className="w-full justify-start text-left font-normal mt-1">
+                            <Button variant="outline" className="w-full justify-start text-left font-normal mt-1 text-base h-11">
                                 <Users className="mr-2 h-4 w-4" />
                                 <span>{totalParticipants} {dictionary.participants.toLowerCase()}</span>
                             </Button>
@@ -137,7 +137,7 @@ export function TourBookingSection({ dictionary, price, lang }: TourBookingSecti
                     <label className="text-sm font-medium text-muted-foreground">{dictionary.date}</label>
                      <Popover>
                         <PopoverTrigger asChild>
-                           <Button variant="outline" className="w-full justify-start text-left font-normal mt-1">
+                           <Button variant="outline" className="w-full justify-start text-left font-normal mt-1 text-base h-11">
                                 <CalendarIcon className="mr-2 h-4 w-4" />
                                 {formattedDate}
                             </Button>
@@ -157,7 +157,7 @@ export function TourBookingSection({ dictionary, price, lang }: TourBookingSecti
                 <div>
                      <label className="text-sm font-medium text-muted-foreground">{dictionary.language}</label>
                      <Select value={language} onValueChange={setLanguage}>
-                        <SelectTrigger className="w-full mt-1">
+                        <SelectTrigger className="w-full mt-1 text-base h-11">
                             <div className="flex items-center gap-2">
                                 <Languages className="h-4 w-4 text-muted-foreground" />
                                 <SelectValue placeholder="Select a language" />
@@ -190,7 +190,7 @@ export function TourBookingSection({ dictionary, price, lang }: TourBookingSecti
             transition={{ duration: 0.3 }}
             className="space-y-6"
         >
-             <div className="border border-border bg-secondary/50 rounded-lg p-3 text-sm">
+             <div className="border border-border bg-secondary/50 rounded-lg p-3 text-base">
                 <h4 className="font-bold mb-2">{dictionary.bookingSummary}</h4>
                 <div className="flex justify-between items-center text-muted-foreground">
                     <span>{formattedDate}</span>
@@ -200,14 +200,14 @@ export function TourBookingSection({ dictionary, price, lang }: TourBookingSecti
             
             <div className="space-y-4">
                  <div>
-                    <label className="text-sm font-medium text-muted-foreground">{dictionary.pickupPoint}</label>
+                    <label className="text-base font-medium text-muted-foreground">{dictionary.pickupPoint}</label>
                     <Popover open={openHotelSearch} onOpenChange={setOpenHotelSearch}>
                         <PopoverTrigger asChild>
                             <Button
                             variant="outline"
                             role="combobox"
                             aria-expanded={openHotelSearch}
-                            className="w-full justify-between font-normal mt-1"
+                            className="w-full justify-between font-normal mt-1 text-base h-11"
                             >
                             <div className="flex items-center gap-2">
                                 <Hotel className="h-4 w-4" />
@@ -243,20 +243,23 @@ export function TourBookingSection({ dictionary, price, lang }: TourBookingSecti
                         </PopoverContent>
                     </Popover>
                     {selectedHotel && (
-                        <div className="mt-2 text-xs text-muted-foreground flex items-center gap-2 p-2 bg-secondary/30 rounded-md">
-                            <MapPin className="h-4 w-4 text-primary"/>
-                            <span>{dictionary.suggestedPickup}: Meeting Point Parque Infantil</span>
+                        <div className="mt-2 text-sm text-muted-foreground flex items-start gap-3 p-3 bg-secondary/30 rounded-md border border-primary/20">
+                            <MapPin className="h-5 w-5 text-primary flex-shrink-0 mt-0.5"/>
+                            <div>
+                                <span className="font-semibold text-foreground">{dictionary.suggestedPickup}:</span>
+                                <p>Meeting Point - Parque Infantil de Tráfico</p>
+                            </div>
                         </div>
                     )}
                 </div>
 
                 <div>
-                    <label htmlFor="name" className="text-sm font-medium text-muted-foreground">{dictionary.yourName}</label>
-                    <Input id="name" placeholder="John Doe" value={name} onChange={(e) => setName(e.target.value)} className="mt-1" />
+                    <label htmlFor="name" className="text-base font-medium text-muted-foreground">{dictionary.yourName}</label>
+                    <Input id="name" placeholder="John Doe" value={name} onChange={(e) => setName(e.target.value)} className="mt-1 text-base h-11" />
                 </div>
                  <div>
-                    <label htmlFor="email" className="text-sm font-medium text-muted-foreground">{dictionary.yourEmail}</label>
-                    <Input id="email" type="email" placeholder="john.doe@example.com" value={email} onChange={(e) => setEmail(e.target.value)} className="mt-1" />
+                    <label htmlFor="email" className="text-base font-medium text-muted-foreground">{dictionary.yourEmail}</label>
+                    <Input id="email" type="email" placeholder="john.doe@example.com" value={email} onChange={(e) => setEmail(e.target.value)} className="mt-1 text-base h-11" />
                 </div>
             </div>
 
@@ -318,3 +321,5 @@ export function TourBookingSection({ dictionary, price, lang }: TourBookingSecti
         </>
     );
 }
+
+    
