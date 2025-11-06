@@ -66,24 +66,38 @@ export function RouteMap({ originAddress, destinationAddress }: RouteMapProps) {
   useEffect(() => {
     const geocodeAddress = (
       address: string,
-      setter: (result: GeocodedResult) => void
+      setter: (result: GeocodedResult) => void,
+      onError: (status: google.maps.GeocoderStatus) => void
     ) => {
+      if (!window.google || !window.google.maps) {
+          onError('GOOGLE_MAPS_NOT_LOADED' as any);
+          return;
+      }
       const geocoder = new window.google.maps.Geocoder();
       geocoder.geocode({ address: address }, (results, status) => {
         if (status === 'OK' && results) {
           setter(results[0].geometry.location.toJSON());
         } else {
-          setError(`Geocode was not successful for the following reason: ${status}`);
+          onError(status);
         }
       });
     };
     
-    if (window.google) {
-        Promise.all([
-            new Promise<void>((resolve) => geocodeAddress(originAddress, setOrigin)),
-            new Promise<void>((resolve) => geocodeAddress(destinationAddress, setDestination)),
-        ]).finally(() => setLoading(false));
-    }
+    setLoading(true);
+    Promise.all([
+      new Promise<void>((resolve, reject) => 
+        geocodeAddress(originAddress, (res) => { setOrigin(res); resolve(); }, (status) => reject(new Error(`Origin geocoding failed: ${status}`)))
+      ),
+      new Promise<void>((resolve, reject) => 
+        geocodeAddress(destinationAddress, (res) => { setDestination(res); resolve(); }, (status) => reject(new Error(`Destination geocoding failed: ${status}`)))
+      ),
+    ]).catch((error) => {
+        console.error(error);
+        setError(error.message);
+    }).finally(() => {
+        setLoading(false);
+    });
+
   }, [originAddress, destinationAddress]);
 
   if (!apiKey) {
@@ -95,10 +109,10 @@ export function RouteMap({ originAddress, destinationAddress }: RouteMapProps) {
   }
 
   if (error) {
-    return <div className="flex items-center justify-center h-full bg-destructive text-destructive-foreground p-4">{error}</div>;
+    return <div className="flex items-center justify-center h-full bg-destructive text-destructive-foreground p-4 text-center">{error}</div>;
   }
   
-  const center = origin || { lat: 40.416775, lng: -3.703790 };
+  const center = origin || destination || { lat: 40.416775, lng: -3.703790 };
 
   return (
     <APIProvider apiKey={apiKey} libraries={['marker', 'routes', 'geocoding']}>
@@ -108,7 +122,8 @@ export function RouteMap({ originAddress, destinationAddress }: RouteMapProps) {
         gestureHandling={'greedy'}
         disableDefaultUI={true}
       >
-        {!origin && <Marker position={center} />}
+        {origin && <Marker position={origin} title="Tu hotel" />}
+        {destination && <Marker position={destination} title="Punto de encuentro" />}
         <Directions origin={origin} destination={destination} />
       </Map>
     </APIProvider>

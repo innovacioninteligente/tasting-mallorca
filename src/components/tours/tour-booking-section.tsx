@@ -44,14 +44,14 @@ interface TourBookingSectionProps {
 }
 
 const mockHotels = [
-  "Iberostar Selection Llaüt Palma",
-  "Hipotels Gran Playa de Palma",
-  "Secrets Mallorca Villamil Resort & Spa",
-  "St. Regis Mardavall Mallorca Resort",
-  "Zafiro Palace Palmanova",
-  "Pure Salt Port Adriano",
-  "Cap Rocat",
-  "Castell Son Claret"
+  "Iberostar Selection Llaüt Palma, Playa de Palma, Mallorca",
+  "Hipotels Gran Playa de Palma, Playa de Palma, Mallorca",
+  "Secrets Mallorca Villamil Resort & Spa, Peguera",
+  "St. Regis Mardavall Mallorca Resort, Costa d'en Blanes",
+  "Zafiro Palace Palmanova, Palmanova",
+  "Pure Salt Port Adriano, El Toro",
+  "Cap Rocat, Cala Blava",
+  "Castell Son Claret, Es Capdellà"
 ];
 
 const locales: { [key: string]: Locale } = { es, ca, fr, de, nl };
@@ -83,9 +83,11 @@ export function TourBookingSection({ dictionary, price, lang, tourTitle }: TourB
         }
     };
     
-    const filteredHotels = mockHotels.filter(hotel =>
+    const filteredHotels = searchQuery
+    ? mockHotels.filter(hotel =>
         hotel.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+      )
+    : mockHotels;
 
     const locale = locales[lang] || es;
     const formattedDate = date ? format(date, "PPP", { locale }) : "Pick a date";
@@ -217,10 +219,11 @@ export function TourBookingSection({ dictionary, price, lang, tourTitle }: TourB
             className="flex flex-col h-full"
         >
             <div className="flex items-center justify-between p-4 border-b">
-                <h3 className="text-lg font-bold">{dictionary.searchHotel}</h3>
                 <Button variant="ghost" size="icon" onClick={() => setIsSearchingHotel(false)}>
-                    <X className="h-5 w-5" />
+                    <ArrowLeft className="h-5 w-5" />
                 </Button>
+                <h3 className="text-lg font-bold">{dictionary.searchHotel}</h3>
+                <div className="w-9 h-9"></div> 
             </div>
             <div className="p-2">
                 <div className="relative">
@@ -237,7 +240,7 @@ export function TourBookingSection({ dictionary, price, lang, tourTitle }: TourB
                         filteredHotels.map((hotel) => (
                             <button
                                 key={hotel}
-                                className="relative flex w-full cursor-default select-none items-center rounded-sm px-2 py-3 text-base outline-none hover:bg-accent hover:text-accent-foreground"
+                                className="relative flex w-full cursor-default select-none items-center rounded-sm px-2 py-3 text-base outline-none hover:bg-accent hover:text-accent-foreground text-left"
                                 onClick={() => {
                                     setSelectedHotel(hotel);
                                     setIsSearchingHotel(false);
@@ -377,12 +380,15 @@ export function TourBookingSection({ dictionary, price, lang, tourTitle }: TourB
                             </Button>
                         </SheetTrigger>
                         <SheetContent side="bottom" className="rounded-t-2xl max-h-[90vh] overflow-y-auto p-0">
-                           {isSearchingHotel || step === 3 ? (
+                           {isSearchingHotel ? (
                                 <div className="h-full"> {renderStep()} </div>
                            ) : (
                              <>
                                 <SheetHeader className="p-6 pb-4 text-left">
-                                    <SheetTitle className="text-2xl font-bold">{dictionary.title}</SheetTitle>
+                                    <SheetTitle className="text-2xl font-bold">{
+                                        step === 1 ? dictionary.title :
+                                        step === 2 ? dictionary.bookingSummary : dictionary.finalSummary
+                                    }</SheetTitle>
                                 </SheetHeader>
                                 <div className="p-6 pt-0">
                                     <AnimatePresence mode="wait">
