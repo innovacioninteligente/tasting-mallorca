@@ -8,7 +8,7 @@ import {
 } from '@vis.gl/react-google-maps';
 import { useEffect, useState } from 'react';
 import { Button } from './ui/button';
-import { Car, Walk, Bike, Bus } from 'lucide-react';
+import { Car, Footprints, Bike, Bus } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 type TravelMode = 'DRIVING' | 'WALKING' | 'BICYCLING' | 'TRANSIT';
@@ -50,6 +50,14 @@ function Directions({
   }, [map]);
 
   useEffect(() => {
+    if (!map) {
+      setLoading(false);
+      setError("Google Maps not loaded.");
+      return;
+    }
+    setLoading(true);
+    const geocoder = new window.google.maps.Geocoder();
+
     const geocodeAddress = (
       geocoder: google.maps.Geocoder,
       address: string
@@ -67,10 +75,6 @@ function Directions({
       });
     };
 
-    if (!map) return;
-    setLoading(true);
-    const geocoder = new window.google.maps.Geocoder();
-
     Promise.all([
       geocodeAddress(geocoder, originAddress),
       geocodeAddress(geocoder, destinationAddress),
@@ -78,10 +82,11 @@ function Directions({
       .then(([originResult, destinationResult]) => {
         setOrigin(originResult);
         setDestination(destinationResult);
+        setError(null);
       })
       .catch((err) => {
         console.error(err);
-        setError(err.message);
+        setError("Origin geocoding failed: " + err.message);
       })
       .finally(() => {
         setLoading(false);
@@ -140,7 +145,7 @@ function Directions({
             onClick={() => setTravelMode('WALKING')} 
             className={cn("h-10 w-10", travelMode === 'WALKING' && 'bg-primary/20 text-primary')}
         >
-          <Walk className="h-5 w-5" />
+          <Footprints className="h-5 w-5" />
         </Button>
         <Button 
             variant="ghost" 
