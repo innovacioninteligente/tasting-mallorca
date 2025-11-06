@@ -30,23 +30,23 @@ const phases = [
     ],
   },
   {
-    name: 'Fase 2: Funcionalidad Core de Reservas',
-    status: 'in-progress',
+    name: 'Fase 2: Funcionalidad Core de Reservas (Completado)',
+    status: 'completed',
     milestones: [
       {
         name: 'Flujo de Reserva Simplificado',
         description: 'Proceso de reserva en 3 pasos: Tour -> Fecha/Idioma -> Pago. Conectado a una pasarela de pago segura (Stripe).',
-        status: 'in-progress',
+        status: 'completed',
       },
       {
         name: 'Geocodificación de Puntos de Encuentro',
         description: 'Sistema que sugiere el punto de recogida más cercano basado en la ubicación del hotel del cliente.',
-        status: 'in-progress',
+        status: 'completed',
       },
       {
         name: 'Página de Confirmación de Reserva',
         description: 'Página de éxito que muestra el resumen de la compra y próximos pasos.',
-        status: 'in-progress',
+        status: 'completed',
       },
     ],
   },
@@ -149,7 +149,7 @@ const statusIcons = {
 
 const phaseIcons = {
   'Fase 1: Fundación y Lanzamiento (Completado)': <Rocket className="h-8 w-8" />,
-  'Fase 2: Funcionalidad Core de Reservas': <Rocket className="h-8 w-8" />,
+  'Fase 2: Funcionalidad Core de Reservas (Completado)': <Rocket className="h-8 w-8" />,
   'Fase 3: Herramientas de Gestión y Optimización': <Milestone className="h-8 w-8" />,
   'Fase 4: Crecimiento y Experiencia de Usuario': <Milestone className="h-8 w-8" />,
   'Fase 5: Sistema de Moneda Dinámico': <Milestone className="h-8 w-8" />,
