@@ -55,6 +55,26 @@ const phases = [
     status: 'todo',
     milestones: [
       {
+        name: 'Configuración del Backend en Firebase',
+        description: 'Activar Autenticación, Firestore en modo producción y Cloud Functions (Plan Blaze) para soportar la lógica de negocio.',
+        status: 'todo',
+      },
+      {
+        name: 'Definición de Entidades de Dominio (Arquitectura Hexagonal)',
+        description: "Crear modelos de datos para 'User', 'Tour', 'Booking', 'Payment' e 'Invoice' que formarán el núcleo de nuestro backend.",
+        status: 'todo',
+      },
+      {
+        name: 'Gestión de Roles con Custom Claims (Cloud Function)',
+        description: "Implementar funciones 'onUserCreate' y 'assignAdminRole' para asignar roles ('customer', 'guide', 'admin') a los usuarios en Firebase Auth.",
+        status: 'todo',
+      },
+      {
+        name: 'Procesamiento de Pagos Automatizado (Cloud Function)',
+        description: "Crear un webhook ('processStripePayment') que escuche los pagos de Stripe y actualice el estado de las reservas y pagos en Firestore.",
+        status: 'todo',
+      },
+      {
         name: 'Panel de Administración Seguro (Admin Dashboard)',
         description: 'Interfaz para gestionar tours, precios, horarios, y contenidos en 6 idiomas de forma centralizada.',
         status: 'todo',
@@ -64,17 +84,17 @@ const phases = [
         description: 'Función para que los guías calculen la ruta de recogida más eficiente para cada día, minimizando tiempos.',
         status: 'todo',
       },
-      {
-        name: 'Sistema de Cuentas de Usuario',
-        description: 'Portal para que los clientes vean su historial de reservas, gestionen sus datos y accedan a sus tickets.',
-        status: 'todo',
-      },
     ],
   },
   {
     name: 'Fase 4: Crecimiento y Experiencia de Usuario',
     status: 'todo',
     milestones: [
+      {
+        name: 'Sistema de Cuentas de Usuario',
+        description: 'Portal para que los clientes vean su historial de reservas, gestionen sus datos y accedan a sus tickets.',
+        status: 'todo',
+      },
       {
         name: 'Sistema de Reseñas y Valoraciones',
         description: 'Permitir a los usuarios dejar valoraciones y comentarios después de un tour para generar confianza y feedback.',
