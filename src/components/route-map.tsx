@@ -3,8 +3,8 @@
 import {
   APIProvider,
   Map,
-  Marker,
   useMap,
+  AdvancedMarker,
 } from '@vis.gl/react-google-maps';
 import { useEffect, useState } from 'react';
 import { Button } from './ui/button';
@@ -44,7 +44,7 @@ function Directions({
     setDirectionsRenderer(
       new window.google.maps.DirectionsRenderer({
         map,
-        suppressMarkers: true, // We'll use our own markers
+        suppressMarkers: true,
       })
     );
   }, [map]);
@@ -52,7 +52,6 @@ function Directions({
   useEffect(() => {
     if (!map) {
       setLoading(false);
-      setError("Google Maps not loaded.");
       return;
     }
     setLoading(true);
@@ -86,7 +85,7 @@ function Directions({
       })
       .catch((err) => {
         console.error(err);
-        setError("Origin geocoding failed: " + err.message);
+        setError(err.message);
       })
       .finally(() => {
         setLoading(false);
@@ -110,7 +109,7 @@ function Directions({
       })
       .catch((e) => {
         console.error('Directions request failed', e);
-        if (e.code === 'REQUEST_DENIED') {
+        if ((e as any).code === 'REQUEST_DENIED') {
              setError("El servicio de direcciones no está activado para tu clave de API.");
         } else {
              setError("No se pudo calcular la ruta.");
@@ -156,7 +155,7 @@ function Directions({
           <Bike className="h-5 w-5" />
         </Button>
         <Button 
-            variant="ghost" 
+            variant="ghost" G
             size="icon" 
             onClick={() => setTravelMode('TRANSIT')} 
             className={cn("h-10 w-10", travelMode === 'TRANSIT' && 'bg-primary/20 text-primary')}
@@ -173,8 +172,8 @@ function Directions({
         </div>
       )}
       
-      {origin && <Marker position={origin} title="Tu hotel" />}
-      {destination && <Marker position={destination} title="Punto de encuentro" />}
+      {origin && <AdvancedMarker position={origin} title="Tu hotel" />}
+      {destination && <AdvancedMarker position={destination} title="Punto de encuentro" />}
       
       {error && routes.length === 0 && (
        <div className="absolute top-16 left-1/2 -translate-x-1/2 bg-destructive text-destructive-foreground p-2 rounded-md shadow-lg text-sm">
@@ -197,17 +196,19 @@ export function RouteMap({ originAddress, destinationAddress }: { originAddress:
   }
 
   return (
-    <APIProvider apiKey={apiKey} libraries={['marker', 'routes', 'geocoding']}>
-      <Map
-        defaultCenter={{ lat: 39.5696, lng: 2.6502 }}
-        defaultZoom={10}
-        gestureHandling={'greedy'}
-        disableDefaultUI={true}
-        mapId={'f91b1312758f731c'}
-        className="relative"
-      >
-        <Directions originAddress={originAddress} destinationAddress={destinationAddress} />
-      </Map>
-    </APIProvider>
+    <div className="w-full h-full">
+      <APIProvider apiKey={apiKey} libraries={['marker', 'routes', 'geocoding']}>
+        <Map
+          defaultCenter={{ lat: 39.5696, lng: 2.6502 }}
+          defaultZoom={10}
+          gestureHandling={'greedy'}
+          disableDefaultUI={true}
+          mapId={'f91b1312758f731c'}
+          className="relative w-full h-full"
+        >
+          <Directions originAddress={originAddress} destinationAddress={destinationAddress} />
+        </Map>
+      </APIProvider>
+    </div>
   );
 }
