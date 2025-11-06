@@ -1,3 +1,4 @@
+
 'use client';
 
 import { Button } from "@/components/ui/button";
@@ -44,14 +45,14 @@ interface TourBookingSectionProps {
 }
 
 const mockHotels = [
-  "Iberostar Selection Llaüt Palma, Playa de Palma, Mallorca",
-  "Hipotels Gran Playa de Palma, Playa de Palma, Mallorca",
-  "Secrets Mallorca Villamil Resort & Spa, Peguera",
-  "St. Regis Mardavall Mallorca Resort, Costa d'en Blanes",
-  "Zafiro Palace Palmanova, Palmanova",
-  "Pure Salt Port Adriano, El Toro",
-  "Cap Rocat, Cala Blava",
-  "Castell Son Claret, Es Capdellà"
+  "Can Bordoy Grand House & Garden, Carrer del Forn de la Glòria, 14, Centre, 07012 Palma, Illes Balears, España",
+  "MHOUSE Hotel Palma, Carrer de Can Maçanet, 1A, Centre, 07003 Palma, Illes Balears, España",
+  "Castillo Hotel Son Vida, a Luxury Collection Hotel, Mallorca, Carrer Raixa, 2, Urbanizacion, Poniente, 07013 Son Vida, Illes Balears, España",
+  "Hotel Son Bunyola Villas, Ctra. C, 710, 07191 Banyalbufar, Illes Balears, España",
+  "El Llorenç Parc de la Mar (+16), Plaça de Llorenç Villalonga, 4, Centre, 07001 Palma, Illes Balears, España",
+  "Meliá Palma Bay, Carrer de Felicià Fuster, 4, Llevant, 07006 Palma, Illes Balears, España",
+  "Nakar Hotel, Av. de Jaume III, 21, Centre, 07012 Palma, Illes Balears, España",
+  "Concepció by Nobis, C/ de la Concepció, 34, Centre, 07012 Palma, Illes Balears, España"
 ];
 
 const locales: { [key: string]: Locale } = { es, ca, fr, de, nl };
@@ -179,6 +180,11 @@ export function TourBookingSection({ dictionary, price, lang, tourTitle }: TourB
                                 selected={date}
                                 onSelect={setDate}
                                 initialFocus
+                                classNames={{
+                                    day: "text-base h-11 w-11",
+                                    head_cell: "text-base w-11",
+                                    nav_button: "h-9 w-9"
+                                }}
                             />
                         </PopoverContent>
                     </Popover>
@@ -404,3 +410,5 @@ export function TourBookingSection({ dictionary, price, lang, tourTitle }: TourB
         </>
     );
 }
+
+    
