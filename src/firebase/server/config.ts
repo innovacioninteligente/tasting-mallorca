@@ -15,12 +15,6 @@ const createFirebaseAdminApp = () => {
     return getApp();
   }
 
-  if (serviceAccount) {
-     return initializeApp({
-      credential: cert(serviceAccount)
-    });
-  }
-
   // Parse the service account key from the environment variable.
   const serviceAccountString = process.env.FIREBASE_SERVICE_ACCOUNT_JSON;
   if (!serviceAccountString) {
