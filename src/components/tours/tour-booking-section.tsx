@@ -3,9 +3,8 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Calendar as CalendarIcon, Users, DollarSign, Minus, Plus, Languages, ArrowLeft, Hotel, CheckCircle, MapPin, Search } from "lucide-react";
+import { Calendar as CalendarIcon, Users, DollarSign, Minus, Plus, Languages, ArrowLeft, Hotel, CheckCircle, MapPin, Search, X } from "lucide-react";
 import { useState } from "react";
 import { Calendar } from "@/components/ui/calendar";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -63,7 +62,7 @@ export function TourBookingSection({ dictionary, price, lang }: TourBookingSecti
     const [language, setLanguage] = useState(lang);
     
     // Step 2 State
-    const [openHotelSearch, setOpenHotelSearch] = useState(false);
+    const [isSearchingHotel, setIsSearchingHotel] = useState(false);
     const [selectedHotel, setSelectedHotel] = useState("");
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
@@ -71,7 +70,13 @@ export function TourBookingSection({ dictionary, price, lang }: TourBookingSecti
     const totalParticipants = adults + children;
 
     const handleNextStep = () => setStep(step + 1);
-    const handlePrevStep = () => setStep(step - 1);
+    const handlePrevStep = () => {
+        if (isSearchingHotel) {
+            setIsSearchingHotel(false);
+        } else {
+            setStep(step - 1);
+        }
+    };
 
     const locale = locales[lang];
     const formattedDate = date ? format(date, "PPP", { locale }) : "Pick a date";
@@ -184,6 +189,48 @@ export function TourBookingSection({ dictionary, price, lang }: TourBookingSecti
         </motion.div>
     );
 
+    const HotelSearchView = (
+         <motion.div
+            key="hotel-search"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="flex flex-col h-full"
+        >
+            <div className="flex items-center justify-between p-4 border-b">
+                 <h3 className="text-lg font-bold">{dictionary.searchHotel}</h3>
+                 <Button variant="ghost" size="icon" onClick={() => setIsSearchingHotel(false)}>
+                    <X className="h-5 w-5" />
+                 </Button>
+            </div>
+             <Command className="p-2">
+                <CommandInput placeholder={dictionary.searchHotel} className="h-11 text-base"/>
+                <CommandList>
+                    <CommandEmpty>No hotel found.</CommandEmpty>
+                    <CommandGroup>
+                        {mockHotels.map((hotel) => (
+                        <CommandItem
+                            key={hotel}
+                            value={hotel}
+                            className="text-base py-3"
+                            onSelect={(currentValue) => {
+                                setSelectedHotel(currentValue === selectedHotel ? "" : currentValue)
+                                setIsSearchingHotel(false)
+                            }}
+                        >
+                            <CheckCircle
+                                className={`mr-2 h-4 w-4 ${selectedHotel === hotel ? "opacity-100" : "opacity-0"}`}
+                            />
+                            {hotel}
+                        </CommandItem>
+                        ))}
+                    </CommandGroup>
+                </CommandList>
+            </Command>
+        </motion.div>
+    );
+
     const Step2 = (
          <motion.div
             key="step2"
@@ -204,52 +251,19 @@ export function TourBookingSection({ dictionary, price, lang }: TourBookingSecti
             <div className="space-y-4">
                  <div>
                     <label className="text-base font-medium text-muted-foreground">{dictionary.pickupPoint}</label>
-                     <Dialog open={openHotelSearch} onOpenChange={setOpenHotelSearch}>
-                        <DialogTrigger asChild>
-                             <Button
-                                variant="outline"
-                                role="combobox"
-                                aria-expanded={openHotelSearch}
-                                className="w-full justify-between font-normal mt-1 text-base h-11"
-                                >
-                                <div className="flex items-center gap-2">
-                                    <Hotel className="h-4 w-4" />
-                                    <span className="truncate">{selectedHotel || dictionary.searchHotel}</span>
-                                </div>
-                                <Search className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                                </Button>
-                        </DialogTrigger>
-                        <DialogContent className="sm:max-w-[425px]">
-                             <DialogHeader>
-                                <DialogTitle>{dictionary.searchHotel}</DialogTitle>
-                            </DialogHeader>
-                            <Command>
-                                <CommandInput placeholder={dictionary.searchHotel} />
-                                <CommandList>
-                                    <CommandEmpty>No hotel found.</CommandEmpty>
-                                    <CommandGroup>
-                                        {mockHotels.map((hotel) => (
-                                        <CommandItem
-                                            key={hotel}
-                                            value={hotel}
-                                            className="text-base"
-                                            onMouseDown={(e) => e.preventDefault()}
-                                            onSelect={(currentValue) => {
-                                                setSelectedHotel(currentValue === selectedHotel ? "" : currentValue)
-                                                setOpenHotelSearch(false)
-                                            }}
-                                        >
-                                            <CheckCircle
-                                                className={`mr-2 h-4 w-4 ${selectedHotel === hotel ? "opacity-100" : "opacity-0"}`}
-                                            />
-                                            {hotel}
-                                        </CommandItem>
-                                        ))}
-                                    </CommandGroup>
-                                </CommandList>
-                            </Command>
-                        </DialogContent>
-                    </Dialog>
+                     <Button
+                        variant="outline"
+                        role="combobox"
+                        className="w-full justify-between font-normal mt-1 text-base h-11"
+                        onClick={() => setIsSearchingHotel(true)}
+                        >
+                        <div className="flex items-center gap-2">
+                            <Hotel className="h-4 w-4" />
+                            <span className="truncate">{selectedHotel || dictionary.searchHotel}</span>
+                        </div>
+                        <Search className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                    </Button>
+                    
                     {selectedHotel && (
                         <div className="mt-2 text-sm text-muted-foreground flex items-start gap-3 p-3 bg-secondary/30 rounded-md border border-primary/20">
                             <MapPin className="h-5 w-5 text-primary flex-shrink-0 mt-0.5"/>
@@ -285,8 +299,7 @@ export function TourBookingSection({ dictionary, price, lang }: TourBookingSecti
 
     const BookingForm = (
         <AnimatePresence mode="wait">
-            {step === 1 && Step1}
-            {step === 2 && Step2}
+            {isSearchingHotel ? HotelSearchView : (step === 1 ? Step1 : Step2)}
         </AnimatePresence>
     );
 
@@ -315,13 +328,19 @@ export function TourBookingSection({ dictionary, price, lang }: TourBookingSecti
                                 {dictionary.bookButton}
                             </Button>
                         </SheetTrigger>
-                        <SheetContent side="bottom" className="rounded-t-2xl max-h-[90vh] overflow-y-auto">
-                            <SheetHeader className="mb-4 text-left">
-                                <SheetTitle className="text-2xl font-bold">{dictionary.title}</SheetTitle>
-                            </SheetHeader>
-                            <div className="p-1">
-                               {BookingForm}
-                            </div>
+                        <SheetContent side="bottom" className="rounded-t-2xl max-h-[90vh] overflow-y-auto p-0">
+                           {isSearchingHotel ? (
+                                <div className="h-full"> {HotelSearchView} </div>
+                           ) : (
+                             <>
+                                <SheetHeader className="p-6 pb-4 text-left">
+                                    <SheetTitle className="text-2xl font-bold">{dictionary.title}</SheetTitle>
+                                </SheetHeader>
+                                <div className="p-6 pt-0">
+                                {step === 1 ? Step1 : Step2}
+                                </div>
+                             </>
+                           )}
                         </SheetContent>
                     </Sheet>
                 </div>
