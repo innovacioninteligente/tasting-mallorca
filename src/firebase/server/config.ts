@@ -1,35 +1,35 @@
-import { initializeApp, getApp, getApps, cert } from 'firebase-admin/app';
-
-// This is a special case for the dev environment
-// In a deployed environment, you would use environment variables
-// that are properly formatted.
-let serviceAccount: any;
-try {
-  serviceAccount = require('../../../service-account.json');
-} catch (e) {
-  // We ignore this error, as it will only happen in a deployed environment
-}
+import { initializeApp, getApp, getApps, cert, ServiceAccount } from 'firebase-admin/app';
 
 const createFirebaseAdminApp = () => {
   if (getApps().length > 0) {
     return getApp();
   }
 
-  // Parse the service account key from the environment variable.
-  const serviceAccountString = process.env.FIREBASE_SERVICE_ACCOUNT_JSON;
-  if (!serviceAccountString) {
-    throw new Error('The FIREBASE_SERVICE_ACCOUNT_JSON environment variable is not set.');
+  // Ensure all required environment variables are set
+  const projectId = process.env.FIREBASE_PROJECT_ID;
+  const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
+  const privateKey = process.env.FIREBASE_PRIVATE_KEY;
+
+  if (!projectId || !clientEmail || !privateKey) {
+    throw new Error(
+      'Missing Firebase Admin SDK credentials. Please set FIREBASE_PROJECT_ID, FIREBASE_CLIENT_EMAIL, and FIREBASE_PRIVATE_KEY environment variables.'
+    );
   }
 
-  try {
-    const parsedServiceAccount = JSON.parse(serviceAccountString);
+  const serviceAccount: ServiceAccount = {
+    projectId,
+    clientEmail,
+    // Replace escaped newlines from the environment variable
+    privateKey: privateKey.replace(/\\n/g, '\n'),
+  };
 
+  try {
     return initializeApp({
-      credential: cert(parsedServiceAccount)
+      credential: cert(serviceAccount)
     });
-  } catch (error) {
-    console.error('Failed to parse Firebase service account JSON.', error);
-    throw new Error('The FIREBASE_SERVICE_ACCOUNT_JSON environment variable is not a valid JSON string.');
+  } catch (error: any) {
+    console.error('Firebase Admin SDK initialization failed:', error);
+    throw new Error(`Failed to initialize Firebase Admin: ${error.message}`);
   }
 };
 
