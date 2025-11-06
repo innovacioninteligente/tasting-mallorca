@@ -1,6 +1,6 @@
 'use client';
 
-import { CheckCircle, Clock, Construction, Rocket, Milestone } from 'lucide-react';
+import { CheckCircle, Clock, Construction, Rocket, Milestone, QrCode } from 'lucide-react';
 
 const phases = [
   {
@@ -35,18 +35,18 @@ const phases = [
     milestones: [
       {
         name: 'Flujo de Reserva Simplificado',
-        description: 'Proceso de reserva en 3 pasos: Tour -> Fecha/Idioma -> Pago. Conectado a una pasarela de pago segura (Stripe/RedSys).',
+        description: 'Proceso de reserva en 3 pasos: Tour -> Fecha/Idioma -> Pago. Conectado a una pasarela de pago segura (Stripe).',
         status: 'in-progress',
-      },
-      {
-        name: 'Generación de Tickets con Código QR',
-        description: 'Creación de un ticket digital único por reserva con un QR para validación. Se enviará por email al cliente.',
-        status: 'todo',
       },
       {
         name: 'Geocodificación de Puntos de Encuentro',
         description: 'Sistema que sugiere el punto de recogida más cercano basado en la ubicación del hotel del cliente.',
-        status: 'todo',
+        status: 'in-progress',
+      },
+      {
+        name: 'Página de Confirmación de Reserva',
+        description: 'Página de éxito que muestra el resumen de la compra y próximos pasos.',
+        status: 'in-progress',
       },
     ],
   },
@@ -65,8 +65,8 @@ const phases = [
         status: 'todo',
       },
       {
-        name: 'Sistema de Validación de Tickets QR',
-        description: 'App sencilla o web-app para que los guías escaneen los QR y validen los tickets, marcándolos como usados.',
+        name: 'Sistema de Cuentas de Usuario',
+        description: 'Portal para que los clientes vean su historial de reservas, gestionen sus datos y accedan a sus tickets.',
         status: 'todo',
       },
     ],
@@ -75,11 +75,6 @@ const phases = [
     name: 'Fase 4: Crecimiento y Experiencia de Usuario',
     status: 'todo',
     milestones: [
-      {
-        name: 'Sistema de Cuentas de Usuario',
-        description: 'Portal para que los clientes vean su historial de reservas, gestionen sus datos y accedan a sus tickets.',
-        status: 'todo',
-      },
       {
         name: 'Sistema de Reseñas y Valoraciones',
         description: 'Permitir a los usuarios dejar valoraciones y comentarios después de un tour para generar confianza y feedback.',
@@ -103,17 +98,43 @@ const phases = [
       },
       {
         name: 'Integración con API de Tasas de Cambio',
-        description: 'Conectar con la API de Stripe para obtener tasas de cambio actualizadas y cachearlas en el backend para optimizar el rendimiento.',
+        description: 'Conectar con una API para obtener tasas de cambio actualizadas y cachearlas para optimizar el rendimiento.',
         status: 'todo',
       },
       {
         name: 'Lógica de Conversión y Visualización',
-        description: 'Crear un hook (useCurrency) y un proveedor de contexto en React para mostrar los precios convertidos y formateados correctamente en toda la web.',
+        description: 'Crear un hook y un proveedor de contexto en React para mostrar los precios convertidos y formateados correctamente.',
         status: 'todo',
       },
       {
         name: 'Integración Segura con Pasarela de Pago',
-        description: 'Asegurar que, aunque los precios se muestren en varias monedas, el pago final se procese siempre en EUR a través de Stripe para garantizar la consistencia.',
+        description: 'Asegurar que, aunque los precios se muestren en varias monedas, el pago final se procese siempre en EUR.',
+        status: 'todo',
+      },
+    ],
+  },
+  {
+    name: 'Fase 6: Ticket Inteligente y Gestión de Tours',
+    status: 'todo',
+    milestones: [
+      {
+        name: 'Generación de Ticket Digital con QR',
+        description: 'Creación de un ticket digital único por reserva con un QR para validación. Se enviará por email y estará accesible desde la cuenta del usuario.',
+        status: 'todo',
+      },
+      {
+        name: 'Mapa con Ruta en Página de Confirmación',
+        description: 'Integrar un mapa de Google Maps en la página del ticket que muestre la ruta desde el hotel del cliente hasta el punto de encuentro.',
+        status: 'todo',
+      },
+      {
+        name: 'Web-App para Guías (Validación de Tickets)',
+        description: 'App sencilla para que los guías escaneen los QR, validen los tickets y lleven un control de asistencia en tiempo real.',
+        status: 'todo',
+      },
+      {
+        name: 'Automatización Post-Tour',
+        description: 'Sistema que envía un email de agradecimiento y una solicitud de reseña al cliente una vez el tour ha finalizado.',
         status: 'todo',
       },
     ],
@@ -125,6 +146,15 @@ const statusIcons = {
   'in-progress': <Construction className="h-6 w-6 text-yellow-500 animate-pulse" />,
   todo: <Clock className="h-6 w-6 text-gray-500" />,
 };
+
+const phaseIcons = {
+  'Fase 1: Fundación y Lanzamiento (Completado)': <Rocket className="h-8 w-8" />,
+  'Fase 2: Funcionalidad Core de Reservas': <Rocket className="h-8 w-8" />,
+  'Fase 3: Herramientas de Gestión y Optimización': <Milestone className="h-8 w-8" />,
+  'Fase 4: Crecimiento y Experiencia de Usuario': <Milestone className="h-8 w-8" />,
+  'Fase 5: Sistema de Moneda Dinámico': <Milestone className="h-8 w-8" />,
+  'Fase 6: Ticket Inteligente y Gestión de Tours': <QrCode className="h-8 w-8" />,
+}
 
 const statusText = {
   completed: 'Completado',
@@ -152,7 +182,7 @@ export default function RoadMapPage() {
             <div key={phase.name} className="relative mb-12">
               <div className="absolute -left-[6px] md:left-1/2 md:-translate-x-1/2 top-1 z-10">
                 <div className="bg-primary text-primary-foreground rounded-full h-14 w-14 flex items-center justify-center ring-8 ring-background">
-                  <Milestone className="h-8 w-8" />
+                  {phaseIcons[phase.name as keyof typeof phaseIcons] || <Milestone className="h-8 w-8" />}
                 </div>
               </div>
 
@@ -163,7 +193,7 @@ export default function RoadMapPage() {
                  {/* Card content */}
                 <div className="w-full md:w-1/2 px-4 md:px-8">
                   <div className="bg-card p-6 rounded-lg shadow-lg border border-border/50 ml-10 md:ml-0">
-                    <h2 className="text-2xl font-bold font-headline text-primary mb-2">{phase.name}</h2>
+                    <h2 className="text-2xl font-bold font-headline text-primary mb-2 text-left">{phase.name}</h2>
                      <span className={`inline-flex items-center gap-2 text-sm font-medium px-3 py-1 rounded-full mb-4 ${
                        phase.status === 'completed' ? 'bg-green-100 text-green-800' :
                        phase.status === 'in-progress' ? 'bg-yellow-100 text-yellow-800' : 'bg-gray-100 text-gray-800'
