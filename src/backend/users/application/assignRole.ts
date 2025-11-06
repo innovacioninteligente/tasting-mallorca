@@ -1,13 +1,16 @@
 import { getAuth } from 'firebase-admin/auth';
 import { UserRepository } from '../domain/user.repository';
 import { UserRole } from '../domain/user.model';
+import { FirestoreUserRepository } from '../infrastructure/firestore-user.repository';
 
 export async function assignRole(
-  userRepository: UserRepository,
   email: string,
   role: UserRole
 ): Promise<void> {
+
+  const userRepository = new FirestoreUserRepository();
   const user = await userRepository.findByEmail(email);
+
   if (!user) {
     throw new Error(`User with email ${email} not found.`);
   }

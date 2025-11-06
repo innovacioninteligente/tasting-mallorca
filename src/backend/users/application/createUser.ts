@@ -1,8 +1,7 @@
-import { User } from '../domain/user.model';
+import { User, UserRole } from '../domain/user.model';
 import { UserRepository } from '../domain/user.repository';
+import { getAuth } from 'firebase-admin/auth';
 
-// Note: In a real implementation, you would inject the repository
-// dependency instead of passing it as an argument.
 export async function createUser(
   userRepository: UserRepository,
   user: Omit<User, 'id' | 'role'> & { id: string }
@@ -11,5 +10,10 @@ export async function createUser(
     ...user,
     role: 'customer', // Default role
   };
+  
+  // Set custom claim for the new user
+  await getAuth().setCustomUserClaims(newUser.id, { role: 'customer' });
+
+  // Save the user document to Firestore
   await userRepository.save(newUser);
 }
