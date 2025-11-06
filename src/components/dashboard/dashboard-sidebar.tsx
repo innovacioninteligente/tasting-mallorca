@@ -16,20 +16,17 @@ import { useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
 
 const navItems = [
-  { href: '/dashboard/overview', icon: LayoutDashboard, label: 'Overview' },
-  { href: '/dashboard/bookings', icon: Ticket, label: 'My Bookings' },
-  { href: '/dashboard/profile', icon: User, label: 'Profile' },
-  { href: '/dashboard/settings', icon: Settings, label: 'Settings' },
+  { href: '/dashboard/overview', label: 'Overview' },
+  { href: '/dashboard/bookings', label: 'My Bookings' },
+  { href: '/dashboard/profile', label: 'Profile' },
+  { href: '/dashboard/settings', label: 'Settings' },
 ];
 
-export function DashboardSidebar() {
+export function DashboardSidebar({ lang }: { lang: string }) {
   const pathname = usePathname();
   const auth = useAuth();
   const router = useRouter();
   
-  // Extract lang from pathname
-  const lang = pathname.split('/')[1] || 'en';
-
   const handleSignOut = async () => {
     if (auth) {
       await auth.signOut();
@@ -54,7 +51,10 @@ export function DashboardSidebar() {
                 variant={pathname.startsWith(href) ? 'secondary' : 'ghost'}
                 className="w-full justify-start text-base"
               >
-                <item.icon className="mr-3 h-5 w-5" />
+                {item.href.includes('overview') && <LayoutDashboard className="mr-3 h-5 w-5" />}
+                {item.href.includes('bookings') && <Ticket className="mr-3 h-5 w-5" />}
+                {item.href.includes('profile') && <User className="mr-3 h-5 w-5" />}
+                {item.href.includes('settings') && <Settings className="mr-3 h-5 w-5" />}
                 {item.label}
               </Button>
             </Link>
