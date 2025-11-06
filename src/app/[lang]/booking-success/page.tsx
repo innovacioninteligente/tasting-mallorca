@@ -4,8 +4,9 @@ import { useSearchParams } from 'next/navigation';
 import { Suspense } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { CheckCircle, Home } from 'lucide-react';
+import { CheckCircle, Home, Map } from 'lucide-react';
 import Link from 'next/link';
+import { RouteMap } from '@/components/route-map';
 
 function BookingSuccessContent() {
   const searchParams = useSearchParams();
@@ -17,9 +18,11 @@ function BookingSuccessContent() {
   const pickupPoint = searchParams.get('pickupPoint');
   const name = searchParams.get('name');
 
+  const destination = "Meeting Point - Parque Infantil de Tráfico, Palma, Illes Balears";
+
   return (
-    <div className="bg-background text-foreground min-h-[60vh] flex items-center justify-center">
-      <div className="container mx-auto px-4 py-16 w-full md:w-[70vw] lg:w-[50vw]">
+    <div className="bg-background text-foreground min-h-screen flex items-center justify-center py-12">
+      <div className="container mx-auto px-4 w-full md:w-[70vw] lg:w-[60vw] xl:w-[50vw]">
         <Card className="shadow-2xl border-primary/20">
           <CardHeader className="text-center bg-secondary/30 rounded-t-lg pt-8">
             <CheckCircle className="mx-auto h-16 w-16 text-green-500 mb-4" />
@@ -49,14 +52,34 @@ function BookingSuccessContent() {
                 <span className="font-semibold">{name}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-muted-foreground">Punto de Recogida:</span>
+                <span className="text-muted-foreground">Tu hotel:</span>
                 <span className="font-semibold text-right">{pickupPoint}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Punto de Recogida:</span>
+                <span className="font-semibold text-right">{destination}</span>
               </div>
               <div className="flex justify-between text-lg font-bold pt-3 border-t mt-3">
                 <span className="text-foreground">Total Pagado:</span>
                 <span className="text-primary">€{totalPrice}</span>
               </div>
             </div>
+
+            {pickupPoint && (
+                <div className="space-y-4">
+                    <h3 className="font-bold text-xl flex items-center gap-2">
+                        <Map className="w-6 h-6 text-primary"/>
+                        Ruta a tu punto de recogida
+                    </h3>
+                    <div className="h-96 rounded-lg overflow-hidden border border-border">
+                        <RouteMap
+                            originAddress={pickupPoint}
+                            destinationAddress={destination}
+                        />
+                    </div>
+                </div>
+            )}
+
             <Button asChild size="lg" className="w-full font-bold text-lg mt-6">
               <Link href="/">
                 <Home className="mr-2 h-5 w-5" />
