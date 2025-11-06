@@ -232,6 +232,8 @@ export function TourBookingSection({ dictionary, price, lang }: TourBookingSecti
                                         <CommandItem
                                             key={hotel}
                                             value={hotel}
+                                            className="text-base"
+                                            onMouseDown={(e) => e.preventDefault()}
                                             onSelect={(currentValue) => {
                                                 setSelectedHotel(currentValue === selectedHotel ? "" : currentValue)
                                                 setOpenHotelSearch(false)
@@ -327,5 +329,3 @@ export function TourBookingSection({ dictionary, price, lang }: TourBookingSecti
         </>
     );
 }
-
-    
