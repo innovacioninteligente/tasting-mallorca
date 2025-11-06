@@ -5,7 +5,6 @@ import {
   Bus,
   UtensilsCrossed,
   ShoppingBag,
-  CircleUser,
 } from 'lucide-react';
 import {
   Collapsible,
@@ -14,6 +13,7 @@ import {
 } from '@/components/ui/collapsible';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { cn } from '@/lib/utils';
 
 interface TourItinerarySectionProps {
   dictionary: {
@@ -40,7 +40,6 @@ const iconMap = {
   Camera: <Camera className="h-6 w-6 text-primary" />,
   UtensilsCrossed: <UtensilsCrossed className="h-6 w-6 text-primary" />,
   ShoppingBag: <ShoppingBag className="h-6 w-6 text-primary" />,
-  CircleUser: <CircleUser className="h-6 w-6 text-primary" />,
 };
 
 export function TourItinerarySection({
@@ -50,23 +49,26 @@ export function TourItinerarySection({
     <section>
       <h2 className="text-3xl font-bold mb-8">{dictionary.title}</h2>
       <div className="relative">
-        <div className="absolute left-6 top-0 h-full w-0.5 bg-border -translate-x-1/2"></div>
+        <div className="absolute left-6 top-0 h-full w-1 bg-border -translate-x-1/2"></div>
         
         {/* Pickup Point */}
         <div className="relative flex items-start gap-6 pb-8">
           <div className="z-10 flex flex-col items-center">
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 ring-8 ring-background">
-              {iconMap['CircleUser']}
+            <div className="h-12 w-12 rounded-full bg-background flex items-center justify-center">
+              <div className="w-4 h-4 rounded-full bg-primary ring-4 ring-primary/20"></div>
             </div>
           </div>
           <div className="flex-1 pt-2.5">
-            <h3 className="text-xl font-bold">{dictionary.pickupTitle}</h3>
+            <div className='flex items-center gap-3'>
+              <MapPin className="h-6 w-6 text-primary" />
+              <h3 className="text-xl font-bold">{dictionary.pickupTitle}</h3>
+            </div>
             <Collapsible>
-              <CollapsibleContent className="mt-2 text-muted-foreground text-sm">
+              <CollapsibleContent className="mt-2 text-muted-foreground text-sm pl-9">
                 {dictionary.pickupPoints.join(', ')}
               </CollapsibleContent>
               <CollapsibleTrigger asChild>
-                <Button variant="link" className="p-0 text-primary">
+                <Button variant="link" className="p-0 text-primary pl-9">
                   {dictionary.seeMore}
                 </Button>
               </CollapsibleTrigger>
@@ -78,25 +80,34 @@ export function TourItinerarySection({
         {dictionary.stops.map((stop, index) => (
           <div key={index} className="relative flex items-start gap-6 pb-8">
             <div className="z-10 flex flex-col items-center">
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 ring-8 ring-background">
-                {iconMap[stop.icon as keyof typeof iconMap]}
+               <div className="h-12 w-12 rounded-full bg-background flex items-center justify-center">
+                <div className={cn(
+                  "w-4 h-4 rounded-full",
+                  stop.type === 'stop' ? "bg-primary ring-4 ring-primary/20" : "bg-muted-foreground"
+                )}></div>
               </div>
             </div>
             <div className="flex-1">
               {stop.type === 'travel' ? (
-                <div className="pt-3">
+                <div className="pt-3 flex items-center gap-3">
+                  {iconMap[stop.icon as keyof typeof iconMap]}
                   <p className="font-semibold text-muted-foreground">
                     {stop.title} ({stop.duration})
                   </p>
                 </div>
               ) : (
-                <Card className="shadow-md border border-border/80">
+                <Card className="shadow-md border border-border/80 -mt-1">
                   <CardContent className="p-4">
-                    <p className="font-semibold text-primary text-sm">
-                      {stop.duration}
-                    </p>
-                    <h3 className="text-lg font-bold mt-1">{stop.title}</h3>
-                    <div className="mt-4 flex flex-wrap gap-2">
+                    <div className='flex items-center gap-3'>
+                        {iconMap[stop.icon as keyof typeof iconMap]}
+                        <div>
+                            <p className="font-semibold text-primary text-sm">
+                            {stop.duration}
+                            </p>
+                            <h3 className="text-lg font-bold">{stop.title}</h3>
+                        </div>
+                    </div>
+                    <div className="mt-4 flex flex-wrap gap-2 pl-9">
                       {stop.activities.map((activity, i) => (
                         <span
                           key={i}
@@ -116,18 +127,21 @@ export function TourItinerarySection({
         {/* Dropoff Point */}
         <div className="relative flex items-start gap-6">
             <div className="z-10 flex flex-col items-center">
-                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 ring-8 ring-background">
-                {iconMap['CircleUser']}
+                 <div className="h-12 w-12 rounded-full bg-background flex items-center justify-center">
+                    <div className="w-4 h-4 rounded-full bg-primary ring-4 ring-primary/20"></div>
                 </div>
             </div>
             <div className="flex-1 pt-2.5">
-                <h3 className="text-xl font-bold">{dictionary.dropoffTitle}</h3>
+                <div className='flex items-center gap-3'>
+                    <MapPin className="h-6 w-6 text-primary" />
+                    <h3 className="text-xl font-bold">{dictionary.dropoffTitle}</h3>
+                </div>
                 <Collapsible>
-                <CollapsibleContent className="mt-2 text-muted-foreground text-sm">
+                <CollapsibleContent className="mt-2 text-muted-foreground text-sm pl-9">
                     {dictionary.dropoffPoints.join(', ')}
                 </CollapsibleContent>
                 <CollapsibleTrigger asChild>
-                    <Button variant="link" className="p-0 text-primary">
+                    <Button variant="link" className="p-0 text-primary pl-9">
                     {dictionary.seeMore}
                     </Button>
                 </CollapsibleTrigger>
