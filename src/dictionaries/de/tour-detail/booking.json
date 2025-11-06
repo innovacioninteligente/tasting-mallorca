@@ -2,5 +2,11 @@
 {
     "title": "Diese Aktivität Buchen",
     "priceLabel": "Preis pro Person",
-    "bookButton": "Jetzt Buchen"
+    "bookButton": "Jetzt Buchen",
+    "checkAvailability": "Verfügbarkeit prüfen",
+    "participants": "Teilnehmer",
+    "adults": "Erwachsene",
+    "children": "Kinder",
+    "date": "Datum",
+    "language": "Sprache"
 }

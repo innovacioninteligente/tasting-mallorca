@@ -2,5 +2,11 @@
 {
     "title": "Boek Deze Activiteit",
     "priceLabel": "Prijs per persoon",
-    "bookButton": "Boek Nu"
+    "bookButton": "Boek Nu",
+    "checkAvailability": "Beschikbaarheid controleren",
+    "participants": "Deelnemers",
+    "adults": "Volwassenen",
+    "children": "Kinderen",
+    "date": "Datum",
+    "language": "Taal"
 }

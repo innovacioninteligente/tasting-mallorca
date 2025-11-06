@@ -2,5 +2,11 @@
 {
     "title": "Réserver Cette Activité",
     "priceLabel": "Prix par personne",
-    "bookButton": "Réserver Maintenant"
+    "bookButton": "Réserver Maintenant",
+    "checkAvailability": "Vérifier la Disponibilité",
+    "participants": "Participants",
+    "adults": "Adultes",
+    "children": "Enfants",
+    "date": "Date",
+    "language": "Langue"
 }

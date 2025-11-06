@@ -2,5 +2,11 @@
 {
     "title": "Reservar Aquesta Activitat",
     "priceLabel": "Preu per persona",
-    "bookButton": "Reservar Ara"
+    "bookButton": "Reserva Ara",
+    "checkAvailability": "Veure Disponibilitat",
+    "participants": "Participants",
+    "adults": "Adults",
+    "children": "Nens",
+    "date": "Data",
+    "language": "Idioma"
 }
