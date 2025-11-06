@@ -1,5 +1,5 @@
-import { config } from 'dotenv';
-config(); // Load .env variables
+// IMPORTANT: This must be the first import to ensure environment variables are loaded
+require('dotenv').config();
 
 import { assignRole } from '@/backend/users/application/assignRole';
 import { UserRole } from '@/backend/users/domain/user.model';
