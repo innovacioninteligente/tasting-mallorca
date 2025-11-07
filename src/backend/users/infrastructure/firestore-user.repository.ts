@@ -1,3 +1,4 @@
+
 import { getFirestore } from 'firebase-admin/firestore';
 import { User } from '../domain/user.model';
 import { UserRepository } from '../domain/user.repository';
@@ -11,7 +12,7 @@ export class FirestoreUserRepository implements UserRepository {
     if (!doc.exists) {
       return null;
     }
-    return doc.data() as User;
+    return { id: doc.id, ...doc.data() } as User;
   }
   
   async findByEmail(email: string): Promise<User | null> {
@@ -19,7 +20,13 @@ export class FirestoreUserRepository implements UserRepository {
     if (snapshot.empty) {
         return null;
     }
-    return snapshot.docs[0].data() as User;
+    const doc = snapshot.docs[0];
+    return { id: doc.id, ...doc.data() } as User;
+  }
+
+  async findAll(): Promise<User[]> {
+      const snapshot = await this.collection.get();
+      return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as User));
   }
 
   async save(user: User): Promise<void> {
