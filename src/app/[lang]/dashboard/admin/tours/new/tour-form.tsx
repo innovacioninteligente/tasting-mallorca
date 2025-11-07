@@ -23,7 +23,6 @@ const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
 
 
-// Zod schema based on the Tour entity
 const tourFormSchema = z.object({
   title: z.object({
     es: z.string().min(1, "El título en español es requerido."),
@@ -71,6 +70,24 @@ const tourFormSchema = z.object({
         (files) => Array.from(files).every((file: any) => ACCEPTED_IMAGE_TYPES.includes(file.type)),
         "Solo se aceptan formatos .jpg, .jpeg, .png y .webp."
     ),
+  allowDeposit: z.boolean().default(false),
+  depositPrice: z.coerce.number().optional(),
+}).refine(data => {
+    if (data.allowDeposit) {
+        return data.depositPrice !== undefined && data.depositPrice > 0;
+    }
+    return true;
+}, {
+    message: "El precio del depósito es requerido si se permiten depósitos.",
+    path: ["depositPrice"],
+}).refine(data => {
+    if (data.allowDeposit && data.depositPrice) {
+        return data.depositPrice < data.price;
+    }
+    return true;
+}, {
+    message: "El depósito no puede ser mayor o igual al precio total.",
+    path: ["depositPrice"],
 });
 
 type TourFormValues = z.infer<typeof tourFormSchema>;
@@ -90,8 +107,12 @@ export function TourForm() {
       slug: { es: '', en: '', de: '', fr: '', nl: '' },
       description: { es: '', en: '', de: '', fr: '', nl: '' },
       overview: { es: '', en: '', de: '', fr: '', nl: '' },
+      allowDeposit: false,
+      depositPrice: 0,
     },
   });
+
+  const allowDeposit = form.watch("allowDeposit");
 
  async function onSubmit(data: TourFormValues) {
     try {
@@ -325,8 +346,33 @@ export function TourForm() {
                         </FormItem>
                     )}
                     />
-
-                {/* Placeholder for dynamic availability periods */}
+                <FormField
+                    control={form.control}
+                    name="allowDeposit"
+                    render={({ field }) => (
+                        <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                        <div className="space-y-0.5">
+                            <FormLabel className="text-base">Permitir reserva con depósito</FormLabel>
+                            <FormDescription>Permitir a los clientes pagar un depósito para reservar, y el resto en el lugar.</FormDescription>
+                        </div>
+                        <FormControl><Switch checked={field.value} onCheckedChange={field.onChange} /></FormControl>
+                        </FormItem>
+                    )}
+                    />
+                {allowDeposit && (
+                     <FormField
+                        control={form.control}
+                        name="depositPrice"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Precio del Depósito (€)</FormLabel>
+                                <FormControl><Input type="number" placeholder="Ej: 20" {...field} /></FormControl>
+                                <FormDescription>El cliente pagará esta cantidad para reservar. El resto se paga en el lugar.</FormDescription>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                        />
+                )}
                 <div>
                     <h3 className="text-lg font-medium mb-2">Periodos de Disponibilidad</h3>
                     <div className="border-2 border-dashed rounded-lg p-8 text-center text-muted-foreground">
@@ -420,5 +466,3 @@ export function TourForm() {
     </Form>
   );
 }
-
-    

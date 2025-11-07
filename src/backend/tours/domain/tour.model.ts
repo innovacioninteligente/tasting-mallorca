@@ -17,6 +17,8 @@ export interface Tour {
     activeDays: string[];
   }[];
   isFeatured: boolean;
+  allowDeposit: boolean;
+  depositPrice: number;
 }
 
     

@@ -99,6 +99,14 @@
         "isFeatured": {
             "type": "boolean",
             "description": "Whether the tour is featured on the homepage."
+        },
+        "allowDeposit": {
+          "type": "boolean",
+          "description": "Whether this tour allows booking with a deposit."
+        },
+        "depositPrice": {
+          "type": "number",
+          "description": "The deposit amount required for booking, in cents. Only applicable if allowDeposit is true."
         }
       },
       "required": ["slug", "title", "price", "region"]
