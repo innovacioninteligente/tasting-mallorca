@@ -10,7 +10,7 @@ export interface Tour {
   galleryImages: string[];
   durationHours: number;
   overview: { [key: string]: string };
-  itinerary: { [key: string]: any[] }; // Keeping as 'any' for now, can be refined
+  itinerary: { [key: string]: any[] }; 
   availabilityPeriods: {
     startDate: string;
     endDate: string;
@@ -18,3 +18,5 @@ export interface Tour {
   }[];
   isFeatured: boolean;
 }
+
+    

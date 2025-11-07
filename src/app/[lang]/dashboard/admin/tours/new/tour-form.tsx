@@ -12,6 +12,16 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
+import { createTour } from "@/app/server-actions/tours/createTour";
+import { useToast } from "@/hooks/use-toast";
+import { useRouter, usePathname } from "next/navigation";
+import { ImageUpload } from "./image-upload";
+import { uploadImages } from "@/app/server-actions/tours/uploadImages";
+
+
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
+
 
 // Zod schema based on the Tour entity
 const tourFormSchema = z.object({
@@ -47,11 +57,28 @@ const tourFormSchema = z.object({
   region: z.enum(["North", "East", "South", "West", "Central"]),
   durationHours: z.coerce.number().min(1, "La duración debe ser al menos 1 hora."),
   isFeatured: z.boolean().default(false),
+  mainImage: z.any()
+    .refine((file) => !!file, "La imagen principal es requerida.")
+    .refine((file) => file?.size <= MAX_FILE_SIZE, `El tamaño máximo es 5MB.`)
+    .refine(
+      (file) => ACCEPTED_IMAGE_TYPES.includes(file?.type),
+      "Solo se aceptan formatos .jpg, .jpeg, .png y .webp."
+    ),
+  galleryImages: z.any()
+    .refine((files) => files?.length > 0, "Se requiere al menos una imagen para la galería.")
+    .refine((files) => Array.from(files).every((file: any) => file.size <= MAX_FILE_SIZE), `Cada archivo debe ser menor a 5MB.`)
+    .refine(
+        (files) => Array.from(files).every((file: any) => ACCEPTED_IMAGE_TYPES.includes(file.type)),
+        "Solo se aceptan formatos .jpg, .jpeg, .png y .webp."
+    ),
 });
 
 type TourFormValues = z.infer<typeof tourFormSchema>;
 
 export function TourForm() {
+  const { toast } = useToast();
+  const router = useRouter();
+  const pathname = usePathname();
   const form = useForm<TourFormValues>({
     resolver: zodResolver(tourFormSchema),
     defaultValues: {
@@ -66,10 +93,55 @@ export function TourForm() {
     },
   });
 
-  function onSubmit(data: TourFormValues) {
-    console.log(data);
-    // Here we will call the server action to create the tour
-  }
+ async function onSubmit(data: TourFormValues) {
+    try {
+        const basePath = pathname.split('/').slice(0, -2).join('/');
+        
+        // 1. Create FormData and upload images
+        const formData = new FormData();
+        formData.append('mainImage', data.mainImage);
+        data.galleryImages.forEach((file: File) => {
+            formData.append('galleryImages', file);
+        });
+
+        const uploadResult = await uploadImages(formData);
+
+        if (uploadResult.error) {
+            throw new Error(uploadResult.error);
+        }
+
+        // 2. Prepare tour data with uploaded image URLs
+        const tourData = {
+            ...data,
+            mainImage: uploadResult.data.mainImageUrl,
+            galleryImages: uploadResult.data.galleryImageUrls,
+        };
+
+        // 3. Create the tour document in Firestore
+        const result = await createTour(tourData);
+
+        if (result.error) {
+            throw new Error(result.error);
+        }
+
+        toast({
+            title: "¡Tour Creado!",
+            description: `El tour "${data.title.es}" ha sido guardado exitosamente.`,
+        });
+
+        router.push(basePath);
+        router.refresh();
+
+    } catch (error: any) {
+        console.error("Error creating tour:", error);
+        toast({
+            variant: "destructive",
+            title: "Error al crear el tour",
+            description: error.message || "Ocurrió un problema, por favor intenta de nuevo.",
+        });
+    }
+}
+
 
   const langTabs = [
     { code: 'en', name: 'English' },
@@ -83,9 +155,9 @@ export function TourForm() {
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <Tabs defaultValue="main" className="w-full">
           <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="main">Contenido Principal</TabsTrigger>
+            <TabsTrigger value="main">Contenido e Imágenes</TabsTrigger>
             <TabsTrigger value="availability">Disponibilidad y Precio</TabsTrigger>
-            <TabsTrigger value="media">Imágenes e Itinerario</TabsTrigger>
+            <TabsTrigger value="itinerary">Itinerario</TabsTrigger>
             <TabsTrigger value="translations">Traducciones</TabsTrigger>
           </TabsList>
 
@@ -141,6 +213,52 @@ export function TourForm() {
                   )}
                 />
               </CardContent>
+            </Card>
+
+            <Card className="mt-6">
+                <CardHeader>
+                    <CardTitle>Imágenes del Tour</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-8">
+                     <FormField
+                        control={form.control}
+                        name="mainImage"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Imagen Principal</FormLabel>
+                                <FormDescription>Esta es la imagen que se mostrará en las tarjetas de tours.</FormDescription>
+                                <FormControl>
+                                    <ImageUpload
+                                        value={field.value ? [field.value] : []}
+                                        onChange={(file) => field.onChange(file)}
+                                        onRemove={() => field.onChange(null)}
+                                        multiple={false}
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                        />
+                    <FormField
+                        control={form.control}
+                        name="galleryImages"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Galería de Imágenes</FormLabel>
+                                <FormDescription>Estas imágenes se mostrarán en la página de detalle del tour.</FormDescription>
+                                <FormControl>
+                                    <ImageUpload
+                                        value={field.value || []}
+                                        onChange={(files) => field.onChange(files)}
+                                        onRemove={(fileToRemove) => field.onChange([...field.value].filter(file => file !== fileToRemove))}
+                                        multiple={true}
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                        />
+                </CardContent>
             </Card>
           </TabsContent>
 
@@ -220,19 +338,11 @@ export function TourForm() {
             </Card>
           </TabsContent>
 
-          <TabsContent value="media" className="mt-6">
+          <TabsContent value="itinerary" className="mt-6">
              <Card>
-              <CardHeader><CardTitle>Imágenes e Itinerario</CardTitle></CardHeader>
+              <CardHeader><CardTitle>Itinerario del Tour</CardTitle></CardHeader>
               <CardContent className="space-y-8">
                  <div>
-                    <h3 className="text-lg font-medium mb-2">Imágenes</h3>
-                    <div className="border-2 border-dashed rounded-lg p-8 text-center text-muted-foreground">
-                        <p>Aquí podrás subir la imagen principal y la galería de imágenes.</p>
-                         <p className="text-sm">(Funcionalidad próximamente)</p>
-                    </div>
-                </div>
-                 <div>
-                    <h3 className="text-lg font-medium mb-2">Itinerario</h3>
                     <div className="border-2 border-dashed rounded-lg p-8 text-center text-muted-foreground">
                         <p>Aquí podrás definir las paradas y actividades del itinerario del tour.</p>
                          <p className="text-sm">(Funcionalidad próximamente)</p>
@@ -303,8 +413,12 @@ export function TourForm() {
             </Card>
           </TabsContent>
         </Tabs>
-        <Button type="submit" size="lg">Guardar Tour</Button>
+        <Button type="submit" size="lg" disabled={form.formState.isSubmitting}>
+            {form.formState.isSubmitting ? 'Guardando...' : 'Guardar Tour'}
+        </Button>
       </form>
     </Form>
   );
 }
+
+    
