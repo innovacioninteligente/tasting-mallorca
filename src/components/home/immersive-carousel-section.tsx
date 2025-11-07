@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useRef, useState } from 'react';
@@ -35,14 +36,15 @@ export function ImmersiveCarouselSection() {
             </section>
 
             <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-                <DialogContent className="max-w-none w-screen h-screen md:h-auto md:w-auto md:max-w-6xl p-0 bg-black/90 border-0 flex items-center justify-center">
+                <DialogContent className="max-w-none w-screen h-screen p-0 bg-black/95 border-0 flex items-center justify-center">
                     <DialogTitle className="sr-only">Video Player</DialogTitle>
                    {isModalOpen && (
                      <video
                         src={videoUrl}
                         autoPlay
                         controls
-                        className="w-full h-auto max-h-screen"
+                        controlsList="nodownload"
+                        className="w-full h-auto max-h-screen max-w-6xl custom-video-controls"
                     >
                         Your browser does not support the video tag.
                     </video>

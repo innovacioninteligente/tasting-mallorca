@@ -1,3 +1,4 @@
+
 @import url('https://fonts.googleapis.com/css2?family=Edu+NSW+ACT+Cursive:wght@400..700&family=Poppins:wght@300;400;500;600;700;800&display=swap');
 
 @tailwind base;
@@ -104,5 +105,34 @@
 @layer utilities {
   .view-transition {
     view-transition-name: var(--view-transition-name);
+  }
+
+  /* Custom video controls styling */
+  .custom-video-controls::-webkit-media-controls-panel {
+    background-color: rgba(0, 0, 0, 0.6);
+  }
+  .custom-video-controls::-webkit-media-controls-play-button,
+  .custom-video-controls::-webkit-media-controls-mute-button,
+  .custom-video-controls::-webkit-media-controls-fullscreen-button {
+    filter: brightness(2);
+  }
+  .custom-video-controls::-webkit-media-controls-current-time-display,
+  .custom-video-controls::-webkit-media-controls-time-remaining-display {
+    color: white;
+  }
+  .custom-video-controls::-webkit-media-controls-timeline {
+    height: 5px;
+    border-radius: 2px;
+    background-color: rgba(255, 255, 255, 0.3);
+  }
+  .custom-video-controls::-webkit-media-controls-timeline:hover {
+    height: 7px;
+  }
+  .custom-video-controls::-webkit-media-progress-bar {
+    background-color: hsl(var(--primary));
+  }
+  .custom-video-controls::-webkit-media-controls-seek-back-button,
+  .custom-video-controls::-webkit-media-controls-seek-forward-button {
+    display: none;
   }
 }
