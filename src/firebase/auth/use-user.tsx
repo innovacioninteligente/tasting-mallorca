@@ -12,6 +12,27 @@ export interface UserState extends User {
   loading: boolean;
 }
 
+const createSessionCookie = async (idToken: string) => {
+    try {
+        await fetch('/api/auth/login', {
+            method: 'POST',
+            headers: {
+                Authorization: `Bearer ${idToken}`,
+            },
+        });
+    } catch (error) {
+        console.error('Failed to create session cookie:', error);
+    }
+};
+
+const clearSessionCookie = async () => {
+    try {
+        await fetch('/api/auth/logout', { method: 'POST' });
+    } catch (error) {
+        console.error('Failed to clear session cookie:', error);
+    }
+}
+
 export const useUser = (): { user: UserState | null; loading: boolean } => {
   const auth = useAuth();
   const [user, setUser] = useState<UserState | null>(null);
@@ -24,10 +45,11 @@ export const useUser = (): { user: UserState | null; loading: boolean } => {
   useEffect(() => {
     if (!auth) return;
 
-    const unsubscribe = auth.onAuthStateChanged(async (firebaseUser) => {
+    const unsubscribe = auth.onIdTokenChanged(async (firebaseUser) => {
       if (firebaseUser) {
         const tokenResult = await firebaseUser.getIdTokenResult();
         const customClaims = tokenResult.claims;
+        const idToken = await firebaseUser.getIdToken();
 
         setUser({
           ...firebaseUser,
@@ -35,8 +57,14 @@ export const useUser = (): { user: UserState | null; loading: boolean } => {
           profile: null, // will be set by useDoc
           loading: true,
         });
+
+        // Set session cookie when token changes
+        await createSessionCookie(idToken);
+
       } else {
         setUser(null);
+        // Clear session cookie on sign out
+        await clearSessionCookie();
       }
       setLoading(false);
     });

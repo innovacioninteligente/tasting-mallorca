@@ -1,10 +1,10 @@
-
 // This is a higher-order function to create safe server actions.
 // It should not contain 'use server'; itself. Instead, the files
 // that use this function to define actions should have 'use server';
+// This comment is to clarify usage and prevent future errors.
 
 import { getAuth } from 'firebase-admin/auth';
-import { headers } from 'next/headers';
+import { cookies } from 'next/headers';
 import { adminApp } from '@/firebase/server/config';
 import { findUserById } from '@/backend/users/application/findUser';
 import { FirestoreUserRepository } from '@/backend/users/infrastructure/firestore-user.repository';
@@ -33,14 +33,14 @@ export function createSafeAction<TInput, TOutput>(
   return async (
     input: TInput
   ): Promise<{ data?: TOutput; error?: string }> => {
-    const idToken = headers().get('Authorization')?.split('Bearer ')[1];
+    const sessionCookie = cookies().get('session')?.value;
 
-    if (!idToken) {
-      return { error: 'Unauthorized: No token provided.' };
+    if (!sessionCookie) {
+      return { error: 'Unauthorized: No session cookie provided.' };
     }
 
     try {
-      const decodedToken = await getAuth().verifyIdToken(idToken);
+      const decodedToken = await getAuth().verifySessionCookie(sessionCookie, true);
       const uid = decodedToken.uid;
       const userRole = (decodedToken.role as UserRole) || 'customer';
 
@@ -64,8 +64,11 @@ export function createSafeAction<TInput, TOutput>(
       return await action(input, { uid, role: userRole, user });
     } catch (error: any) {
       console.error('Error in safe action:', error);
-      if (error.code === 'auth/id-token-expired') {
-        return { error: 'Unauthorized: Token expired.' };
+      if (error.code === 'auth/session-cookie-expired') {
+        return { error: 'Unauthorized: Session expired. Please sign in again.' };
+      }
+      if (error.code === 'auth/session-cookie-revoked') {
+          return { error: 'Unauthorized: Session revoked. Please sign in again.' };
       }
       return { error: error.message || 'An unexpected server error occurred.' };
     }
