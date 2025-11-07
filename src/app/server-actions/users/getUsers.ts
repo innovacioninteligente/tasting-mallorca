@@ -10,7 +10,7 @@ export const getUsers = createSafeAction(
   {
     allowedRoles: ['admin'],
   },
-  async (): Promise<{ data?: User[]; error?: string }> => {
+  async (_: {}): Promise<{ data?: User[]; error?: string }> => {
     try {
       const userRepository = new FirestoreUserRepository();
       const users = await findAllUsers(userRepository);
