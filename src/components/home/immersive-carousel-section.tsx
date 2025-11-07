@@ -56,6 +56,7 @@ export function ImmersiveCarouselSection() {
                         src={videoUrl}
                         autoPlay
                         loop
+                        controls
                         onClick={togglePlay}
                         className="w-full h-auto max-h-screen max-w-6xl cursor-pointer"
                     >
