@@ -16,7 +16,6 @@ import { useState, useEffect } from 'react';
 import toursCa from '@/dictionaries/ca/tours.json';
 import toursDe from '@/dictionaries/de/tours.json';
 import toursEn from '@/dictionaries/en/tours.json';
-import toursEs from '@/dictionaries/es/tours.json';
 import toursFr from '@/dictionaries/fr/tours.json';
 import toursNl from '@/dictionaries/nl/tours.json';
 
@@ -28,7 +27,6 @@ type Language = {
 
 const languages: Language[] = [
   { code: 'en', name: 'English', flag: '🇬🇧' },
-  { code: 'es', name: 'Español', flag: '🇪🇸' },
   { code: 'ca', name: 'Català', flag: '🇦🇩' },
   { code: 'fr', name: 'Français', flag: '🇫🇷' },
   { code: 'de', name: 'Deutsch', flag: '🇩🇪' },
@@ -39,7 +37,6 @@ const allTours = {
   ca: toursCa,
   de: toursDe,
   en: toursEn,
-  es: toursEs,
   fr: toursFr,
   nl: toursNl,
 };
@@ -66,11 +63,11 @@ export function LanguageSwitcher({ currentLocale }: { currentLocale: Locale }) {
       const currentSlug = pathSegments[2];
       
       // Find the current tour by its slug in the current language's dictionary
-      const currentTour = allTours[currentLocale]?.find(t => t.slug === currentSlug);
+      const currentTour = (allTours as any)[currentLocale]?.find((t: any) => t.slug === currentSlug);
 
       if (currentTour) {
         // Find the corresponding tour in the new language's dictionary using the ID
-        const newTour = allTours[newLocale]?.find(t => t.id === currentTour.id);
+        const newTour = (allTours as any)[newLocale]?.find((t: any) => t.id === currentTour.id);
         
         if (newTour) {
           // If found, redirect to the new URL with the correct slug
