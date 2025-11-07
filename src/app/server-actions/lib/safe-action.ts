@@ -1,5 +1,7 @@
 
-'use server';
+// This is a higher-order function to create safe server actions.
+// It should not contain 'use server'; itself. Instead, the files
+// that use this function to define actions should have 'use server';
 
 import { getAuth } from 'firebase-admin/auth';
 import { headers } from 'next/headers';
@@ -44,6 +46,7 @@ export function createSafeAction<TInput, TOutput>(
 
       if (
         authOptions.allowedRoles &&
+        authOptions.allowedRoles.length > 0 &&
         !authOptions.allowedRoles.includes(userRole)
       ) {
         return {
