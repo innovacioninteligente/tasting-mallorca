@@ -2,7 +2,7 @@
 
 import { useRef, useState } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 
 const videoUrl = "https://firebasestorage.googleapis.com/v0/b/tasting-mallorca.firebasestorage.app/o/web%2Fvideos%2FAUTENTICA%20MALLORCA%20GENERAL%20%20V1.mp4?alt=media&token=90225773-8283-4884-a4d5-565abcafc790";
 
@@ -35,7 +35,8 @@ export function ImmersiveCarouselSection() {
             </section>
 
             <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-                <DialogContent className="max-w-none w-screen h-screen md:h-auto md:w-auto md:max-w-6xl p-0 bg-black border-0 flex items-center justify-center">
+                <DialogContent className="max-w-none w-screen h-screen md:h-auto md:w-auto md:max-w-6xl p-0 bg-black/90 border-0 flex items-center justify-center">
+                    <DialogTitle className="sr-only">Video Player</DialogTitle>
                    {isModalOpen && (
                      <video
                         src={videoUrl}
