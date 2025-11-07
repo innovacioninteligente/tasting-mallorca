@@ -9,8 +9,7 @@
     "build": "NODE_ENV=production next build",
     "start": "next start",
     "lint": "next lint",
-    "typecheck": "tsc --noEmit",
-    "set-admin": "tsx src/scripts/set-admin-role.ts"
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@formatjs/intl-localematcher": "^0.5.4",
