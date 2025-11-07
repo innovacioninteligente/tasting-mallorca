@@ -74,7 +74,7 @@ export function ImageUpload({
             : 'Arrastra y suelta imágenes, o haz clic para seleccionar'}
         </p>
         <p className="text-xs">
-          {multiple ? 'Puedes subir varias imágenes' : 'Sube una imagen'} (Max 5MB por archivo)
+          {multiple ? 'Puedes subir varias imágenes' : 'Sube una imagen'} (Max 10MB por archivo)
         </p>
       </div>
 
@@ -107,6 +107,5 @@ export function ImageUpload({
     </div>
   );
 }
-
 
     
