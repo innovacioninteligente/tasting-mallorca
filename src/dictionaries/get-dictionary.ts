@@ -27,28 +27,6 @@ const dictionaries = {
       booking: () => import('./en/tour-detail/booking.json').then(m => m.default),
     }
   },
-  ca: {
-    home: () => import('./ca/home.json').then((module) => module.default),
-    header: () => import('./ca/header.json').then((module) => module.default),
-    whatsIncluded: () => import('./ca/whats-included.json').then((module) => module.default),
-    whyChooseUs: () => import('./ca/why-choose-us.json').then((module) => module.default),
-    tours: () => import('./ca/tours.json').then((module) => module.default),
-    featuredTours: () => import('./ca/featured-tours.json').then((module) => module.default),
-    gallery: () => import('./ca/gallery.json').then((module) => module.default),
-    happyCustomers: () => import('./ca/happy-customers.json').then((module) => module.default),
-    destinations: () => import('./ca/destinations.json').then((module) => module.default),
-    tourGuides: () => import('./ca/tour-guides.json').then((module) => module.default),
-    testimonials: () => import('./ca/testimonials.json').then((module) => module.default),
-    blog: () => import('./ca/blog.json').then((module) => module.default),
-    tourDetail: {
-      header: () => import('./ca/tour-detail/header.json').then(m => m.default),
-      overview: () => import('./ca/tour-detail/overview.json').then(m => m.default),
-      tourInfo: () => import('./ca/tour-detail/tour-info.json').then(m => m.default),
-      tourDetails: () => import('./ca/tour-detail/tour-details.json').then(m => m.default),
-      itinerary: () => import('./ca/tour-detail/itinerary.json').then(m => m.default),
-      booking: () => import('./ca/tour-detail/booking.json').then(m => m.default),
-    }
-  },
   fr: {
     home: () => import('./fr/home.json').then((module) => module.default),
     header: () => import('./fr/header.json').then((module) => module.default),

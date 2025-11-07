@@ -12,7 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { format } from "date-fns";
 import { AnimatePresence, motion } from "framer-motion";
-import { es, ca, fr, de, nl } from 'date-fns/locale';
+import { fr, de, nl } from 'date-fns/locale';
 import { StripeProvider } from '@/components/stripe-provider';
 import CheckoutForm from '@/components/checkout-form';
 
@@ -55,7 +55,7 @@ const mockHotels = [
   "Concepció by Nobis, C/ de la Concepció, 34, Centre, 07012 Palma, Illes Balears, España"
 ];
 
-const locales: { [key: string]: Locale } = { es, ca, fr, de, nl };
+const locales: { [key: string]: Locale } = { fr, de, nl };
 
 export function TourBookingSection({ dictionary, price, lang, tourTitle }: TourBookingSectionProps) {
     const [isSheetOpen, setIsSheetOpen] = useState(false);
@@ -90,7 +90,7 @@ export function TourBookingSection({ dictionary, price, lang, tourTitle }: TourB
       )
     : mockHotels;
 
-    const locale = locales[lang] || es;
+    const locale = locales[lang] || undefined;
     const formattedDate = date ? format(date, "PPP", { locale }) : "Pick a date";
 
     const getReturnUrl = () => {
@@ -200,8 +200,6 @@ export function TourBookingSection({ dictionary, price, lang, tourTitle }: TourB
                         </SelectTrigger>
                         <SelectContent>
                             <SelectItem value="en">English</SelectItem>
-                            <SelectItem value="es">Español</SelectItem>
-                            <SelectItem value="ca">Català</SelectItem>
                             <SelectItem value="fr">Français</SelectItem>
                             <SelectItem value="de">Deutsch</SelectItem>
                             <SelectItem value="nl">Nederlands</SelectItem>

@@ -13,7 +13,6 @@ import { i18n, type Locale } from '@/dictionaries/config';
 import { useState, useEffect } from 'react';
 
 // Import all tour dictionaries
-import toursCa from '@/dictionaries/ca/tours.json';
 import toursDe from '@/dictionaries/de/tours.json';
 import toursEn from '@/dictionaries/en/tours.json';
 import toursFr from '@/dictionaries/fr/tours.json';
@@ -27,14 +26,12 @@ type Language = {
 
 const languages: Language[] = [
   { code: 'en', name: 'English', flag: '🇬🇧' },
-  { code: 'ca', name: 'Català', flag: '🇦🇩' },
   { code: 'fr', name: 'Français', flag: '🇫🇷' },
   { code: 'de', name: 'Deutsch', flag: '🇩🇪' },
   { code: 'nl', name: 'Nederlands', flag: '🇳🇱' },
 ];
 
 const allTours = {
-  ca: toursCa,
   de: toursDe,
   en: toursEn,
   fr: toursFr,
