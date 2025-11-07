@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { AdminRouteGuard } from "@/components/auth/admin-route-guard";
@@ -10,8 +11,7 @@ import { usePathname } from 'next/navigation';
 
 export default function TourManagementPage() {
     const pathname = usePathname();
-    // This will be replaced with a link to the creation page, e.g., `${pathname}/new`
-    const createTourLink = `${pathname}/#`;
+    const createTourLink = `${pathname}/new`;
 
     return (
         <AdminRouteGuard>
