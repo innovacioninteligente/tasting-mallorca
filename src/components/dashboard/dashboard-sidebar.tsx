@@ -11,6 +11,7 @@ import {
   Settings,
   LogOut,
   Users,
+  Mountain,
 } from 'lucide-react';
 import { useAuth, useUser } from '@/firebase';
 import { cn } from '@/lib/utils';
@@ -22,6 +23,7 @@ const navItems = [
 ];
 
 const adminNavItems = [
+    { href: '/dashboard/admin/tours', label: 'Manage Tours', icon: Mountain, role: 'admin' },
     { href: '/dashboard/users', label: 'Manage Users', icon: Users, role: 'admin' },
 ];
 
@@ -40,6 +42,8 @@ export function DashboardSidebar() {
   const handleSignOut = async () => {
     if (auth) {
       await auth.signOut();
+      // Clear session cookie by calling the API route
+      await fetch('/api/auth/logout', { method: 'POST' });
       router.push(`/${lang}/`);
     }
   };

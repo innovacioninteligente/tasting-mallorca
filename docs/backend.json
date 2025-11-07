@@ -33,16 +33,75 @@
     },
     "Tour": {
       "title": "Tour",
-      "description": "Represents a tour offered by the company.",
+      "description": "Represents a tour offered by the company, with multilingual content.",
       "type": "object",
       "properties": {
-        "title": { "type": "string" },
-        "description": { "type": "string" },
-        "price": { "type": "number" },
-        "availableLanguages": { "type": "array", "items": { "type": "string" }},
-        "maxParticipants": { "type": "number" }
+        "slug": {
+          "type": "object",
+          "description": "URL-friendly slugs for each language.",
+          "properties": {
+            "en": { "type": "string" },
+            "es": { "type": "string" },
+            "de": { "type": "string" },
+            "fr": { "type": "string" },
+            "nl": { "type": "string" }
+          }
+        },
+        "title": {
+          "type": "object",
+          "description": "The title of the tour in multiple languages.",
+           "properties": { "en": { "type": "string" }, "es": { "type": "string" }, "de": { "type": "string" }, "fr": { "type": "string" }, "nl": { "type": "string" } }
+        },
+        "description": {
+          "type": "object",
+          "description": "A short description for tour cards, in multiple languages.",
+           "properties": { "en": { "type": "string" }, "es": { "type": "string" }, "de": { "type": "string" }, "fr": { "type": "string" }, "nl": { "type": "string" } }
+        },
+        "price": {
+          "type": "number",
+          "description": "Base price per person in cents."
+        },
+        "region": {
+          "type": "string",
+          "description": "Geographical region of the tour in Mallorca.",
+          "enum": ["North", "East", "South", "West", "Central"]
+        },
+        "mainImage": { "type": "string", "format": "uri" },
+        "galleryImages": { "type": "array", "items": { "type": "string", "format": "uri" } },
+        "durationHours": { "type": "number" },
+        "overview": {
+          "type": "object",
+          "description": "General overview of the tour in multiple languages.",
+           "properties": { "en": { "type": "string" }, "es": { "type": "string" }, "de": { "type": "string" }, "fr": { "type": "string" }, "nl": { "type": "string" } }
+        },
+        "itinerary": {
+          "type": "object",
+          "description": "Itinerary details in multiple languages.",
+          "properties": {
+             "en": { "type": "array", "items": { "type": "object" } },
+             "es": { "type": "array", "items": { "type": "object" } },
+             "de": { "type": "array", "items": { "type": "object" } },
+             "fr": { "type": "array", "items": { "type": "object" } },
+             "nl": { "type": "array", "items": { "type": "object" } }
+          }
+        },
+        "availabilityPeriods": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "startDate": { "type": "string", "format": "date" },
+              "endDate": { "type": "string", "format": "date" },
+              "activeDays": { "type": "array", "items": { "type": "string", "enum": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"] } }
+            }
+          }
+        },
+        "isFeatured": {
+            "type": "boolean",
+            "description": "Whether the tour is featured on the homepage."
+        }
       },
-      "required": ["title", "price"]
+      "required": ["slug", "title", "price", "region"]
     },
     "Booking": {
       "title": "Booking",
