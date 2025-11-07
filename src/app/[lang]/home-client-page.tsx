@@ -33,7 +33,6 @@ export default function HomeClientPage({
       <GallerySection dictionary={dictionary.gallery} />
       <HappyCustomersSection dictionary={dictionary.happyCustomers} />
       <TopDestinationsSection dictionary={dictionary.destinations} />
-      <TourGuidesSection dictionary={dictionary.tourGuides} />
       <TestimonialsSection dictionary={dictionary.testimonials} />
       <BlogSection dictionary={dictionary.blog} />
     </div>

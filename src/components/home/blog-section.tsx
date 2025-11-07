@@ -34,7 +34,7 @@ const blogPosts = [
 
 export function BlogSection({ dictionary }: BlogSectionProps) {
     return (
-        <section className="py-24 bg-background">
+        <section className="py-24 bg-background flex flex-col items-center">
             <div className="container text-center mb-12">
                 <div className='flex justify-center items-center gap-2'>
                 <Sprout className="w-6 h-6 text-primary" />
