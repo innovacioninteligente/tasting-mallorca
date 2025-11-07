@@ -58,6 +58,11 @@ export function TourForm() {
       isFeatured: false,
       region: "South",
       durationHours: 8,
+      price: 0,
+      title: { es: '', en: '', de: '', fr: '', nl: '' },
+      slug: { es: '', en: '', de: '', fr: '', nl: '' },
+      description: { es: '', en: '', de: '', fr: '', nl: '' },
+      overview: { es: '', en: '', de: '', fr: '', nl: '' },
     },
   });
 
