@@ -1,10 +1,12 @@
+
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { i18n } from './dictionaries/config';
 import { match as matchLocale } from '@formatjs/intl-localematcher';
 import Negotiator from 'negotiator';
-import { adminApp } from './firebase/server/config';
-import { getAuth } from 'firebase-admin/auth';
+
+// Force Node.js runtime to avoid conflicts with firebase-admin in API routes.
+export const runtime = 'nodejs';
 
 function getLocale(request: NextRequest): string | undefined {
   const negotiatorHeaders: Record<string, string> = {};
@@ -20,30 +22,6 @@ function getLocale(request: NextRequest): string | undefined {
     return i18n.defaultLocale;
   }
 }
-
-async function handleSession(request: NextRequest) {
-  const session = request.cookies.get('session')?.value;
-  if (!session) {
-    // If no session, clear any existing user data by redirecting to an API route that clears the cookie
-    // This is a placeholder for a more robust session management flow.
-    return NextResponse.next();
-  }
-
-  try {
-    // Initialize admin app to verify token
-    adminApp;
-    const decodedClaims = await getAuth().verifySessionCookie(session, true);
-    // You can add logic here based on decodedClaims if needed
-    return NextResponse.next();
-  } catch (error) {
-    console.error('Error verifying session cookie in middleware:', error);
-    // Invalid session, redirect to clear it, or to a login page
-    const response = NextResponse.redirect(new URL('/api/auth/logout', request.url));
-    response.cookies.delete('session');
-    return response;
-  }
-}
-
 
 export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
@@ -64,8 +42,7 @@ export async function middleware(request: NextRequest) {
     );
   }
 
-  // Handle session management for all other routes
-  return await handleSession(request);
+  return NextResponse.next();
 }
 
 export const config = {
