@@ -3,7 +3,8 @@
 
 import { useRef, useState } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogTitle, DialogClose } from '@/components/ui/dialog';
+import { X } from 'lucide-react';
 
 const videoUrl = "https://firebasestorage.googleapis.com/v0/b/tasting-mallorca.firebasestorage.app/o/web%2Fvideos%2FAUTENTICA%20MALLORCA%20GENERAL%20%20V1.mp4?alt=media&token=90225773-8283-4884-a4d5-565abcafc790";
 
@@ -49,6 +50,10 @@ export function ImmersiveCarouselSection() {
                         Your browser does not support the video tag.
                     </video>
                    )}
+                   <DialogClose className="absolute right-4 top-4 rounded-full p-2 bg-black/50 text-white opacity-80 hover:opacity-100 transition-opacity focus:outline-none focus:ring-2 focus:ring-white">
+                        <X className="h-8 w-8" />
+                        <span className="sr-only">Close</span>
+                    </DialogClose>
                 </DialogContent>
             </Dialog>
         </>
