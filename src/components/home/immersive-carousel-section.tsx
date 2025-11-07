@@ -1,26 +1,13 @@
 'use client';
 
-import Image from 'next/image';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
-import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel';
-import Autoplay from "embla-carousel-autoplay";
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
 
-const hikerImage = PlaceHolderImages.find(img => img.id === 'hiker-with-backpack');
-const travelGirlImage = PlaceHolderImages.find(img => img.id === 'girl-travel-view');
-const testimonialAvatar2 = PlaceHolderImages.find(img => img.id === 'testimonial-avatar-2');
-const heroImage3 = PlaceHolderImages.find(img => img.id === 'hero-image-3');
-
-const immersiveCarouselImages = [
-    hikerImage,
-    travelGirlImage,
-    testimonialAvatar2,
-    heroImage3,
-].filter(Boolean) as (typeof PlaceHolderImages[0])[];
+const videoUrl = "https://firebasestorage.googleapis.com/v0/b/tasting-mallorca.firebasestorage.app/o/web%2Fvideos%2FAUTENTICA%20MALLORCA%20GENERAL%20%20V1.mp4?alt=media&token=90225773-8283-4884-a4d5-565abcafc790";
 
 export function ImmersiveCarouselSection() {
-    const immersiveAutoplayPlugin = useRef(Autoplay({ delay: 3000, stopOnInteraction: false }))
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const carouselContainerRef = useRef<HTMLDivElement>(null);
     const { scrollYProgress } = useScroll({
         target: carouselContainerRef,
@@ -30,31 +17,37 @@ export function ImmersiveCarouselSection() {
     const y = useTransform(scrollYProgress, [0, 1], ['-70%', '70%']);
 
     return (
-        <section ref={carouselContainerRef} className='w-full min-h-screen overflow-hidden'>
-            <motion.div style={{ y }} className="h-full">
-                <Carousel
-                    plugins={[immersiveAutoplayPlugin.current]}
-                    className="w-full h-full"
-                    opts={{
-                        loop: true,
-                    }}
-                >
-                    <CarouselContent className='h-screen'>
-                        {immersiveCarouselImages.map((img) => (
-                            <CarouselItem key={img.id} className='h-full relative'>
-                                <Image
-                                    src={img.imageUrl}
-                                    alt={img.description}
-                                    fill
-                                    className="object-cover"
-                                    data-ai-hint={img.imageHint}
-                                />
-                                <div className="absolute inset-0 bg-black/20"></div>
-                            </CarouselItem>
-                        ))}
-                    </CarouselContent>
-                </Carousel>
-            </motion.div>
-        </section>
+        <>
+            <section ref={carouselContainerRef} className='w-full min-h-screen overflow-hidden cursor-pointer' onClick={() => setIsModalOpen(true)}>
+                <motion.div style={{ y }} className="h-full">
+                    <div className='h-screen relative'>
+                        <video
+                            src={videoUrl}
+                            autoPlay
+                            muted
+                            loop
+                            playsInline
+                            className="object-cover w-full h-full"
+                        />
+                        <div className="absolute inset-0 bg-black/20"></div>
+                    </div>
+                </motion.div>
+            </section>
+
+            <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+                <DialogContent className="max-w-none w-screen h-screen md:h-auto md:w-auto md:max-w-6xl p-0 bg-black border-0 flex items-center justify-center">
+                   {isModalOpen && (
+                     <video
+                        src={videoUrl}
+                        autoPlay
+                        controls
+                        className="w-full h-auto max-h-screen"
+                    >
+                        Your browser does not support the video tag.
+                    </video>
+                   )}
+                </DialogContent>
+            </Dialog>
+        </>
     );
 }
