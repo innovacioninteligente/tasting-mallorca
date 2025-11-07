@@ -14,7 +14,8 @@ export const getUsers = createSafeAction(
     try {
       const userRepository = new FirestoreUserRepository();
       const users = await findAllUsers(userRepository);
-      return { data: users };
+      // The users object is converted to a plain object to avoid Next.js serialization issues.
+      return { data: JSON.parse(JSON.stringify(users)) };
     } catch (error: any) {
       return { error: error.message || 'Failed to fetch users.' };
     }
