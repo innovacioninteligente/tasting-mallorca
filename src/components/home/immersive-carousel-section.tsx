@@ -57,8 +57,9 @@ export function ImmersiveCarouselSection() {
                         autoPlay
                         loop
                         controls
+                        controlsList="nodownload"
                         onClick={togglePlay}
-                        className="w-full h-auto max-h-screen max-w-6xl cursor-pointer"
+                        className="w-full h-auto max-h-screen max-w-6xl cursor-pointer custom-video-controls"
                     >
                         Your browser does not support the video tag.
                     </video>
