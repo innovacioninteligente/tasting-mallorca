@@ -5,9 +5,6 @@ import { i18n } from './dictionaries/config';
 import { match as matchLocale } from '@formatjs/intl-localematcher';
 import Negotiator from 'negotiator';
 
-// Force Node.js runtime to avoid conflicts with firebase-admin in API routes.
-export const runtime = 'nodejs';
-
 function getLocale(request: NextRequest): string | undefined {
   const negotiatorHeaders: Record<string, string> = {};
   request.headers.forEach((value, key) => (negotiatorHeaders[key] = value));
@@ -23,7 +20,7 @@ function getLocale(request: NextRequest): string | undefined {
   }
 }
 
-export async function middleware(request: NextRequest) {
+export function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
   // Skip middleware for API routes and static files
