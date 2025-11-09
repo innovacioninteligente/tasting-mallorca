@@ -1,15 +1,17 @@
 'use client';
 
-import { AdminRouteGuard } from "@/components/auth/admin-route-guard";
-import { TourForm } from "./tour-form";
+import { TourForm } from "@/app/[lang]/dashboard/admin/tours/new/tour-form";
 import { useForm, FormProvider } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { TourFormHeader } from "./tour-form-header";
+import { TourFormHeader } from "@/app/[lang]/dashboard/admin/tours/new/tour-form-header";
 import { useState } from "react";
 import { Tour } from "@/backend/tours/domain/tour.model";
-import { usePathname, useRouter } from "next/navigation";
+import { createTour } from "@/app/server-actions/tours/createTour";
+import { updateTour } from "@/app/server-actions/tours/updateTour";
 import { useToast } from "@/hooks/use-toast";
+import { useRouter } from "next/navigation";
+import { format, parseISO } from 'date-fns';
 
 const multilingualStringSchema = z.object({
     es: z.string().min(1, { message: "El texto en español es requerido." }),
@@ -62,62 +64,73 @@ const formSchema = z.object({
   depositPrice: z.coerce.number().optional(),
   availabilityPeriods: z.array(availabilityPeriodSchema).optional(),
   itinerary: z.array(itineraryItemSchema).optional(),
+}).refine(data => {
+    if (data.allowDeposit) {
+        return data.depositPrice !== undefined && data.depositPrice > 0;
+    }
+    return true;
+}, {
+    message: "El precio del depósito es requerido si se permiten depósitos.",
+    path: ["depositPrice"],
+}).refine(data => {
+    if (data.allowDeposit && data.depositPrice) {
+        return data.depositPrice < data.price;
+    }
+    return true;
+}, {
+    message: "El depósito no puede ser mayor o igual al precio total.",
+    path: ["depositPrice"],
 });
 
-export default function NewTourPage() {
+type TourFormValues = z.infer<typeof formSchema>;
+
+interface EditTourClientPageProps {
+    initialData: Tour;
+    lang: string;
+}
+
+export function EditTourClientPage({ initialData, lang }: EditTourClientPageProps) {
     const { toast } = useToast();
     const router = useRouter();
-    const pathname = usePathname();
-    const lang = pathname.split('/')[1];
-
-    const form = useForm({
-        resolver: zodResolver(formSchema),
-        defaultValues: {
-            title: { es: '', en: '', de: '', fr: '', nl: '' },
-            slug: { es: '', en: '', de: '', fr: '', nl: '' },
-            description: { es: '', en: '', de: '', fr: '', nl: '' },
-            overview: { es: '', en: '', de: '', fr: '', nl: '' },
-            generalInfo: {
-                cancellationPolicy: { es: '', en: '', de: '', fr: '', nl: '' },
-                bookingPolicy: { es: '', en: '', de: '', fr: '', nl: '' },
-                guideInfo: { es: '', en: '', de: '', fr: '', nl: '' },
-                pickupInfo: { es: '', en: '', de: '', fr: '', nl: '' },
-            },
-            price: 0,
-            region: "South",
-            durationHours: 8,
-            isFeatured: false,
-            published: false,
-            allowDeposit: false,
-            itinerary: [],
-            galleryImages: [],
-        },
-    });
-
     const [isSubmitting, setIsSubmitting] = useState(false);
+    
+    // The dates come as strings from the server action, so we need to parse them.
+    const parsedInitialData = {
+        ...initialData,
+        availabilityPeriods: initialData.availabilityPeriods?.map(p => ({
+            ...p,
+            startDate: parseISO(p.startDate),
+            endDate: parseISO(p.endDate)
+        })) || [],
+        mainImage: initialData.mainImage,
+        galleryImages: initialData.galleryImages || [],
+    };
+    
+    const form = useForm<TourFormValues>({
+        resolver: zodResolver(formSchema),
+        defaultValues: parsedInitialData,
+    });
+    
     const basePath = `/${lang}/dashboard/admin/tours`;
 
-    const onSubmit = async (data: z.infer<typeof formSchema>) => {
+    const onSubmit = async (data: TourFormValues) => {
         setIsSubmitting(true);
-        // This logic is now handled within the TourForm component itself.
-        // We just need a function to pass to form.handleSubmit
-        // The actual submission logic is triggered from within TourForm's onSubmit.
+        // Logic will be handled inside TourForm, but we need the handler here.
     };
 
     return (
-        <AdminRouteGuard>
-            <div className="flex flex-col h-full -mx-4 -pb-4 md:-mx-8 md:-pb-8 lg:-px-10 lg:-pb-10">
-                <FormProvider {...form}>
-                    <TourFormHeader
-                        isSubmitting={isSubmitting}
-                        basePath={basePath}
-                        onSubmit={form.handleSubmit(onSubmit)} 
-                    />
-                    <div className="flex-grow overflow-auto px-4 pt-6 md:px-8 lg:px-10">
-                       <TourForm />
-                    </div>
-                </FormProvider>
-            </div>
-        </AdminRouteGuard>
+        <div className="flex flex-col h-full -mx-4 -pb-4 md:-mx-8 md:-pb-8 lg:-px-10 lg:-pb-10">
+            <FormProvider {...form}>
+                <TourFormHeader
+                    isSubmitting={isSubmitting}
+                    initialData={initialData}
+                    basePath={basePath}
+                    onSubmit={form.handleSubmit(onSubmit)}
+                />
+                <div className="flex-grow overflow-auto px-4 pt-6 md:px-8 lg:px-10">
+                   <TourForm initialData={initialData} />
+                </div>
+            </FormProvider>
+        </div>
     );
 }

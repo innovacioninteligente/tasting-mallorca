@@ -3,7 +3,7 @@
 'use client';
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm, useFieldArray, FormProvider } from "react-hook-form";
+import { useForm, useFieldArray, FormProvider, useFormContext } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -273,40 +273,7 @@ export function TourForm({ initialData }: TourFormProps) {
   const [uploadProgress, setUploadProgress] = useState(0);
   const [uploadMessage, setUploadMessage] = useState('Starting...');
   const [tourId, setTourId] = useState<string | undefined>(initialData?.id);
-  const basePath = '/dashboard/admin/tours';
-  
-  const defaultValues: Partial<TourFormValues> = {
-      title: initialData?.title || { es: '', en: '', de: '', fr: '', nl: '' },
-      slug: initialData?.slug || { es: '', en: '', de: '', fr: '', nl: '' },
-      description: initialData?.description || { es: '', en: '', de: '', fr: '', nl: '' },
-      overview: initialData?.overview || { es: '', en: '', de: '', fr: '', nl: '' },
-      generalInfo: initialData?.generalInfo || {
-        cancellationPolicy: { es: '', en: '', de: '', fr: '', nl: '' },
-        bookingPolicy: { es: '', en: '', de: '', fr: '', nl: '' },
-        guideInfo: { es: '', en: '', de: '', fr: '', nl: '' },
-        pickupInfo: { es: '', en: '', de: '', fr: '', nl: '' },
-      },
-      price: initialData?.price || 0,
-      region: initialData?.region || "South",
-      durationHours: initialData?.durationHours || 8,
-      isFeatured: initialData?.isFeatured || false,
-      published: initialData?.published || false,
-      allowDeposit: initialData?.allowDeposit || false,
-      depositPrice: initialData?.depositPrice || 0,
-      availabilityPeriods: initialData?.availabilityPeriods?.map(p => ({
-        ...p,
-        startDate: parseISO(p.startDate),
-        endDate: parseISO(p.endDate)
-      })) || [],
-      itinerary: initialData?.itinerary || [],
-      mainImage: initialData?.mainImage,
-      galleryImages: initialData?.galleryImages || [],
-  };
-
-  const form = useForm<TourFormValues>({
-    resolver: zodResolver(formSchema),
-    defaultValues
-  });
+  const form = useFormContext<TourFormValues>();
 
   const { fields, append, remove } = useFieldArray({
     control: form.control,
@@ -348,6 +315,7 @@ export function TourForm({ initialData }: TourFormProps) {
  async function onSubmit(data: TourFormValues) {
     setIsSubmitting(true);
     const currentLang = window.location.pathname.split('/')[1] || 'en';
+    const basePath = `/${currentLang}/dashboard/admin/tours`;
 
     try {
         let currentTourId = tourId;
@@ -393,8 +361,8 @@ export function TourForm({ initialData }: TourFormProps) {
         };
         
         let result;
-        if (initialData?.id || tourId) { 
-            result = await updateTour({ ...tourData, id: tourId! });
+        if (initialData?.id) { 
+            result = await updateTour({ ...tourData, id: initialData.id });
         } else { 
             result = await createTour({ ...tourData, id: currentTourId! });
         }
@@ -402,7 +370,7 @@ export function TourForm({ initialData }: TourFormProps) {
         if (result.error) throw new Error(result.error);
         
         if (!initialData?.id) {
-            const newPath = `/${currentLang}${basePath}/${currentTourId}/edit`;
+            const newPath = `${basePath}/${currentTourId}/edit`;
             router.replace(newPath, { scroll: false });
         }
 
@@ -435,7 +403,7 @@ export function TourForm({ initialData }: TourFormProps) {
   return (
     <>
       {isSubmitting && <UploadProgressDialog progress={uploadProgress} message={uploadMessage} />}
-      <FormProvider {...form}>
+      <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             <div className="pt-2">
                 <Tabs defaultValue="main" className="w-full">
@@ -964,8 +932,7 @@ export function TourForm({ initialData }: TourFormProps) {
                 </Tabs>
             </div>
         </form>
-      </FormProvider>
+      </Form>
     </>
   );
 }
-
