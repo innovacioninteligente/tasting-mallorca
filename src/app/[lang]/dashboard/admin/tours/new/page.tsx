@@ -1,5 +1,3 @@
-
-
 'use client';
 
 import { AdminRouteGuard } from "@/components/auth/admin-route-guard";
@@ -14,4 +12,3 @@ export default function NewTourPage() {
         </AdminRouteGuard>
     );
 }
-
