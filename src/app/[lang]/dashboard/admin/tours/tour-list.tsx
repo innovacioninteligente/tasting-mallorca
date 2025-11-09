@@ -1,30 +1,22 @@
+
 'use client';
 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Tour } from "@/backend/tours/domain/tour.model";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Edit, Eye, Loader2 } from "lucide-react";
+import { Edit, Eye } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
 
 interface TourListProps {
     tours?: Tour[];
-    loading: boolean;
     error?: string;
 }
 
-export function TourList({ tours, loading, error }: TourListProps) {
+export function TourList({ tours, error }: TourListProps) {
     const pathname = usePathname();
-
-    if (loading) {
-        return (
-            <div className="flex justify-center items-center py-12">
-                <Loader2 className="h-8 w-8 animate-spin text-primary" />
-            </div>
-        );
-    }
     
     if (error) {
         return <p className="text-destructive text-center py-12">Error: {error}</p>;

@@ -1,22 +1,19 @@
 
-'use client';
+'use server';
 
 import { AdminRouteGuard } from "@/components/auth/admin-route-guard";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
 import { PlusCircle } from "lucide-react";
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { useCollection } from "@/firebase";
-import { Tour } from "@/backend/tours/domain/tour.model";
 import { TourList } from "./tour-list";
+import { findAllTours } from "@/app/server-actions/tours/findTours";
+import { Tour } from "@/backend/tours/domain/tour.model";
 
-export default function TourManagementPage() {
-    const pathname = usePathname();
-    const createTourLink = `${pathname}/new`;
-
-    const { data: tours, loading, error } = useCollection('tours');
-
+export default async function TourManagementPage({ params }: { params: { lang: string }}) {
+    const createTourLink = `/${params.lang}/dashboard/admin/tours/new`;
+    const result = await findAllTours({});
+    
     return (
         <AdminRouteGuard>
             <div className="flex justify-between items-center mb-6">
@@ -41,7 +38,7 @@ export default function TourManagementPage() {
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <TourList tours={tours as Tour[]} loading={loading} error={error?.message} />
+                    <TourList tours={result.data as Tour[]} error={result.error} />
                 </CardContent>
             </Card>
         </AdminRouteGuard>

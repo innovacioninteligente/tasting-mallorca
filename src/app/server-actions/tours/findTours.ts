@@ -5,6 +5,7 @@ import { createSafeAction } from '@/app/server-actions/lib/safe-action';
 import { findAllTours as findAllToursUseCase, findTourById as findTourByIdUseCase } from '@/backend/tours/application/findTours';
 import { FirestoreTourRepository } from '@/backend/tours/infrastructure/firestore-tour.repository';
 import { Tour } from '@/backend/tours/domain/tour.model';
+import { User } from '@/backend/users/domain/user.model';
 
 export const findTourById = createSafeAction(
     {
@@ -17,6 +18,7 @@ export const findTourById = createSafeAction(
             if (!tour) {
                 return { error: 'Tour not found.' };
             }
+            // The object needs to be serialized to be passed from Server to Client Components.
             return { data: JSON.parse(JSON.stringify(tour)) };
         } catch (error: any) {
             return { error: error.message || 'Failed to fetch tour.' };
@@ -29,14 +31,14 @@ export const findAllTours = createSafeAction(
   {
     allowedRoles: ['admin'],
   },
-  async (_: {}): Promise<{ data?: User[]; error?: string }> => {
+  async (_: {}): Promise<{ data?: Tour[]; error?: string }> => {
     try {
       const tourRepository = new FirestoreTourRepository();
       const tours = await findAllToursUseCase(tourRepository);
-      // The users object is converted to a plain object to avoid Next.js serialization issues.
+      // The object needs to be serialized to be passed from Server to Client Components.
       return { data: JSON.parse(JSON.stringify(tours)) };
     } catch (error: any) {
-      return { error: error.message || 'Failed to fetch users.' };
+      return { error: error.message || 'Failed to fetch tours.' };
     }
   }
 );
