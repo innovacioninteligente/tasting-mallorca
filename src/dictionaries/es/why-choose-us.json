@@ -1,13 +1,17 @@
 {
     "title": "¿Por Qué Elegir Tasting Mallorca?",
-    "subtitle": "Creemos en un tipo de viaje que te conecta con el alma de un lugar. Olvídate de los autobuses abarrotados y las trampas para turistas. Ofrecemos experiencias auténticas en grupos reducidos, donde puedes saborear la verdadera Mallorca, su cultura, su gente y sus tradiciones.",
+    "subtitle": "Creemos en un tipo de viaje que te conecta con el alma de un lugar. Olvídate de los autobuses abarrotados y las trampas para turistas. Ofrecemos experiencias auténticas donde puedes saborear la verdadera Mallorca, su cultura, su gente y sus tradiciones.",
     "item1": {
         "title": "Más Allá de la Ruta Turística",
         "description": "Nuestras rutas están diseñadas para mostrarte las joyas ocultas de la isla. Te llevamos a bodegas familiares, olivares centenarios y pueblos donde el tiempo parece haberse detenido."
     },
     "item2": {
-        "title": "Grupos Pequeños, Grandes Experiencias",
-        "description": "Con un máximo de 8 personas por tour, garantizamos un ambiente personal e íntimo. Esto permite conversaciones reales, paradas espontáneas y una conexión más profunda con tu guía y compañeros de viaje."
+        "title": "Guías Locales Apasionados",
+        "description": "Nuestros guías no son solo expertos; son narradores y tu conexión personal con la isla. Dan vida a Mallorca con una pasión contagiosa, compartiendo secretos que no encontrarás en una guía."
+    },
+    "item3": {
+        "title": "Sabores Auténticos, No Comida para Turistas",
+        "description": "Creemos que probar un lugar es entenderlo. Por eso te llevamos a donde comen los locales, desde bodegas rústicas hasta restaurantes en el campo, asegurando que pruebes el sabor real de Mallorca."
     },
     "bookingButton": "Empieza a Reservar",
     "travelerCount": "18k+",

@@ -1,13 +1,17 @@
 {
     "title": "Warum Tasting Mallorca Wählen?",
-    "subtitle": "Wir glauben an Reisen, die Sie mit der Seele eines Ortes verbinden. Vergessen Sie überfüllte Busse und Touristenfallen. Wir bieten authentische Erlebnisse in kleinen Gruppen, bei denen Sie das echte Mallorca, seine Kultur, seine Menschen und seine Traditionen genießen können.",
+    "subtitle": "Wir glauben an Reisen, die Sie mit der Seele eines Ortes verbinden. Vergessen Sie überfüllte Busse und Touristenfallen. Wir bieten authentische Erlebnisse, bei denen Sie das echte Mallorca, seine Kultur, seine Menschen und seine Traditionen genießen können.",
     "item1": {
         "title": "Jenseits der Touristenpfade",
         "description": "Unsere Routen sind darauf ausgelegt, Ihnen die verborgenen Juwelen der Insel zu zeigen. Wir führen Sie zu familiengeführten Weingütern, jahrhundertealten Olivenhainen und Dörfern, in denen die Zeit stillzustehen scheint."
     },
     "item2": {
-        "title": "Kleine Gruppen, Große Erlebnisse",
-        "description": "Mit maximal 8 Personen pro Tour gewährleisten wir eine persönliche und intime Atmosphäre. Dies ermöglicht echte Gespräche, spontane Stopps und eine tiefere Verbindung zu Ihrem Reiseleiter und den Mitreisenden."
+        "title": "Leidenschaftliche Lokale Führer",
+        "description": "Unsere Führer sind mehr als nur Experten; sie sind Geschichtenerzähler und Ihre persönliche Verbindung zur Insel. Sie erwecken Mallorca mit ansteckender Leidenschaft zum Leben und teilen Geheimnisse, die Sie in keinem Reiseführer finden."
+    },
+    "item3": {
+        "title": "Authentische Aromen, Kein Touristenessen",
+        "description": "Wir glauben, dass man einen Ort schmecken muss, um ihn zu verstehen. Deshalb führen wir Sie dorthin, wo die Einheimischen essen, von rustikalen Weingütern bis hin zu ländlichen Restaurants, um einen echten Geschmack von Mallorca zu gewährleisten."
     },
     "bookingButton": "Buchung Starten",
     "travelerCount": "18k+",

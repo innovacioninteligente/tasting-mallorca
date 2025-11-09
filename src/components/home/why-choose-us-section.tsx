@@ -4,7 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Button } from '@/components/ui/button';
-import { Briefcase, Map, CheckCircle, ArrowUpRight, Users } from 'lucide-react';
+import { Briefcase, Map, CheckCircle, ArrowUpRight, Users, Utensils } from 'lucide-react';
 import { type getDictionary } from '@/dictionaries/get-dictionary';
 
 const aboutUsImage = PlaceHolderImages.find(img => img.id === 'about-us-philosophy');
@@ -74,6 +74,17 @@ export function WhyChooseUsSection({ dictionary }: { dictionary: WhyChooseUsDict
                         <h3 className="text-2xl font-bold">{dictionary.item2.title}</h3>
                         <p className="mt-2 text-muted-foreground">
                             {dictionary.item2.description}
+                        </p>
+                    </div>
+                    </div>
+                     <div className="flex items-start gap-6">
+                    <div className="flex-shrink-0 w-14 h-14 bg-primary/10 text-primary rounded-xl flex items-center justify-center">
+                        <Utensils className="w-7 h-7" />
+                    </div>
+                    <div>
+                        <h3 className="text-2xl font-bold">{dictionary.item3.title}</h3>
+                        <p className="mt-2 text-muted-foreground">
+                            {dictionary.item3.description}
                         </p>
                     </div>
                     </div>
