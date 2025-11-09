@@ -20,11 +20,12 @@ import { uploadImages } from "@/app/server-actions/tours/uploadImages";
 import React, { useState } from "react";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { CalendarIcon, PlusCircle, Trash2 } from "lucide-react";
+import { CalendarIcon, Loader2, PlusCircle, Trash2 } from "lucide-react";
 import { DateRange } from "react-day-picker";
 import { addDays, format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { Progress } from "@/components/ui/progress";
 
 
 const MAX_FILE_SIZE = 100 * 1024 * 1024; // 100MB
@@ -221,6 +222,8 @@ export function TourForm() {
   const { toast } = useToast();
   const router = useRouter();
   const pathname = usePathname();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
   
   const form = useForm<TourFormValues>({
     resolver: zodResolver(tourFormSchema),
@@ -236,6 +239,8 @@ export function TourForm() {
       allowDeposit: false,
       depositPrice: 0,
       availabilityPeriods: [],
+      mainImage: null,
+      galleryImages: [],
     },
   });
 
@@ -247,6 +252,9 @@ export function TourForm() {
   const allowDeposit = form.watch("allowDeposit");
 
  async function onSubmit(data: TourFormValues) {
+    setIsSubmitting(true);
+    setUploadProgress(0);
+
     try {
         const basePath = pathname.split('/').slice(0, -2).join('/');
         
@@ -257,7 +265,17 @@ export function TourForm() {
             formData.append('galleryImages', file);
         });
 
+        // Simulate upload progress
+        let progress = 0;
+        const interval = setInterval(() => {
+            progress += 10;
+            if (progress > 90) progress = 90; // Don't complete until server responds
+            setUploadProgress(progress);
+        }, 300);
+
         const uploadResult = await uploadImages(formData);
+        clearInterval(interval);
+        setUploadProgress(95);
 
         if (uploadResult.error) {
             throw new Error(uploadResult.error);
@@ -281,6 +299,8 @@ export function TourForm() {
         if (result.error) {
             throw new Error(result.error);
         }
+        
+        setUploadProgress(100);
 
         toast({
             title: "¡Tour Creado!",
@@ -297,6 +317,9 @@ export function TourForm() {
             title: "Error al crear el tour",
             description: error.message || "Ocurrió un problema, por favor intenta de nuevo.",
         });
+    } finally {
+        setIsSubmitting(false);
+        setUploadProgress(0);
     }
 }
 
@@ -617,14 +640,18 @@ export function TourForm() {
             </Card>
           </TabsContent>
         </Tabs>
-        <Button type="submit" size="lg" disabled={form.formState.isSubmitting}>
-            {form.formState.isSubmitting ? 'Guardando...' : 'Guardar Tour'}
-        </Button>
+        
+        {isSubmitting ? (
+          <div className="space-y-4">
+              <p className="text-center font-medium">Guardando tour, por favor espera...</p>
+              <Progress value={uploadProgress} className="w-full" />
+          </div>
+        ) : (
+          <Button type="submit" size="lg" disabled={isSubmitting}>
+              Guardar Tour
+          </Button>
+        )}
       </form>
     </Form>
   );
 }
-
-    
-
-    

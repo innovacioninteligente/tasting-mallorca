@@ -17,10 +17,10 @@ const poppins = Poppins({
 export default async function RootLayout({
   children,
   params,
-}: Readonly<{
+}: {
   children: React.ReactNode;
   params: { lang: Locale };
-}>) {
+}) {
   const dictionary = await getDictionary(params.lang);
 
   return (
