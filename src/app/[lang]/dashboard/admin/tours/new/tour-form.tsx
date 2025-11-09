@@ -131,6 +131,14 @@ function AvailabilityPeriodCreator({ onAddPeriod }: { onAddPeriod: (period: z.in
         setShowCreator(false);
     };
 
+    const handleToggleAllWeek = () => {
+        if (activeDays.length === weekDays.length) {
+            setActiveDays([]);
+        } else {
+            setActiveDays(weekDays);
+        }
+    };
+
     if (!showCreator) {
         return (
             <Button variant="outline" onClick={() => setShowCreator(true)} className="mt-4 w-full">
@@ -180,13 +188,23 @@ function AvailabilityPeriodCreator({ onAddPeriod }: { onAddPeriod: (period: z.in
                 </div>
                 <div>
                     <FormLabel>Días Activos</FormLabel>
-                    <ToggleGroup type="multiple" value={activeDays} onValueChange={setActiveDays} variant="outline" className="flex-wrap justify-start mt-1">
-                        {weekDays.map((day, index) => (
-                             <ToggleGroupItem key={day} value={day} aria-label={`Toggle ${day}`} className="w-10 h-10">
-                                {weekDayInitials[index]}
-                            </ToggleGroupItem>
-                        ))}
-                    </ToggleGroup>
+                    <div className="flex flex-wrap items-center gap-2 mt-1">
+                        <ToggleGroup type="multiple" value={activeDays} onValueChange={setActiveDays} variant="outline" className="flex-wrap justify-start">
+                            {weekDays.map((day, index) => (
+                                <ToggleGroupItem
+                                    key={day}
+                                    value={day}
+                                    aria-label={`Toggle ${day}`}
+                                    className="w-10 h-10 data-[state=on]:bg-primary data-[state=on]:text-primary-foreground"
+                                >
+                                    {weekDayInitials[index]}
+                                </ToggleGroupItem>
+                            ))}
+                        </ToggleGroup>
+                        <Button type="button" variant="link" size="sm" onClick={handleToggleAllWeek} className="px-2">
+                           Toda la semana
+                        </Button>
+                    </div>
                 </div>
                 {error && <p className="text-sm font-medium text-destructive">{error}</p>}
                 <div className="flex gap-2 justify-end">
