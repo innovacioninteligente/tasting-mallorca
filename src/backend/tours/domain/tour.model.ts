@@ -11,6 +11,12 @@ export interface Tour {
   galleryImages: string[];
   durationHours: number;
   overview: { [key: string]: string };
+  generalInfo: {
+    cancellationPolicy: { [key: string]: string };
+    bookingPolicy: { [key: string]: string };
+    guideInfo: { [key: string]: string };
+    pickupInfo: { [key: string]: string };
+  };
   itinerary: { [key: string]: any[] }; 
   availabilityPeriods: {
     startDate: string;

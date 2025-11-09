@@ -1,3 +1,4 @@
+
 {
   "//": "This file is a blueprint used by Firebase Studio to provision and manage backend services. For more details, see the 'Firebase Usage Instructions' in the documentation.",
   "entities": {
@@ -73,6 +74,16 @@
           "type": "object",
           "description": "General overview of the tour in multiple languages.",
            "properties": { "en": { "type": "string" }, "es": { "type": "string" }, "de": { "type": "string" }, "fr": { "type": "string" }, "nl": { "type": "string" } }
+        },
+        "generalInfo": {
+          "type": "object",
+          "description": "General information about the tour in multiple languages.",
+          "properties": {
+            "cancellationPolicy": { "type": "object", "properties": { "en": { "type": "string" }, "es": { "type": "string" }, "de": { "type": "string" }, "fr": { "type": "string" }, "nl": { "type": "string" } } },
+            "bookingPolicy": { "type": "object", "properties": { "en": { "type": "string" }, "es": { "type": "string" }, "de": { "type": "string" }, "fr": { "type": "string" }, "nl": { "type": "string" } } },
+            "guideInfo": { "type": "object", "properties": { "en": { "type": "string" }, "es": { "type": "string" }, "de": { "type": "string" }, "fr": { "type": "string" }, "nl": { "type": "string" } } },
+            "pickupInfo": { "type": "object", "properties": { "en": { "type": "string" }, "es": { "type": "string" }, "de": { "type": "string" }, "fr": { "type": "string" }, "nl": { "type": "string" } } }
+          }
         },
         "itinerary": {
           "type": "object",

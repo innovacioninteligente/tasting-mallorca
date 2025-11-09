@@ -40,34 +40,24 @@ const availabilityPeriodSchema = z.object({
     activeDays: z.array(z.string()).min(1, "At least one active day is required."),
 });
 
+const multilingualStringSchema = z.object({
+    es: z.string().min(1, { message: "El texto en español es requerido." }),
+    en: z.string().optional(),
+    de: z.string().optional(),
+    fr: z.string().optional(),
+    nl: z.string().optional(),
+});
+
 const formSchema = z.object({
-  title: z.object({
-    es: z.string().min(1, "El título en español es requerido."),
-    en: z.string().optional(),
-    de: z.string().optional(),
-    fr: z.string().optional(),
-    nl: z.string().optional(),
-  }),
-  slug: z.object({
-    es: z.string().min(1, "El slug en español es requerido."),
-    en: z.string().optional(),
-    de: z.string().optional(),
-    fr: z.string().optional(),
-    nl: z.string().optional(),
-  }),
-  description: z.object({
-    es: z.string().min(1, "La descripción corta en español es requerida."),
-    en: z.string().optional(),
-    de: z.string().optional(),
-    fr: z.string().optional(),
-    nl: z.string().optional(),
-  }),
-  overview: z.object({
-    es: z.string().min(1, "El resumen en español es requerido."),
-    en: z.string().optional(),
-    de: z.string().optional(),
-    fr: z.string().optional(),
-    nl: z.string().optional(),
+  title: multilingualStringSchema,
+  slug: multilingualStringSchema,
+  description: multilingualStringSchema,
+  overview: multilingualStringSchema,
+  generalInfo: z.object({
+    cancellationPolicy: multilingualStringSchema,
+    bookingPolicy: multilingualStringSchema,
+    guideInfo: multilingualStringSchema,
+    pickupInfo: multilingualStringSchema,
   }),
   price: z.coerce.number().min(0, "El precio debe ser un número positivo."),
   region: z.enum(["North", "East", "South", "West", "Central"]),
@@ -227,6 +217,12 @@ export function TourForm({ initialData }: TourFormProps) {
       slug: initialData?.slug || { es: '', en: '', de: '', fr: '', nl: '' },
       description: initialData?.description || { es: '', en: '', de: '', fr: '', nl: '' },
       overview: initialData?.overview || { es: '', en: '', de: '', fr: '', nl: '' },
+      generalInfo: initialData?.generalInfo || {
+        cancellationPolicy: { es: '', en: '', de: '', fr: '', nl: '' },
+        bookingPolicy: { es: '', en: '', de: '', fr: '', nl: '' },
+        guideInfo: { es: '', en: '', de: '', fr: '', nl: '' },
+        pickupInfo: { es: '', en: '', de: '', fr: '', nl: '' },
+      },
       price: initialData?.price || 0,
       region: initialData?.region || "South",
       durationHours: initialData?.durationHours || 8,
@@ -442,6 +438,58 @@ export function TourForm({ initialData }: TourFormProps) {
                               />
                           </CardContent>
                           </Card>
+
+                           <Card className="mt-6">
+                                <CardHeader>
+                                    <CardTitle>Información General (Español)</CardTitle>
+                                </CardHeader>
+                                <CardContent className="space-y-6">
+                                    <FormField
+                                        control={form.control}
+                                        name="generalInfo.cancellationPolicy.es"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Política de Cancelación</FormLabel>
+                                                <FormControl><Textarea rows={2} placeholder="Ej: Cancela hasta 24 horas antes para un reembolso completo" {...field} /></FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+                                    <FormField
+                                        control={form.control}
+                                        name="generalInfo.bookingPolicy.es"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Política de Reserva</FormLabel>
+                                                <FormControl><Textarea rows={2} placeholder="Ej: Planes flexibles: reserva tu plaza inmediatamente, sin que se te cobre hoy." {...field} /></FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+                                    <FormField
+                                        control={form.control}
+                                        name="generalInfo.guideInfo.es"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Información del Guía</FormLabel>
+                                                <FormControl><Textarea rows={1} placeholder="Ej: Inglés, Alemán, Francés, Neerlandés" {...field} /></FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+                                    <FormField
+                                        control={form.control}
+                                        name="generalInfo.pickupInfo.es"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Información de Recogida</FormLabel>
+                                                <FormControl><Textarea rows={4} placeholder="Describe los detalles del servicio de recogida..." {...field} /></FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+                                </CardContent>
+                            </Card>
 
                           <Card className="mt-6">
                               <CardHeader>
@@ -672,6 +720,50 @@ export function TourForm({ initialData }: TourFormProps) {
                                                       </FormItem>
                                                   )}
                                               />
+                                               <FormField
+                                                    control={form.control}
+                                                    name={`generalInfo.cancellationPolicy.${lang.code as 'en' | 'de' | 'fr' | 'nl'}`}
+                                                    render={({ field }) => (
+                                                        <FormItem>
+                                                            <FormLabel>Política de Cancelación ({lang.code.toUpperCase()})</FormLabel>
+                                                            <FormControl><Textarea rows={2} {...field} /></FormControl>
+                                                            <FormMessage />
+                                                        </FormItem>
+                                                    )}
+                                                />
+                                                <FormField
+                                                    control={form.control}
+                                                    name={`generalInfo.bookingPolicy.${lang.code as 'en' | 'de' | 'fr' | 'nl'}`}
+                                                    render={({ field }) => (
+                                                        <FormItem>
+                                                            <FormLabel>Política de Reserva ({lang.code.toUpperCase()})</FormLabel>
+                                                            <FormControl><Textarea rows={2} {...field} /></FormControl>
+                                                            <FormMessage />
+                                                        </FormItem>
+                                                    )}
+                                                />
+                                                <FormField
+                                                    control={form.control}
+                                                    name={`generalInfo.guideInfo.${lang.code as 'en' | 'de' | 'fr' | 'nl'}`}
+                                                    render={({ field }) => (
+                                                        <FormItem>
+                                                            <FormLabel>Información del Guía ({lang.code.toUpperCase()})</FormLabel>
+                                                            <FormControl><Textarea rows={1} {...field} /></FormControl>
+                                                            <FormMessage />
+                                                        </FormItem>
+                                                    )}
+                                                />
+                                                <FormField
+                                                    control={form.control}
+                                                    name={`generalInfo.pickupInfo.${lang.code as 'en' | 'de' | 'fr' | 'nl'}`}
+                                                    render={({ field }) => (
+                                                        <FormItem>
+                                                            <FormLabel>Información de Recogida ({lang.code.toUpperCase()})</FormLabel>
+                                                            <FormControl><Textarea rows={4} {...field} /></FormControl>
+                                                            <FormMessage />
+                                                        </FormItem>
+                                                    )}
+                                                />
                                               <FormField
                                                   control={form.control}
                                                   name={`slug.${lang.code as 'en' | 'de' | 'fr' | 'nl'}`}
