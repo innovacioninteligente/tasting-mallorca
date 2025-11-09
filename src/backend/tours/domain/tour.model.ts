@@ -9,6 +9,11 @@ export type ItineraryItem = {
     activities: { [key: "es" | "en" | "de" | "fr" | "nl"]: string[] };
 };
 
+export type PickupPoint = {
+    title: { [key: string]: string };
+    description: { [key: string]: string };
+};
+
 export interface Tour {
   id: string;
   slug: { [key: string]: string };
@@ -26,6 +31,7 @@ export interface Tour {
     guideInfo: { [key: string]: string };
     pickupInfo: { [key: string]: string };
   };
+  pickupPoint: PickupPoint;
   itinerary: ItineraryItem[]; 
   availabilityPeriods: {
     startDate: string;

@@ -46,6 +46,11 @@ const availabilityPeriodSchema = z.object({
     activeDays: z.array(z.string()).min(1, "At least one active day is required."),
 });
 
+const pickupPointSchema = z.object({
+    title: multilingualStringSchema,
+    description: multilingualStringSchema,
+});
+
 const itineraryItemSchema = z.object({
     id: z.string(),
     type: z.enum(["stop", "travel"]),
@@ -72,6 +77,7 @@ const formSchema = z.object({
     guideInfo: multilingualStringSchema,
     pickupInfo: multilingualStringSchema,
   }),
+  pickupPoint: pickupPointSchema,
   price: z.coerce.number().min(0, "El precio debe ser un número positivo."),
   region: z.enum(["North", "East", "South", "West", "Central"]),
   durationHours: z.coerce.number().min(1, "La duración debe ser al menos 1 hora."),
@@ -698,6 +704,49 @@ export function TourForm({ initialData }: TourFormProps) {
                         <CardContent>
                              <div className="relative">
                                 <div className="absolute left-6 top-0 h-full w-1 bg-border -translate-x-1/2"></div>
+                                
+                                {/* Fixed Pickup Point */}
+                                <div className="relative flex items-start gap-6 pb-8">
+                                    <div className="z-10 flex flex-col items-center">
+                                        <div className="h-12 w-12 rounded-full bg-background flex items-center justify-center">
+                                            <div className="w-4 h-4 rounded-full bg-primary ring-4 ring-primary/20"></div>
+                                        </div>
+                                    </div>
+                                    <div className="flex-1 pt-2.5">
+                                        <Card className="shadow-md border border-primary/50">
+                                            <CardHeader className="flex-row items-center gap-3 p-4">
+                                                <MapPin className="h-6 w-6 text-primary flex-shrink-0" />
+                                                <CardTitle className="text-xl">Punto de Recogida</CardTitle>
+                                            </CardHeader>
+                                            <CardContent className="p-4 pt-0 space-y-4">
+                                                <FormField
+                                                    control={form.control}
+                                                    name="pickupPoint.title.es"
+                                                    render={({ field }) => (
+                                                        <FormItem>
+                                                            <FormLabel>Título Principal</FormLabel>
+                                                            <FormControl><Input placeholder="Ej: 41 opciones de lugar de recogida" {...field} /></FormControl>
+                                                            <FormMessage />
+                                                        </FormItem>
+                                                    )}
+                                                />
+                                                <FormField
+                                                    control={form.control}
+                                                    name="pickupPoint.description.es"
+                                                    render={({ field }) => (
+                                                        <FormItem>
+                                                            <FormLabel>Descripción / Lista de Puntos</FormLabel>
+                                                            <FormControl><Textarea rows={4} placeholder="Lista detallada de todos los puntos de recogida..." {...field} /></FormControl>
+                                                            <FormMessage />
+                                                        </FormItem>
+                                                    )}
+                                                />
+                                            </CardContent>
+                                        </Card>
+                                    </div>
+                                </div>
+
+
                                 <div className="space-y-8">
                                 {itineraryFields.map((field, index) => {
                                      const isEditing = editingItineraryId === field.id;
@@ -940,6 +989,34 @@ export function TourForm({ initialData }: TourFormProps) {
                                                 </FormItem>
                                             )}
                                         />
+
+                                        {/* Pickup Point Translations */}
+                                        <div className="p-4 border rounded-md">
+                                            <p className="text-sm font-medium text-muted-foreground mb-2">Punto de Recogida</p>
+                                            <FormField
+                                                control={form.control}
+                                                name={`pickupPoint.title.${lang.code as 'en' | 'de' | 'fr' | 'nl'}`}
+                                                render={({ field }) => (
+                                                    <FormItem>
+                                                        <FormLabel>Título Principal ({lang.code.toUpperCase()})</FormLabel>
+                                                        <FormControl><Input {...field} /></FormControl>
+                                                        <FormMessage />
+                                                    </FormItem>
+                                                )}
+                                            />
+                                            <FormField
+                                                control={form.control}
+                                                name={`pickupPoint.description.${lang.code as 'en' | 'de' | 'fr' | 'nl'}`}
+                                                render={({ field }) => (
+                                                    <FormItem className="mt-4">
+                                                        <FormLabel>Descripción ({lang.code.toUpperCase()})</FormLabel>
+                                                        <FormControl><Textarea rows={3} {...field} /></FormControl>
+                                                        <FormMessage />
+                                                    </FormItem>
+                                                )}
+                                            />
+                                        </div>
+
                                         {Array.isArray(watchedItinerary) && watchedItinerary.map((_, index) => (
                                             <div key={index} className="p-4 border rounded-md">
                                                 <p className="text-sm font-medium text-muted-foreground mb-2">Itinerario - Ítem {index + 1}</p>

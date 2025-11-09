@@ -23,6 +23,11 @@ const availabilityPeriodSchema = z.object({
     activeDays: z.array(z.string()).min(1, "At least one active day is required."),
 });
 
+const pickupPointSchema = z.object({
+    title: multilingualStringSchema,
+    description: multilingualStringSchema,
+});
+
 const itineraryItemSchema = z.object({
     id: z.string(),
     type: z.enum(["stop", "travel"]),
@@ -49,6 +54,7 @@ const formSchema = z.object({
     guideInfo: multilingualStringSchema,
     pickupInfo: multilingualStringSchema,
   }),
+  pickupPoint: pickupPointSchema,
   price: z.coerce.number().min(0, "El precio debe ser un número positivo."),
   region: z.enum(["North", "East", "South", "West", "Central"]),
   durationHours: z.coerce.number().min(1, "La duración debe ser al menos 1 hora."),
@@ -99,6 +105,7 @@ export function EditTourClientPage({ initialData, lang }: EditTourClientPageProp
         mainImage: initialData.mainImage,
         galleryImages: initialData.galleryImages || [],
         itinerary: initialData.itinerary || [],
+        pickupPoint: initialData.pickupPoint || { title: { es: '' }, description: { es: '' } },
     };
     
     const form = useForm<TourFormValues>({

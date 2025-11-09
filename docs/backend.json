@@ -46,6 +46,16 @@
       },
       "required": ["id", "type", "title", "duration"]
     },
+    "PickupPoint": {
+        "title": "Pickup Point",
+        "description": "Represents the main pickup information for a tour.",
+        "type": "object",
+        "properties": {
+            "title": { "type": "object", "properties": { "en": { "type": "string" }, "es": { "type": "string" }, "de": { "type": "string" }, "fr": { "type": "string" }, "nl": { "type": "string" } } },
+            "description": { "type": "object", "properties": { "en": { "type": "string" }, "es": { "type": "string" }, "de": { "type": "string" }, "fr": { "type": "string" }, "nl": { "type": "string" } } }
+        },
+        "required": ["title", "description"]
+    },
     "Tour": {
       "title": "Tour",
       "description": "Represents a tour offered by the company, with multilingual content.",
@@ -99,6 +109,9 @@
             "pickupInfo": { "type": "object", "properties": { "en": { "type": "string" }, "es": { "type": "string" }, "de": { "type": "string" }, "fr": { "type": "string" }, "nl": { "type": "string" } } }
           }
         },
+        "pickupPoint": {
+            "$ref": "#/entities/PickupPoint"
+        },
         "itinerary": {
             "type": "array",
             "description": "The detailed itinerary of the tour, composed of stops and travel legs.",
@@ -132,7 +145,7 @@
           "description": "The deposit amount required for booking, in cents. Only applicable if allowDeposit is true."
         }
       },
-      "required": ["slug", "title", "price", "region", "published"]
+      "required": ["slug", "title", "price", "region", "published", "pickupPoint"]
     },
     "Booking": {
       "title": "Booking",
