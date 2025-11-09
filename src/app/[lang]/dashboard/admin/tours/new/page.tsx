@@ -7,9 +7,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { TourFormHeader } from "./tour-form-header";
 import { useState } from "react";
-import { Tour } from "@/backend/tours/domain/tour.model";
 import { usePathname, useRouter } from "next/navigation";
-import { useToast } from "@/hooks/use-toast";
 
 const multilingualStringSchema = z.object({
     es: z.string().min(1, { message: "El texto en español es requerido." }),
@@ -65,8 +63,6 @@ const formSchema = z.object({
 });
 
 export default function NewTourPage() {
-    const { toast } = useToast();
-    const router = useRouter();
     const pathname = usePathname();
     const lang = pathname.split('/')[1];
 
@@ -98,10 +94,7 @@ export default function NewTourPage() {
     const basePath = `/${lang}/dashboard/admin/tours`;
 
     const onSubmit = async (data: z.infer<typeof formSchema>) => {
-        setIsSubmitting(true);
-        // This logic is now handled within the TourForm component itself.
-        // We just need a function to pass to form.handleSubmit
-        // The actual submission logic is triggered from within TourForm's onSubmit.
+        // This logic is handled inside TourForm, but we need a handler here.
     };
 
     return (

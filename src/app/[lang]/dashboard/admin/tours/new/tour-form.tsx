@@ -22,14 +22,13 @@ import { getStorage, ref as storageRef, uploadBytesResumable, getDownloadURL } f
 import React, { useState } from "react";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { CalendarIcon, PlusCircle, Trash2, Bus, Camera, MapPin, ShoppingBag, UtensilsCrossed, X as XIcon, GripVertical } from "lucide-react";
+import { CalendarIcon, PlusCircle, Trash2, Bus, Camera, MapPin, ShoppingBag, UtensilsCrossed, X as XIcon, GripVertical, Edit, Check } from "lucide-react";
 import { DateRange } from "react-day-picker";
 import { addDays, format, parseISO } from "date-fns";
 import { cn } from "@/lib/utils";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { initializeFirebase } from "@/firebase";
 import { Tour } from "@/backend/tours/domain/tour.model";
-import { TourFormHeader } from "./tour-form-header";
 import { UploadProgressDialog } from "@/components/upload-progress-dialog";
 import { Badge } from "@/components/ui/badge";
 
@@ -273,6 +272,7 @@ export function TourForm({ initialData }: TourFormProps) {
   const [uploadProgress, setUploadProgress] = useState(0);
   const [uploadMessage, setUploadMessage] = useState('Starting...');
   const [tourId, setTourId] = useState<string | undefined>(initialData?.id);
+  const [editingItineraryId, setEditingItineraryId] = useState<string | null>(null);
   const form = useFormContext<TourFormValues>();
 
   const { fields, append, remove } = useFieldArray({
@@ -696,96 +696,156 @@ export function TourForm({ initialData }: TourFormProps) {
                     <Card>
                         <CardHeader><CardTitle>Constructor de Itinerario</CardTitle></CardHeader>
                         <CardContent>
-                            <div className="space-y-4">
-                                {itineraryFields.map((field, index) => (
-                                    <Card key={field.id} className="bg-card border-l-4 border-primary">
-                                        <CardContent className="p-4">
-                                            <div className="flex items-start gap-4">
-                                                <div className="flex flex-col items-center gap-2">
-                                                    <span className="cursor-grab text-muted-foreground hover:text-foreground"><GripVertical /></span>
-                                                    <Button type="button" variant="ghost" size="icon" onClick={() => removeItinerary(index)}>
-                                                        <Trash2 className="h-4 w-4 text-destructive" />
-                                                    </Button>
-                                                </div>
-                                                <div className="flex-1 grid grid-cols-1 md:grid-cols-3 gap-4">
-                                                    <FormField
-                                                        control={form.control}
-                                                        name={`itinerary.${index}.title.es`}
-                                                        render={({ field }) => (
-                                                            <FormItem className="md:col-span-2">
-                                                                <FormLabel>Título (Parada o Tramo)</FormLabel>
-                                                                <FormControl><Input placeholder="Ej: Viaje a Valldemossa" {...field} /></FormControl>
-                                                                <FormMessage />
-                                                            </FormItem>
-                                                        )}
-                                                    />
-                                                    <FormField
-                                                        control={form.control}
-                                                        name={`itinerary.${index}.duration`}
-                                                        render={({ field }) => (
-                                                            <FormItem>
-                                                                <FormLabel>Duración</FormLabel>
-                                                                <FormControl><Input placeholder="Ej: 45 minutos" {...field} /></FormControl>
-                                                                <FormMessage />
-                                                            </FormItem>
-                                                        )}
-                                                    />
-                                                    <FormField
-                                                        control={form.control}
-                                                        name={`itinerary.${index}.icon`}
-                                                        render={({ field }) => (
-                                                        <FormItem>
-                                                            <FormLabel>Icono</FormLabel>
-                                                            <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                                                <FormControl>
-                                                                    <SelectTrigger>
-                                                                        <SelectValue placeholder="Selecciona un icono" />
-                                                                    </SelectTrigger>
-                                                                </FormControl>
-                                                                <SelectContent>
-                                                                    {Object.keys(iconMap).map(iconKey => (
-                                                                        <SelectItem key={iconKey} value={iconKey}>
-                                                                            <div className="flex items-center gap-2">
-                                                                                {React.cloneElement(iconMap[iconKey as keyof typeof iconMap], { className: "h-4 w-4"})}
-                                                                                {iconKey}
-                                                                            </div>
-                                                                        </SelectItem>
-                                                                    ))}
-                                                                </SelectContent>
-                                                            </Select>
-                                                            <FormMessage />
-                                                        </FormItem>
-                                                        )}
-                                                    />
-                                                    {form.watch(`itinerary.${index}.type`) === 'stop' && (
-                                                        <div className="md:col-span-3">
-                                                            <FormField
-                                                                control={form.control}
-                                                                name={`itinerary.${index}.activities.es`}
-                                                                render={({ field }) => (
-                                                                    <FormItem>
-                                                                        <FormLabel>Actividades (Etiquetas)</FormLabel>
-                                                                        <FormControl>
-                                                                            <ActivityTagsInput field={field} fieldName={`itinerary.${index}.activities.es`} />
-                                                                        </FormControl>
-                                                                        <FormMessage />
-                                                                    </FormItem>
-                                                                )}
-                                                            />
-                                                        </div>
-                                                    )}
+                             <div className="relative">
+                                <div className="absolute left-6 top-0 h-full w-1 bg-border -translate-x-1/2"></div>
+                                <div className="space-y-8">
+                                {itineraryFields.map((field, index) => {
+                                     const isEditing = editingItineraryId === field.id;
 
+                                    return (
+                                        <div key={field.id} className="relative flex items-start gap-6">
+                                            <div className="z-10 flex flex-col items-center">
+                                                <div className="h-12 w-12 rounded-full bg-background flex items-center justify-center">
+                                                    <div className={cn(
+                                                        "w-4 h-4 rounded-full",
+                                                        field.type === 'stop' ? "bg-primary ring-4 ring-primary/20" : "bg-muted-foreground"
+                                                    )}></div>
                                                 </div>
                                             </div>
-                                        </CardContent>
-                                    </Card>
-                                ))}
+                                            <div className="flex-1">
+                                                {isEditing ? (
+                                                     <Card className="bg-secondary/30 border-primary shadow-lg -mt-1">
+                                                        <CardContent className="p-4 space-y-4">
+                                                             <div className="flex-1 grid grid-cols-1 md:grid-cols-3 gap-4">
+                                                                <FormField
+                                                                    control={form.control}
+                                                                    name={`itinerary.${index}.title.es`}
+                                                                    render={({ field }) => (
+                                                                        <FormItem className="md:col-span-2">
+                                                                            <FormLabel>Título (Parada o Tramo)</FormLabel>
+                                                                            <FormControl><Input placeholder="Ej: Viaje a Valldemossa" {...field} /></FormControl>
+                                                                            <FormMessage />
+                                                                        </FormItem>
+                                                                    )}
+                                                                />
+                                                                <FormField
+                                                                    control={form.control}
+                                                                    name={`itinerary.${index}.duration`}
+                                                                    render={({ field }) => (
+                                                                        <FormItem>
+                                                                            <FormLabel>Duración</FormLabel>
+                                                                            <FormControl><Input placeholder="Ej: 45 minutos" {...field} /></FormControl>
+                                                                            <FormMessage />
+                                                                        </FormItem>
+                                                                    )}
+                                                                />
+                                                                <FormField
+                                                                    control={form.control}
+                                                                    name={`itinerary.${index}.icon`}
+                                                                    render={({ field: selectField }) => (
+                                                                    <FormItem>
+                                                                        <FormLabel>Icono</FormLabel>
+                                                                        <Select onValueChange={selectField.onChange} defaultValue={selectField.value}>
+                                                                            <FormControl>
+                                                                                <SelectTrigger>
+                                                                                    <SelectValue placeholder="Selecciona un icono" />
+                                                                                </SelectTrigger>
+                                                                            </FormControl>
+                                                                            <SelectContent>
+                                                                                {Object.keys(iconMap).map(iconKey => (
+                                                                                    <SelectItem key={iconKey} value={iconKey}>
+                                                                                        <div className="flex items-center gap-2">
+                                                                                            {React.cloneElement(iconMap[iconKey as keyof typeof iconMap], { className: "h-4 w-4"})}
+                                                                                            {iconKey}
+                                                                                        </div>
+                                                                                    </SelectItem>
+                                                                                ))}
+                                                                            </SelectContent>
+                                                                        </Select>
+                                                                        <FormMessage />
+                                                                    </FormItem>
+                                                                    )}
+                                                                />
+                                                                {form.watch(`itinerary.${index}.type`) === 'stop' && (
+                                                                    <div className="md:col-span-3">
+                                                                        <FormField
+                                                                            control={form.control}
+                                                                            name={`itinerary.${index}.activities.es`}
+                                                                            render={({ field: activityField }) => (
+                                                                                <FormItem>
+                                                                                    <FormLabel>Actividades (Etiquetas)</FormLabel>
+                                                                                    <FormControl>
+                                                                                        <ActivityTagsInput field={activityField} fieldName={`itinerary.${index}.activities.es`} />
+                                                                                    </FormControl>
+                                                                                    <FormMessage />
+                                                                                </FormItem>
+                                                                            )}
+                                                                        />
+                                                                    </div>
+                                                                )}
+                                                            </div>
+                                                            <div className="flex justify-end gap-2">
+                                                                <Button type="button" variant="ghost" size="sm" onClick={() => setEditingItineraryId(null)}>Cancelar</Button>
+                                                                <Button type="button" size="sm" onClick={() => setEditingItineraryId(null)}><Check className="mr-2 h-4 w-4"/>Guardar</Button>
+                                                            </div>
+                                                        </CardContent>
+                                                     </Card>
+                                                ) : (
+                                                    field.type === 'stop' ? (
+                                                        <Card className="shadow-md border border-border/80 -mt-1 group">
+                                                            <CardContent className="p-4 relative">
+                                                                <div className="flex items-center gap-3">
+                                                                    {iconMap[field.icon as keyof typeof iconMap]}
+                                                                    <div>
+                                                                        <p className="font-semibold text-primary text-sm">{field.duration}</p>
+                                                                        <h3 className="text-lg font-bold">{field.title.es || 'Sin título'}</h3>
+                                                                    </div>
+                                                                </div>
+                                                                {field.activities?.es && field.activities.es.length > 0 && (
+                                                                    <div className="mt-4 flex flex-wrap gap-2 pl-9">
+                                                                        {field.activities.es.map((activity, i) => (
+                                                                            <Badge key={i} variant="secondary">{activity}</Badge>
+                                                                        ))}
+                                                                    </div>
+                                                                )}
+                                                                <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                                    <Button type="button" size="icon" variant="ghost" className="h-7 w-7" onClick={() => setEditingItineraryId(field.id)}><Edit className="h-4 w-4" /></Button>
+                                                                    <Button type="button" size="icon" variant="ghost" className="h-7 w-7 text-destructive hover:text-destructive" onClick={() => removeItinerary(index)}><Trash2 className="h-4 w-4" /></Button>
+                                                                </div>
+                                                            </CardContent>
+                                                        </Card>
+                                                    ) : (
+                                                        <div className="pt-3 flex items-center gap-3 group">
+                                                            {iconMap[field.icon as keyof typeof iconMap] || <Bus className="h-6 w-6 text-muted-foreground" />}
+                                                            <p className="font-semibold text-muted-foreground">
+                                                                {field.title.es || 'Tramo de viaje'} ({field.duration})
+                                                            </p>
+                                                            <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                                <Button type="button" size="icon" variant="ghost" className="h-7 w-7" onClick={() => setEditingItineraryId(field.id)}><Edit className="h-4 w-4" /></Button>
+                                                                <Button type="button" size="icon" variant="ghost" className="h-7 w-7 text-destructive hover:text-destructive" onClick={() => removeItinerary(index)}><Trash2 className="h-4 w-4" /></Button>
+                                                            </div>
+                                                        </div>
+                                                    )
+                                                )}
+                                            </div>
+                                        </div>
+                                    )
+                                })}
+                                </div>
                             </div>
-                            <div className="flex gap-4 mt-6">
-                                <Button type="button" variant="outline" className="w-full" onClick={() => appendItinerary({ id: crypto.randomUUID(), type: 'stop', icon: 'MapPin', duration: '', title: { es: '' }, activities: { es: [] } })}>
+                            <div className="flex gap-4 mt-8">
+                                <Button type="button" variant="outline" className="w-full" onClick={() => {
+                                    const newId = crypto.randomUUID();
+                                    appendItinerary({ id: newId, type: 'stop', icon: 'MapPin', duration: '', title: { es: '' }, activities: { es: [] } });
+                                    setEditingItineraryId(newId);
+                                }}>
                                     <PlusCircle className="mr-2 h-4 w-4" /> Añadir Parada
                                 </Button>
-                                <Button type="button" variant="secondary" className="w-full" onClick={() => appendItinerary({ id: crypto.randomUUID(), type: 'travel', icon: 'Bus', duration: '', title: { es: '' }, activities: { es: [] } })}>
+                                <Button type="button" variant="secondary" className="w-full" onClick={() => {
+                                    const newId = crypto.randomUUID();
+                                    appendItinerary({ id: newId, type: 'travel', icon: 'Bus', duration: '', title: { es: '' }, activities: { es: [] } });
+                                    setEditingItineraryId(newId);
+                                }}>
                                     <PlusCircle className="mr-2 h-4 w-4" /> Añadir Tramo de Viaje
                                 </Button>
                             </div>

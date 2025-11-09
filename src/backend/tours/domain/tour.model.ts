@@ -6,7 +6,7 @@ export type ItineraryItem = {
     icon: string;
     title: { [key: string]: string };
     duration: string;
-    activities: { [key: string]: string[] };
+    activities: { [key: "es" | "en" | "de" | "fr" | "nl"]: string[] };
 };
 
 export interface Tour {

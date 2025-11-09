@@ -7,11 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { TourFormHeader } from "@/app/[lang]/dashboard/admin/tours/new/tour-form-header";
 import { useState } from "react";
 import { Tour } from "@/backend/tours/domain/tour.model";
-import { createTour } from "@/app/server-actions/tours/createTour";
-import { updateTour } from "@/app/server-actions/tours/updateTour";
-import { useToast } from "@/hooks/use-toast";
-import { useRouter } from "next/navigation";
-import { format, parseISO } from 'date-fns';
+import { parseISO } from 'date-fns';
 
 const multilingualStringSchema = z.object({
     es: z.string().min(1, { message: "El texto en español es requerido." }),
@@ -90,8 +86,6 @@ interface EditTourClientPageProps {
 }
 
 export function EditTourClientPage({ initialData, lang }: EditTourClientPageProps) {
-    const { toast } = useToast();
-    const router = useRouter();
     const [isSubmitting, setIsSubmitting] = useState(false);
     
     // The dates come as strings from the server action, so we need to parse them.
@@ -104,6 +98,7 @@ export function EditTourClientPage({ initialData, lang }: EditTourClientPageProp
         })) || [],
         mainImage: initialData.mainImage,
         galleryImages: initialData.galleryImages || [],
+        itinerary: initialData.itinerary || [],
     };
     
     const form = useForm<TourFormValues>({
@@ -114,7 +109,6 @@ export function EditTourClientPage({ initialData, lang }: EditTourClientPageProp
     const basePath = `/${lang}/dashboard/admin/tours`;
 
     const onSubmit = async (data: TourFormValues) => {
-        setIsSubmitting(true);
         // Logic will be handled inside TourForm, but we need the handler here.
     };
 
