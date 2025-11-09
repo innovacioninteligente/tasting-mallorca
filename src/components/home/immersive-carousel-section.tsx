@@ -19,7 +19,7 @@ export function ImmersiveCarouselSection() {
         offset: ['start end', 'end start'],
     });
 
-    const y = useTransform(scrollYProgress, [0, 1], ['-70%', '70%']);
+    const y = useTransform(scrollYProgress, [0, 1], ['-20%', '20%']);
 
     const handleVideoClick = (e: React.MouseEvent<HTMLElement>) => {
         // Prevent the click from propagating to the video element and pausing it.
@@ -35,11 +35,11 @@ export function ImmersiveCarouselSection() {
     return (
         <section 
             ref={carouselContainerRef} 
-            className='w-full min-h-screen overflow-hidden cursor-pointer relative' 
+            className='w-full h-[80vh] overflow-hidden cursor-pointer relative' 
             onClick={handleVideoClick}
         >
             <motion.div style={{ y }} className="h-full">
-                <div className='h-screen relative'>
+                <div className='h-full relative'>
                     <video
                         ref={videoRef}
                         src={videoUrl}
