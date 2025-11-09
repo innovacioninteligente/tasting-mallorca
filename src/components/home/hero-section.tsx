@@ -14,7 +14,7 @@ type HeroDictionary = {
 
 export function HeroSection({ dictionary }: { dictionary: HeroDictionary }) {
   return (
-    <section className="relative w-full h-[75vh] md:min-h-screen flex items-center justify-center text-center pb-20">
+    <section className="relative w-full min-h-screen flex items-center justify-center text-center pb-20">
       <div className="container">
         <div className="max-w-2xl mx-auto">
           <h2 className="text-lg font-cursive font-bold text-accent mb-2">{dictionary.welcome}</h2>
