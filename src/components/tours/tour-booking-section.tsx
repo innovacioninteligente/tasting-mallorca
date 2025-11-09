@@ -1,4 +1,3 @@
-
 'use client';
 
 import { Button } from "@/components/ui/button";
@@ -371,7 +370,7 @@ export function TourBookingSection({ dictionary, price, lang, tourTitle }: TourB
                 </CardContent>
             </Card>
 
-            <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-background border-t border-border p-4 shadow-[0_-4px_10px_rgba(0,0,0,0.05)] z-40">
+            <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-background border-t border-border p-4 shadow-[0_-4px_10px_rgba(0,0,0,0.05)] z-50">
                 <div className="flex items-center justify-between gap-4">
                      <div>
                         <p className="text-sm text-muted-foreground">{dictionary.priceLabel}</p>

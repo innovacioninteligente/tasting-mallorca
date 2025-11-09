@@ -1,4 +1,3 @@
-
 'use client';
 
 import { usePathname } from 'next/navigation';
@@ -19,9 +18,6 @@ export function MainLayout({
 }) {
   const pathname = usePathname();
   const isDashboard = pathname.includes('/dashboard');
-  const isTourDetail = /^\/[a-z]{2}\/tours\/.+/.test(pathname);
-
-  const showWhatsAppButton = !isDashboard && !isTourDetail;
 
   return (
     <>
@@ -30,7 +26,7 @@ export function MainLayout({
         {children}
       </main>
       {!isDashboard && <Footer />}
-      {showWhatsAppButton && <WhatsAppButton />}
+      {!isDashboard && <WhatsAppButton />}
     </>
   );
 }
