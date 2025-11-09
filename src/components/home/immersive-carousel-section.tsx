@@ -48,7 +48,7 @@ export function ImmersiveCarouselSection() {
                     loop
                     playsInline
                     controls={showControls}
-                    className="object-cover w-full h-full custom-video-controls pointer-events-none"
+                    className="object-cover w-full h-full custom-video-controls"
                 />
                 <div className="absolute inset-0 bg-black/20 pointer-events-none"></div>
             </motion.div>
