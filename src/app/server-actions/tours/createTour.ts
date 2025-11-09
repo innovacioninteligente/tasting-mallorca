@@ -22,9 +22,11 @@ export const createTour = createSafeAction(
       
       const newTour: Omit<Tour, 'id'> = {
         ...tourData,
-        // Ensure price and duration are numbers
+        // Ensure numbers are correctly typed
         price: Number(tourData.price),
         durationHours: Number(tourData.durationHours),
+        depositPrice: tourData.allowDeposit ? Number(tourData.depositPrice) : 0,
+
         // Set empty arrays if they are not provided, although schema requires them
         itinerary: tourData.itinerary || { es: [], en: [], de: [], fr: [], nl: [] },
         availabilityPeriods: tourData.availabilityPeriods || [],

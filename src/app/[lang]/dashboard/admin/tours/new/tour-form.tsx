@@ -2,7 +2,7 @@
 'use client';
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { useForm, useFieldArray } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -17,11 +17,24 @@ import { useToast } from "@/hooks/use-toast";
 import { useRouter, usePathname } from "next/navigation";
 import { ImageUpload } from "./image-upload";
 import { uploadImages } from "@/app/server-actions/tours/uploadImages";
+import React, { useState } from "react";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { CalendarIcon, PlusCircle, Trash2 } from "lucide-react";
+import { DateRange } from "react-day-picker";
+import { addDays, format } from "date-fns";
+import { cn } from "@/lib/utils";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
 
+const availabilityPeriodSchema = z.object({
+    startDate: z.date({ required_error: "Start date is required." }),
+    endDate: z.date({ required_error: "End date is required." }),
+    activeDays: z.array(z.string()).min(1, "At least one active day is required."),
+});
 
 const tourFormSchema = z.object({
   title: z.object({
@@ -72,6 +85,7 @@ const tourFormSchema = z.object({
     ),
   allowDeposit: z.boolean().default(false),
   depositPrice: z.coerce.number().optional(),
+  availabilityPeriods: z.array(availabilityPeriodSchema).optional(),
 }).refine(data => {
     if (data.allowDeposit) {
         return data.depositPrice !== undefined && data.depositPrice > 0;
@@ -92,10 +106,104 @@ const tourFormSchema = z.object({
 
 type TourFormValues = z.infer<typeof tourFormSchema>;
 
+const weekDays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+const weekDayInitials = ["L", "M", "X", "J", "V", "S", "D"];
+
+function AvailabilityPeriodCreator({ onAddPeriod }: { onAddPeriod: (period: z.infer<typeof availabilityPeriodSchema>) => void }) {
+    const [dateRange, setDateRange] = useState<DateRange | undefined>({ from: new Date(), to: addDays(new Date(), 20) });
+    const [activeDays, setActiveDays] = useState<string[]>([]);
+    const [showCreator, setShowCreator] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+
+    const handleSavePeriod = () => {
+        if (!dateRange?.from || !dateRange?.to) {
+            setError("Debes seleccionar un rango de fechas.");
+            return;
+        }
+        if (activeDays.length === 0) {
+            setError("Debes seleccionar al menos un día activo.");
+            return;
+        }
+        onAddPeriod({ startDate: dateRange.from, endDate: dateRange.to, activeDays });
+        setDateRange({ from: new Date(), to: addDays(new Date(), 20) });
+        setActiveDays([]);
+        setError(null);
+        setShowCreator(false);
+    };
+
+    if (!showCreator) {
+        return (
+            <Button variant="outline" onClick={() => setShowCreator(true)} className="mt-4 w-full">
+                <PlusCircle className="mr-2 h-4 w-4" />
+                Añadir Nuevo Periodo de Disponibilidad
+            </Button>
+        );
+    }
+
+    return (
+        <Card className="mt-4 bg-secondary/50 border-dashed">
+            <CardContent className="p-4 space-y-4">
+                <div>
+                    <FormLabel>Rango de Fechas</FormLabel>
+                    <Popover>
+                        <PopoverTrigger asChild>
+                            <Button
+                                id="date"
+                                variant={"outline"}
+                                className={cn("w-full justify-start text-left font-normal mt-1", !dateRange && "text-muted-foreground")}
+                            >
+                                <CalendarIcon className="mr-2 h-4 w-4" />
+                                {dateRange?.from ? (
+                                    dateRange.to ? (
+                                        <>
+                                            {format(dateRange.from, "LLL dd, y")} - {format(dateRange.to, "LLL dd, y")}
+                                        </>
+                                    ) : (
+                                        format(dateRange.from, "LLL dd, y")
+                                    )
+                                ) : (
+                                    <span>Selecciona un rango</span>
+                                )}
+                            </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0" align="start">
+                            <Calendar
+                                initialFocus
+                                mode="range"
+                                defaultMonth={dateRange?.from}
+                                selected={dateRange}
+                                onSelect={setDateRange}
+                                numberOfMonths={2}
+                            />
+                        </PopoverContent>
+                    </Popover>
+                </div>
+                <div>
+                    <FormLabel>Días Activos</FormLabel>
+                    <ToggleGroup type="multiple" value={activeDays} onValueChange={setActiveDays} variant="outline" className="flex-wrap justify-start mt-1">
+                        {weekDays.map((day, index) => (
+                             <ToggleGroupItem key={day} value={day} aria-label={`Toggle ${day}`} className="w-10 h-10">
+                                {weekDayInitials[index]}
+                            </ToggleGroupItem>
+                        ))}
+                    </ToggleGroup>
+                </div>
+                {error && <p className="text-sm font-medium text-destructive">{error}</p>}
+                <div className="flex gap-2 justify-end">
+                    <Button variant="ghost" onClick={() => setShowCreator(false)}>Cancelar</Button>
+                    <Button onClick={handleSavePeriod}>Guardar Periodo</Button>
+                </div>
+            </CardContent>
+        </Card>
+    );
+}
+
+
 export function TourForm() {
   const { toast } = useToast();
   const router = useRouter();
   const pathname = usePathname();
+  
   const form = useForm<TourFormValues>({
     resolver: zodResolver(tourFormSchema),
     defaultValues: {
@@ -109,7 +217,13 @@ export function TourForm() {
       overview: { es: '', en: '', de: '', fr: '', nl: '' },
       allowDeposit: false,
       depositPrice: 0,
+      availabilityPeriods: [],
     },
+  });
+
+  const { fields, append, remove } = useFieldArray({
+    control: form.control,
+    name: "availabilityPeriods",
   });
 
   const allowDeposit = form.watch("allowDeposit");
@@ -121,7 +235,7 @@ export function TourForm() {
         // 1. Create FormData and upload images
         const formData = new FormData();
         formData.append('mainImage', data.mainImage);
-        data.galleryImages.forEach((file: File) => {
+        (data.galleryImages as File[]).forEach((file: File) => {
             formData.append('galleryImages', file);
         });
 
@@ -136,6 +250,11 @@ export function TourForm() {
             ...data,
             mainImage: uploadResult.data.mainImageUrl,
             galleryImages: uploadResult.data.galleryImageUrls,
+            availabilityPeriods: data.availabilityPeriods?.map(p => ({
+                ...p,
+                startDate: format(p.startDate, 'yyyy-MM-dd'),
+                endDate: format(p.endDate, 'yyyy-MM-dd')
+            }))
         };
 
         // 3. Create the tour document in Firestore
@@ -271,7 +390,7 @@ export function TourForm() {
                                     <ImageUpload
                                         value={field.value || []}
                                         onChange={(files) => field.onChange(files)}
-                                        onRemove={(fileToRemove) => field.onChange([...field.value].filter(file => file !== fileToRemove))}
+                                        onRemove={(fileToRemove) => field.onChange([...(field.value || [])].filter(file => file !== fileToRemove))}
                                         multiple={true}
                                     />
                                 </FormControl>
@@ -374,11 +493,32 @@ export function TourForm() {
                         />
                 )}
                 <div>
-                    <h3 className="text-lg font-medium mb-2">Periodos de Disponibilidad</h3>
-                    <div className="border-2 border-dashed rounded-lg p-8 text-center text-muted-foreground">
-                        <p>Aquí podrás añadir y gestionar los rangos de fechas y días de operación del tour.</p>
-                        <p className="text-sm">(Funcionalidad próximamente)</p>
-                    </div>
+                  <h3 className="text-lg font-medium mb-2">Periodos de Disponibilidad</h3>
+                  <FormMessage>{form.formState.errors.availabilityPeriods?.root?.message}</FormMessage>
+                  <div className="space-y-3">
+                    {fields.map((field, index) => (
+                      <Card key={field.id} className="bg-secondary/30">
+                        <CardContent className="p-3 flex justify-between items-center">
+                          <div>
+                            <p className="font-semibold">{format(field.startDate, "dd/MM/yy")} - {format(field.endDate, "dd/MM/yy")}</p>
+                            <div className="flex gap-1 mt-1">
+                              {weekDays.map((day, i) => (
+                                <span key={day} className={cn("text-xs w-6 h-6 flex items-center justify-center rounded-full", field.activeDays.includes(day) ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground")}>
+                                    {weekDayInitials[i]}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                          <Button type="button" variant="ghost" size="icon" onClick={() => remove(index)}>
+                              <Trash2 className="h-4 w-4 text-destructive" />
+                          </Button>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+
+                  <AvailabilityPeriodCreator onAddPeriod={(period) => append(period)} />
+                  <FormMessage>{form.formState.errors.availabilityPeriods?.message}</FormMessage>
                 </div>
               </CardContent>
             </Card>
@@ -466,3 +606,5 @@ export function TourForm() {
     </Form>
   );
 }
+
+    
