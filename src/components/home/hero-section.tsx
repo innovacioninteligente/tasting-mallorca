@@ -1,3 +1,4 @@
+
 'use client';
 
 import Link from 'next/link';
@@ -16,7 +17,7 @@ export function HeroSection({ dictionary }: { dictionary: HeroDictionary }) {
     <section className="relative w-full min-h-screen flex items-center justify-center text-center pb-20">
       <div className="container">
         <div className="max-w-2xl mx-auto">
-          <h2 className="text-lg font-cursive font-bold text-primary mb-2">{dictionary.welcome}</h2>
+          <h2 className="text-lg font-cursive font-bold text-accent mb-2">{dictionary.welcome}</h2>
           <h1 className="text-5xl md:text-7xl font-extrabold tracking-tighter leading-tight">
             {dictionary.title}
           </h1>

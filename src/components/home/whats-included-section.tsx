@@ -1,3 +1,4 @@
+
 'use client';
 
 import Image from 'next/image';
@@ -45,11 +46,11 @@ export function WhatsIncludedSection({ dictionary }: { dictionary: WhatsIncluded
     });
 
     const items = [
-        { id: 'pickup', dictionary: dictionary.pickup, icon: <Bus className="w-14 h-14" /> },
-        { id: 'guides', dictionary: dictionary.guides, icon: <Users className="w-14 h-14" /> },
-        { id: 'lunch', dictionary: dictionary.lunch, icon: <UtensilsCrossed className="w-14 h-14" /> },
-        { id: 'landscapes', dictionary: dictionary.landscapes, icon: <Mountain className="w-14 h-14" /> },
-        { id: 'sites', dictionary: dictionary.sites, icon: <Landmark className="w-14 h-14" /> },
+        { id: 'pickup', dictionary: dictionary.pickup, icon: <Bus className="w-14 h-14 text-accent" /> },
+        { id: 'guides', dictionary: dictionary.guides, icon: <Users className="w-14 h-14 text-accent" /> },
+        { id: 'lunch', dictionary: dictionary.lunch, icon: <UtensilsCrossed className="w-14 h-14 text-accent" /> },
+        { id: 'landscapes', dictionary: dictionary.landscapes, icon: <Mountain className="w-14 h-14 text-accent" /> },
+        { id: 'sites', dictionary: dictionary.sites, icon: <Landmark className="w-14 h-14 text-accent" /> },
     ];
 
     const activeIndex = useTransform(scrollYProgress, (pos) => {
@@ -60,7 +61,7 @@ export function WhatsIncludedSection({ dictionary }: { dictionary: WhatsIncluded
         <section ref={sectionRef} className="py-24 bg-background">
              <div className="container mx-auto w-full md:w-[90vw] px-4 md:px-0">
                 <div className="max-w-xl mb-16">
-                    <p className="text-primary font-cursive font-bold text-lg">{dictionary.subtitle}</p>
+                    <p className="text-accent font-cursive font-bold text-lg">{dictionary.subtitle}</p>
                     <h2 className="text-4xl md:text-5xl font-extrabold mt-2">{dictionary.title}</h2>
                     <p className="mt-4 text-lg text-muted-foreground">
                        {dictionary.description}
@@ -71,7 +72,7 @@ export function WhatsIncludedSection({ dictionary }: { dictionary: WhatsIncluded
                     <div className="w-full">
                         {items.map((item) => (
                            <div key={item.id} className="flex flex-col items-start gap-4 mb-16">
-                                <div className="flex-shrink-0 w-20 h-20 bg-primary/10 text-primary rounded-xl flex items-center justify-center">
+                                <div className="flex-shrink-0 w-20 h-20 bg-primary/10 rounded-xl flex items-center justify-center">
                                     {item.icon}
                                 </div>
                                 <div>

@@ -1,3 +1,4 @@
+
 'use client';
 
 import Image from 'next/image';
@@ -37,8 +38,8 @@ export function BlogSection({ dictionary }: BlogSectionProps) {
         <section className="py-24 bg-background flex flex-col items-center">
             <div className="container text-center mb-12">
                 <div className='flex justify-center items-center gap-2'>
-                <Sprout className="w-6 h-6 text-primary" />
-                <p className="text-primary font-cursive font-bold text-lg">{dictionary.subtitle}</p>
+                <Sprout className="w-6 h-6 text-accent" />
+                <p className="text-accent font-cursive font-bold text-lg">{dictionary.subtitle}</p>
                 </div>
                 <h2 className="text-4xl md:text-5xl font-extrabold mt-2">{dictionary.title}</h2>
                 <p className="mt-4 text-lg text-muted-foreground max-w-xl mx-auto">

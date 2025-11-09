@@ -1,3 +1,4 @@
+
 'use client';
 
 import Image from 'next/image';
@@ -20,7 +21,7 @@ export function TourGuidesSection({ dictionary }: TourGuidesSectionProps) {
     return (
         <section className="py-24 bg-secondary">
             <div className="container text-center mb-16">
-            <p className="text-primary font-cursive font-bold text-lg">{dictionary.subtitle}</p>
+            <p className="text-accent font-cursive font-bold text-lg">{dictionary.subtitle}</p>
             <h2 className="text-4xl md:text-5xl font-extrabold mt-2">{dictionary.title}</h2>
             <p className="mt-4 text-lg text-muted-foreground max-w-xl mx-auto">
                 {dictionary.description}

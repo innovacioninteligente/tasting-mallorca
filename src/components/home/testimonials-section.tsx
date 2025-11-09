@@ -94,7 +94,7 @@ export function TestimonialsSection({ dictionary }: TestimonialsSectionProps) {
         <section className="py-24 bg-secondary">
             <div className="container mx-auto w-full md:w-[90vw]">
                 <div className="text-center mb-12 px-4">
-                    <p className="text-primary font-cursive font-bold text-lg">{dictionary.subtitle}</p>
+                    <p className="text-accent font-cursive font-bold text-lg">{dictionary.subtitle}</p>
                     <h2 className="text-4xl md:text-5xl font-extrabold mt-2">{dictionary.title}</h2>
                     <p className="mt-4 text-lg text-muted-foreground max-w-xl mx-auto">
                         {dictionary.description}
