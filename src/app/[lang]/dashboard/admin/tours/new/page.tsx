@@ -8,6 +8,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { TourFormHeader } from "./tour-form-header";
 import { useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
+import { getStorage, ref as storageRef, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { initializeFirebase } from "@/firebase";
+import { useToast } from "@/hooks/use-toast";
+import { createTour } from "@/app/server-actions/tours/createTour";
+import { useFormPersistence } from "@/hooks/use-form-persistence";
 
 const multilingualStringSchema = z.object({
     es: z.string().min(1, { message: "El texto en español es requerido." }),
@@ -44,6 +49,7 @@ const itineraryItemSchema = z.object({
 });
 
 const formSchema = z.object({
+  id: z.string(),
   title: multilingualStringSchema,
   slug: multilingualStringSchema,
   description: multilingualStringSchema,
@@ -68,44 +74,146 @@ const formSchema = z.object({
   itinerary: z.array(itineraryItemSchema).optional(),
 });
 
+type TourFormValues = z.infer<typeof formSchema>;
+
 export default function NewTourPage() {
     const pathname = usePathname();
+    const router = useRouter();
+    const { toast } = useToast();
     const lang = pathname.split('/')[1];
 
-    const form = useForm({
-        resolver: zodResolver(formSchema),
-        defaultValues: {
-            title: { es: '', en: '', de: '', fr: '', nl: '' },
-            slug: { es: '', en: '', de: '', fr: '', nl: '' },
-            description: { es: '', en: '', de: '', fr: '', nl: '' },
-            overview: { es: '', en: '', de: '', fr: '', nl: '' },
-            generalInfo: {
-                cancellationPolicy: { es: '', en: '', de: '', fr: '', nl: '' },
-                bookingPolicy: { es: '', en: '', de: '', fr: '', nl: '' },
-                guideInfo: { es: '', en: '', de: '', fr: '', nl: '' },
-                pickupInfo: { es: '', en: '', de: '', fr: '', nl: '' },
-            },
-            pickupPoint: {
-                title: { es: '', en: '', de: '', fr: '', nl: '' },
-                description: { es: '', en: '', de: '', fr: '', nl: '' },
-            },
-            price: 0,
-            region: "South",
-            durationHours: 8,
-            isFeatured: false,
-            published: false,
-            allowDeposit: false,
-            itinerary: [],
-            galleryImages: [],
+    const formPersistenceKey = 'tour-form-new';
+
+    const defaultValues = {
+        id: '',
+        title: { es: '', en: '', de: '', fr: '', nl: '' },
+        slug: { es: '', en: '', de: '', fr: '', nl: '' },
+        description: { es: '', en: '', de: '', fr: '', nl: '' },
+        overview: { es: '', en: '', de: '', fr: '', nl: '' },
+        generalInfo: {
+            cancellationPolicy: { es: '', en: '', de: '', fr: '', nl: '' },
+            bookingPolicy: { es: '', en: '', de: '', fr: '', nl: '' },
+            guideInfo: { es: '', en: '', de: '', fr: '', nl: '' },
+            pickupInfo: { es: '', en: '', de: '', fr: '', nl: '' },
         },
+        pickupPoint: {
+            title: { es: '', en: '', de: '', fr: '', nl: '' },
+            description: { es: '', en: '', de: '', fr: '', nl: '' },
+        },
+        price: 0,
+        region: "South" as "South",
+        durationHours: 8,
+        isFeatured: false,
+        published: false,
+        allowDeposit: false,
+        itinerary: [],
+        galleryImages: [],
+        mainImage: undefined
+    };
+
+    const form = useForm<TourFormValues>({
+        resolver: zodResolver(formSchema),
+        defaultValues,
     });
+    
+    const { clearPersistedData } = useFormPersistence(formPersistenceKey, form, defaultValues);
 
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [uploadProgress, setUploadProgress] = useState(0);
+    const [uploadMessage, setUploadMessage] = useState('Starting...');
     const basePath = `/${lang}/dashboard/admin/tours`;
 
-    const onSubmit = async (data: z.infer<typeof formSchema>) => {
-        // This logic is handled inside TourForm, but we need a handler here.
+    const uploadFile = (file: File, tourId: string): Promise<string> => {
+        return new Promise((resolve, reject) => {
+            const { app } = initializeFirebase();
+            const storage = getStorage(app);
+            const fileName = `tours/${tourId}/${Date.now()}-${file.name}`;
+            const fileRef = storageRef(storage, fileName);
+            const uploadTask = uploadBytesResumable(fileRef, file);
+
+            uploadTask.on(
+                'state_changed',
+                (snapshot) => {
+                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                    setUploadProgress(progress);
+                },
+                (error) => {
+                    console.error("Upload failed:", error);
+                    reject(error);
+                },
+                () => {
+                    getDownloadURL(uploadTask.snapshot.ref).then(resolve);
+                }
+            );
+        });
     };
+
+    const onSubmit = async (data: TourFormValues) => {
+        setIsSubmitting(true);
+    
+        try {
+            const tourId = crypto.randomUUID();
+    
+            let mainImageUrl = data.mainImage;
+            if (data.mainImage instanceof File) {
+                setUploadMessage('Subiendo imagen principal...');
+                mainImageUrl = await uploadFile(data.mainImage, tourId);
+            }
+    
+            let galleryImageUrls: string[] = [];
+            const newGalleryFiles = (data.galleryImages as any[])?.filter(img => img instanceof File) || [];
+            
+            if (newGalleryFiles.length > 0) {
+                const uploadedUrls: string[] = [];
+                for (let i = 0; i < newGalleryFiles.length; i++) {
+                    setUploadMessage(`Subiendo imagen de galería ${i + 1} de ${newGalleryFiles.length}...`);
+                    const url = await uploadFile(newGalleryFiles[i], tourId);
+                    uploadedUrls.push(url);
+                }
+                galleryImageUrls = uploadedUrls;
+            }
+    
+            setUploadMessage('Guardando datos del tour...');
+            setUploadProgress(100);
+    
+            const tourData = {
+                ...data,
+                id: tourId,
+                mainImage: mainImageUrl,
+                galleryImages: galleryImageUrls,
+                availabilityPeriods: data.availabilityPeriods?.map(p => ({
+                    ...p,
+                    startDate: p.startDate.toISOString().split('T')[0],
+                    endDate: p.endDate.toISOString().split('T')[0]
+                }))
+            };
+            
+            const result = await createTour(tourData);
+    
+            if (result.error) throw new Error(result.error);
+            
+            clearPersistedData();
+            
+            const newPath = `${basePath}/${tourId}/edit`;
+            router.replace(newPath, { scroll: false });
+    
+            toast({
+                title: "¡Tour Creado!",
+                description: `El tour "${data.title.es}" ha sido creado exitosamente.`,
+            });
+    
+        } catch (error: any) {
+            console.error("Error creating tour:", error);
+            toast({
+                variant: "destructive",
+                title: "Error al crear el tour",
+                description: error.message || "Ocurrió un problema, por favor intenta de nuevo.",
+            });
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
 
     return (
         <AdminRouteGuard>
@@ -117,7 +225,11 @@ export default function NewTourPage() {
                         onSubmit={form.handleSubmit(onSubmit)} 
                     />
                     <div className="flex-grow overflow-auto px-4 pt-6 md:px-8 lg:px-10">
-                       <TourForm />
+                       <TourForm 
+                         isSubmitting={isSubmitting}
+                         uploadProgress={uploadProgress}
+                         uploadMessage={uploadMessage}
+                       />
                     </div>
                 </FormProvider>
             </div>

@@ -1,5 +1,3 @@
-
-
 export type ItineraryItem = {
     id: string;
     type: 'stop' | 'travel';
@@ -43,5 +41,3 @@ export interface Tour {
   depositPrice: number;
   published: boolean;
 }
-
-    

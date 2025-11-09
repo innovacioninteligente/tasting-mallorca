@@ -1,5 +1,3 @@
-
-
 'use client';
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -13,21 +11,15 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import { createTour } from "@/app/server-actions/tours/createTour";
-import { updateTour } from "@/app/server-actions/tours/updateTour";
-import { useToast } from "@/hooks/use-toast";
-import { useRouter } from "next/navigation";
 import { ImageUpload } from "./image-upload";
-import { getStorage, ref as storageRef, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import React, { useState } from "react";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { CalendarIcon, PlusCircle, Trash2, Bus, Camera, MapPin, ShoppingBag, UtensilsCrossed, X as XIcon, GripVertical, Edit, Check } from "lucide-react";
 import { DateRange } from "react-day-picker";
-import { addDays, format, parseISO } from "date-fns";
+import { addDays, format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { initializeFirebase } from "@/firebase";
 import { Tour } from "@/backend/tours/domain/tour.model";
 import { UploadProgressDialog } from "@/components/upload-progress-dialog";
 import { Badge } from "@/components/ui/badge";
@@ -67,6 +59,7 @@ const itineraryItemSchema = z.object({
 });
 
 const formSchema = z.object({
+  id: z.string(),
   title: multilingualStringSchema,
   slug: multilingualStringSchema,
   description: multilingualStringSchema,
@@ -269,15 +262,12 @@ const iconMap = {
 
 interface TourFormProps {
   initialData?: Tour;
+  isSubmitting: boolean;
+  uploadProgress: number;
+  uploadMessage: string;
 }
 
-export function TourForm({ initialData }: TourFormProps) {
-  const { toast } = useToast();
-  const router = useRouter();
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [uploadProgress, setUploadProgress] = useState(0);
-  const [uploadMessage, setUploadMessage] = useState('Starting...');
-  const [tourId, setTourId] = useState<string | undefined>(initialData?.id);
+export function TourForm({ initialData, isSubmitting, uploadProgress, uploadMessage }: TourFormProps) {
   const [editingItineraryId, setEditingItineraryId] = useState<string | null>(null);
   const form = useFormContext<TourFormValues>();
 
@@ -293,110 +283,6 @@ export function TourForm({ initialData }: TourFormProps) {
 
   const allowDeposit = form.watch("allowDeposit");
 
- const uploadFile = (file: File, currentTourId: string): Promise<string> => {
-    return new Promise((resolve, reject) => {
-        const { app } = initializeFirebase();
-        const storage = getStorage(app);
-        const fileName = `tours/${currentTourId}/${Date.now()}-${file.name}`;
-        const fileRef = storageRef(storage, fileName);
-        const uploadTask = uploadBytesResumable(fileRef, file);
-
-        uploadTask.on(
-            'state_changed',
-            (snapshot) => {
-                const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                setUploadProgress(progress);
-            },
-            (error) => {
-                console.error("Upload failed:", error);
-                reject(error);
-            },
-            () => {
-                getDownloadURL(uploadTask.snapshot.ref).then(resolve);
-            }
-        );
-    });
-  };
-
- async function onSubmit(data: TourFormValues) {
-    setIsSubmitting(true);
-    const currentLang = window.location.pathname.split('/')[1] || 'en';
-    const basePath = `/${currentLang}/dashboard/admin/tours`;
-
-    try {
-        let currentTourId = tourId;
-        if (!currentTourId) {
-            currentTourId = crypto.randomUUID();
-            setTourId(currentTourId);
-        }
-
-        let mainImageUrl = data.mainImage;
-        if (data.mainImage instanceof File) {
-            setUploadMessage('Subiendo imagen principal...');
-            mainImageUrl = await uploadFile(data.mainImage, currentTourId!);
-        }
-
-        let galleryImageUrls: string[] = [];
-        const existingGalleryUrls = (data.galleryImages as any[])?.filter(img => typeof img === 'string') || [];
-        const newGalleryFiles = (data.galleryImages as any[])?.filter(img => img instanceof File) || [];
-        
-        if (newGalleryFiles.length > 0) {
-            const uploadedUrls: string[] = [];
-            for (let i = 0; i < newGalleryFiles.length; i++) {
-                setUploadMessage(`Subiendo imagen de galería ${i + 1} de ${newGalleryFiles.length}...`);
-                const url = await uploadFile(newGalleryFiles[i], currentTourId!);
-                uploadedUrls.push(url);
-            }
-            galleryImageUrls = [...existingGalleryUrls, ...uploadedUrls];
-        } else {
-            galleryImageUrls = existingGalleryUrls;
-        }
-
-        setUploadMessage('Guardando datos del tour...');
-        setUploadProgress(100);
-
-        const tourData = {
-            ...data,
-            mainImage: mainImageUrl,
-            galleryImages: galleryImageUrls,
-            availabilityPeriods: data.availabilityPeriods?.map(p => ({
-                ...p,
-                startDate: format(p.startDate, 'yyyy-MM-dd'),
-                endDate: format(p.endDate, 'yyyy-MM-dd')
-            }))
-        };
-        
-        let result;
-        if (initialData?.id) { 
-            result = await updateTour({ ...tourData, id: initialData.id });
-        } else { 
-            result = await createTour({ ...tourData, id: currentTourId! });
-        }
-
-        if (result.error) throw new Error(result.error);
-        
-        if (!initialData?.id) {
-            const newPath = `${basePath}/${currentTourId}/edit`;
-            router.replace(newPath, { scroll: false });
-        }
-
-        toast({
-            title: "¡Tour Guardado!",
-            description: `El tour "${data.title.es}" ha sido guardado exitosamente.`,
-        });
-
-    } catch (error: any) {
-        console.error("Error saving tour:", error);
-        toast({
-            variant: "destructive",
-            title: "Error al guardar el tour",
-            description: error.message || "Ocurrió un problema, por favor intenta de nuevo.",
-        });
-    } finally {
-        setIsSubmitting(false);
-    }
-}
-
   const langTabs = [
     { code: 'en', name: 'English' },
     { code: 'de', name: 'Deutsch' },
@@ -410,7 +296,7 @@ export function TourForm({ initialData }: TourFormProps) {
     <>
       {isSubmitting && <UploadProgressDialog progress={uploadProgress} message={uploadMessage} />}
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <form className="space-y-8">
             <div className="pt-2">
                 <Tabs defaultValue="main" className="w-full">
                 <TabsList className="grid w-full grid-cols-4">
@@ -705,7 +591,6 @@ export function TourForm({ initialData }: TourFormProps) {
                              <div className="relative">
                                 <div className="absolute left-6 top-0 h-full w-1 bg-border -translate-x-1/2"></div>
                                 
-                                {/* Fixed Pickup Point */}
                                 <div className="relative flex items-start gap-6 pb-8">
                                     <div className="z-10 flex flex-col items-center">
                                         <div className="h-12 w-12 rounded-full bg-background flex items-center justify-center">
@@ -990,7 +875,6 @@ export function TourForm({ initialData }: TourFormProps) {
                                             )}
                                         />
 
-                                        {/* Pickup Point Translations */}
                                         <div className="p-4 border rounded-md">
                                             <p className="text-sm font-medium text-muted-foreground mb-2">Punto de Recogida</p>
                                             <FormField

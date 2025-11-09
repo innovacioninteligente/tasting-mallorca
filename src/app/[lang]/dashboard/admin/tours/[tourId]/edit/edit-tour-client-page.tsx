@@ -8,6 +8,13 @@ import { TourFormHeader } from "@/app/[lang]/dashboard/admin/tours/new/tour-form
 import { useState } from "react";
 import { Tour } from "@/backend/tours/domain/tour.model";
 import { parseISO } from 'date-fns';
+import { useToast } from "@/hooks/use-toast";
+import { useRouter } from "next/navigation";
+import { getStorage, ref as storageRef, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { initializeFirebase } from "@/firebase";
+import { updateTour } from "@/app/server-actions/tours/updateTour";
+import { createTour } from "@/app/server-actions/tours/createTour";
+import { useFormPersistence } from "@/hooks/use-form-persistence";
 
 const multilingualStringSchema = z.object({
     es: z.string().min(1, { message: "El texto en español es requerido." }),
@@ -44,6 +51,7 @@ const itineraryItemSchema = z.object({
 });
 
 const formSchema = z.object({
+  id: z.string(),
   title: multilingualStringSchema,
   slug: multilingualStringSchema,
   description: multilingualStringSchema,
@@ -92,7 +100,13 @@ interface EditTourClientPageProps {
 }
 
 export function EditTourClientPage({ initialData, lang }: EditTourClientPageProps) {
+    const { toast } = useToast();
+    const router = useRouter();
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [uploadProgress, setUploadProgress] = useState(0);
+    const [uploadMessage, setUploadMessage] = useState('Starting...');
+
+    const formPersistenceKey = `tour-form-edit-${initialData.id}`;
     
     // The dates come as strings from the server action, so we need to parse them.
     const parsedInitialData = {
@@ -107,17 +121,106 @@ export function EditTourClientPage({ initialData, lang }: EditTourClientPageProp
         itinerary: initialData.itinerary || [],
         pickupPoint: initialData.pickupPoint || { title: { es: '' }, description: { es: '' } },
     };
-    
+
     const form = useForm<TourFormValues>({
         resolver: zodResolver(formSchema),
         defaultValues: parsedInitialData,
     });
-    
-    const basePath = `/${lang}/dashboard/admin/tours`;
+
+    const { clearPersistedData } = useFormPersistence(formPersistenceKey, form, parsedInitialData);
+
+    const uploadFile = (file: File, tourId: string): Promise<string> => {
+      return new Promise((resolve, reject) => {
+          const { app } = initializeFirebase();
+          const storage = getStorage(app);
+          const fileName = `tours/${tourId}/${Date.now()}-${file.name}`;
+          const fileRef = storageRef(storage, fileName);
+          const uploadTask = uploadBytesResumable(fileRef, file);
+
+          uploadTask.on(
+              'state_changed',
+              (snapshot) => {
+                  const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                  setUploadProgress(progress);
+              },
+              (error) => {
+                  console.error("Upload failed:", error);
+                  reject(error);
+              },
+              () => {
+                  getDownloadURL(uploadTask.snapshot.ref).then(resolve);
+              }
+          );
+      });
+    };
 
     const onSubmit = async (data: TourFormValues) => {
-        // Logic will be handled inside TourForm, but we need the handler here.
+        setIsSubmitting(true);
+        const basePath = `/${lang}/dashboard/admin/tours`;
+    
+        try {
+            let tourId = data.id;
+    
+            let mainImageUrl = data.mainImage;
+            if (data.mainImage instanceof File) {
+                setUploadMessage('Subiendo imagen principal...');
+                mainImageUrl = await uploadFile(data.mainImage, tourId!);
+            }
+    
+            let galleryImageUrls: string[] = [];
+            const existingGalleryUrls = (data.galleryImages as any[])?.filter(img => typeof img === 'string') || [];
+            const newGalleryFiles = (data.galleryImages as any[])?.filter(img => img instanceof File) || [];
+            
+            if (newGalleryFiles.length > 0) {
+                const uploadedUrls: string[] = [];
+                for (let i = 0; i < newGalleryFiles.length; i++) {
+                    setUploadMessage(`Subiendo imagen de galería ${i + 1} de ${newGalleryFiles.length}...`);
+                    const url = await uploadFile(newGalleryFiles[i], tourId!);
+                    uploadedUrls.push(url);
+                }
+                galleryImageUrls = [...existingGalleryUrls, ...uploadedUrls];
+            } else {
+                galleryImageUrls = existingGalleryUrls;
+            }
+    
+            setUploadMessage('Guardando datos del tour...');
+            setUploadProgress(100);
+    
+            const tourData = {
+                ...data,
+                mainImage: mainImageUrl,
+                galleryImages: galleryImageUrls,
+                availabilityPeriods: data.availabilityPeriods?.map(p => ({
+                    ...p,
+                    startDate: p.startDate.toISOString().split('T')[0],
+                    endDate: p.endDate.toISOString().split('T')[0]
+                }))
+            };
+            
+            const result = await updateTour({ ...tourData, id: tourId });
+    
+            if (result.error) throw new Error(result.error);
+
+            clearPersistedData();
+    
+            toast({
+                title: "¡Tour Guardado!",
+                description: `El tour "${data.title.es}" ha sido guardado exitosamente.`,
+            });
+    
+        } catch (error: any) {
+            console.error("Error saving tour:", error);
+            toast({
+                variant: "destructive",
+                title: "Error al guardar el tour",
+                description: error.message || "Ocurrió un problema, por favor intenta de nuevo.",
+            });
+        } finally {
+            setIsSubmitting(false);
+        }
     };
+    
+    const basePath = `/${lang}/dashboard/admin/tours`;
 
     return (
         <div className="flex flex-col h-full -mx-4 -pb-4 md:-mx-8 md:-pb-8 lg:-px-10 lg:-pb-10">
@@ -129,7 +232,12 @@ export function EditTourClientPage({ initialData, lang }: EditTourClientPageProp
                     onSubmit={form.handleSubmit(onSubmit)}
                 />
                 <div className="flex-grow overflow-auto px-4 pt-6 md:px-8 lg:px-10">
-                   <TourForm initialData={initialData} />
+                   <TourForm
+                     initialData={initialData}
+                     isSubmitting={isSubmitting}
+                     uploadProgress={uploadProgress}
+                     uploadMessage={uploadMessage}
+                    />
                 </div>
             </FormProvider>
         </div>
