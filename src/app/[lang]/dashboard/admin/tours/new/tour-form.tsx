@@ -594,13 +594,13 @@ export function TourForm({ initialData, isSubmitting, uploadProgress, uploadMess
                                 <div className="relative flex items-start gap-6 pb-8">
                                     <div className="z-10 flex flex-col items-center">
                                         <div className="h-12 w-12 rounded-full bg-background flex items-center justify-center">
-                                            <div className="w-4 h-4 rounded-full bg-primary ring-4 ring-primary/20"></div>
+                                            <div className="w-4 h-4 rounded-full bg-accent ring-4 ring-accent/20"></div>
                                         </div>
                                     </div>
                                     <div className="flex-1 pt-2.5">
-                                        <Card className="shadow-md border border-primary/50">
+                                        <Card className="shadow-md border border-accent/50">
                                             <CardHeader className="flex-row items-center gap-3 p-4">
-                                                <MapPin className="h-6 w-6 text-primary flex-shrink-0" />
+                                                <MapPin className="h-6 w-6 text-accent flex-shrink-0" />
                                                 <CardTitle className="text-xl">Pickup Point</CardTitle>
                                             </CardHeader>
                                             <CardContent className="p-4 pt-0 space-y-4">
@@ -642,7 +642,7 @@ export function TourForm({ initialData, isSubmitting, uploadProgress, uploadMess
                                                 <div className="h-12 w-12 rounded-full bg-background flex items-center justify-center">
                                                     <div className={cn(
                                                         "w-4 h-4 rounded-full",
-                                                        field.type === 'stop' ? "bg-primary ring-4 ring-primary/20" : "bg-muted-foreground"
+                                                        field.type === 'stop' ? "bg-accent ring-4 ring-accent/20" : "bg-muted-foreground"
                                                     )}></div>
                                                 </div>
                                             </div>

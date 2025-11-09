@@ -1,3 +1,4 @@
+
 'use client';
 import {
   MapPin,
@@ -55,12 +56,12 @@ export function TourItinerarySection({
         <div className="relative flex items-start gap-6 pb-8">
           <div className="z-10 flex flex-col items-center">
             <div className="h-12 w-12 rounded-full bg-background flex items-center justify-center">
-              <div className="w-4 h-4 rounded-full bg-primary ring-4 ring-primary/20"></div>
+              <div className="w-4 h-4 rounded-full bg-accent ring-4 ring-accent/20"></div>
             </div>
           </div>
           <div className="flex-1 pt-2.5">
             <div className='flex items-center gap-3'>
-              <MapPin className="h-6 w-6 text-primary" />
+              <MapPin className="h-6 w-6 text-accent" />
               <h3 className="text-xl font-bold">{dictionary.pickupTitle}</h3>
             </div>
             <Collapsible>
@@ -83,7 +84,7 @@ export function TourItinerarySection({
                <div className="h-12 w-12 rounded-full bg-background flex items-center justify-center">
                 <div className={cn(
                   "w-4 h-4 rounded-full",
-                  stop.type === 'stop' ? "bg-primary ring-4 ring-primary/20" : "bg-muted-foreground"
+                  stop.type === 'stop' ? "bg-accent ring-4 ring-accent/20" : "bg-muted-foreground"
                 )}></div>
               </div>
             </div>
@@ -128,12 +129,12 @@ export function TourItinerarySection({
         <div className="relative flex items-start gap-6">
             <div className="z-10 flex flex-col items-center">
                  <div className="h-12 w-12 rounded-full bg-background flex items-center justify-center">
-                    <div className="w-4 h-4 rounded-full bg-primary ring-4 ring-primary/20"></div>
+                    <div className="w-4 h-4 rounded-full bg-accent ring-4 ring-accent/20"></div>
                 </div>
             </div>
             <div className="flex-1 pt-2.5">
                 <div className='flex items-center gap-3'>
-                    <MapPin className="h-6 w-6 text-primary" />
+                    <MapPin className="h-6 w-6 text-accent" />
                     <h3 className="text-xl font-bold">{dictionary.dropoffTitle}</h3>
                 </div>
                 <Collapsible>

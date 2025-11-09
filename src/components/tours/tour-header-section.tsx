@@ -35,7 +35,7 @@ export function TourHeaderSection({ tour, dictionary }: TourHeaderSectionProps) 
                             {tour.title}
                         </h1>
                         <div className="flex flex-col items-start gap-2 md:flex-row md:items-center md:gap-4 mt-4">
-                            <Badge className="bg-accent text-accent-foreground hover:bg-accent/90">{dictionary.newActivity}</Badge>
+                            <Badge variant="destructive" className="bg-accent text-accent-foreground hover:bg-accent/90">{dictionary.newActivity}</Badge>
                             <span className="text-sm text-muted-foreground">
                                 {dictionary.provider}: <span className="font-semibold text-primary">Tasting Mallorca</span>
                             </span>
