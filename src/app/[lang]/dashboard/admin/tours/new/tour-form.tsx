@@ -102,7 +102,6 @@ type TourFormValues = z.infer<typeof formSchema>;
 const weekDays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 const weekDayInitials = ["L", "M", "X", "J", "V", "S", "D"];
 
-// This component is kept as is.
 function AvailabilityPeriodCreator({ onAddPeriod }: { onAddPeriod: (period: z.infer<typeof availabilityPeriodSchema>) => void }) {
     const [dateRange, setDateRange] = useState<DateRange | undefined>({ from: new Date(), to: addDays(new Date(), 20) });
     const [activeDays, setActiveDays] = useState<string[]>([]);
@@ -286,7 +285,12 @@ export function TourForm({ initialData }: TourFormProps) {
     setUploadProgress(0);
 
     try {
-        const currentTourId = tourId || crypto.randomUUID();
+        let currentTourId = tourId;
+        if (!currentTourId) {
+            currentTourId = crypto.randomUUID();
+            setTourId(currentTourId);
+        }
+
         let mainImageUrl = data.mainImage;
         let galleryImageUrls = data.galleryImages || [];
 
@@ -302,7 +306,7 @@ export function TourForm({ initialData }: TourFormProps) {
         const existingGalleryUrls = (data.galleryImages as any[]).filter(img => typeof img === 'string');
         
         if (newGalleryFiles.length > 0) {
-            const uploadedUrls = await Promise.all(newGalleryFiles.map(file => uploadFile(file, currentTourId)));
+            const uploadedUrls = await Promise.all(newGalleryFiles.map(file => uploadFile(file, currentTourId!)));
             galleryImageUrls = [...existingGalleryUrls, ...uploadedUrls];
         }
         setUploadProgress(90);
@@ -319,8 +323,8 @@ export function TourForm({ initialData }: TourFormProps) {
         };
         
         let result;
-        if (tourId) { // If we have an ID, we update
-            result = await updateTour({ ...tourData, id: tourId });
+        if (initialData) { // If we have initialData, we are editing
+            result = await updateTour({ ...tourData, id: tourId! });
         } else { // Otherwise, we create
             result = await createTour({ ...tourData, id: currentTourId });
         }
@@ -329,11 +333,10 @@ export function TourForm({ initialData }: TourFormProps) {
 
         if (result.error) throw new Error(result.error);
         
-        // If it was a new creation, set the ID and refresh URL
-        if (!tourId) {
-            setTourId(currentTourId);
+        // If it was a new creation, update URL to edit page
+        if (!initialData) {
             const newPath = `${basePath}/${currentTourId}/edit`;
-            // router.replace(newPath); // Use replace to avoid history pollution
+            router.replace(newPath, { scroll: false });
         }
 
         toast({
@@ -354,7 +357,6 @@ export function TourForm({ initialData }: TourFormProps) {
     }
 }
 
-
   const langTabs = [
     { code: 'en', name: 'English' },
     { code: 'de', name: 'Deutsch' },
@@ -363,50 +365,49 @@ export function TourForm({ initialData }: TourFormProps) {
   ];
 
   return (
-    <>
-     <div className="mb-6 flex justify-between items-center">
-        <Button asChild variant="outline" size="sm">
-          <Link href={basePath}>
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Volver a Todos los Tours
-          </Link>
-        </Button>
-        <div className="flex items-center gap-4">
-             <FormField
-                control={form.control}
-                name="published"
-                render={({ field }) => (
-                    <FormItem className="flex items-center gap-2 space-y-0">
-                        <FormControl><Switch checked={field.value} onCheckedChange={field.onChange} /></FormControl>
-                        <FormLabel className="text-base font-normal">
-                            {field.value ? 'Publicado' : 'Borrador'}
-                        </FormLabel>
-                    </FormItem>
-                )}
-            />
-            <Button onClick={form.handleSubmit(onSubmit)} size="sm" disabled={isSubmitting}>
-              {isSubmitting ? <Loader2 className="animate-spin" /> : 'Guardar Tour'}
-            </Button>
-        </div>
-      </div>
-      
-      {isSubmitting && (
-        <div className="fixed top-0 left-0 right-0 z-50">
-            <Progress value={uploadProgress} className="w-full h-1 rounded-none" />
-        </div>
-      )}
-
-      <div className="flex justify-between items-center mb-6">
-          <div>
-              <h1 className="text-3xl font-bold">{initialData ? 'Editar Tour' : 'Crear un Nuevo Tour'}</h1>
-              <p className="text-muted-foreground">
-                  {initialData ? 'Edita los detalles del tour a continuación.' : 'Rellena el formulario para añadir un nuevo tour a la plataforma.'}
-              </p>
-          </div>
-      </div>
-
     <Form {...form}>
-      <form className="space-y-8">
+        {isSubmitting && (
+            <div className="fixed top-0 left-0 right-0 z-50">
+                <Progress value={uploadProgress} className="w-full h-1 rounded-none" />
+            </div>
+        )}
+
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <div className="mb-6 flex justify-between items-center sticky top-0 bg-background/95 backdrop-blur-sm z-10 py-4 -mt-8 pt-8">
+            <Button asChild variant="outline" size="sm">
+                <Link href={basePath}>
+                    <ArrowLeft className="mr-2 h-4 w-4" />
+                    Volver a Todos los Tours
+                </Link>
+            </Button>
+            <div className="flex items-center gap-4">
+                <FormField
+                    control={form.control}
+                    name="published"
+                    render={({ field }) => (
+                        <FormItem className="flex items-center gap-2 space-y-0">
+                            <FormControl><Switch checked={field.value} onCheckedChange={field.onChange} /></FormControl>
+                            <FormLabel className="text-base font-normal">
+                                {field.value ? 'Publicado' : 'Borrador'}
+                            </FormLabel>
+                        </FormItem>
+                    )}
+                />
+                <Button type="submit" size="sm" disabled={isSubmitting}>
+                    {isSubmitting ? <Loader2 className="animate-spin" /> : 'Guardar Tour'}
+                </Button>
+            </div>
+        </div>
+      
+        <div className="flex justify-between items-center -mt-4">
+            <div>
+                <h1 className="text-3xl font-bold">{initialData ? 'Editar Tour' : 'Crear un Nuevo Tour'}</h1>
+                <p className="text-muted-foreground">
+                    {initialData ? 'Edita los detalles del tour a continuación.' : 'Rellena el formulario para añadir un nuevo tour a la plataforma.'}
+                </p>
+            </div>
+        </div>
+
         <Tabs defaultValue="main" className="w-full">
           <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="main">Contenido e Imágenes</TabsTrigger>
@@ -719,6 +720,7 @@ export function TourForm({ initialData }: TourFormProps) {
         </Tabs>
       </form>
     </Form>
-    </>
   );
 }
+
+    
