@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useRef, useState } from 'react';
@@ -38,20 +39,18 @@ export function ImmersiveCarouselSection() {
             className='w-full h-auto md:h-[80vh] overflow-hidden cursor-pointer relative flex justify-center' 
             onClick={handleVideoClick}
         >
-            <motion.div style={{ y }} className="h-full w-full">
-                <div className='aspect-video h-full relative'>
-                    <video
-                        ref={videoRef}
-                        src={videoUrl}
-                        autoPlay
-                        muted={isMuted}
-                        loop
-                        playsInline
-                        controls={showControls}
-                        className="object-cover w-full h-full custom-video-controls pointer-events-none"
-                    />
-                    <div className="absolute inset-0 bg-black/20 pointer-events-none"></div>
-                </div>
+            <motion.div style={{ y }} className="w-full aspect-video relative">
+                <video
+                    ref={videoRef}
+                    src={videoUrl}
+                    autoPlay
+                    muted={isMuted}
+                    loop
+                    playsInline
+                    controls={showControls}
+                    className="object-cover w-full h-full custom-video-controls pointer-events-none"
+                />
+                <div className="absolute inset-0 bg-black/20 pointer-events-none"></div>
             </motion.div>
             
             {!showControls && (
