@@ -7,34 +7,34 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%; /* White */
+    --background: 43 100% 96%; /* Warm Ivory */
     --foreground: 240 10% 3.9%; /* Near Black */
 
-    --card: 0 0% 100%;
+    --card: 43 100% 98%; /* Slightly lighter Ivory for cards */
     --card-foreground: 240 10% 3.9%;
 
-    --popover: 0 0% 100%;
+    --popover: 43 100% 98%;
     --popover-foreground: 240 10% 3.9%;
 
-    --primary: 75 35% 38%; /* Olive Green */
-    --primary-foreground: 0 0% 98%; /* Light text on Olive */
-    --primary-dark: 75 45% 20%;
+    --primary: 77 24% 23%; /* Fern */
+    --primary-foreground: 43 100% 96%; /* Warm Ivory for text on Fern */
+    --primary-dark: 77 24% 18%; /* Darker Fern */
 
-    --secondary: 240 4.8% 95.9%; /* Light Gray */
-    --secondary-foreground: 240 5.9% 10%;
+    --secondary: 33 19% 90%; /* Lighter Natural for secondary bg */
+    --secondary-foreground: 77 24% 15%;
 
-    --muted: 240 4.8% 95.9%;
-    --muted-foreground: 240 3.8% 46.1%;
+    --muted: 33 19% 90%;
+    --muted-foreground: 33 10% 45%; /* Darker Natural for text */
 
-    --accent: 15 85% 55%; /* Soft Terracotta/Orange */
-    --accent-foreground: 15 25% 10%; /* Dark brown for text on accent */
+    --accent: 34 75% 54%; /* Apricot */
+    --accent-foreground: 20 80% 15%; /* Dark brown for text on accent */
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 240 5.9% 90%;
-    --input: 240 5.9% 90%;
-    --ring: 75 35% 38%; /* Olive Green for focus rings */
+    --border: 33 19% 80%; /* A variant of Natural for borders */
+    --input: 33 19% 85%; /* A variant of Natural for inputs */
+    --ring: 77 24% 30%; /* A variant of Fern for focus rings */
 
     --chart-1: 12 76% 61%;
     --chart-2: 173 58% 39%;
@@ -59,9 +59,9 @@
     --popover: 240 10% 3.9%;
     --popover-foreground: 0 0% 98%;
 
-    --primary: 75 35% 42%;
-    --primary-foreground: 0 0% 98%;
-    --primary-dark: 75 45% 20%;
+    --primary: 77 24% 33%;
+    --primary-foreground: 43 100% 96%;
+    --primary-dark: 77 24% 18%;
 
     --secondary: 240 3.7% 15.9%;
     --secondary-foreground: 0 0% 98%;
@@ -69,7 +69,7 @@
     --muted: 240 3.7% 15.9%;
     --muted-foreground: 240 5% 64.9%;
 
-    --accent: 15 75% 50%;
+    --accent: 34 75% 60%;
     --accent-foreground: 0 0% 98%;
     
     --destructive: 0 62.8% 30.6%;
@@ -77,7 +77,7 @@
 
     --border: 240 3.7% 15.9%;
     --input: 240 3.7% 15.9%;
-    --ring: 75 35% 42%;
+    --ring: 77 24% 38%;
 
     --chart-1: 220 70% 50%;
     --chart-2: 160 60% 45%;
