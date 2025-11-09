@@ -6,6 +6,7 @@ import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
 import { type getDictionary } from '@/dictionaries/get-dictionary';
 import { type Locale } from '@/dictionaries/config';
+import { WhatsAppButton } from './whatsapp-button';
 
 export function MainLayout({ 
     children, 
@@ -18,6 +19,9 @@ export function MainLayout({
 }) {
   const pathname = usePathname();
   const isDashboard = pathname.includes('/dashboard');
+  const isTourDetail = /^\/[a-z]{2}\/tours\/.+/.test(pathname);
+
+  const showWhatsAppButton = !isDashboard && !isTourDetail;
 
   return (
     <>
@@ -26,6 +30,7 @@ export function MainLayout({
         {children}
       </main>
       {!isDashboard && <Footer />}
+      {showWhatsAppButton && <WhatsAppButton />}
     </>
   );
 }
