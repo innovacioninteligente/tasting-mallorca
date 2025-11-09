@@ -1,4 +1,5 @@
 
+
 export interface Tour {
   id: string;
   slug: { [key: string]: string };
@@ -19,6 +20,7 @@ export interface Tour {
   isFeatured: boolean;
   allowDeposit: boolean;
   depositPrice: number;
+  published: boolean;
 }
 
     

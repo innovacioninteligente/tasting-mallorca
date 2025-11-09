@@ -13,20 +13,23 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { createTour } from "@/app/server-actions/tours/createTour";
+import { updateTour } from "@/app/server-actions/tours/updateTour";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter, usePathname } from "next/navigation";
 import { ImageUpload } from "./image-upload";
-import { getStorage, ref as storageRef, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-import React, { useState } from "react";
+import { getStorage, ref as storageRef, uploadBytesResumable, getDownloadURL, deleteObject } from "firebase/storage";
+import React, { useState, useEffect } from "react";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { CalendarIcon, Loader2, PlusCircle, Trash2 } from "lucide-react";
+import { CalendarIcon, Loader2, PlusCircle, Trash2, ArrowLeft } from "lucide-react";
 import { DateRange } from "react-day-picker";
-import { addDays, format } from "date-fns";
+import { addDays, format, parseISO } from "date-fns";
 import { cn } from "@/lib/utils";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Progress } from "@/components/ui/progress";
 import { initializeFirebase } from "@/firebase";
+import { Tour } from "@/backend/tours/domain/tour.model";
+import Link from "next/link";
 
 const MAX_FILE_SIZE = 100 * 1024 * 1024; // 100MB
 const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
@@ -70,20 +73,9 @@ const formSchema = z.object({
   region: z.enum(["North", "East", "South", "West", "Central"]),
   durationHours: z.coerce.number().min(1, "La duración debe ser al menos 1 hora."),
   isFeatured: z.boolean().default(false),
-  mainImage: z.any()
-    .refine((file) => !!file, "La imagen principal es requerida.")
-    .refine((file) => file?.size <= MAX_FILE_SIZE, `El tamaño máximo es 100MB.`)
-    .refine(
-      (file) => ACCEPTED_IMAGE_TYPES.includes(file?.type),
-      "Solo se aceptan formatos .jpg, .jpeg, .png y .webp."
-    ),
-  galleryImages: z.array(z.any())
-    .refine((files) => files?.length > 0, "Se requiere al menos una imagen para la galería.")
-    .refine((files) => Array.from(files).every((file: any) => file.size <= MAX_FILE_SIZE), `Cada archivo debe ser menor a 100MB.`)
-    .refine(
-        (files) => Array.from(files).every((file: any) => ACCEPTED_IMAGE_TYPES.includes(file.type)),
-        "Solo se aceptan formatos .jpg, .jpeg, .png y .webp."
-    ),
+  published: z.boolean().default(false),
+  mainImage: z.any(),
+  galleryImages: z.any().optional(),
   allowDeposit: z.boolean().default(false),
   depositPrice: z.coerce.number().optional(),
   availabilityPeriods: z.array(availabilityPeriodSchema).optional(),
@@ -110,6 +102,7 @@ type TourFormValues = z.infer<typeof formSchema>;
 const weekDays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 const weekDayInitials = ["L", "M", "X", "J", "V", "S", "D"];
 
+// This component is kept as is.
 function AvailabilityPeriodCreator({ onAddPeriod }: { onAddPeriod: (period: z.infer<typeof availabilityPeriodSchema>) => void }) {
     const [dateRange, setDateRange] = useState<DateRange | undefined>({ from: new Date(), to: addDays(new Date(), 20) });
     const [activeDays, setActiveDays] = useState<string[]>([]);
@@ -217,30 +210,43 @@ function AvailabilityPeriodCreator({ onAddPeriod }: { onAddPeriod: (period: z.in
     );
 }
 
-export function TourForm() {
+interface TourFormProps {
+  initialData?: Tour;
+}
+
+export function TourForm({ initialData }: TourFormProps) {
   const { toast } = useToast();
   const router = useRouter();
   const pathname = usePathname();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
+  const [tourId, setTourId] = useState<string | undefined>(initialData?.id);
+  const basePath = pathname.split('/').slice(0, -2).join('/');
+  
+  const defaultValues: Partial<TourFormValues> = {
+      title: initialData?.title || { es: '', en: '', de: '', fr: '', nl: '' },
+      slug: initialData?.slug || { es: '', en: '', de: '', fr: '', nl: '' },
+      description: initialData?.description || { es: '', en: '', de: '', fr: '', nl: '' },
+      overview: initialData?.overview || { es: '', en: '', de: '', fr: '', nl: '' },
+      price: initialData?.price || 0,
+      region: initialData?.region || "South",
+      durationHours: initialData?.durationHours || 8,
+      isFeatured: initialData?.isFeatured || false,
+      published: initialData?.published || false,
+      allowDeposit: initialData?.allowDeposit || false,
+      depositPrice: initialData?.depositPrice || 0,
+      availabilityPeriods: initialData?.availabilityPeriods?.map(p => ({
+        ...p,
+        startDate: parseISO(p.startDate),
+        endDate: parseISO(p.endDate)
+      })) || [],
+      mainImage: initialData?.mainImage,
+      galleryImages: initialData?.galleryImages || [],
+  };
 
   const form = useForm<TourFormValues>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      isFeatured: false,
-      region: "South",
-      durationHours: 8,
-      price: 0,
-      title: { es: '', en: '', de: '', fr: '', nl: '' },
-      slug: { es: '', en: '', de: '', fr: '', nl: '' },
-      description: { es: '', en: '', de: '', fr: '', nl: '' },
-      overview: { es: '', en: '', de: '', fr: '', nl: '' },
-      allowDeposit: false,
-      depositPrice: 0,
-      availabilityPeriods: [],
-      mainImage: undefined,
-      galleryImages: [],
-    },
+    defaultValues
   });
 
   const { fields, append, remove } = useFieldArray({
@@ -250,29 +256,26 @@ export function TourForm() {
 
   const allowDeposit = form.watch("allowDeposit");
 
-  const uploadFile = (file: File, tourId: string): Promise<string> => {
+  const uploadFile = (file: File, currentTourId: string): Promise<string> => {
     return new Promise((resolve, reject) => {
         const { app } = initializeFirebase();
         const storage = getStorage(app);
-        const fileName = `tours/${tourId}/${Date.now()}-${file.name}`;
+        const fileName = `tours/${currentTourId}/${Date.now()}-${file.name}`;
         const fileRef = storageRef(storage, fileName);
         const uploadTask = uploadBytesResumable(fileRef, file);
 
         uploadTask.on(
             'state_changed',
             (snapshot) => {
-                // Optional: Update progress bar
                 const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                setUploadProgress(prev => (prev + progress) / 2); // Average progress
+                setUploadProgress(prev => (prev + progress) / 2);
             },
             (error) => {
                 console.error("Upload failed:", error);
                 reject(error);
             },
             () => {
-                getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-                    resolve(downloadURL);
-                });
+                getDownloadURL(uploadTask.snapshot.ref).then(resolve);
             }
         );
     });
@@ -283,20 +286,27 @@ export function TourForm() {
     setUploadProgress(0);
 
     try {
-        const basePath = pathname.split('/').slice(0, -2).join('/');
-        const tourId = crypto.randomUUID(); // Unique ID for the tour
-        
-        // 1. Upload main image
-        setUploadProgress(10);
-        const mainImageUrl = await uploadFile(data.mainImage, tourId);
-        setUploadProgress(30);
+        const currentTourId = tourId || crypto.randomUUID();
+        let mainImageUrl = data.mainImage;
+        let galleryImageUrls = data.galleryImages || [];
 
-        // 2. Upload gallery images in parallel
-        const galleryImagePromises = (data.galleryImages as File[]).map(file => uploadFile(file, tourId));
-        const galleryImageUrls = await Promise.all(galleryImagePromises);
+        // Upload main image if it's a File object
+        if (data.mainImage instanceof File) {
+            setUploadProgress(10);
+            mainImageUrl = await uploadFile(data.mainImage, currentTourId);
+            setUploadProgress(30);
+        }
+
+        // Upload gallery images if they are File objects
+        const newGalleryFiles = (data.galleryImages as any[]).filter(img => img instanceof File);
+        const existingGalleryUrls = (data.galleryImages as any[]).filter(img => typeof img === 'string');
+        
+        if (newGalleryFiles.length > 0) {
+            const uploadedUrls = await Promise.all(newGalleryFiles.map(file => uploadFile(file, currentTourId)));
+            galleryImageUrls = [...existingGalleryUrls, ...uploadedUrls];
+        }
         setUploadProgress(90);
 
-        // 3. Prepare tour data with uploaded image URLs
         const tourData = {
             ...data,
             mainImage: mainImageUrl,
@@ -307,28 +317,35 @@ export function TourForm() {
                 endDate: format(p.endDate, 'yyyy-MM-dd')
             }))
         };
+        
+        let result;
+        if (tourId) { // If we have an ID, we update
+            result = await updateTour({ ...tourData, id: tourId });
+        } else { // Otherwise, we create
+            result = await createTour({ ...tourData, id: currentTourId });
+        }
 
-        // 4. Create the tour document in Firestore
-        const result = await createTour(tourData);
         setUploadProgress(100);
 
-        if (result.error) {
-            throw new Error(result.error);
-        }
+        if (result.error) throw new Error(result.error);
         
+        // If it was a new creation, set the ID and refresh URL
+        if (!tourId) {
+            setTourId(currentTourId);
+            const newPath = `${basePath}/${currentTourId}/edit`;
+            // router.replace(newPath); // Use replace to avoid history pollution
+        }
+
         toast({
-            title: "¡Tour Creado!",
+            title: "¡Tour Guardado!",
             description: `El tour "${data.title.es}" ha sido guardado exitosamente.`,
         });
 
-        router.push(basePath);
-        router.refresh();
-
     } catch (error: any) {
-        console.error("Error creating tour:", error);
+        console.error("Error saving tour:", error);
         toast({
             variant: "destructive",
-            title: "Error al crear el tour",
+            title: "Error al guardar el tour",
             description: error.message || "Ocurrió un problema, por favor intenta de nuevo.",
         });
     } finally {
@@ -346,8 +363,50 @@ export function TourForm() {
   ];
 
   return (
+    <>
+     <div className="mb-6 flex justify-between items-center">
+        <Button asChild variant="outline" size="sm">
+          <Link href={basePath}>
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              Volver a Todos los Tours
+          </Link>
+        </Button>
+        <div className="flex items-center gap-4">
+             <FormField
+                control={form.control}
+                name="published"
+                render={({ field }) => (
+                    <FormItem className="flex items-center gap-2 space-y-0">
+                        <FormControl><Switch checked={field.value} onCheckedChange={field.onChange} /></FormControl>
+                        <FormLabel className="text-base font-normal">
+                            {field.value ? 'Publicado' : 'Borrador'}
+                        </FormLabel>
+                    </FormItem>
+                )}
+            />
+            <Button onClick={form.handleSubmit(onSubmit)} size="sm" disabled={isSubmitting}>
+              {isSubmitting ? <Loader2 className="animate-spin" /> : 'Guardar Tour'}
+            </Button>
+        </div>
+      </div>
+      
+      {isSubmitting && (
+        <div className="fixed top-0 left-0 right-0 z-50">
+            <Progress value={uploadProgress} className="w-full h-1 rounded-none" />
+        </div>
+      )}
+
+      <div className="flex justify-between items-center mb-6">
+          <div>
+              <h1 className="text-3xl font-bold">{initialData ? 'Editar Tour' : 'Crear un Nuevo Tour'}</h1>
+              <p className="text-muted-foreground">
+                  {initialData ? 'Edita los detalles del tour a continuación.' : 'Rellena el formulario para añadir un nuevo tour a la plataforma.'}
+              </p>
+          </div>
+      </div>
+
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form className="space-y-8">
         <Tabs defaultValue="main" className="w-full">
           <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="main">Contenido e Imágenes</TabsTrigger>
@@ -445,7 +504,10 @@ export function TourForm() {
                                     <ImageUpload
                                         value={field.value || []}
                                         onChange={(files) => field.onChange(files)}
-                                        onRemove={(fileToRemove) => field.onChange([...(field.value || [])].filter(file => file !== fileToRemove))}
+                                        onRemove={(fileToRemove) => {
+                                            const newValue = [...(field.value || [])].filter(file => file !== fileToRemove);
+                                            field.onChange(newValue);
+                                        }}
                                         multiple={true}
                                     />
                                 </FormControl>
@@ -457,6 +519,7 @@ export function TourForm() {
             </Card>
           </TabsContent>
 
+          {/* Other Tabs are the same */}
           <TabsContent value="availability" className="mt-6">
             <Card>
               <CardHeader><CardTitle>Disponibilidad y Precios</CardTitle></CardHeader>
@@ -654,18 +717,8 @@ export function TourForm() {
             </Card>
           </TabsContent>
         </Tabs>
-        
-        {isSubmitting ? (
-          <div className="space-y-4">
-              <p className="text-center font-medium">Guardando tour, por favor espera...</p>
-              <Progress value={uploadProgress} className="w-full" />
-          </div>
-        ) : (
-          <Button type="submit" size="lg" disabled={isSubmitting}>
-              {isSubmitting ? <Loader2 className="animate-spin" /> : 'Guardar Tour'}
-          </Button>
-        )}
       </form>
     </Form>
+    </>
   );
 }

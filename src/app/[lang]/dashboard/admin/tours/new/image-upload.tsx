@@ -3,15 +3,15 @@
 
 import { UploadCloud, X } from 'lucide-react';
 import Image from 'next/image';
-import { useCallback, useState } from 'react';
+import { useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
 interface ImageUploadProps {
-  onChange: (file: any) => void;
+  onChange: (files: any) => void;
   onRemove: (file: any) => void;
-  value: File[];
+  value: (File | string)[];
   multiple?: boolean;
 }
 
@@ -21,30 +21,18 @@ export function ImageUpload({
   value,
   multiple = false,
 }: ImageUploadProps) {
-  const [previews, setPreviews] = useState<string[]>([]);
-
+  
   const onDrop = useCallback((acceptedFiles: File[]) => {
-    const newPreviews: string[] = [];
-    acceptedFiles.forEach(file => {
-      newPreviews.push(URL.createObjectURL(file));
-    });
-
     if (multiple) {
-        setPreviews(prev => [...prev, ...newPreviews]);
         onChange([...value, ...acceptedFiles]);
     } else {
-        setPreviews(newPreviews);
         onChange(acceptedFiles[0]);
     }
   }, [onChange, multiple, value]);
 
   const handleRemove = (file: File | string, e: React.MouseEvent) => {
     e.stopPropagation();
-    const fileToRemove = typeof file === 'string' ? value.find(f => URL.createObjectURL(f) === file) : file;
-    if (fileToRemove) {
-      setPreviews(previews.filter(p => p !== (typeof file === 'string' ? file : URL.createObjectURL(file))));
-      onRemove(fileToRemove);
-    }
+    onRemove(file);
   };
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -56,6 +44,13 @@ export function ImageUpload({
     },
     multiple,
   });
+
+  const getPreviewUrl = (file: File | string) => {
+    if (typeof file === 'string') {
+      return file;
+    }
+    return URL.createObjectURL(file);
+  }
 
   return (
     <div>
@@ -80,34 +75,37 @@ export function ImageUpload({
 
       {value && value.length > 0 && (
         <div className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-          {value.map((file, i) => (
-            <div key={i} className="relative aspect-square overflow-hidden rounded-md">
-              <Image
-                src={URL.createObjectURL(file)}
-                alt={`Preview ${i}`}
-                fill
-                className="object-cover"
-                onLoad={() => URL.revokeObjectURL(URL.createObjectURL(file))}
-              />
-              <div className="absolute right-1 top-1">
-                <Button
-                  onClick={(e) => handleRemove(file, e)}
-                  type="button"
-                  variant="destructive"
-                  size="icon"
-                  className="h-7 w-7"
-                >
-                  <X className="h-4 w-4" />
-                </Button>
+          {value.map((file, i) => {
+            const previewUrl = getPreviewUrl(file);
+            return (
+              <div key={i} className="relative aspect-square overflow-hidden rounded-md">
+                <Image
+                  src={previewUrl}
+                  alt={`Preview ${i}`}
+                  fill
+                  className="object-cover"
+                  onLoad={() => {
+                      if (file instanceof File) {
+                          URL.revokeObjectURL(previewUrl);
+                      }
+                  }}
+                />
+                <div className="absolute right-1 top-1">
+                  <Button
+                    onClick={(e) => handleRemove(file, e)}
+                    type="button"
+                    variant="destructive"
+                    size="icon"
+                    className="h-7 w-7"
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
+                </div>
               </div>
-            </div>
-          ))}
+            )
+          })}
         </div>
       )}
     </div>
   );
 }
-
-    
-
-    

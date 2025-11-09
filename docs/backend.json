@@ -100,6 +100,10 @@
             "type": "boolean",
             "description": "Whether the tour is featured on the homepage."
         },
+        "published": {
+            "type": "boolean",
+            "description": "Whether the tour is published and visible to customers."
+        },
         "allowDeposit": {
           "type": "boolean",
           "description": "Whether this tour allows booking with a deposit."
@@ -109,7 +113,7 @@
           "description": "The deposit amount required for booking, in cents. Only applicable if allowDeposit is true."
         }
       },
-      "required": ["slug", "title", "price", "region"]
+      "required": ["slug", "title", "price", "region", "published"]
     },
     "Booking": {
       "title": "Booking",
