@@ -27,7 +27,7 @@ import { cn } from "@/lib/utils";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
 
-const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+const MAX_FILE_SIZE = 100 * 1024 * 1024; // 100MB
 const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
 
 const availabilityPeriodSchema = z.object({
@@ -71,14 +71,14 @@ const tourFormSchema = z.object({
   isFeatured: z.boolean().default(false),
   mainImage: z.any()
     .refine((file) => !!file, "La imagen principal es requerida.")
-    .refine((file) => file?.size <= MAX_FILE_SIZE, `El tamaño máximo es 10MB.`)
+    .refine((file) => file?.size <= MAX_FILE_SIZE, `El tamaño máximo es 100MB.`)
     .refine(
       (file) => ACCEPTED_IMAGE_TYPES.includes(file?.type),
       "Solo se aceptan formatos .jpg, .jpeg, .png y .webp."
     ),
   galleryImages: z.any()
     .refine((files) => files?.length > 0, "Se requiere al menos una imagen para la galería.")
-    .refine((files) => Array.from(files).every((file: any) => file.size <= MAX_FILE_SIZE), `Cada archivo debe ser menor a 10MB.`)
+    .refine((files) => Array.from(files).every((file: any) => file.size <= MAX_FILE_SIZE), `Cada archivo debe ser menor a 100MB.`)
     .refine(
         (files) => Array.from(files).every((file: any) => ACCEPTED_IMAGE_TYPES.includes(file.type)),
         "Solo se aceptan formatos .jpg, .jpeg, .png y .webp."
@@ -624,5 +624,7 @@ export function TourForm() {
     </Form>
   );
 }
+
+    
 
     
