@@ -17,8 +17,8 @@ import { updateTour } from "@/app/server-actions/tours/updateTour";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter, usePathname } from "next/navigation";
 import { ImageUpload } from "./image-upload";
-import { getStorage, ref as storageRef, uploadBytesResumable, getDownloadURL, deleteObject } from "firebase/storage";
-import React, { useState, useEffect } from "react";
+import { getStorage, ref as storageRef, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import React, { useState } from "react";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { CalendarIcon, PlusCircle, Trash2 } from "lucide-react";
@@ -26,19 +26,10 @@ import { DateRange } from "react-day-picker";
 import { addDays, format, parseISO } from "date-fns";
 import { cn } from "@/lib/utils";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { Progress } from "@/components/ui/progress";
 import { initializeFirebase } from "@/firebase";
 import { Tour } from "@/backend/tours/domain/tour.model";
 import { TourFormHeader } from "./tour-form-header";
-
-const MAX_FILE_SIZE = 100 * 1024 * 1024; // 100MB
-const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
-
-const availabilityPeriodSchema = z.object({
-    startDate: z.date({ required_error: "Start date is required." }),
-    endDate: z.date({ required_error: "End date is required." }),
-    activeDays: z.array(z.string()).min(1, "At least one active day is required."),
-});
+import { UploadProgressDialog } from "@/components/upload-progress-dialog";
 
 const multilingualStringSchema = z.object({
     es: z.string().min(1, { message: "El texto en español es requerido." }),
@@ -46,6 +37,12 @@ const multilingualStringSchema = z.object({
     de: z.string().optional(),
     fr: z.string().optional(),
     nl: z.string().optional(),
+});
+
+const availabilityPeriodSchema = z.object({
+    startDate: z.date({ required_error: "Start date is required." }),
+    endDate: z.date({ required_error: "End date is required." }),
+    activeDays: z.array(z.string()).min(1, "At least one active day is required."),
 });
 
 const formSchema = z.object({
@@ -64,7 +61,7 @@ const formSchema = z.object({
   durationHours: z.coerce.number().min(1, "La duración debe ser al menos 1 hora."),
   isFeatured: z.boolean().default(false),
   published: z.boolean().default(false),
-  mainImage: z.any(),
+  mainImage: z.any().refine(val => val, "La imagen principal es requerida."),
   galleryImages: z.any().optional(),
   allowDeposit: z.boolean().default(false),
   depositPrice: z.coerce.number().optional(),
@@ -209,6 +206,7 @@ export function TourForm({ initialData }: TourFormProps) {
   const pathname = usePathname();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
+  const [uploadMessage, setUploadMessage] = useState('Starting...');
   const [tourId, setTourId] = useState<string | undefined>(initialData?.id);
   const basePath = pathname.split('/').slice(0, -2).join('/');
   
@@ -251,7 +249,7 @@ export function TourForm({ initialData }: TourFormProps) {
 
   const allowDeposit = form.watch("allowDeposit");
 
-  const uploadFile = (file: File, currentTourId: string): Promise<string> => {
+ const uploadFile = (file: File, currentTourId: string): Promise<string> => {
     return new Promise((resolve, reject) => {
         const { app } = initializeFirebase();
         const storage = getStorage(app);
@@ -263,7 +261,7 @@ export function TourForm({ initialData }: TourFormProps) {
             'state_changed',
             (snapshot) => {
                 const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                setUploadProgress(prev => (prev + progress) / 2);
+                setUploadProgress(progress);
             },
             (error) => {
                 console.error("Upload failed:", error);
@@ -278,32 +276,38 @@ export function TourForm({ initialData }: TourFormProps) {
 
  async function onSubmit(data: TourFormValues) {
     setIsSubmitting(true);
-    setUploadProgress(0);
 
     try {
         let currentTourId = tourId;
-        if (!currentTourId) {
+        if (!tourId) {
             currentTourId = crypto.randomUUID();
             setTourId(currentTourId);
         }
 
         let mainImageUrl = data.mainImage;
-        let galleryImageUrls = data.galleryImages || [];
-
         if (data.mainImage instanceof File) {
-            setUploadProgress(10);
-            mainImageUrl = await uploadFile(data.mainImage, currentTourId);
-            setUploadProgress(30);
+            setUploadMessage('Subiendo imagen principal...');
+            mainImageUrl = await uploadFile(data.mainImage, currentTourId!);
         }
 
-        const newGalleryFiles = (data.galleryImages as any[]).filter(img => img instanceof File);
-        const existingGalleryUrls = (data.galleryImages as any[]).filter(img => typeof img === 'string');
+        let galleryImageUrls: string[] = [];
+        const existingGalleryUrls = (data.galleryImages as any[])?.filter(img => typeof img === 'string') || [];
+        const newGalleryFiles = (data.galleryImages as any[])?.filter(img => img instanceof File) || [];
         
         if (newGalleryFiles.length > 0) {
-            const uploadedUrls = await Promise.all(newGalleryFiles.map(file => uploadFile(file, currentTourId!)));
+            const uploadedUrls: string[] = [];
+            for (let i = 0; i < newGalleryFiles.length; i++) {
+                setUploadMessage(`Subiendo imagen de galería ${i + 1} de ${newGalleryFiles.length}...`);
+                const url = await uploadFile(newGalleryFiles[i], currentTourId!);
+                uploadedUrls.push(url);
+            }
             galleryImageUrls = [...existingGalleryUrls, ...uploadedUrls];
+        } else {
+            galleryImageUrls = existingGalleryUrls;
         }
-        setUploadProgress(90);
+
+        setUploadMessage('Guardando datos del tour...');
+        setUploadProgress(100);
 
         const tourData = {
             ...data,
@@ -317,17 +321,15 @@ export function TourForm({ initialData }: TourFormProps) {
         };
         
         let result;
-        if (initialData || tourId) { 
+        if (initialData?.id || tourId) { 
             result = await updateTour({ ...tourData, id: tourId! });
         } else { 
-            result = await createTour({ ...tourData, id: currentTourId });
+            result = await createTour({ ...tourData, id: currentTourId! });
         }
-
-        setUploadProgress(100);
 
         if (result.error) throw new Error(result.error);
         
-        if (!initialData) {
+        if (!initialData?.id) {
             const newPath = `${basePath}/${currentTourId}/edit`;
             router.replace(newPath, { scroll: false });
         }
@@ -346,7 +348,6 @@ export function TourForm({ initialData }: TourFormProps) {
         });
     } finally {
         setIsSubmitting(false);
-        setUploadProgress(0);
     }
 }
 
@@ -359,23 +360,17 @@ export function TourForm({ initialData }: TourFormProps) {
 
   return (
     <>
+      {isSubmitting && <UploadProgressDialog progress={uploadProgress} message={uploadMessage} />}
       <FormProvider {...form}>
         <TourFormHeader
           isSubmitting={isSubmitting}
-          uploadProgress={uploadProgress}
           initialData={initialData}
           basePath={basePath}
           onSubmit={form.handleSubmit(onSubmit)}
         />
         <div className="flex-grow overflow-auto px-4 pt-6 md:px-8 lg:px-10">
           <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-                  {isSubmitting && (
-                      <div className="fixed top-16 left-0 right-0 z-50 -mt-4">
-                          <Progress value={uploadProgress} className="w-full h-1 rounded-none" />
-                      </div>
-                  )}
-              
+              <form className="space-y-8">
                   <div className="pt-2">
                       <Tabs defaultValue="main" className="w-full">
                       <TabsList className="grid w-full grid-cols-4">

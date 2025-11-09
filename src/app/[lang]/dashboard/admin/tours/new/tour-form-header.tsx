@@ -4,7 +4,6 @@
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form";
-import { Progress } from "@/components/ui/progress";
 import { ArrowLeft, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useFormContext } from "react-hook-form";
@@ -12,7 +11,6 @@ import { Tour } from "@/backend/tours/domain/tour.model";
 
 interface TourFormHeaderProps {
     isSubmitting: boolean;
-    uploadProgress: number;
     initialData?: Tour;
     basePath: string;
     onSubmit: () => void;
@@ -20,7 +18,6 @@ interface TourFormHeaderProps {
 
 export function TourFormHeader({
     isSubmitting,
-    uploadProgress,
     initialData,
     basePath,
     onSubmit,
@@ -60,4 +57,3 @@ export function TourFormHeader({
         </div>
     );
 }
-

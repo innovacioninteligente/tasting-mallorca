@@ -6,9 +6,7 @@ import { createTour as createTourUseCase } from '@/backend/tours/application/cre
 import { FirestoreTourRepository } from '@/backend/tours/infrastructure/firestore-tour.repository';
 import { Tour } from '@/backend/tours/domain/tour.model';
 
-// We omit 'id' and will generate it in the use case.
-// Image fields will be URLs (strings) after upload.
-type CreateTourInput = Omit<Tour, 'id'>;
+type CreateTourInput = Tour;
 
 export const createTour = createSafeAction(
   {
@@ -20,26 +18,25 @@ export const createTour = createSafeAction(
     try {
       const tourRepository = new FirestoreTourRepository();
       
-      const newTour: Omit<Tour, 'id'> = {
+      const newTour: Tour = {
         ...tourData,
         // Ensure numbers are correctly typed
         price: Number(tourData.price),
         durationHours: Number(tourData.durationHours),
         depositPrice: tourData.allowDeposit ? Number(tourData.depositPrice) : 0,
 
-        // Set empty arrays if they are not provided, although schema requires them
+        // Set empty arrays if they are not provided
         itinerary: tourData.itinerary || { es: [], en: [], de: [], fr: [], nl: [] },
         availabilityPeriods: tourData.availabilityPeriods || [],
+        galleryImages: tourData.galleryImages || [],
       };
 
-      const tourId = await createTourUseCase(tourRepository, newTour);
+      await createTourUseCase(tourRepository, newTour);
 
-      return { data: { tourId } };
+      return { data: { tourId: newTour.id } };
     } catch (error: any) {
       console.error('Error creating tour:', error);
       return { error: error.message || 'Failed to create tour.' };
     }
   }
 );
-
-    
