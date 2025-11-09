@@ -14,6 +14,14 @@ export class FirestoreTourRepository implements TourRepository {
     return doc.data() as Tour;
   }
 
+  async findBySlug(slug: string, lang: string): Promise<Tour | null> {
+    const snapshot = await this.collection.where(`slug.${lang}`, '==', slug).limit(1).get();
+    if (snapshot.empty) {
+        return null;
+    }
+    return snapshot.docs[0].data() as Tour;
+  }
+
   async findAll(): Promise<Tour[]> {
     const snapshot = await this.collection.get();
     return snapshot.docs.map(doc => doc.data() as Tour);

@@ -1,3 +1,4 @@
+
 'use client';
 
 import { AdminRouteGuard } from "@/components/auth/admin-route-guard";
@@ -13,10 +14,11 @@ import { initializeFirebase } from "@/firebase";
 import { useToast } from "@/hooks/use-toast";
 import { createTour } from "@/app/server-actions/tours/createTour";
 import { useFormPersistence } from "@/hooks/use-form-persistence";
+import { translateTourContent } from "@/app/server-actions/tours/translateTour";
 
 const multilingualStringSchema = z.object({
-    es: z.string().min(1, { message: "El texto en español es requerido." }),
-    en: z.string().optional(),
+    es: z.string().optional(),
+    en: z.string().min(1, { message: "El texto en inglés es requerido." }),
     de: z.string().optional(),
     fr: z.string().optional(),
     nl: z.string().optional(),
@@ -119,6 +121,7 @@ export default function NewTourPage() {
     const { clearPersistedData } = useFormPersistence(formPersistenceKey, form, defaultValues);
 
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isTranslating, setIsTranslating] = useState(false);
     const [uploadProgress, setUploadProgress] = useState(0);
     const [uploadMessage, setUploadMessage] = useState('Starting...');
     const basePath = `/${lang}/dashboard/admin/tours`;
@@ -156,7 +159,7 @@ export default function NewTourPage() {
     
             let mainImageUrl = data.mainImage;
             if (data.mainImage instanceof File) {
-                setUploadMessage('Subiendo imagen principal...');
+                setUploadMessage('Uploading main image...');
                 mainImageUrl = await uploadFile(data.mainImage, tourId);
             }
     
@@ -166,14 +169,14 @@ export default function NewTourPage() {
             if (newGalleryFiles.length > 0) {
                 const uploadedUrls: string[] = [];
                 for (let i = 0; i < newGalleryFiles.length; i++) {
-                    setUploadMessage(`Subiendo imagen de galería ${i + 1} de ${newGalleryFiles.length}...`);
+                    setUploadMessage(`Uploading gallery image ${i + 1} of ${newGalleryFiles.length}...`);
                     const url = await uploadFile(newGalleryFiles[i], tourId);
                     uploadedUrls.push(url);
                 }
                 galleryImageUrls = uploadedUrls;
             }
     
-            setUploadMessage('Guardando datos del tour...');
+            setUploadMessage('Saving tour data...');
             setUploadProgress(100);
     
             const tourData = {
@@ -198,19 +201,91 @@ export default function NewTourPage() {
             router.replace(newPath, { scroll: false });
     
             toast({
-                title: "¡Tour Creado!",
-                description: `El tour "${data.title.es}" ha sido creado exitosamente.`,
+                title: "Tour Created!",
+                description: `The tour "${data.title.en}" has been created successfully.`,
             });
     
         } catch (error: any) {
             console.error("Error creating tour:", error);
             toast({
                 variant: "destructive",
-                title: "Error al crear el tour",
-                description: error.message || "Ocurrió un problema, por favor intenta de nuevo.",
+                title: "Error creating tour",
+                description: error.message || "An issue occurred, please try again.",
             });
         } finally {
             setIsSubmitting(false);
+        }
+    };
+
+    const handleTranslate = async () => {
+        setIsTranslating(true);
+        try {
+            const values = form.getValues();
+            const sourceContent = {
+                title: values.title.en,
+                description: values.description.en,
+                overview: values.overview.en,
+                generalInfo: {
+                    cancellationPolicy: values.generalInfo.cancellationPolicy.en,
+                    bookingPolicy: values.generalInfo.bookingPolicy.en,
+                    guideInfo: values.generalInfo.guideInfo.en,
+                    pickupInfo: values.generalInfo.pickupInfo.en,
+                },
+                pickupPoint: {
+                    title: values.pickupPoint.title.en,
+                    description: values.pickupPoint.description.en,
+                },
+                itinerary: values.itinerary?.map(item => ({
+                    title: item.title.en,
+                    activities: item.activities?.en || [],
+                })) || [],
+            };
+
+            const result = await translateTourContent(sourceContent);
+            if (result.error || !result.data) {
+                throw new Error(result.error || "Failed to get translation data.");
+            }
+
+            const translations = result.data;
+
+            // Resetting form with new translations
+            const currentValues = form.getValues();
+            form.reset({
+                ...currentValues,
+                title: { ...currentValues.title, ...translations.title },
+                description: { ...currentValues.description, ...translations.description },
+                overview: { ...currentValues.overview, ...translations.overview },
+                generalInfo: {
+                    cancellationPolicy: { ...currentValues.generalInfo.cancellationPolicy, ...translations.generalInfo.cancellationPolicy },
+                    bookingPolicy: { ...currentValues.generalInfo.bookingPolicy, ...translations.generalInfo.bookingPolicy },
+                    guideInfo: { ...currentValues.generalInfo.guideInfo, ...translations.generalInfo.guideInfo },
+                    pickupInfo: { ...currentValues.generalInfo.pickupInfo, ...translations.generalInfo.pickupInfo },
+                },
+                pickupPoint: {
+                    title: { ...currentValues.pickupPoint.title, ...translations.pickupPoint.title },
+                    description: { ...currentValues.pickupPoint.description, ...translations.pickupPoint.description },
+                },
+                itinerary: currentValues.itinerary?.map((item, index) => ({
+                    ...item,
+                    title: { ...item.title, ...translations.itinerary[index]?.title },
+                    activities: { ...item.activities, ...translations.itinerary[index]?.activities },
+                })),
+            });
+            
+
+            toast({
+                title: "Translations Applied!",
+                description: "The content has been translated and fields have been updated.",
+            });
+        } catch (error: any) {
+            console.error("Translation failed:", error);
+            toast({
+                variant: "destructive",
+                title: "Translation Failed",
+                description: error.message || "Could not translate tour content.",
+            });
+        } finally {
+            setIsTranslating(false);
         }
     };
 
@@ -223,6 +298,8 @@ export default function NewTourPage() {
                         isSubmitting={isSubmitting}
                         basePath={basePath}
                         onSubmit={form.handleSubmit(onSubmit)} 
+                        onTranslate={handleTranslate}
+                        isTranslating={isTranslating}
                     />
                     <div className="flex-grow overflow-auto px-4 pt-6 md:px-8 lg:px-10">
                        <TourForm 

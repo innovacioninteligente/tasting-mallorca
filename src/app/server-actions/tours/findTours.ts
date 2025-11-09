@@ -2,7 +2,7 @@
 'use server';
 
 import { createSafeAction } from '@/app/server-actions/lib/safe-action';
-import { findAllTours as findAllToursUseCase, findTourById as findTourByIdUseCase } from '@/backend/tours/application/findTours';
+import { findAllTours as findAllToursUseCase, findTourById as findTourByIdUseCase, findTourBySlug } from '@/backend/tours/application/findTours';
 import { FirestoreTourRepository } from '@/backend/tours/infrastructure/firestore-tour.repository';
 import { Tour } from '@/backend/tours/domain/tour.model';
 import { User } from '@/backend/users/domain/user.model';
@@ -42,3 +42,24 @@ export const findAllTours = createSafeAction(
     }
   }
 );
+
+export const findTourBySlugAndLang = createSafeAction(
+    {
+        // Public action, no roles required
+    },
+    async (params: { slug: string; lang: string; }): Promise<{ data?: Tour; error?: string; }> => {
+        try {
+            const tourRepository = new FirestoreTourRepository();
+            const tour = await findTourBySlug(tourRepository, params.slug, params.lang);
+
+            if (!tour) {
+                return { error: 'Tour not found.' };
+            }
+            return { data: JSON.parse(JSON.stringify(tour)) };
+
+        } catch (error: any) {
+            return { error: error.message || 'Failed to fetch tour.' };
+        }
+    }
+);
+

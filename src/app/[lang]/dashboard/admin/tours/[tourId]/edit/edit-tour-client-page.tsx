@@ -1,3 +1,4 @@
+
 'use client';
 
 import { TourForm } from "@/app/[lang]/dashboard/admin/tours/new/tour-form";
@@ -13,12 +14,12 @@ import { useRouter } from "next/navigation";
 import { getStorage, ref as storageRef, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { initializeFirebase } from "@/firebase";
 import { updateTour } from "@/app/server-actions/tours/updateTour";
-import { createTour } from "@/app/server-actions/tours/createTour";
 import { useFormPersistence } from "@/hooks/use-form-persistence";
+import { translateTourContent } from "@/app/server-actions/tours/translateTour";
 
 const multilingualStringSchema = z.object({
-    es: z.string().min(1, { message: "El texto en español es requerido." }),
-    en: z.string().optional(),
+    es: z.string().optional(),
+    en: z.string().min(1, { message: "El texto en inglés es requerido." }),
     de: z.string().optional(),
     fr: z.string().optional(),
     nl: z.string().optional(),
@@ -103,6 +104,7 @@ export function EditTourClientPage({ initialData, lang }: EditTourClientPageProp
     const { toast } = useToast();
     const router = useRouter();
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isTranslating, setIsTranslating] = useState(false);
     const [uploadProgress, setUploadProgress] = useState(0);
     const [uploadMessage, setUploadMessage] = useState('Starting...');
 
@@ -119,7 +121,7 @@ export function EditTourClientPage({ initialData, lang }: EditTourClientPageProp
         mainImage: initialData.mainImage,
         galleryImages: initialData.galleryImages || [],
         itinerary: initialData.itinerary || [],
-        pickupPoint: initialData.pickupPoint || { title: { es: '' }, description: { es: '' } },
+        pickupPoint: initialData.pickupPoint || { title: { en: '' }, description: { en: '' } },
     };
 
     const form = useForm<TourFormValues>({
@@ -163,7 +165,7 @@ export function EditTourClientPage({ initialData, lang }: EditTourClientPageProp
     
             let mainImageUrl = data.mainImage;
             if (data.mainImage instanceof File) {
-                setUploadMessage('Subiendo imagen principal...');
+                setUploadMessage('Uploading main image...');
                 mainImageUrl = await uploadFile(data.mainImage, tourId!);
             }
     
@@ -174,7 +176,7 @@ export function EditTourClientPage({ initialData, lang }: EditTourClientPageProp
             if (newGalleryFiles.length > 0) {
                 const uploadedUrls: string[] = [];
                 for (let i = 0; i < newGalleryFiles.length; i++) {
-                    setUploadMessage(`Subiendo imagen de galería ${i + 1} de ${newGalleryFiles.length}...`);
+                    setUploadMessage(`Uploading gallery image ${i + 1} of ${newGalleryFiles.length}...`);
                     const url = await uploadFile(newGalleryFiles[i], tourId!);
                     uploadedUrls.push(url);
                 }
@@ -183,7 +185,7 @@ export function EditTourClientPage({ initialData, lang }: EditTourClientPageProp
                 galleryImageUrls = existingGalleryUrls;
             }
     
-            setUploadMessage('Guardando datos del tour...');
+            setUploadMessage('Saving tour data...');
             setUploadProgress(100);
     
             const tourData = {
@@ -204,16 +206,16 @@ export function EditTourClientPage({ initialData, lang }: EditTourClientPageProp
             clearPersistedData();
     
             toast({
-                title: "¡Tour Guardado!",
-                description: `El tour "${data.title.es}" ha sido guardado exitosamente.`,
+                title: "Tour Saved!",
+                description: `The tour "${data.title.en}" has been saved successfully.`,
             });
     
         } catch (error: any) {
             console.error("Error saving tour:", error);
             toast({
                 variant: "destructive",
-                title: "Error al guardar el tour",
-                description: error.message || "Ocurrió un problema, por favor intenta de nuevo.",
+                title: "Error saving tour",
+                description: error.message || "An issue occurred, please try again.",
             });
         } finally {
             setIsSubmitting(false);
@@ -221,6 +223,79 @@ export function EditTourClientPage({ initialData, lang }: EditTourClientPageProp
     };
     
     const basePath = `/${lang}/dashboard/admin/tours`;
+
+    const handleTranslate = async () => {
+        setIsTranslating(true);
+        try {
+            const values = form.getValues();
+            const sourceContent = {
+                title: values.title.en,
+                description: values.description.en,
+                overview: values.overview.en,
+                generalInfo: {
+                    cancellationPolicy: values.generalInfo.cancellationPolicy.en,
+                    bookingPolicy: values.generalInfo.bookingPolicy.en,
+                    guideInfo: values.generalInfo.guideInfo.en,
+                    pickupInfo: values.generalInfo.pickupInfo.en,
+                },
+                pickupPoint: {
+                    title: values.pickupPoint.title.en,
+                    description: values.pickupPoint.description.en,
+                },
+                itinerary: values.itinerary?.map(item => ({
+                    title: item.title.en,
+                    activities: item.activities?.en || [],
+                })) || [],
+            };
+
+            const result = await translateTourContent(sourceContent);
+            if (result.error || !result.data) {
+                throw new Error(result.error || "Failed to get translation data.");
+            }
+
+            const translations = result.data;
+
+            // Resetting form with new translations
+            const currentValues = form.getValues();
+            form.reset({
+                ...currentValues,
+                title: { ...currentValues.title, ...translations.title },
+                description: { ...currentValues.description, ...translations.description },
+                overview: { ...currentValues.overview, ...translations.overview },
+                generalInfo: {
+                    cancellationPolicy: { ...currentValues.generalInfo.cancellationPolicy, ...translations.generalInfo.cancellationPolicy },
+                    bookingPolicy: { ...currentValues.generalInfo.bookingPolicy, ...translations.generalInfo.bookingPolicy },
+                    guideInfo: { ...currentValues.generalInfo.guideInfo, ...translations.generalInfo.guideInfo },
+                    pickupInfo: { ...currentValues.generalInfo.pickupInfo, ...translations.generalInfo.pickupInfo },
+                },
+                pickupPoint: {
+                    title: { ...currentValues.pickupPoint.title, ...translations.pickupPoint.title },
+                    description: { ...currentValues.pickupPoint.description, ...translations.pickupPoint.description },
+                },
+                itinerary: currentValues.itinerary?.map((item, index) => ({
+                    ...item,
+                    title: { ...item.title, ...translations.itinerary[index]?.title },
+                    activities: { ...item.activities, ...translations.itinerary[index]?.activities },
+                })),
+            });
+            
+
+            toast({
+                title: "Translations Applied!",
+                description: "The content has been translated and fields have been updated.",
+            });
+        } catch (error: any) {
+            console.error("Translation failed:", error);
+            toast({
+                variant: "destructive",
+                title: "Translation Failed",
+                description: error.message || "Could not translate tour content.",
+            });
+        } finally {
+            setIsTranslating(false);
+        }
+    };
+
 
     return (
         <div className="flex flex-col h-full -mx-4 -pb-4 md:-mx-8 md:-pb-8 lg:-px-10 lg:-pb-10">
@@ -230,6 +305,8 @@ export function EditTourClientPage({ initialData, lang }: EditTourClientPageProp
                     initialData={initialData}
                     basePath={basePath}
                     onSubmit={form.handleSubmit(onSubmit)}
+                    onTranslate={handleTranslate}
+                    isTranslating={isTranslating}
                 />
                 <div className="flex-grow overflow-auto px-4 pt-6 md:px-8 lg:px-10">
                    <TourForm

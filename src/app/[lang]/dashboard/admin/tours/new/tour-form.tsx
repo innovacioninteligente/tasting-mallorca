@@ -1,3 +1,4 @@
+
 'use client';
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -25,8 +26,8 @@ import { UploadProgressDialog } from "@/components/upload-progress-dialog";
 import { Badge } from "@/components/ui/badge";
 
 const multilingualStringSchema = z.object({
-    es: z.string().min(1, { message: "El texto en español es requerido." }),
-    en: z.string().optional(),
+    es: z.string().optional(),
+    en: z.string().min(1, { message: "El texto en inglés es requerido." }),
     de: z.string().optional(),
     fr: z.string().optional(),
     nl: z.string().optional(),
@@ -139,7 +140,7 @@ function AvailabilityPeriodCreator({ onAddPeriod }: { onAddPeriod: (period: z.in
         return (
             <Button type="button" variant="outline" onClick={() => setShowCreator(true)} className="mt-4 w-full">
                 <PlusCircle className="mr-2 h-4 w-4" />
-                Añadir Nuevo Periodo de Disponibilidad
+                Add New Availability Period
             </Button>
         );
     }
@@ -148,7 +149,7 @@ function AvailabilityPeriodCreator({ onAddPeriod }: { onAddPeriod: (period: z.in
         <Card className="mt-4 bg-secondary/50 border-dashed">
             <CardContent className="p-4 space-y-4">
                 <div>
-                    <FormLabel>Rango de Fechas</FormLabel>
+                    <FormLabel>Date Range</FormLabel>
                     <Popover>
                         <PopoverTrigger asChild>
                             <Button
@@ -166,7 +167,7 @@ function AvailabilityPeriodCreator({ onAddPeriod }: { onAddPeriod: (period: z.in
                                         format(dateRange.from, "LLL dd, y")
                                     )
                                 ) : (
-                                    <span>Selecciona un rango</span>
+                                    <span>Select a range</span>
                                 )}
                             </Button>
                         </PopoverTrigger>
@@ -183,7 +184,7 @@ function AvailabilityPeriodCreator({ onAddPeriod }: { onAddPeriod: (period: z.in
                     </Popover>
                 </div>
                 <div>
-                    <FormLabel>Días Activos</FormLabel>
+                    <FormLabel>Active Days</FormLabel>
                     <div className="flex flex-wrap items-center gap-2 mt-1">
                         <ToggleGroup type="multiple" value={activeDays} onValueChange={setActiveDays} variant="outline" className="flex-wrap justify-start">
                             {weekDays.map((day, index) => (
@@ -198,14 +199,14 @@ function AvailabilityPeriodCreator({ onAddPeriod }: { onAddPeriod: (period: z.in
                             ))}
                         </ToggleGroup>
                         <Button type="button" variant="link" size="sm" onClick={handleToggleAllWeek} className="px-2">
-                           Toda la semana
+                           All week
                         </Button>
                     </div>
                 </div>
                 {error && <p className="text-sm font-medium text-destructive">{error}</p>}
                 <div className="flex gap-2 justify-end">
-                    <Button type="button" variant="ghost" onClick={() => setShowCreator(false)}>Cancelar</Button>
-                    <Button type="button" onClick={handleSavePeriod}>Guardar Periodo</Button>
+                    <Button type="button" variant="ghost" onClick={() => setShowCreator(false)}>Cancel</Button>
+                    <Button type="button" onClick={handleSavePeriod}>Save Period</Button>
                 </div>
             </CardContent>
         </Card>
@@ -233,7 +234,7 @@ function ActivityTagsInput({ field, fieldName }: { field: any, fieldName: string
     return (
         <div>
             <Input
-                placeholder="Añade una actividad y presiona Enter"
+                placeholder="Add an activity and press Enter"
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
                 onKeyDown={handleKeyDown}
@@ -284,7 +285,7 @@ export function TourForm({ initialData, isSubmitting, uploadProgress, uploadMess
   const allowDeposit = form.watch("allowDeposit");
 
   const langTabs = [
-    { code: 'en', name: 'English' },
+    { code: 'es', name: 'Español' },
     { code: 'de', name: 'Deutsch' },
     { code: 'fr', name: 'Français' },
     { code: 'nl', name: 'Nederlands' },
@@ -300,47 +301,47 @@ export function TourForm({ initialData, isSubmitting, uploadProgress, uploadMess
             <div className="pt-2">
                 <Tabs defaultValue="main" className="w-full">
                 <TabsList className="grid w-full grid-cols-4">
-                    <TabsTrigger value="main">Contenido e Imágenes</TabsTrigger>
-                    <TabsTrigger value="availability">Disponibilidad y Precio</TabsTrigger>
-                    <TabsTrigger value="itinerary">Itinerario</TabsTrigger>
-                    <TabsTrigger value="translations">Traducciones</TabsTrigger>
+                    <TabsTrigger value="main">Content & Images</TabsTrigger>
+                    <TabsTrigger value="availability">Availability & Pricing</TabsTrigger>
+                    <TabsTrigger value="itinerary">Itinerary</TabsTrigger>
+                    <TabsTrigger value="translations">Translations</TabsTrigger>
                 </TabsList>
 
                 <TabsContent value="main" className="mt-6">
                     <Card>
                     <CardHeader>
-                        <CardTitle>Contenido Principal (Español)</CardTitle>
+                        <CardTitle>Main Content (English)</CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-6">
                         <FormField
                         control={form.control}
-                        name="title.es"
+                        name="title.en"
                         render={({ field }) => (
                             <FormItem>
-                            <FormLabel>Título del Tour</FormLabel>
-                            <FormControl><Input placeholder="Ej: Vistas de Tramuntana y Corazón de la Isla" {...field} /></FormControl>
+                            <FormLabel>Tour Title</FormLabel>
+                            <FormControl><Input placeholder="e.g., Tramuntana Views & Island Heart" {...field} /></FormControl>
                             <FormMessage />
                             </FormItem>
                         )}
                         />
                         <FormField
                         control={form.control}
-                        name="slug.es"
+                        name="slug.en"
                         render={({ field }) => (
                             <FormItem>
-                            <FormLabel>Slug (URL amigable)</FormLabel>
-                            <FormControl><Input placeholder="ej-vistas-tramuntana-corazon-isla" {...field} /></FormControl>
-                            <FormDescription>Esto formará parte de la URL. Usar solo letras minúsculas, números y guiones.</FormDescription>
+                            <FormLabel>Slug (URL-friendly)</FormLabel>
+                            <FormControl><Input placeholder="e-g-tramuntana-views-island-heart" {...field} /></FormControl>
+                            <FormDescription>This will be part of the URL. Use lowercase letters, numbers, and hyphens only.</FormDescription>
                             <FormMessage />
                             </FormItem>
                         )}
                         />
                         <FormField
                         control={form.control}
-                        name="description.es"
+                        name="description.en"
                         render={({ field }) => (
                             <FormItem>
-                            <FormLabel>Descripción Corta (para tarjetas)</FormLabel>
+                            <FormLabel>Short Description (for cards)</FormLabel>
                             <FormControl><Textarea rows={3} {...field} /></FormControl>
                             <FormMessage />
                             </FormItem>
@@ -348,10 +349,10 @@ export function TourForm({ initialData, isSubmitting, uploadProgress, uploadMess
                         />
                         <FormField
                         control={form.control}
-                        name="overview.es"
+                        name="overview.en"
                         render={({ field }) => (
                             <FormItem>
-                            <FormLabel>Descripción General (página de detalle)</FormLabel>
+                            <FormLabel>General Overview (detail page)</FormLabel>
                             <FormControl><Textarea rows={6} {...field} /></FormControl>
                             <FormMessage />
                             </FormItem>
@@ -362,49 +363,49 @@ export function TourForm({ initialData, isSubmitting, uploadProgress, uploadMess
 
                     <Card className="mt-6">
                         <CardHeader>
-                            <CardTitle>Información General (Español)</CardTitle>
+                            <CardTitle>General Information (English)</CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-6">
                             <FormField
                                 control={form.control}
-                                name="generalInfo.cancellationPolicy.es"
+                                name="generalInfo.cancellationPolicy.en"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Política de Cancelación</FormLabel>
-                                        <FormControl><Textarea rows={2} placeholder="Ej: Cancela hasta 24 horas antes para un reembolso completo" {...field} /></FormControl>
+                                        <FormLabel>Cancellation Policy</FormLabel>
+                                        <FormControl><Textarea rows={2} placeholder="e.g., Cancel up to 24 hours in advance for a full refund" {...field} /></FormControl>
                                         <FormMessage />
                                     </FormItem>
                                 )}
                             />
                             <FormField
                                 control={form.control}
-                                name="generalInfo.bookingPolicy.es"
+                                name="generalInfo.bookingPolicy.en"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Política de Reserva</FormLabel>
-                                        <FormControl><Textarea rows={2} placeholder="Ej: Planes flexibles: reserva tu plaza inmediatamente, sin que se te cobre hoy." {...field} /></FormControl>
+                                        <FormLabel>Booking Policy</FormLabel>
+                                        <FormControl><Textarea rows={2} placeholder="e.g., Flexible plans: book your spot immediately, without being charged today." {...field} /></FormControl>
                                         <FormMessage />
                                     </FormItem>
                                 )}
                             />
                             <FormField
                                 control={form.control}
-                                name="generalInfo.guideInfo.es"
+                                name="generalInfo.guideInfo.en"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Información del Guía</FormLabel>
-                                        <FormControl><Textarea rows={1} placeholder="Ej: Inglés, Alemán, Francés, Neerlandés" {...field} /></FormControl>
+                                        <FormLabel>Guide Information</FormLabel>
+                                        <FormControl><Textarea rows={1} placeholder="e.g., English, German, French, Dutch" {...field} /></FormControl>
                                         <FormMessage />
                                     </FormItem>
                                 )}
                             />
                             <FormField
                                 control={form.control}
-                                name="generalInfo.pickupInfo.es"
+                                name="generalInfo.pickupInfo.en"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Información de Recogida</FormLabel>
-                                        <FormControl><Textarea rows={4} placeholder="Describe los detalles del servicio de recogida..." {...field} /></FormControl>
+                                        <FormLabel>Pickup Information</FormLabel>
+                                        <FormControl><Textarea rows={4} placeholder="Describe the details of the pickup service..." {...field} /></FormControl>
                                         <FormMessage />
                                     </FormItem>
                                 )}
@@ -414,7 +415,7 @@ export function TourForm({ initialData, isSubmitting, uploadProgress, uploadMess
 
                     <Card className="mt-6">
                         <CardHeader>
-                            <CardTitle>Imágenes del Tour</CardTitle>
+                            <CardTitle>Tour Images</CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-8">
                             <FormField
@@ -422,8 +423,8 @@ export function TourForm({ initialData, isSubmitting, uploadProgress, uploadMess
                                 name="mainImage"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Imagen Principal</FormLabel>
-                                        <FormDescription>Esta es la imagen que se mostrará en las tarjetas de tours.</FormDescription>
+                                        <FormLabel>Main Image</FormLabel>
+                                        <FormDescription>This is the image that will be displayed on the tour cards.</FormDescription>
                                         <FormControl>
                                             <ImageUpload
                                                 value={field.value ? [field.value] : []}
@@ -441,8 +442,8 @@ export function TourForm({ initialData, isSubmitting, uploadProgress, uploadMess
                                 name="galleryImages"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Galería de Imágenes</FormLabel>
-                                        <FormDescription>Estas imágenes se mostrarán en la página de detalle del tour.</FormDescription>
+                                        <FormLabel>Image Gallery</FormLabel>
+                                        <FormDescription>These images will be displayed on the tour detail page.</FormDescription>
                                         <FormControl>
                                             <ImageUpload
                                                 value={field.value || []}
@@ -464,7 +465,7 @@ export function TourForm({ initialData, isSubmitting, uploadProgress, uploadMess
 
                 <TabsContent value="availability" className="mt-6">
                     <Card>
-                    <CardHeader><CardTitle>Disponibilidad y Precios</CardTitle></CardHeader>
+                    <CardHeader><CardTitle>Availability & Pricing</CardTitle></CardHeader>
                     <CardContent className="space-y-6">
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                             <FormField
@@ -472,8 +473,8 @@ export function TourForm({ initialData, isSubmitting, uploadProgress, uploadMess
                             name="price"
                             render={({ field }) => (
                                 <FormItem>
-                                <FormLabel>Precio Base (€)</FormLabel>
-                                <FormControl><Input type="number" placeholder="Ej: 120" {...field} /></FormControl>
+                                <FormLabel>Base Price (€)</FormLabel>
+                                <FormControl><Input type="number" placeholder="e.g., 120" {...field} /></FormControl>
                                 <FormMessage />
                                 </FormItem>
                             )}
@@ -483,8 +484,8 @@ export function TourForm({ initialData, isSubmitting, uploadProgress, uploadMess
                             name="durationHours"
                             render={({ field }) => (
                                 <FormItem>
-                                <FormLabel>Duración (horas)</FormLabel>
-                                <FormControl><Input type="number" placeholder="Ej: 8" {...field} /></FormControl>
+                                <FormLabel>Duration (hours)</FormLabel>
+                                <FormControl><Input type="number" placeholder="e.g., 8" {...field} /></FormControl>
                                 <FormMessage />
                                 </FormItem>
                             )}
@@ -494,16 +495,16 @@ export function TourForm({ initialData, isSubmitting, uploadProgress, uploadMess
                                 name="region"
                                 render={({ field }) => (
                                     <FormItem>
-                                    <FormLabel>Región del Tour</FormLabel>
+                                    <FormLabel>Tour Region</FormLabel>
                                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                                         <FormControl>
-                                        <SelectTrigger><SelectValue placeholder="Selecciona una región" /></SelectTrigger>
+                                        <SelectTrigger><SelectValue placeholder="Select a region" /></SelectTrigger>
                                         </FormControl>
                                         <SelectContent>
-                                            <SelectItem value="North">Norte</SelectItem>
-                                            <SelectItem value="East">Este</SelectItem>
-                                            <SelectItem value="South">Sur</SelectItem>
-                                            <SelectItem value="West">Oeste</SelectItem>
+                                            <SelectItem value="North">North</SelectItem>
+                                            <SelectItem value="East">East</SelectItem>
+                                            <SelectItem value="South">South</SelectItem>
+                                            <SelectItem value="West">West</SelectItem>
                                             <SelectItem value="Central">Central</SelectItem>
                                         </SelectContent>
                                     </Select>
@@ -518,8 +519,8 @@ export function TourForm({ initialData, isSubmitting, uploadProgress, uploadMess
                             render={({ field }) => (
                                 <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
                                 <div className="space-y-0.5">
-                                    <FormLabel className="text-base">Tour Destacado</FormLabel>
-                                    <FormDescription>Marcar si este tour debe aparecer en la página de inicio.</FormDescription>
+                                    <FormLabel className="text-base">Featured Tour</FormLabel>
+                                    <FormDescription>Check if this tour should appear on the homepage.</FormDescription>
                                 </div>
                                 <FormControl><Switch checked={field.value} onCheckedChange={field.onChange} /></FormControl>
                                 </FormItem>
@@ -531,8 +532,8 @@ export function TourForm({ initialData, isSubmitting, uploadProgress, uploadMess
                             render={({ field }) => (
                                 <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
                                 <div className="space-y-0.5">
-                                    <FormLabel className="text-base">Permitir reserva con depósito</FormLabel>
-                                    <FormDescription>Permitir a los clientes pagar un depósito para reservar, y el resto en el lugar.</FormDescription>
+                                    <FormLabel className="text-base">Allow booking with deposit</FormLabel>
+                                    <FormDescription>Allow customers to pay a deposit to book, and the rest on site.</FormDescription>
                                 </div>
                                 <FormControl><Switch checked={field.value} onCheckedChange={field.onChange} /></FormControl>
                                 </FormItem>
@@ -544,16 +545,16 @@ export function TourForm({ initialData, isSubmitting, uploadProgress, uploadMess
                                 name="depositPrice"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Precio del Depósito (€)</FormLabel>
-                                        <FormControl><Input type="number" placeholder="Ej: 20" {...field} /></FormControl>
-                                        <FormDescription>El cliente pagará esta cantidad para reservar. El resto se paga en el lugar.</FormDescription>
+                                        <FormLabel>Deposit Price (€)</FormLabel>
+                                        <FormControl><Input type="number" placeholder="e.g., 20" {...field} /></FormControl>
+                                        <FormDescription>The customer will pay this amount to book. The rest is paid on site.</FormDescription>
                                         <FormMessage />
                                     </FormItem>
                                 )}
                                 />
                         )}
                         <div>
-                        <h3 className="text-lg font-medium mb-2">Periodos de Disponibilidad</h3>
+                        <h3 className="text-lg font-medium mb-2">Availability Periods</h3>
                         <FormMessage>{form.formState.errors.availabilityPeriods?.root?.message}</FormMessage>
                         <div className="space-y-3">
                             {fields.map((field, index) => (
@@ -586,7 +587,7 @@ export function TourForm({ initialData, isSubmitting, uploadProgress, uploadMess
 
                 <TabsContent value="itinerary" className="mt-6">
                     <Card>
-                        <CardHeader><CardTitle>Constructor de Itinerario</CardTitle></CardHeader>
+                        <CardHeader><CardTitle>Itinerary Builder</CardTitle></CardHeader>
                         <CardContent>
                              <div className="relative">
                                 <div className="absolute left-6 top-0 h-full w-1 bg-border -translate-x-1/2"></div>
@@ -601,27 +602,27 @@ export function TourForm({ initialData, isSubmitting, uploadProgress, uploadMess
                                         <Card className="shadow-md border border-primary/50">
                                             <CardHeader className="flex-row items-center gap-3 p-4">
                                                 <MapPin className="h-6 w-6 text-primary flex-shrink-0" />
-                                                <CardTitle className="text-xl">Punto de Recogida</CardTitle>
+                                                <CardTitle className="text-xl">Pickup Point</CardTitle>
                                             </CardHeader>
                                             <CardContent className="p-4 pt-0 space-y-4">
                                                 <FormField
                                                     control={form.control}
-                                                    name="pickupPoint.title.es"
+                                                    name="pickupPoint.title.en"
                                                     render={({ field }) => (
                                                         <FormItem>
-                                                            <FormLabel>Título Principal</FormLabel>
-                                                            <FormControl><Input placeholder="Ej: 41 opciones de lugar de recogida" {...field} /></FormControl>
+                                                            <FormLabel>Main Title</FormLabel>
+                                                            <FormControl><Input placeholder="e.g., 41 pickup location options" {...field} /></FormControl>
                                                             <FormMessage />
                                                         </FormItem>
                                                     )}
                                                 />
                                                 <FormField
                                                     control={form.control}
-                                                    name="pickupPoint.description.es"
+                                                    name="pickupPoint.description.en"
                                                     render={({ field }) => (
                                                         <FormItem>
-                                                            <FormLabel>Descripción / Lista de Puntos</FormLabel>
-                                                            <FormControl><Textarea rows={4} placeholder="Lista detallada de todos los puntos de recogida..." {...field} /></FormControl>
+                                                            <FormLabel>Description / List of Points</FormLabel>
+                                                            <FormControl><Textarea rows={4} placeholder="Detailed list of all pickup points..." {...field} /></FormControl>
                                                             <FormMessage />
                                                         </FormItem>
                                                     )}
@@ -653,11 +654,11 @@ export function TourForm({ initialData, isSubmitting, uploadProgress, uploadMess
                                                              <div className="flex-1 grid grid-cols-1 md:grid-cols-3 gap-4">
                                                                 <FormField
                                                                     control={form.control}
-                                                                    name={`itinerary.${index}.title.es`}
+                                                                    name={`itinerary.${index}.title.en`}
                                                                     render={({ field }) => (
                                                                         <FormItem className="md:col-span-2">
-                                                                            <FormLabel>Título (Parada o Tramo)</FormLabel>
-                                                                            <FormControl><Input placeholder="Ej: Viaje a Valldemossa" {...field} /></FormControl>
+                                                                            <FormLabel>Title (Stop or Leg)</FormLabel>
+                                                                            <FormControl><Input placeholder="e.g., Journey to Valldemossa" {...field} /></FormControl>
                                                                             <FormMessage />
                                                                         </FormItem>
                                                                     )}
@@ -667,8 +668,8 @@ export function TourForm({ initialData, isSubmitting, uploadProgress, uploadMess
                                                                     name={`itinerary.${index}.duration`}
                                                                     render={({ field }) => (
                                                                         <FormItem>
-                                                                            <FormLabel>Duración</FormLabel>
-                                                                            <FormControl><Input placeholder="Ej: 45 minutos" {...field} /></FormControl>
+                                                                            <FormLabel>Duration</FormLabel>
+                                                                            <FormControl><Input placeholder="e.g., 45 minutes" {...field} /></FormControl>
                                                                             <FormMessage />
                                                                         </FormItem>
                                                                     )}
@@ -678,11 +679,11 @@ export function TourForm({ initialData, isSubmitting, uploadProgress, uploadMess
                                                                     name={`itinerary.${index}.icon`}
                                                                     render={({ field: selectField }) => (
                                                                     <FormItem>
-                                                                        <FormLabel>Icono</FormLabel>
+                                                                        <FormLabel>Icon</FormLabel>
                                                                         <Select onValueChange={selectField.onChange} defaultValue={selectField.value}>
                                                                             <FormControl>
                                                                                 <SelectTrigger>
-                                                                                    <SelectValue placeholder="Selecciona un icono" />
+                                                                                    <SelectValue placeholder="Select an icon" />
                                                                                 </SelectTrigger>
                                                                             </FormControl>
                                                                             <SelectContent>
@@ -704,12 +705,12 @@ export function TourForm({ initialData, isSubmitting, uploadProgress, uploadMess
                                                                     <div className="md:col-span-3">
                                                                         <FormField
                                                                             control={form.control}
-                                                                            name={`itinerary.${index}.activities.es`}
+                                                                            name={`itinerary.${index}.activities.en`}
                                                                             render={({ field: activityField }) => (
                                                                                 <FormItem>
-                                                                                    <FormLabel>Actividades (Etiquetas)</FormLabel>
+                                                                                    <FormLabel>Activities (Tags)</FormLabel>
                                                                                     <FormControl>
-                                                                                        <ActivityTagsInput field={activityField} fieldName={`itinerary.${index}.activities.es`} />
+                                                                                        <ActivityTagsInput field={activityField} fieldName={`itinerary.${index}.activities.en`} />
                                                                                     </FormControl>
                                                                                     <FormMessage />
                                                                                 </FormItem>
@@ -719,8 +720,8 @@ export function TourForm({ initialData, isSubmitting, uploadProgress, uploadMess
                                                                 )}
                                                             </div>
                                                             <div className="flex justify-end gap-2">
-                                                                <Button type="button" variant="ghost" size="sm" onClick={() => setEditingItineraryId(null)}>Cancelar</Button>
-                                                                <Button type="button" size="sm" onClick={() => setEditingItineraryId(null)}><Check className="mr-2 h-4 w-4"/>Guardar</Button>
+                                                                <Button type="button" variant="ghost" size="sm" onClick={() => setEditingItineraryId(null)}>Cancel</Button>
+                                                                <Button type="button" size="sm" onClick={() => setEditingItineraryId(null)}><Check className="mr-2 h-4 w-4"/>Save</Button>
                                                             </div>
                                                         </CardContent>
                                                      </Card>
@@ -732,12 +733,12 @@ export function TourForm({ initialData, isSubmitting, uploadProgress, uploadMess
                                                                     {iconMap[field.icon as keyof typeof iconMap]}
                                                                     <div>
                                                                         <p className="font-semibold text-primary text-sm">{field.duration}</p>
-                                                                        <h3 className="text-lg font-bold">{field.title.es || 'Sin título'}</h3>
+                                                                        <h3 className="text-lg font-bold">{field.title.en || 'Untitled'}</h3>
                                                                     </div>
                                                                 </div>
-                                                                {field.activities?.es && field.activities.es.length > 0 && (
+                                                                {field.activities?.en && field.activities.en.length > 0 && (
                                                                     <div className="mt-4 flex flex-wrap gap-2 pl-9">
-                                                                        {field.activities.es.map((activity, i) => (
+                                                                        {field.activities.en.map((activity, i) => (
                                                                             <Badge key={i} variant="secondary">{activity}</Badge>
                                                                         ))}
                                                                     </div>
@@ -752,7 +753,7 @@ export function TourForm({ initialData, isSubmitting, uploadProgress, uploadMess
                                                         <div className="pt-3 flex items-center gap-3 group">
                                                             {iconMap[field.icon as keyof typeof iconMap] || <Bus className="h-6 w-6 text-muted-foreground" />}
                                                             <p className="font-semibold text-muted-foreground">
-                                                                {field.title.es || 'Tramo de viaje'} ({field.duration})
+                                                                {field.title.en || 'Travel leg'} ({field.duration})
                                                             </p>
                                                             <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                                                                 <Button type="button" size="icon" variant="ghost" className="h-7 w-7" onClick={() => setEditingItineraryId(field.id)}><Edit className="h-4 w-4" /></Button>
@@ -770,17 +771,17 @@ export function TourForm({ initialData, isSubmitting, uploadProgress, uploadMess
                             <div className="flex gap-4 mt-8">
                                 <Button type="button" variant="outline" className="w-full" onClick={() => {
                                     const newId = crypto.randomUUID();
-                                    appendItinerary({ id: newId, type: 'stop', icon: 'MapPin', duration: '', title: { es: '' }, activities: { es: [] } });
+                                    appendItinerary({ id: newId, type: 'stop', icon: 'MapPin', duration: '', title: { en: '' }, activities: { en: [] } });
                                     setEditingItineraryId(newId);
                                 }}>
-                                    <PlusCircle className="mr-2 h-4 w-4" /> Añadir Parada
+                                    <PlusCircle className="mr-2 h-4 w-4" /> Add Stop
                                 </Button>
                                 <Button type="button" variant="secondary" className="w-full" onClick={() => {
                                     const newId = crypto.randomUUID();
-                                    appendItinerary({ id: newId, type: 'travel', icon: 'Bus', duration: '', title: { es: '' }, activities: { es: [] } });
+                                    appendItinerary({ id: newId, type: 'travel', icon: 'Bus', duration: '', title: { en: '' }, activities: { en: [] } });
                                     setEditingItineraryId(newId);
                                 }}>
-                                    <PlusCircle className="mr-2 h-4 w-4" /> Añadir Tramo de Viaje
+                                    <PlusCircle className="mr-2 h-4 w-4" /> Add Travel Leg
                                 </Button>
                             </div>
                         </CardContent>
@@ -789,9 +790,9 @@ export function TourForm({ initialData, isSubmitting, uploadProgress, uploadMess
 
                 <TabsContent value="translations" className="mt-6">
                     <Card>
-                        <CardHeader><CardTitle>Traducciones</CardTitle></CardHeader>
+                        <CardHeader><CardTitle>Translations</CardTitle></CardHeader>
                         <CardContent>
-                            <Tabs defaultValue="en" className="w-full">
+                            <Tabs defaultValue="es" className="w-full">
                                 <TabsList className="grid w-full grid-cols-4">
                                     {langTabs.map(lang => <TabsTrigger key={lang.code} value={lang.code}>{lang.name}</TabsTrigger>)}
                                 </TabsList>
@@ -799,10 +800,10 @@ export function TourForm({ initialData, isSubmitting, uploadProgress, uploadMess
                                     <TabsContent key={lang.code} value={lang.code} className="mt-4 space-y-4">
                                         <FormField
                                             control={form.control}
-                                            name={`title.${lang.code as 'en' | 'de' | 'fr' | 'nl'}`}
+                                            name={`title.${lang.code as 'es' | 'de' | 'fr' | 'nl'}`}
                                             render={({ field }) => (
                                                 <FormItem>
-                                                <FormLabel>Título ({lang.code.toUpperCase()})</FormLabel>
+                                                <FormLabel>Title ({lang.code.toUpperCase()})</FormLabel>
                                                 <FormControl><Input {...field} /></FormControl>
                                                 <FormMessage />
                                                 </FormItem>
@@ -810,10 +811,10 @@ export function TourForm({ initialData, isSubmitting, uploadProgress, uploadMess
                                         />
                                         <FormField
                                             control={form.control}
-                                            name={`description.${lang.code as 'en' | 'de' | 'fr' | 'nl'}`}
+                                            name={`description.${lang.code as 'es' | 'de' | 'fr' | 'nl'}`}
                                             render={({ field }) => (
                                                 <FormItem>
-                                                <FormLabel>Descripción Corta ({lang.code.toUpperCase()})</FormLabel>
+                                                <FormLabel>Short Description ({lang.code.toUpperCase()})</FormLabel>
                                                 <FormControl><Textarea rows={2} {...field} /></FormControl>
                                                 <FormMessage />
                                                 </FormItem>
@@ -821,10 +822,10 @@ export function TourForm({ initialData, isSubmitting, uploadProgress, uploadMess
                                         />
                                         <FormField
                                             control={form.control}
-                                            name={`overview.${lang.code as 'en' | 'de' | 'fr' | 'nl'}`}
+                                            name={`overview.${lang.code as 'es' | 'de' | 'fr' | 'nl'}`}
                                             render={({ field }) => (
                                                 <FormItem>
-                                                <FormLabel>Descripción General ({lang.code.toUpperCase()})</FormLabel>
+                                                <FormLabel>General Overview ({lang.code.toUpperCase()})</FormLabel>
                                                 <FormControl><Textarea rows={5} {...field} /></FormControl>
                                                 <FormMessage />
                                                 </FormItem>
@@ -832,10 +833,10 @@ export function TourForm({ initialData, isSubmitting, uploadProgress, uploadMess
                                         />
                                         <FormField
                                             control={form.control}
-                                            name={`generalInfo.cancellationPolicy.${lang.code as 'en' | 'de' | 'fr' | 'nl'}`}
+                                            name={`generalInfo.cancellationPolicy.${lang.code as 'es' | 'de' | 'fr' | 'nl'}`}
                                             render={({ field }) => (
                                                 <FormItem>
-                                                    <FormLabel>Política de Cancelación ({lang.code.toUpperCase()})</FormLabel>
+                                                    <FormLabel>Cancellation Policy ({lang.code.toUpperCase()})</FormLabel>
                                                     <FormControl><Textarea rows={2} {...field} /></FormControl>
                                                     <FormMessage />
                                                 </FormItem>
@@ -843,10 +844,10 @@ export function TourForm({ initialData, isSubmitting, uploadProgress, uploadMess
                                         />
                                         <FormField
                                             control={form.control}
-                                            name={`generalInfo.bookingPolicy.${lang.code as 'en' | 'de' | 'fr' | 'nl'}`}
+                                            name={`generalInfo.bookingPolicy.${lang.code as 'es' | 'de' | 'fr' | 'nl'}`}
                                             render={({ field }) => (
                                                 <FormItem>
-                                                    <FormLabel>Política de Reserva ({lang.code.toUpperCase()})</FormLabel>
+                                                    <FormLabel>Booking Policy ({lang.code.toUpperCase()})</FormLabel>
                                                     <FormControl><Textarea rows={2} {...field} /></FormControl>
                                                     <FormMessage />
                                                 </FormItem>
@@ -854,10 +855,10 @@ export function TourForm({ initialData, isSubmitting, uploadProgress, uploadMess
                                         />
                                         <FormField
                                             control={form.control}
-                                            name={`generalInfo.guideInfo.${lang.code as 'en' | 'de' | 'fr' | 'nl'}`}
+                                            name={`generalInfo.guideInfo.${lang.code as 'es' | 'de' | 'fr' | 'nl'}`}
                                             render={({ field }) => (
                                                 <FormItem>
-                                                    <FormLabel>Información del Guía ({lang.code.toUpperCase()})</FormLabel>
+                                                    <FormLabel>Guide Information ({lang.code.toUpperCase()})</FormLabel>
                                                     <FormControl><Textarea rows={1} {...field} /></FormControl>
                                                     <FormMessage />
                                                 </FormItem>
@@ -865,10 +866,10 @@ export function TourForm({ initialData, isSubmitting, uploadProgress, uploadMess
                                         />
                                         <FormField
                                             control={form.control}
-                                            name={`generalInfo.pickupInfo.${lang.code as 'en' | 'de' | 'fr' | 'nl'}`}
+                                            name={`generalInfo.pickupInfo.${lang.code as 'es' | 'de' | 'fr' | 'nl'}`}
                                             render={({ field }) => (
                                                 <FormItem>
-                                                    <FormLabel>Información de Recogida ({lang.code.toUpperCase()})</FormLabel>
+                                                    <FormLabel>Pickup Information ({lang.code.toUpperCase()})</FormLabel>
                                                     <FormControl><Textarea rows={4} {...field} /></FormControl>
                                                     <FormMessage />
                                                 </FormItem>
@@ -876,13 +877,13 @@ export function TourForm({ initialData, isSubmitting, uploadProgress, uploadMess
                                         />
 
                                         <div className="p-4 border rounded-md">
-                                            <p className="text-sm font-medium text-muted-foreground mb-2">Punto de Recogida</p>
+                                            <p className="text-sm font-medium text-muted-foreground mb-2">Pickup Point</p>
                                             <FormField
                                                 control={form.control}
-                                                name={`pickupPoint.title.${lang.code as 'en' | 'de' | 'fr' | 'nl'}`}
+                                                name={`pickupPoint.title.${lang.code as 'es' | 'de' | 'fr' | 'nl'}`}
                                                 render={({ field }) => (
                                                     <FormItem>
-                                                        <FormLabel>Título Principal ({lang.code.toUpperCase()})</FormLabel>
+                                                        <FormLabel>Main Title ({lang.code.toUpperCase()})</FormLabel>
                                                         <FormControl><Input {...field} /></FormControl>
                                                         <FormMessage />
                                                     </FormItem>
@@ -890,10 +891,10 @@ export function TourForm({ initialData, isSubmitting, uploadProgress, uploadMess
                                             />
                                             <FormField
                                                 control={form.control}
-                                                name={`pickupPoint.description.${lang.code as 'en' | 'de' | 'fr' | 'nl'}`}
+                                                name={`pickupPoint.description.${lang.code as 'es' | 'de' | 'fr' | 'nl'}`}
                                                 render={({ field }) => (
                                                     <FormItem className="mt-4">
-                                                        <FormLabel>Descripción ({lang.code.toUpperCase()})</FormLabel>
+                                                        <FormLabel>Description ({lang.code.toUpperCase()})</FormLabel>
                                                         <FormControl><Textarea rows={3} {...field} /></FormControl>
                                                         <FormMessage />
                                                     </FormItem>
@@ -903,13 +904,13 @@ export function TourForm({ initialData, isSubmitting, uploadProgress, uploadMess
 
                                         {Array.isArray(watchedItinerary) && watchedItinerary.map((_, index) => (
                                             <div key={index} className="p-4 border rounded-md">
-                                                <p className="text-sm font-medium text-muted-foreground mb-2">Itinerario - Ítem {index + 1}</p>
+                                                <p className="text-sm font-medium text-muted-foreground mb-2">Itinerary - Item {index + 1}</p>
                                                 <FormField
                                                     control={form.control}
-                                                    name={`itinerary.${index}.title.${lang.code as 'en' | 'de' | 'fr' | 'nl'}`}
+                                                    name={`itinerary.${index}.title.${lang.code as 'es' | 'de' | 'fr' | 'nl'}`}
                                                     render={({ field }) => (
                                                         <FormItem>
-                                                            <FormLabel>Título ({lang.code.toUpperCase()})</FormLabel>
+                                                            <FormLabel>Title ({lang.code.toUpperCase()})</FormLabel>
                                                             <FormControl><Input {...field} /></FormControl>
                                                             <FormMessage />
                                                         </FormItem>
@@ -918,12 +919,12 @@ export function TourForm({ initialData, isSubmitting, uploadProgress, uploadMess
                                                 {form.watch(`itinerary.${index}.type`) === 'stop' && (
                                                     <FormField
                                                         control={form.control}
-                                                        name={`itinerary.${index}.activities.${lang.code as 'en' | 'de' | 'fr' | 'nl'}`}
+                                                        name={`itinerary.${index}.activities.${lang.code as 'es' | 'de' | 'fr' | 'nl'}`}
                                                         render={({ field }) => (
                                                             <FormItem className="mt-4">
-                                                                <FormLabel>Actividades ({lang.code.toUpperCase()})</FormLabel>
+                                                                <FormLabel>Activities ({lang.code.toUpperCase()})</FormLabel>
                                                                 <FormControl>
-                                                                    <ActivityTagsInput field={field} fieldName={`itinerary.${index}.activities.${lang.code as 'en' | 'de' | 'fr' | 'nl'}`} />
+                                                                    <ActivityTagsInput field={field} fieldName={`itinerary.${index}.activities.${lang.code as 'es' | 'de' | 'fr' | 'nl'}`} />
                                                                 </FormControl>
                                                                 <FormMessage />
                                                             </FormItem>
@@ -935,7 +936,7 @@ export function TourForm({ initialData, isSubmitting, uploadProgress, uploadMess
 
                                         <FormField
                                             control={form.control}
-                                            name={`slug.${lang.code as 'en' | 'de' | 'fr' | 'nl'}`}
+                                            name={`slug.${lang.code as 'es' | 'de' | 'fr' | 'nl'}`}
                                             render={({ field }) => (
                                                 <FormItem>
                                                 <FormLabel>Slug ({lang.code.toUpperCase()})</FormLabel>

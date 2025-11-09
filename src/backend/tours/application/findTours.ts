@@ -8,6 +8,14 @@ export async function findTourById(
   return tourRepository.findById(id);
 }
 
+export async function findTourBySlug(
+  tourRepository: TourRepository,
+  slug: string,
+  lang: string
+): Promise<Tour | null> {
+    return tourRepository.findBySlug(slug, lang);
+}
+
 export async function findAllTours(
   tourRepository: TourRepository
 ): Promise<Tour[]> {
