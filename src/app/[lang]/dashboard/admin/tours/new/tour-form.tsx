@@ -1,9 +1,8 @@
 
-
 'use client';
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm, useFieldArray } from "react-hook-form";
+import { useForm, useFieldArray, FormProvider } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -22,7 +21,7 @@ import { getStorage, ref as storageRef, uploadBytesResumable, getDownloadURL, de
 import React, { useState, useEffect } from "react";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { CalendarIcon, Loader2, PlusCircle, Trash2, ArrowLeft } from "lucide-react";
+import { CalendarIcon, PlusCircle, Trash2 } from "lucide-react";
 import { DateRange } from "react-day-picker";
 import { addDays, format, parseISO } from "date-fns";
 import { cn } from "@/lib/utils";
@@ -30,7 +29,7 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Progress } from "@/components/ui/progress";
 import { initializeFirebase } from "@/firebase";
 import { Tour } from "@/backend/tours/domain/tour.model";
-import Link from "next/link";
+import { TourFormHeader } from "./tour-form-header";
 
 const MAX_FILE_SIZE = 100 * 1024 * 1024; // 100MB
 const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
@@ -295,14 +294,12 @@ export function TourForm({ initialData }: TourFormProps) {
         let mainImageUrl = data.mainImage;
         let galleryImageUrls = data.galleryImages || [];
 
-        // Upload main image if it's a File object
         if (data.mainImage instanceof File) {
             setUploadProgress(10);
             mainImageUrl = await uploadFile(data.mainImage, currentTourId);
             setUploadProgress(30);
         }
 
-        // Upload gallery images if they are File objects
         const newGalleryFiles = (data.galleryImages as any[]).filter(img => img instanceof File);
         const existingGalleryUrls = (data.galleryImages as any[]).filter(img => typeof img === 'string');
         
@@ -324,9 +321,9 @@ export function TourForm({ initialData }: TourFormProps) {
         };
         
         let result;
-        if (initialData) { // If we have initialData, we are editing
+        if (initialData || tourId) { 
             result = await updateTour({ ...tourData, id: tourId! });
-        } else { // Otherwise, we create
+        } else { 
             result = await createTour({ ...tourData, id: currentTourId });
         }
 
@@ -334,7 +331,6 @@ export function TourForm({ initialData }: TourFormProps) {
 
         if (result.error) throw new Error(result.error);
         
-        // If it was a new creation, update URL to edit page
         if (!initialData) {
             const newPath = `${basePath}/${currentTourId}/edit`;
             router.replace(newPath, { scroll: false });
@@ -366,358 +362,337 @@ export function TourForm({ initialData }: TourFormProps) {
   ];
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <div className="sticky top-0 z-10 flex items-center justify-between border-b bg-background/95 py-4 backdrop-blur-sm">
-            <div className="flex items-center gap-4">
-                <Button asChild variant="outline" size="sm">
-                    <Link href={basePath}>
-                        <ArrowLeft className="mr-2 h-4 w-4" />
-                        Volver a Todos los Tours
-                    </Link>
-                </Button>
-                <h1 className="text-xl font-semibold tracking-tight">
-                    {initialData ? 'Editar Tour' : 'Crear un Nuevo Tour'}
-                </h1>
-            </div>
-            <div className="flex items-center gap-4">
-                <FormField
-                    control={form.control}
-                    name="published"
-                    render={({ field }) => (
-                        <FormItem className="flex items-center gap-2 space-y-0">
-                            <FormControl><Switch checked={field.value} onCheckedChange={field.onChange} /></FormControl>
-                            <FormLabel className="text-base font-normal">
-                                {field.value ? 'Publicado' : 'Borrador'}
-                            </FormLabel>
-                        </FormItem>
-                    )}
-                />
-                <Button type="submit" size="sm" disabled={isSubmitting}>
-                    {isSubmitting ? <Loader2 className="animate-spin" /> : 'Guardar Tour'}
-                </Button>
-            </div>
-        </div>
-
-        {isSubmitting && (
-            <div className="fixed top-16 left-0 right-0 z-50 -mt-4">
-                <Progress value={uploadProgress} className="w-full h-1 rounded-none" />
-            </div>
-        )}
-      
-        <div className="pt-2">
-            <Tabs defaultValue="main" className="w-full">
-            <TabsList className="grid w-full grid-cols-4">
-                <TabsTrigger value="main">Contenido e Imágenes</TabsTrigger>
-                <TabsTrigger value="availability">Disponibilidad y Precio</TabsTrigger>
-                <TabsTrigger value="itinerary">Itinerario</TabsTrigger>
-                <TabsTrigger value="translations">Traducciones</TabsTrigger>
-            </TabsList>
-
-            <TabsContent value="main" className="mt-6">
-                <Card>
-                <CardHeader>
-                    <CardTitle>Contenido Principal (Español)</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                    <FormField
-                    control={form.control}
-                    name="title.es"
-                    render={({ field }) => (
-                        <FormItem>
-                        <FormLabel>Título del Tour</FormLabel>
-                        <FormControl><Input placeholder="Ej: Vistas de Tramuntana y Corazón de la Isla" {...field} /></FormControl>
-                        <FormMessage />
-                        </FormItem>
-                    )}
-                    />
-                    <FormField
-                    control={form.control}
-                    name="slug.es"
-                    render={({ field }) => (
-                        <FormItem>
-                        <FormLabel>Slug (URL amigable)</FormLabel>
-                        <FormControl><Input placeholder="ej-vistas-tramuntana-corazon-isla" {...field} /></FormControl>
-                        <FormDescription>Esto formará parte de la URL. Usar solo letras minúsculas, números y guiones.</FormDescription>
-                        <FormMessage />
-                        </FormItem>
-                    )}
-                    />
-                    <FormField
-                    control={form.control}
-                    name="description.es"
-                    render={({ field }) => (
-                        <FormItem>
-                        <FormLabel>Descripción Corta (para tarjetas)</FormLabel>
-                        <FormControl><Textarea rows={3} {...field} /></FormControl>
-                        <FormMessage />
-                        </FormItem>
-                    )}
-                    />
-                    <FormField
-                    control={form.control}
-                    name="overview.es"
-                    render={({ field }) => (
-                        <FormItem>
-                        <FormLabel>Descripción General (página de detalle)</FormLabel>
-                        <FormControl><Textarea rows={6} {...field} /></FormControl>
-                        <FormMessage />
-                        </FormItem>
-                    )}
-                    />
-                </CardContent>
-                </Card>
-
-                <Card className="mt-6">
-                    <CardHeader>
-                        <CardTitle>Imágenes del Tour</CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-8">
-                        <FormField
-                            control={form.control}
-                            name="mainImage"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Imagen Principal</FormLabel>
-                                    <FormDescription>Esta es la imagen que se mostrará en las tarjetas de tours.</FormDescription>
-                                    <FormControl>
-                                        <ImageUpload
-                                            value={field.value ? [field.value] : []}
-                                            onChange={(file) => field.onChange(file)}
-                                            onRemove={() => field.onChange(undefined)}
-                                            multiple={false}
-                                        />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                            />
-                        <FormField
-                            control={form.control}
-                            name="galleryImages"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Galería de Imágenes</FormLabel>
-                                    <FormDescription>Estas imágenes se mostrarán en la página de detalle del tour.</FormDescription>
-                                    <FormControl>
-                                        <ImageUpload
-                                            value={field.value || []}
-                                            onChange={(files) => field.onChange(files)}
-                                            onRemove={(fileToRemove) => {
-                                                const newValue = [...(field.value || [])].filter(file => file !== fileToRemove);
-                                                field.onChange(newValue);
-                                            }}
-                                            multiple={true}
-                                        />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                            />
-                    </CardContent>
-                </Card>
-            </TabsContent>
-
-            {/* Other Tabs are the same */}
-            <TabsContent value="availability" className="mt-6">
-                <Card>
-                <CardHeader><CardTitle>Disponibilidad y Precios</CardTitle></CardHeader>
-                <CardContent className="space-y-6">
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <FormField
-                        control={form.control}
-                        name="price"
-                        render={({ field }) => (
-                            <FormItem>
-                            <FormLabel>Precio Base (€)</FormLabel>
-                            <FormControl><Input type="number" placeholder="Ej: 120" {...field} /></FormControl>
-                            <FormMessage />
-                            </FormItem>
-                        )}
-                        />
-                        <FormField
-                        control={form.control}
-                        name="durationHours"
-                        render={({ field }) => (
-                            <FormItem>
-                            <FormLabel>Duración (horas)</FormLabel>
-                            <FormControl><Input type="number" placeholder="Ej: 8" {...field} /></FormControl>
-                            <FormMessage />
-                            </FormItem>
-                        )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name="region"
-                            render={({ field }) => (
-                                <FormItem>
-                                <FormLabel>Región del Tour</FormLabel>
-                                <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                    <FormControl>
-                                    <SelectTrigger><SelectValue placeholder="Selecciona una región" /></SelectTrigger>
-                                    </FormControl>
-                                    <SelectContent>
-                                        <SelectItem value="North">Norte</SelectItem>
-                                        <SelectItem value="East">Este</SelectItem>
-                                        <SelectItem value="South">Sur</SelectItem>
-                                        <SelectItem value="West">Oeste</SelectItem>
-                                        <SelectItem value="Central">Central</SelectItem>
-                                    </SelectContent>
-                                </Select>
-                                <FormMessage />
-                                </FormItem>
-                            )}
-                            />
-                    </div>
-                    <FormField
-                        control={form.control}
-                        name="isFeatured"
-                        render={({ field }) => (
-                            <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-                            <div className="space-y-0.5">
-                                <FormLabel className="text-base">Tour Destacado</FormLabel>
-                                <FormDescription>Marcar si este tour debe aparecer en la página de inicio.</FormDescription>
-                            </div>
-                            <FormControl><Switch checked={field.value} onCheckedChange={field.onChange} /></FormControl>
-                            </FormItem>
-                        )}
-                        />
-                    <FormField
-                        control={form.control}
-                        name="allowDeposit"
-                        render={({ field }) => (
-                            <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-                            <div className="space-y-0.5">
-                                <FormLabel className="text-base">Permitir reserva con depósito</FormLabel>
-                                <FormDescription>Permitir a los clientes pagar un depósito para reservar, y el resto en el lugar.</FormDescription>
-                            </div>
-                            <FormControl><Switch checked={field.value} onCheckedChange={field.onChange} /></FormControl>
-                            </FormItem>
-                        )}
-                        />
-                    {allowDeposit && (
-                        <FormField
-                            control={form.control}
-                            name="depositPrice"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Precio del Depósito (€)</FormLabel>
-                                    <FormControl><Input type="number" placeholder="Ej: 20" {...field} /></FormControl>
-                                    <FormDescription>El cliente pagará esta cantidad para reservar. El resto se paga en el lugar.</FormDescription>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                            />
-                    )}
-                    <div>
-                    <h3 className="text-lg font-medium mb-2">Periodos de Disponibilidad</h3>
-                    <FormMessage>{form.formState.errors.availabilityPeriods?.root?.message}</FormMessage>
-                    <div className="space-y-3">
-                        {fields.map((field, index) => (
-                        <Card key={field.id} className="bg-secondary/30">
-                            <CardContent className="p-3 flex justify-between items-center">
-                            <div>
-                                <p className="font-semibold">{format(field.startDate, "dd/MM/yy")} - {format(field.endDate, "dd/MM/yy")}</p>
-                                <div className="flex gap-1 mt-1">
-                                {weekDays.map((day, i) => (
-                                    <span key={day} className={cn("text-xs w-6 h-6 flex items-center justify-center rounded-full", field.activeDays.includes(day) ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground")}>
-                                        {weekDayInitials[i]}
-                                    </span>
-                                ))}
-                                </div>
-                            </div>
-                            <Button type="button" variant="ghost" size="icon" onClick={() => remove(index)}>
-                                <Trash2 className="h-4 w-4 text-destructive" />
-                            </Button>
-                            </CardContent>
-                        </Card>
-                        ))}
-                    </div>
-
-                    <AvailabilityPeriodCreator onAddPeriod={(period) => append(period)} />
-                    <FormMessage>{form.formState.errors.availabilityPeriods?.message}</FormMessage>
-                    </div>
-                </CardContent>
-                </Card>
-            </TabsContent>
-
-            <TabsContent value="itinerary" className="mt-6">
-                <Card>
-                <CardHeader><CardTitle>Itinerario del Tour</CardTitle></CardHeader>
-                <CardContent className="space-y-8">
-                    <div>
-                        <div className="border-2 border-dashed rounded-lg p-8 text-center text-muted-foreground">
-                            <p>Aquí podrás definir las paradas y actividades del itinerario del tour.</p>
-                            <p className="text-sm">(Funcionalidad próximamente)</p>
+    <>
+        <FormProvider {...form}>
+            <TourFormHeader
+                isSubmitting={isSubmitting}
+                uploadProgress={uploadProgress}
+                initialData={initialData}
+                basePath={basePath}
+                onSubmit={form.handleSubmit(onSubmit)}
+            />
+            <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 flex-grow overflow-auto">
+                    {isSubmitting && (
+                        <div className="fixed top-16 left-0 right-0 z-50 -mt-4">
+                            <Progress value={uploadProgress} className="w-full h-1 rounded-none" />
                         </div>
-                    </div>
-                </CardContent>
-                </Card>
-            </TabsContent>
+                    )}
+                
+                    <div className="pt-2">
+                        <Tabs defaultValue="main" className="w-full">
+                        <TabsList className="grid w-full grid-cols-4">
+                            <TabsTrigger value="main">Contenido e Imágenes</TabsTrigger>
+                            <TabsTrigger value="availability">Disponibilidad y Precio</TabsTrigger>
+                            <TabsTrigger value="itinerary">Itinerario</TabsTrigger>
+                            <TabsTrigger value="translations">Traducciones</TabsTrigger>
+                        </TabsList>
 
-            <TabsContent value="translations" className="mt-6">
-                <Card>
-                    <CardHeader><CardTitle>Traducciones</CardTitle></CardHeader>
-                    <CardContent>
-                        <Tabs defaultValue="en" className="w-full">
-                            <TabsList className="grid w-full grid-cols-4">
-                                {langTabs.map(lang => <TabsTrigger key={lang.code} value={lang.code}>{lang.name}</TabsTrigger>)}
-                            </TabsList>
-                            {langTabs.map(lang => (
-                                <TabsContent key={lang.code} value={lang.code} className="mt-4 space-y-4">
+                        <TabsContent value="main" className="mt-6">
+                            <Card>
+                            <CardHeader>
+                                <CardTitle>Contenido Principal (Español)</CardTitle>
+                            </CardHeader>
+                            <CardContent className="space-y-6">
+                                <FormField
+                                control={form.control}
+                                name="title.es"
+                                render={({ field }) => (
+                                    <FormItem>
+                                    <FormLabel>Título del Tour</FormLabel>
+                                    <FormControl><Input placeholder="Ej: Vistas de Tramuntana y Corazón de la Isla" {...field} /></FormControl>
+                                    <FormMessage />
+                                    </FormItem>
+                                )}
+                                />
+                                <FormField
+                                control={form.control}
+                                name="slug.es"
+                                render={({ field }) => (
+                                    <FormItem>
+                                    <FormLabel>Slug (URL amigable)</FormLabel>
+                                    <FormControl><Input placeholder="ej-vistas-tramuntana-corazon-isla" {...field} /></FormControl>
+                                    <FormDescription>Esto formará parte de la URL. Usar solo letras minúsculas, números y guiones.</FormDescription>
+                                    <FormMessage />
+                                    </FormItem>
+                                )}
+                                />
+                                <FormField
+                                control={form.control}
+                                name="description.es"
+                                render={({ field }) => (
+                                    <FormItem>
+                                    <FormLabel>Descripción Corta (para tarjetas)</FormLabel>
+                                    <FormControl><Textarea rows={3} {...field} /></FormControl>
+                                    <FormMessage />
+                                    </FormItem>
+                                )}
+                                />
+                                <FormField
+                                control={form.control}
+                                name="overview.es"
+                                render={({ field }) => (
+                                    <FormItem>
+                                    <FormLabel>Descripción General (página de detalle)</FormLabel>
+                                    <FormControl><Textarea rows={6} {...field} /></FormControl>
+                                    <FormMessage />
+                                    </FormItem>
+                                )}
+                                />
+                            </CardContent>
+                            </Card>
+
+                            <Card className="mt-6">
+                                <CardHeader>
+                                    <CardTitle>Imágenes del Tour</CardTitle>
+                                </CardHeader>
+                                <CardContent className="space-y-8">
                                     <FormField
                                         control={form.control}
-                                        name={`title.${lang.code as 'en' | 'de' | 'fr' | 'nl'}`}
+                                        name="mainImage"
                                         render={({ field }) => (
                                             <FormItem>
-                                            <FormLabel>Título ({lang.code.toUpperCase()})</FormLabel>
-                                            <FormControl><Input {...field} /></FormControl>
-                                            <FormMessage />
+                                                <FormLabel>Imagen Principal</FormLabel>
+                                                <FormDescription>Esta es la imagen que se mostrará en las tarjetas de tours.</FormDescription>
+                                                <FormControl>
+                                                    <ImageUpload
+                                                        value={field.value ? [field.value] : []}
+                                                        onChange={(file) => field.onChange(file)}
+                                                        onRemove={() => field.onChange(undefined)}
+                                                        multiple={false}
+                                                    />
+                                                </FormControl>
+                                                <FormMessage />
                                             </FormItem>
                                         )}
+                                        />
+                                    <FormField
+                                        control={form.control}
+                                        name="galleryImages"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Galería de Imágenes</FormLabel>
+                                                <FormDescription>Estas imágenes se mostrarán en la página de detalle del tour.</FormDescription>
+                                                <FormControl>
+                                                    <ImageUpload
+                                                        value={field.value || []}
+                                                        onChange={(files) => field.onChange(files)}
+                                                        onRemove={(fileToRemove) => {
+                                                            const newValue = [...(field.value || [])].filter(file => file !== fileToRemove);
+                                                            field.onChange(newValue);
+                                                        }}
+                                                        multiple={true}
+                                                    />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                        />
+                                </CardContent>
+                            </Card>
+                        </TabsContent>
+
+                        <TabsContent value="availability" className="mt-6">
+                            <Card>
+                            <CardHeader><CardTitle>Disponibilidad y Precios</CardTitle></CardHeader>
+                            <CardContent className="space-y-6">
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                    <FormField
+                                    control={form.control}
+                                    name="price"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                        <FormLabel>Precio Base (€)</FormLabel>
+                                        <FormControl><Input type="number" placeholder="Ej: 120" {...field} /></FormControl>
+                                        <FormMessage />
+                                        </FormItem>
+                                    )}
+                                    />
+                                    <FormField
+                                    control={form.control}
+                                    name="durationHours"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                        <FormLabel>Duración (horas)</FormLabel>
+                                        <FormControl><Input type="number" placeholder="Ej: 8" {...field} /></FormControl>
+                                        <FormMessage />
+                                        </FormItem>
+                                    )}
                                     />
                                     <FormField
                                         control={form.control}
-                                        name={`description.${lang.code as 'en' | 'de' | 'fr' | 'nl'}`}
+                                        name="region"
                                         render={({ field }) => (
                                             <FormItem>
-                                            <FormLabel>Descripción Corta ({lang.code.toUpperCase()})</FormLabel>
-                                            <FormControl><Textarea rows={2} {...field} /></FormControl>
+                                            <FormLabel>Región del Tour</FormLabel>
+                                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                                <FormControl>
+                                                <SelectTrigger><SelectValue placeholder="Selecciona una región" /></SelectTrigger>
+                                                </FormControl>
+                                                <SelectContent>
+                                                    <SelectItem value="North">Norte</SelectItem>
+                                                    <SelectItem value="East">Este</SelectItem>
+                                                    <SelectItem value="South">Sur</SelectItem>
+                                                    <SelectItem value="West">Oeste</SelectItem>
+                                                    <SelectItem value="Central">Central</SelectItem>
+                                                </SelectContent>
+                                            </Select>
                                             <FormMessage />
                                             </FormItem>
                                         )}
+                                        />
+                                </div>
+                                <FormField
+                                    control={form.control}
+                                    name="isFeatured"
+                                    render={({ field }) => (
+                                        <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                                        <div className="space-y-0.5">
+                                            <FormLabel className="text-base">Tour Destacado</FormLabel>
+                                            <FormDescription>Marcar si este tour debe aparecer en la página de inicio.</FormDescription>
+                                        </div>
+                                        <FormControl><Switch checked={field.value} onCheckedChange={field.onChange} /></FormControl>
+                                        </FormItem>
+                                    )}
                                     />
+                                <FormField
+                                    control={form.control}
+                                    name="allowDeposit"
+                                    render={({ field }) => (
+                                        <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                                        <div className="space-y-0.5">
+                                            <FormLabel className="text-base">Permitir reserva con depósito</FormLabel>
+                                            <FormDescription>Permitir a los clientes pagar un depósito para reservar, y el resto en el lugar.</FormDescription>
+                                        </div>
+                                        <FormControl><Switch checked={field.value} onCheckedChange={field.onChange} /></FormControl>
+                                        </FormItem>
+                                    )}
+                                    />
+                                {allowDeposit && (
                                     <FormField
                                         control={form.control}
-                                        name={`overview.${lang.code as 'en' | 'de' | 'fr' | 'nl'}`}
+                                        name="depositPrice"
                                         render={({ field }) => (
                                             <FormItem>
-                                            <FormLabel>Descripción General ({lang.code.toUpperCase()})</FormLabel>
-                                            <FormControl><Textarea rows={5} {...field} /></FormControl>
-                                            <FormMessage />
+                                                <FormLabel>Precio del Depósito (€)</FormLabel>
+                                                <FormControl><Input type="number" placeholder="Ej: 20" {...field} /></FormControl>
+                                                <FormDescription>El cliente pagará esta cantidad para reservar. El resto se paga en el lugar.</FormDescription>
+                                                <FormMessage />
                                             </FormItem>
                                         )}
-                                    />
-                                    <FormField
-                                        control={form.control}
-                                        name={`slug.${lang.code as 'en' | 'de' | 'fr' | 'nl'}`}
-                                        render={({ field }) => (
-                                            <FormItem>
-                                            <FormLabel>Slug ({lang.code.toUpperCase()})</FormLabel>
-                                            <FormControl><Input {...field} /></FormControl>
-                                            <FormMessage />
-                                            </FormItem>
-                                        )}
-                                    />
-                                </TabsContent>
-                            ))}
+                                        />
+                                )}
+                                <div>
+                                <h3 className="text-lg font-medium mb-2">Periodos de Disponibilidad</h3>
+                                <FormMessage>{form.formState.errors.availabilityPeriods?.root?.message}</FormMessage>
+                                <div className="space-y-3">
+                                    {fields.map((field, index) => (
+                                    <Card key={field.id} className="bg-secondary/30">
+                                        <CardContent className="p-3 flex justify-between items-center">
+                                        <div>
+                                            <p className="font-semibold">{format(field.startDate, "dd/MM/yy")} - {format(field.endDate, "dd/MM/yy")}</p>
+                                            <div className="flex gap-1 mt-1">
+                                            {weekDays.map((day, i) => (
+                                                <span key={day} className={cn("text-xs w-6 h-6 flex items-center justify-center rounded-full", field.activeDays.includes(day) ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground")}>
+                                                    {weekDayInitials[i]}
+                                                </span>
+                                            ))}
+                                            </div>
+                                        </div>
+                                        <Button type="button" variant="ghost" size="icon" onClick={() => remove(index)}>
+                                            <Trash2 className="h-4 w-4 text-destructive" />
+                                        </Button>
+                                        </CardContent>
+                                    </Card>
+                                    ))}
+                                </div>
+
+                                <AvailabilityPeriodCreator onAddPeriod={(period) => append(period)} />
+                                <FormMessage>{form.formState.errors.availabilityPeriods?.message}</FormMessage>
+                                </div>
+                            </CardContent>
+                            </Card>
+                        </TabsContent>
+
+                        <TabsContent value="itinerary" className="mt-6">
+                            <Card>
+                            <CardHeader><CardTitle>Itinerario del Tour</CardTitle></CardHeader>
+                            <CardContent className="space-y-8">
+                                <div>
+                                    <div className="border-2 border-dashed rounded-lg p-8 text-center text-muted-foreground">
+                                        <p>Aquí podrás definir las paradas y actividades del itinerario del tour.</p>
+                                        <p className="text-sm">(Funcionalidad próximamente)</p>
+                                    </div>
+                                </div>
+                            </CardContent>
+                            </Card>
+                        </TabsContent>
+
+                        <TabsContent value="translations" className="mt-6">
+                            <Card>
+                                <CardHeader><CardTitle>Traducciones</CardTitle></CardHeader>
+                                <CardContent>
+                                    <Tabs defaultValue="en" className="w-full">
+                                        <TabsList className="grid w-full grid-cols-4">
+                                            {langTabs.map(lang => <TabsTrigger key={lang.code} value={lang.code}>{lang.name}</TabsTrigger>)}
+                                        </TabsList>
+                                        {langTabs.map(lang => (
+                                            <TabsContent key={lang.code} value={lang.code} className="mt-4 space-y-4">
+                                                <FormField
+                                                    control={form.control}
+                                                    name={`title.${lang.code as 'en' | 'de' | 'fr' | 'nl'}`}
+                                                    render={({ field }) => (
+                                                        <FormItem>
+                                                        <FormLabel>Título ({lang.code.toUpperCase()})</FormLabel>
+                                                        <FormControl><Input {...field} /></FormControl>
+                                                        <FormMessage />
+                                                        </FormItem>
+                                                    )}
+                                                />
+                                                <FormField
+                                                    control={form.control}
+                                                    name={`description.${lang.code as 'en' | 'de' | 'fr' | 'nl'}`}
+                                                    render={({ field }) => (
+                                                        <FormItem>
+                                                        <FormLabel>Descripción Corta ({lang.code.toUpperCase()})</FormLabel>
+                                                        <FormControl><Textarea rows={2} {...field} /></FormControl>
+                                                        <FormMessage />
+                                                        </FormItem>
+                                                    )}
+                                                />
+                                                <FormField
+                                                    control={form.control}
+                                                    name={`overview.${lang.code as 'en' | 'de' | 'fr' | 'nl'}`}
+                                                    render={({ field }) => (
+                                                        <FormItem>
+                                                        <FormLabel>Descripción General ({lang.code.toUpperCase()})</FormLabel>
+                                                        <FormControl><Textarea rows={5} {...field} /></FormControl>
+                                                        <FormMessage />
+                                                        </FormItem>
+                                                    )}
+                                                />
+                                                <FormField
+                                                    control={form.control}
+                                                    name={`slug.${lang.code as 'en' | 'de' | 'fr' | 'nl'}`}
+                                                    render={({ field }) => (
+                                                        <FormItem>
+                                                        <FormLabel>Slug ({lang.code.toUpperCase()})</FormLabel>
+                                                        <FormControl><Input {...field} /></FormControl>
+                                                        <FormMessage />
+                                                        </FormItem>
+                                                    )}
+                                                />
+                                            </TabsContent>
+                                        ))}
+                                    </Tabs>
+                                </CardContent>
+                            </Card>
+                        </TabsContent>
                         </Tabs>
-                    </CardContent>
-                </Card>
-            </TabsContent>
-            </Tabs>
-        </div>
-      </form>
-    </Form>
+                    </div>
+                </form>
+            </Form>
+        </FormProvider>
+    </>
   );
 }
