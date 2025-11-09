@@ -4,6 +4,7 @@
 import { useRef, useState } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { Volume2, VolumeX } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 const videoUrl = "https://firebasestorage.googleapis.com/v0/b/tasting-mallorca.firebasestorage.app/o/web%2Fvideos%2FAUTENTICA%20MALLORCA%20GENERAL%20%20V1.mp4?alt=media&token=90225773-8283-4884-a4d5-565abcafc790";
 
@@ -35,11 +36,11 @@ export function ImmersiveCarouselSection() {
     return (
         <section 
             ref={carouselContainerRef} 
-            className='w-full h-[80vh] overflow-hidden cursor-pointer relative' 
+            className='w-full h-auto md:h-[80vh] overflow-hidden cursor-pointer relative' 
             onClick={handleVideoClick}
         >
             <motion.div style={{ y }} className="h-full">
-                <div className='h-full relative'>
+                <div className='aspect-video h-full relative'>
                     <video
                         ref={videoRef}
                         src={videoUrl}
