@@ -8,6 +8,10 @@ import { adminApp } from '@/firebase/server/config';
 // Initialize Firebase Admin SDK
 adminApp;
 
+// THIS FILE IS DEPRECATED.
+// The client-side Firebase Storage SDK is now used for uploads.
+// This file is kept for historical reference but is no longer in use.
+
 async function uploadFile(file: File, tourId: string): Promise<string> {
     const storage = getStorage();
     const bucket = storage.bucket(process.env.FIREBASE_STORAGE_BUCKET);
@@ -66,5 +70,4 @@ export const uploadImages = createSafeAction(
     }
   }
 );
-
     
