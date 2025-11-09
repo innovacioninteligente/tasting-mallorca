@@ -66,7 +66,7 @@ const formSchema = z.object({
     es: z.string().min(1, "El resumen en español es requerido."),
     en: z.string().optional(),
     de: z.string().optional(),
-    fr: z.string().optional(),
+    fr: zstring().optional(),
     nl: z.string().optional(),
   }),
   price: z.coerce.number().min(0, "El precio debe ser un número positivo."),
@@ -373,7 +373,7 @@ export function TourForm({ initialData }: TourFormProps) {
         )}
 
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <div className="mb-6 flex justify-between items-center sticky top-0 bg-background/95 backdrop-blur-sm z-10 py-4 -mt-8 pt-8">
+        <div className="flex justify-between items-center sticky top-0 bg-background/95 backdrop-blur-sm z-10 py-4 -my-8">
             <Button asChild variant="outline" size="sm">
                 <Link href={basePath}>
                     <ArrowLeft className="mr-2 h-4 w-4" />
@@ -399,13 +399,8 @@ export function TourForm({ initialData }: TourFormProps) {
             </div>
         </div>
       
-        <div className="flex justify-between items-center -mt-4">
-            <div>
-                <h1 className="text-3xl font-bold">{initialData ? 'Editar Tour' : 'Crear un Nuevo Tour'}</h1>
-                <p className="text-muted-foreground">
-                    {initialData ? 'Edita los detalles del tour a continuación.' : 'Rellena el formulario para añadir un nuevo tour a la plataforma.'}
-                </p>
-            </div>
+        <div className="pt-2">
+            <h1 className="text-3xl font-bold">{initialData ? 'Editar Tour' : 'Crear un Nuevo Tour'}</h1>
         </div>
 
         <Tabs defaultValue="main" className="w-full">
@@ -722,5 +717,3 @@ export function TourForm({ initialData }: TourFormProps) {
     </Form>
   );
 }
-
-    
