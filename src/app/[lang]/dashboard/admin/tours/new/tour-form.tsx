@@ -66,7 +66,7 @@ const formSchema = z.object({
     es: z.string().min(1, "El resumen en español es requerido."),
     en: z.string().optional(),
     de: z.string().optional(),
-    fr: zstring().optional(),
+    fr: z.string().optional(),
     nl: z.string().optional(),
   }),
   price: z.coerce.number().min(0, "El precio debe ser un número positivo."),
@@ -366,14 +366,8 @@ export function TourForm({ initialData }: TourFormProps) {
 
   return (
     <Form {...form}>
-        {isSubmitting && (
-            <div className="fixed top-0 left-0 right-0 z-50">
-                <Progress value={uploadProgress} className="w-full h-1 rounded-none" />
-            </div>
-        )}
-
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <div className="flex justify-between items-center sticky top-0 bg-background/95 backdrop-blur-sm z-10 py-4 -my-8">
+        <div className="flex justify-between items-center sticky top-0 bg-background/95 backdrop-blur-sm z-10 py-4 -my-4 border-b">
             <Button asChild variant="outline" size="sm">
                 <Link href={basePath}>
                     <ArrowLeft className="mr-2 h-4 w-4" />
@@ -398,6 +392,12 @@ export function TourForm({ initialData }: TourFormProps) {
                 </Button>
             </div>
         </div>
+
+        {isSubmitting && (
+            <div className="fixed top-16 left-0 right-0 z-50 -mt-4">
+                <Progress value={uploadProgress} className="w-full h-1 rounded-none" />
+            </div>
+        )}
       
         <div className="pt-2">
             <h1 className="text-3xl font-bold">{initialData ? 'Editar Tour' : 'Crear un Nuevo Tour'}</h1>
