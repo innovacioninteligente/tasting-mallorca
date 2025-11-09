@@ -21,7 +21,11 @@ export function ImmersiveCarouselSection() {
 
     const y = useTransform(scrollYProgress, [0, 1], ['-70%', '70%']);
 
-    const handleVideoClick = () => {
+    const handleVideoClick = (e: React.MouseEvent<HTMLElement>) => {
+        // Prevent the click from propagating to the video element and pausing it.
+        e.preventDefault();
+        e.stopPropagation();
+
         setIsMuted(prevState => !prevState);
         if (!showControls) {
             setShowControls(true);
@@ -44,7 +48,7 @@ export function ImmersiveCarouselSection() {
                         loop
                         playsInline
                         controls={showControls}
-                        className="object-cover w-full h-full custom-video-controls"
+                        className="object-cover w-full h-full custom-video-controls pointer-events-none"
                     />
                     <div className="absolute inset-0 bg-black/20 pointer-events-none"></div>
                 </div>
