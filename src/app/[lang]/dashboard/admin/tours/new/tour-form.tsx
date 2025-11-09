@@ -285,7 +285,6 @@ export function TourForm({ initialData, isSubmitting, uploadProgress, uploadMess
   const allowDeposit = form.watch("allowDeposit");
 
   const langTabs = [
-    { code: 'es', name: 'Español' },
     { code: 'de', name: 'Deutsch' },
     { code: 'fr', name: 'Français' },
     { code: 'nl', name: 'Nederlands' },
@@ -792,15 +791,15 @@ export function TourForm({ initialData, isSubmitting, uploadProgress, uploadMess
                     <Card>
                         <CardHeader><CardTitle>Translations</CardTitle></CardHeader>
                         <CardContent>
-                            <Tabs defaultValue="es" className="w-full">
-                                <TabsList className="grid w-full grid-cols-4">
+                            <Tabs defaultValue="de" className="w-full">
+                                <TabsList className="grid w-full grid-cols-3">
                                     {langTabs.map(lang => <TabsTrigger key={lang.code} value={lang.code}>{lang.name}</TabsTrigger>)}
                                 </TabsList>
                                 {langTabs.map(lang => (
                                     <TabsContent key={lang.code} value={lang.code} className="mt-4 space-y-4">
                                         <FormField
                                             control={form.control}
-                                            name={`title.${lang.code as 'es' | 'de' | 'fr' | 'nl'}`}
+                                            name={`title.${lang.code as 'de' | 'fr' | 'nl'}`}
                                             render={({ field }) => (
                                                 <FormItem>
                                                 <FormLabel>Title ({lang.code.toUpperCase()})</FormLabel>
@@ -811,7 +810,7 @@ export function TourForm({ initialData, isSubmitting, uploadProgress, uploadMess
                                         />
                                         <FormField
                                             control={form.control}
-                                            name={`description.${lang.code as 'es' | 'de' | 'fr' | 'nl'}`}
+                                            name={`description.${lang.code as 'de' | 'fr' | 'nl'}`}
                                             render={({ field }) => (
                                                 <FormItem>
                                                 <FormLabel>Short Description ({lang.code.toUpperCase()})</FormLabel>
@@ -822,7 +821,7 @@ export function TourForm({ initialData, isSubmitting, uploadProgress, uploadMess
                                         />
                                         <FormField
                                             control={form.control}
-                                            name={`overview.${lang.code as 'es' | 'de' | 'fr' | 'nl'}`}
+                                            name={`overview.${lang.code as 'de' | 'fr' | 'nl'}`}
                                             render={({ field }) => (
                                                 <FormItem>
                                                 <FormLabel>General Overview ({lang.code.toUpperCase()})</FormLabel>
@@ -833,7 +832,7 @@ export function TourForm({ initialData, isSubmitting, uploadProgress, uploadMess
                                         />
                                         <FormField
                                             control={form.control}
-                                            name={`generalInfo.cancellationPolicy.${lang.code as 'es' | 'de' | 'fr' | 'nl'}`}
+                                            name={`generalInfo.cancellationPolicy.${lang.code as 'de' | 'fr' | 'nl'}`}
                                             render={({ field }) => (
                                                 <FormItem>
                                                     <FormLabel>Cancellation Policy ({lang.code.toUpperCase()})</FormLabel>
@@ -844,7 +843,7 @@ export function TourForm({ initialData, isSubmitting, uploadProgress, uploadMess
                                         />
                                         <FormField
                                             control={form.control}
-                                            name={`generalInfo.bookingPolicy.${lang.code as 'es' | 'de' | 'fr' | 'nl'}`}
+                                            name={`generalInfo.bookingPolicy.${lang.code as 'de' | 'fr' | 'nl'}`}
                                             render={({ field }) => (
                                                 <FormItem>
                                                     <FormLabel>Booking Policy ({lang.code.toUpperCase()})</FormLabel>
@@ -855,7 +854,7 @@ export function TourForm({ initialData, isSubmitting, uploadProgress, uploadMess
                                         />
                                         <FormField
                                             control={form.control}
-                                            name={`generalInfo.guideInfo.${lang.code as 'es' | 'de' | 'fr' | 'nl'}`}
+                                            name={`generalInfo.guideInfo.${lang.code as 'de' | 'fr' | 'nl'}`}
                                             render={({ field }) => (
                                                 <FormItem>
                                                     <FormLabel>Guide Information ({lang.code.toUpperCase()})</FormLabel>
@@ -866,7 +865,7 @@ export function TourForm({ initialData, isSubmitting, uploadProgress, uploadMess
                                         />
                                         <FormField
                                             control={form.control}
-                                            name={`generalInfo.pickupInfo.${lang.code as 'es' | 'de' | 'fr' | 'nl'}`}
+                                            name={`generalInfo.pickupInfo.${lang.code as 'de' | 'fr' | 'nl'}`}
                                             render={({ field }) => (
                                                 <FormItem>
                                                     <FormLabel>Pickup Information ({lang.code.toUpperCase()})</FormLabel>
@@ -880,7 +879,7 @@ export function TourForm({ initialData, isSubmitting, uploadProgress, uploadMess
                                             <p className="text-sm font-medium text-muted-foreground mb-2">Pickup Point</p>
                                             <FormField
                                                 control={form.control}
-                                                name={`pickupPoint.title.${lang.code as 'es' | 'de' | 'fr' | 'nl'}`}
+                                                name={`pickupPoint.title.${lang.code as 'de' | 'fr' | 'nl'}`}
                                                 render={({ field }) => (
                                                     <FormItem>
                                                         <FormLabel>Main Title ({lang.code.toUpperCase()})</FormLabel>
@@ -891,7 +890,7 @@ export function TourForm({ initialData, isSubmitting, uploadProgress, uploadMess
                                             />
                                             <FormField
                                                 control={form.control}
-                                                name={`pickupPoint.description.${lang.code as 'es' | 'de' | 'fr' | 'nl'}`}
+                                                name={`pickupPoint.description.${lang.code as 'de' | 'fr' | 'nl'}`}
                                                 render={({ field }) => (
                                                     <FormItem className="mt-4">
                                                         <FormLabel>Description ({lang.code.toUpperCase()})</FormLabel>
@@ -907,7 +906,7 @@ export function TourForm({ initialData, isSubmitting, uploadProgress, uploadMess
                                                 <p className="text-sm font-medium text-muted-foreground mb-2">Itinerary - Item {index + 1}</p>
                                                 <FormField
                                                     control={form.control}
-                                                    name={`itinerary.${index}.title.${lang.code as 'es' | 'de' | 'fr' | 'nl'}`}
+                                                    name={`itinerary.${index}.title.${lang.code as 'de' | 'fr' | 'nl'}`}
                                                     render={({ field }) => (
                                                         <FormItem>
                                                             <FormLabel>Title ({lang.code.toUpperCase()})</FormLabel>
@@ -919,12 +918,12 @@ export function TourForm({ initialData, isSubmitting, uploadProgress, uploadMess
                                                 {form.watch(`itinerary.${index}.type`) === 'stop' && (
                                                     <FormField
                                                         control={form.control}
-                                                        name={`itinerary.${index}.activities.${lang.code as 'es' | 'de' | 'fr' | 'nl'}`}
+                                                        name={`itinerary.${index}.activities.${lang.code as 'de' | 'fr' | 'nl'}`}
                                                         render={({ field }) => (
                                                             <FormItem className="mt-4">
                                                                 <FormLabel>Activities ({lang.code.toUpperCase()})</FormLabel>
                                                                 <FormControl>
-                                                                    <ActivityTagsInput field={field} fieldName={`itinerary.${index}.activities.${lang.code as 'es' | 'de' | 'fr' | 'nl'}`} />
+                                                                    <ActivityTagsInput field={field} fieldName={`itinerary.${index}.activities.${lang.code as 'de' | 'fr' | 'nl'}`} />
                                                                 </FormControl>
                                                                 <FormMessage />
                                                             </FormItem>
@@ -936,7 +935,7 @@ export function TourForm({ initialData, isSubmitting, uploadProgress, uploadMess
 
                                         <FormField
                                             control={form.control}
-                                            name={`slug.${lang.code as 'es' | 'de' | 'fr' | 'nl'}`}
+                                            name={`slug.${lang.code as 'de' | 'fr' | 'nl'}`}
                                             render={({ field }) => (
                                                 <FormItem>
                                                 <FormLabel>Slug ({lang.code.toUpperCase()})</FormLabel>
