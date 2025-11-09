@@ -26,7 +26,7 @@ export const createTour = createSafeAction(
         depositPrice: tourData.allowDeposit ? Number(tourData.depositPrice) : 0,
 
         // Set empty arrays if they are not provided
-        itinerary: tourData.itinerary || { es: [], en: [], de: [], fr: [], nl: [] },
+        itinerary: tourData.itinerary || [],
         availabilityPeriods: tourData.availabilityPeriods || [],
         galleryImages: tourData.galleryImages || [],
       };

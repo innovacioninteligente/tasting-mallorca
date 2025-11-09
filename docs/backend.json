@@ -32,6 +32,20 @@
       },
       "required": ["name", "email", "role"]
     },
+     "ItineraryItem": {
+      "title": "Itinerary Item",
+      "description": "Represents a single item in a tour's itinerary, which can be a stop or a travel leg.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "type": { "type": "string", "enum": ["stop", "travel"] },
+        "icon": { "type": "string" },
+        "title": { "type": "object", "properties": { "en": { "type": "string" }, "es": { "type": "string" }, "de": { "type": "string" }, "fr": { "type": "string" }, "nl": { "type": "string" } } },
+        "duration": { "type": "string" },
+        "activities": { "type": "object", "properties": { "en": { "type": "array", "items": {"type": "string"} }, "es": { "type": "array", "items": {"type": "string"} }, "de": { "type": "array", "items": {"type": "string"} }, "fr": { "type": "array", "items": {"type": "string"} }, "nl": { "type": "array", "items": {"type": "string"} } } }
+      },
+      "required": ["id", "type", "title", "duration"]
+    },
     "Tour": {
       "title": "Tour",
       "description": "Represents a tour offered by the company, with multilingual content.",
@@ -86,15 +100,9 @@
           }
         },
         "itinerary": {
-          "type": "object",
-          "description": "Itinerary details in multiple languages.",
-          "properties": {
-             "en": { "type": "array", "items": { "type": "object" } },
-             "es": { "type": "array", "items": { "type": "object" } },
-             "de": { "type": "array", "items": { "type": "object" } },
-             "fr": { "type": "array", "items": { "type": "object" } },
-             "nl": { "type": "array", "items": { "type": "object" } }
-          }
+            "type": "array",
+            "description": "The detailed itinerary of the tour, composed of stops and travel legs.",
+            "items": { "$ref": "#/entities/ItineraryItem" }
         },
         "availabilityPeriods": {
           "type": "array",

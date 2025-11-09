@@ -1,5 +1,14 @@
 
 
+export type ItineraryItem = {
+    id: string;
+    type: 'stop' | 'travel';
+    icon: string;
+    title: { [key: string]: string };
+    duration: string;
+    activities: { [key: string]: string[] };
+};
+
 export interface Tour {
   id: string;
   slug: { [key: string]: string };
@@ -17,7 +26,7 @@ export interface Tour {
     guideInfo: { [key: string]: string };
     pickupInfo: { [key: string]: string };
   };
-  itinerary: { [key: string]: any[] }; 
+  itinerary: ItineraryItem[]; 
   availabilityPeriods: {
     startDate: string;
     endDate: string;

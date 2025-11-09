@@ -1,3 +1,4 @@
+
 'use client';
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -20,7 +21,7 @@ import { getStorage, ref as storageRef, uploadBytesResumable, getDownloadURL } f
 import React, { useState } from "react";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { CalendarIcon, PlusCircle, Trash2 } from "lucide-react";
+import { CalendarIcon, PlusCircle, Trash2, Bus, Camera, MapPin, ShoppingBag, UtensilsCrossed, X as XIcon, GripVertical } from "lucide-react";
 import { DateRange } from "react-day-picker";
 import { addDays, format, parseISO } from "date-fns";
 import { cn } from "@/lib/utils";
@@ -44,6 +45,21 @@ const availabilityPeriodSchema = z.object({
     activeDays: z.array(z.string()).min(1, "At least one active day is required."),
 });
 
+const itineraryItemSchema = z.object({
+    id: z.string(),
+    type: z.enum(["stop", "travel"]),
+    icon: z.string(),
+    duration: z.string().min(1, "La duración es requerida."),
+    title: multilingualStringSchema,
+    activities: z.object({
+        es: z.array(z.string()).optional(),
+        en: z.array(z.string()).optional(),
+        de: z.array(z.string()).optional(),
+        fr: z.array(z.string()).optional(),
+        nl: z.array(z.string()).optional(),
+    }),
+});
+
 const formSchema = z.object({
   title: multilingualStringSchema,
   slug: multilingualStringSchema,
@@ -65,6 +81,7 @@ const formSchema = z.object({
   allowDeposit: z.boolean().default(false),
   depositPrice: z.coerce.number().optional(),
   availabilityPeriods: z.array(availabilityPeriodSchema).optional(),
+  itinerary: z.array(itineraryItemSchema).optional(),
 }).refine(data => {
     if (data.allowDeposit) {
         return data.depositPrice !== undefined && data.depositPrice > 0;
@@ -195,6 +212,54 @@ function AvailabilityPeriodCreator({ onAddPeriod }: { onAddPeriod: (period: z.in
     );
 }
 
+function ActivityTagsInput({ field, fieldName }: { field: any, fieldName: string }) {
+    const [inputValue, setInputValue] = useState('');
+    const { setValue, getValues } = useFormContext();
+
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter' && inputValue.trim()) {
+            e.preventDefault();
+            const currentActivities = getValues(fieldName) || [];
+            setValue(fieldName, [...currentActivities, inputValue.trim()]);
+            setInputValue('');
+        }
+    };
+
+    const removeActivity = (indexToRemove: number) => {
+        const currentActivities = getValues(fieldName) || [];
+        setValue(fieldName, currentActivities.filter((_: any, index: number) => index !== indexToRemove));
+    };
+
+    return (
+        <div>
+            <Input
+                placeholder="Añade una actividad y presiona Enter"
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+                onKeyDown={handleKeyDown}
+            />
+            <div className="flex flex-wrap gap-2 mt-2">
+                {field.value?.map((activity: string, index: number) => (
+                    <Badge key={index} variant="secondary" className="flex items-center gap-1">
+                        {activity}
+                        <button type="button" onClick={() => removeActivity(index)} className="rounded-full hover:bg-muted-foreground/20">
+                            <XIcon className="h-3 w-3" />
+                        </button>
+                    </Badge>
+                ))}
+            </div>
+        </div>
+    );
+}
+
+const iconMap = {
+    Bus: <Bus className="h-5 w-5" />,
+    Camera: <Camera className="h-5 w-5" />,
+    MapPin: <MapPin className="h-5 w-5" />,
+    ShoppingBag: <ShoppingBag className="h-5 w-5" />,
+    UtensilsCrossed: <UtensilsCrossed className="h-5 w-5" />,
+};
+
 interface TourFormProps {
   initialData?: Tour;
 }
@@ -232,6 +297,7 @@ export function TourForm({ initialData }: TourFormProps) {
         startDate: parseISO(p.startDate),
         endDate: parseISO(p.endDate)
       })) || [],
+      itinerary: initialData?.itinerary || [],
       mainImage: initialData?.mainImage,
       galleryImages: initialData?.galleryImages || [],
   };
@@ -244,6 +310,11 @@ export function TourForm({ initialData }: TourFormProps) {
   const { fields, append, remove } = useFieldArray({
     control: form.control,
     name: "availabilityPeriods",
+  });
+  
+  const { fields: itineraryFields, append: appendItinerary, remove: removeItinerary } = useFieldArray({
+    control: form.control,
+    name: "itinerary",
   });
 
   const allowDeposit = form.watch("allowDeposit");
@@ -659,15 +730,102 @@ export function TourForm({ initialData }: TourFormProps) {
 
                       <TabsContent value="itinerary" className="mt-6">
                           <Card>
-                          <CardHeader><CardTitle>Itinerario del Tour</CardTitle></CardHeader>
-                          <CardContent className="space-y-8">
-                              <div>
-                                  <div className="border-2 border-dashed rounded-lg p-8 text-center text-muted-foreground">
-                                      <p>Aquí podrás definir las paradas y actividades del itinerario del tour.</p>
-                                      <p className="text-sm">(Funcionalidad próximamente)</p>
+                              <CardHeader><CardTitle>Constructor de Itinerario</CardTitle></CardHeader>
+                              <CardContent>
+                                  <div className="space-y-4">
+                                      {itineraryFields.map((field, index) => (
+                                          <Card key={field.id} className="bg-card border-l-4 border-primary">
+                                              <CardContent className="p-4">
+                                                  <div className="flex items-start gap-4">
+                                                      <div className="flex flex-col items-center gap-2">
+                                                          <span className="cursor-grab text-muted-foreground hover:text-foreground"><GripVertical /></span>
+                                                          <Button type="button" variant="ghost" size="icon" onClick={() => removeItinerary(index)}>
+                                                              <Trash2 className="h-4 w-4 text-destructive" />
+                                                          </Button>
+                                                      </div>
+                                                      <div className="flex-1 grid grid-cols-1 md:grid-cols-3 gap-4">
+                                                          <FormField
+                                                              control={form.control}
+                                                              name={`itinerary.${index}.title.es`}
+                                                              render={({ field }) => (
+                                                                  <FormItem className="md:col-span-2">
+                                                                      <FormLabel>Título (Parada o Tramo)</FormLabel>
+                                                                      <FormControl><Input placeholder="Ej: Viaje a Valldemossa" {...field} /></FormControl>
+                                                                      <FormMessage />
+                                                                  </FormItem>
+                                                              )}
+                                                          />
+                                                          <FormField
+                                                              control={form.control}
+                                                              name={`itinerary.${index}.duration`}
+                                                              render={({ field }) => (
+                                                                  <FormItem>
+                                                                      <FormLabel>Duración</FormLabel>
+                                                                      <FormControl><Input placeholder="Ej: 45 minutos" {...field} /></FormControl>
+                                                                      <FormMessage />
+                                                                  </FormItem>
+                                                              )}
+                                                          />
+                                                            <FormField
+                                                              control={form.control}
+                                                              name={`itinerary.${index}.icon`}
+                                                              render={({ field }) => (
+                                                                <FormItem>
+                                                                    <FormLabel>Icono</FormLabel>
+                                                                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                                                        <FormControl>
+                                                                            <SelectTrigger>
+                                                                                <SelectValue placeholder="Selecciona un icono" />
+                                                                            </SelectTrigger>
+                                                                        </FormControl>
+                                                                        <SelectContent>
+                                                                            {Object.keys(iconMap).map(iconKey => (
+                                                                                <SelectItem key={iconKey} value={iconKey}>
+                                                                                    <div className="flex items-center gap-2">
+                                                                                        {React.cloneElement(iconMap[iconKey as keyof typeof iconMap], { className: "h-4 w-4"})}
+                                                                                        {iconKey}
+                                                                                    </div>
+                                                                                </SelectItem>
+                                                                            ))}
+                                                                        </SelectContent>
+                                                                    </Select>
+                                                                    <FormMessage />
+                                                                </FormItem>
+                                                              )}
+                                                          />
+                                                           {form.watch(`itinerary.${index}.type`) === 'stop' && (
+                                                              <div className="md:col-span-3">
+                                                                  <FormField
+                                                                      control={form.control}
+                                                                      name={`itinerary.${index}.activities.es`}
+                                                                      render={({ field }) => (
+                                                                          <FormItem>
+                                                                              <FormLabel>Actividades (Etiquetas)</FormLabel>
+                                                                              <FormControl>
+                                                                                  <ActivityTagsInput field={field} fieldName={`itinerary.${index}.activities.es`} />
+                                                                              </FormControl>
+                                                                               <FormMessage />
+                                                                          </FormItem>
+                                                                      )}
+                                                                  />
+                                                              </div>
+                                                           )}
+
+                                                      </div>
+                                                  </div>
+                                              </CardContent>
+                                          </Card>
+                                      ))}
                                   </div>
-                              </div>
-                          </CardContent>
+                                  <div className="flex gap-4 mt-6">
+                                      <Button type="button" variant="outline" className="w-full" onClick={() => appendItinerary({ id: crypto.randomUUID(), type: 'stop', icon: 'MapPin', duration: '', title: { es: '' }, activities: { es: [] } })}>
+                                          <PlusCircle className="mr-2 h-4 w-4" /> Añadir Parada
+                                      </Button>
+                                       <Button type="button" variant="secondary" className="w-full" onClick={() => appendItinerary({ id: crypto.randomUUID(), type: 'travel', icon: 'Bus', duration: '', title: { es: '' }, activities: { es: [] } })}>
+                                          <PlusCircle className="mr-2 h-4 w-4" /> Añadir Tramo de Viaje
+                                      </Button>
+                                  </div>
+                              </CardContent>
                           </Card>
                       </TabsContent>
 
@@ -758,6 +916,38 @@ export function TourForm({ initialData }: TourFormProps) {
                                                         </FormItem>
                                                     )}
                                                 />
+                                                {form.watch('itinerary')?.map((_, index) => (
+                                                    <div key={index} className="p-4 border rounded-md">
+                                                        <p className="text-sm font-medium text-muted-foreground mb-2">Itinerario - Ítem {index + 1}</p>
+                                                        <FormField
+                                                            control={form.control}
+                                                            name={`itinerary.${index}.title.${lang.code as 'en' | 'de' | 'fr' | 'nl'}`}
+                                                            render={({ field }) => (
+                                                                <FormItem>
+                                                                    <FormLabel>Título ({lang.code.toUpperCase()})</FormLabel>
+                                                                    <FormControl><Input {...field} /></FormControl>
+                                                                    <FormMessage />
+                                                                </FormItem>
+                                                            )}
+                                                        />
+                                                        {form.watch(`itinerary.${index}.type`) === 'stop' && (
+                                                            <FormField
+                                                                control={form.control}
+                                                                name={`itinerary.${index}.activities.${lang.code as 'en' | 'de' | 'fr' | 'nl'}`}
+                                                                render={({ field }) => (
+                                                                    <FormItem className="mt-4">
+                                                                        <FormLabel>Actividades ({lang.code.toUpperCase()})</FormLabel>
+                                                                        <FormControl>
+                                                                            <ActivityTagsInput field={field} fieldName={`itinerary.${index}.activities.${lang.code as 'en' | 'de' | 'fr' | 'nl'}`} />
+                                                                        </FormControl>
+                                                                        <FormMessage />
+                                                                    </FormItem>
+                                                                )}
+                                                            />
+                                                        )}
+                                                    </div>
+                                                ))}
+
                                               <FormField
                                                   control={form.control}
                                                   name={`slug.${lang.code as 'en' | 'de' | 'fr' | 'nl'}`}
