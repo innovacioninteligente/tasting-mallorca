@@ -1,3 +1,4 @@
+
 'use client';
 
 import { DashboardSidebar } from "@/components/dashboard/dashboard-sidebar";
@@ -11,7 +12,7 @@ export default function DashboardLayout({
 
   return (
       <RouteGuard>
-        <div className="flex min-h-screen bg-secondary/50">
+        <div className="flex h-screen max-h-screen overflow-hidden bg-secondary/50">
           <DashboardSidebar />
           <main className="flex-1 overflow-auto p-4 md:p-8 lg:p-10">
             {children}
