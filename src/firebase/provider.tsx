@@ -1,6 +1,7 @@
 'use client';
 
 import React, { createContext, useContext } from 'react';
+import { initializeFirebase } from '.';
 import type { FirebaseApp } from 'firebase/app';
 import type { Auth } from 'firebase/auth';
 import type { Firestore } from 'firebase/firestore';
@@ -17,15 +18,27 @@ const FirebaseContext = createContext<FirebaseContextValue | undefined>(
 
 export function FirebaseProvider({
   children,
-  ...value
 }: {
   children: React.ReactNode;
-  app: FirebaseApp;
-  auth: Auth;
-  firestore: Firestore;
 }) {
+  const [firebase, setFirebase] = React.useState<{
+    app: FirebaseApp;
+    auth: Auth;
+    firestore: Firestore;
+  } | null>(null);
+
+  React.useEffect(() => {
+    const { app, auth, firestore } = initializeFirebase();
+    setFirebase({ app, auth, firestore });
+  }, []);
+
+  if (!firebase) {
+    // You can show a loading skeleton here
+    return null;
+  }
+  
   return (
-    <FirebaseContext.Provider value={value}>
+    <FirebaseContext.Provider value={firebase}>
       {children}
     </FirebaseContext.Provider>
   );

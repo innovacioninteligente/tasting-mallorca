@@ -2,19 +2,18 @@
 
 import { useEffect, useCallback } from 'react';
 import { useForm, UseFormReturn } from 'react-hook-form';
-import { debounce } from 'lodash';
+import { debounce, isEqual } from 'lodash';
 
 export const useFormPersistence = (
     key: string,
     form: UseFormReturn<any>,
     defaultValues: any
 ) => {
-    const { watch, reset } = form;
+    const { watch, reset, getValues } = form;
 
     const saveState = useCallback(debounce((data: any) => {
         try {
             const stateToSave = JSON.stringify(data, (key, value) => {
-                // Do not persist File objects
                 if (value instanceof File) {
                     return null;
                 }
@@ -30,14 +29,14 @@ export const useFormPersistence = (
         localStorage.removeItem(key);
     }, [key]);
 
-    // Load state from localStorage on initial render
+    // Load state from localStorage on initial mount
     useEffect(() => {
+        let isMounted = true;
         try {
             const savedStateJSON = localStorage.getItem(key);
             if (savedStateJSON) {
                 const savedState = JSON.parse(savedStateJSON);
                 
-                // Parse date strings back to Date objects
                 if (savedState.availabilityPeriods) {
                     savedState.availabilityPeriods = savedState.availabilityPeriods.map((p: any) => ({
                         ...p,
@@ -48,12 +47,20 @@ export const useFormPersistence = (
 
                 // Merge with default values to ensure all fields are present
                 const mergedState = { ...defaultValues, ...savedState };
-                reset(mergedState, { keepDefaultValues: true });
+                
+                if (isMounted) {
+                    reset(mergedState, { keepDefaultValues: true });
+                }
             }
         } catch (error) {
             console.error("Could not load form state from localStorage", error);
         }
-    }, [key, reset, defaultValues]);
+
+        return () => {
+            isMounted = false;
+        };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [key]);
     
     // Watch for form changes and save to localStorage
     useEffect(() => {
