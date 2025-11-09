@@ -1,3 +1,4 @@
+
 import type { Metadata } from 'next';
 import { i18n } from '@/dictionaries/config';
 
@@ -15,5 +16,9 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return children;
+  return (
+    <html>
+      <body>{children}</body>
+    </html>
+  );
 }
