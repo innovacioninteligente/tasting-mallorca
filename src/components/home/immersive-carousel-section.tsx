@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useRef, useState } from 'react';
@@ -36,10 +35,10 @@ export function ImmersiveCarouselSection() {
     return (
         <section 
             ref={carouselContainerRef} 
-            className='w-full h-auto md:h-[80vh] overflow-hidden cursor-pointer relative' 
+            className='w-full h-auto md:h-[80vh] overflow-hidden cursor-pointer relative flex justify-center' 
             onClick={handleVideoClick}
         >
-            <motion.div style={{ y }} className="h-full">
+            <motion.div style={{ y }} className="h-full w-full">
                 <div className='aspect-video h-full relative'>
                     <video
                         ref={videoRef}
