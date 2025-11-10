@@ -15,9 +15,9 @@ import { useToast } from "@/hooks/use-toast";
 import { createTour } from "@/app/server-actions/tours/createTour";
 import { useFormPersistence } from "@/hooks/use-form-persistence";
 import { UploadProgressDialog } from "@/components/upload-progress-dialog";
-import { translateTourAction } from "@/app/server-actions/tours/translateTour";
 import { cloneDeep, merge, mergeWith } from "lodash";
-import { TranslateTourOutput } from "@/ai/flows/translate-tour-flow";
+import { translateTourAction } from "@/app/server-actions/tours/translateTourAction";
+import { TranslateTourInput, TranslateTourOutput } from "@/ai/flows/translate-tour.flow";
 
 const multilingualStringSchema = z.object({
     es: z.string().optional(),
@@ -265,7 +265,7 @@ export default function NewTourPage() {
         try {
             const currentData = form.getValues();
             
-            const translationInput = {
+            const translationInput: TranslateTourInput = {
                 title: currentData.title.en,
                 description: currentData.description.en,
                 overview: currentData.overview.en,

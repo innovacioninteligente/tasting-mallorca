@@ -17,8 +17,7 @@ import { updateTour } from "@/app/server-actions/tours/updateTour";
 import { useFormPersistence } from "@/hooks/use-form-persistence";
 import { UploadProgressDialog } from "@/components/upload-progress-dialog";
 import { cloneDeep, merge, mergeWith } from "lodash";
-import { translateTourAction } from "@/app/server-actions/tours/translateTour";
-import { TranslateTourOutput } from "@/ai/flows/translate-tour-flow";
+import { TranslateTourInput, TranslateTourOutput } from "@/ai/flows/translate-tour.flow";
 
 
 const multilingualStringSchema = z.object({
@@ -118,14 +117,21 @@ const formSchema = z.object({
 
 type TourFormValues = z.infer<typeof formSchema>;
 
+type TranslateTourAction = (input: TranslateTourInput) => Promise<{
+    data?: TranslateTourOutput;
+    error?: string;
+}>;
+
+
 interface EditTourClientPageProps {
     initialData: Tour;
     lang: string;
+    translateTourAction: TranslateTourAction;
 }
 
 const defaultMultilingual = { es: '', en: '', de: '', fr: '', nl: '' };
 
-export function EditTourClientPage({ initialData, lang }: EditTourClientPageProps) {
+export function EditTourClientPage({ initialData, lang, translateTourAction }: EditTourClientPageProps) {
     const { toast } = useToast();
     const router = useRouter();
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -311,7 +317,7 @@ export function EditTourClientPage({ initialData, lang }: EditTourClientPageProp
         try {
             const currentData = form.getValues();
             
-            const translationInput = {
+            const translationInput: TranslateTourInput = {
                 title: currentData.title.en,
                 description: currentData.description.en,
                 overview: currentData.overview.en,

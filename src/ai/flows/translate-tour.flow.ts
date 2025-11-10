@@ -1,11 +1,10 @@
 
-'use server';
 /**
  * @fileOverview An AI flow to translate tour content from English to other supported languages.
  *
- * - translateTourContent - The Genkit flow for translation.
- * - TranslateTourInput - The input type (English content).
- * - TranslateTourOutput - The return type (translated content for es, de, fr, nl).
+ * - translateTour - The main function to call the translation flow.
+ * - TranslateTourInputSchema - The input type (English content).
+ * - TranslateTourOutputSchema - The return type (translated content for es, de, fr, nl).
  */
 
 import { ai } from '@/ai/genkit';
@@ -60,7 +59,6 @@ const ItineraryItemTranslationOutputSchema = z.object({
     }).optional(),
 });
 
-
 export const TranslateTourOutputSchema = z.object({
   title: MultilingualStringSchema,
   description: MultilingualStringSchema,
@@ -88,15 +86,11 @@ export const TranslateTourOutputSchema = z.object({
 });
 export type TranslateTourOutput = z.infer<typeof TranslateTourOutputSchema>;
 
-export const translateTourContentFlow = ai.defineFlow(
-  {
-    name: 'translateTourContentFlow',
-    inputSchema: TranslateTourInputSchema,
-    outputSchema: TranslateTourOutputSchema,
-  },
-  async (input) => {
-    
-    const translationPrompt = await ai.prompt(`You are an expert translator specializing in creating engaging and natural-sounding tourism marketing content for a European audience. Your task is to translate the provided tour information from English into Spanish (es), German (de), French (fr), and Dutch (nl).
+const translationPrompt = ai.definePrompt({
+  name: 'translationPrompt',
+  input: { schema: TranslateTourInputSchema },
+  output: { schema: TranslateTourOutputSchema },
+  prompt: `You are an expert translator specializing in creating engaging and natural-sounding tourism marketing content for a European audience. Your task is to translate the provided tour information from English into Spanish (es), German (de), French (fr), and Dutch (nl).
 
     **IMPORTANT INSTRUCTIONS:**
     1.  **Do not perform a literal, word-for-word translation.** Adapt the phrasing, tone, and cultural nuances to make the content appealing and natural for speakers of each target language.
@@ -132,16 +126,17 @@ export const translateTourContentFlow = ai.defineFlow(
         - Title: {{this.title}}
         - Activities: {{#each this.activities}}"{{this}}"{{#unless @last}}, {{/unless}}{{/each}}
     {{/each}}
-    `);
+    `
+});
 
-    const { output } = await ai.generate({
-      prompt: translationPrompt,
-      model: 'googleai/gemini-2.5-flash',
-      context: input,
-      output: {
-        schema: TranslateTourOutputSchema,
-      },
-    });
+export const translateTourFlow = ai.defineFlow(
+  {
+    name: 'translateTourFlow',
+    inputSchema: TranslateTourInputSchema,
+    outputSchema: TranslateTourOutputSchema,
+  },
+  async (input) => {
+    const { output } = await translationPrompt(input);
     return output!;
   }
 );
