@@ -84,7 +84,7 @@ function buildPrompt(input: TranslateTourInput): string {
     1.  **Do not perform a literal, word-for-word translation.** Adapt the phrasing, tone, and cultural nuances to make the content appealing and natural for speakers of each target language.
     2.  **Maintain the original meaning and key information.** The core details of the tour must remain accurate.
     3.  **Translate list items individually.** For fields that are newline-separated lists (like highlights, included, etc.), translate each line as a separate item and maintain the newline-separated format in your output.
-    4.  **Format your response strictly as a JSON object** that conforms to the provided output schema. Do not wrap it in markdown backticks or any other text.
+    4.  **Format your response strictly as a JSON object** that conforms to the provided output schema. Do not wrap it in markdown backticks (\`\`\`json) or any other text.
     5.  For itinerary activities, translate each tag individually.
     6.  If a source field is empty, the corresponding translated fields should also be empty strings.
 
@@ -114,11 +114,23 @@ function buildPrompt(input: TranslateTourInput): string {
         - Title: ${item.title}
         - Activities: ${item.activities?.join(', ')}
     `).join('')}
-
-    **Output JSON Schema:**
-    ${JSON.stringify(TranslateTourOutputSchema.shape, null, 2)}
     `;
 }
+
+async function getStreamingResponse(response: Response): Promise<string> {
+    const reader = response.body!.getReader();
+    const decoder = new TextDecoder();
+    let result = '';
+    while (true) {
+        const { done, value } = await reader.read();
+        if (done) {
+            break;
+        }
+        result += decoder.decode(value, { stream: true });
+    }
+    return result;
+}
+
 
 export async function translateTour(input: TranslateTourInput): Promise<TranslateTourOutput> {
   const prompt = buildPrompt(input);
@@ -129,11 +141,11 @@ export async function translateTour(input: TranslateTourInput): Promise<Translat
     throw new Error('VERTEX_AI_API_KEY environment variable is not set.');
   }
 
-  // This is the global endpoint, not tied to a specific project or location.
   const endpoint = `https://aiplatform.googleapis.com/v1/publishers/google/models/gemini-2.5-flash-lite:streamGenerateContent?key=${apiKey}`;
 
   console.log("Sending translation request to Vertex AI REST API...");
-  console.log("Prompt:", prompt.substring(0, 500) + "..."); // Log first 500 chars
+
+  let rawResponseText = '';
 
   try {
     const response = await fetch(endpoint, {
@@ -164,30 +176,34 @@ export async function translateTour(input: TranslateTourInput): Promise<Translat
         throw new Error(`Vertex AI API call failed with status ${response.status}: ${response.statusText}`);
     }
 
-    const responseText = await response.text();
-    // The response is a stream of JSON objects. We need to parse them.
-    // It's typically an array of chunks, let's combine them.
-    // Example: '[{"candidates":...}]' or multiple JSON objects in a stream
-    // A simple approach is to remove brackets and join.
-    const combinedJsonText = responseText.replace(/\]\[/g, ',').slice(1, -1);
+    rawResponseText = await getStreamingResponse(response);
 
-    if (!combinedJsonText) {
+    if (!rawResponseText) {
         throw new Error('No response text from AI model.');
     }
-        
-    try {
-        // Since it's a stream, we might get multiple JSON objects. We'll parse the first one that has the content.
-        const streamData = JSON.parse(combinedJsonText);
-        const contentText = streamData.candidates[0].content.parts[0].text;
-        const parsedJson = JSON.parse(contentText);
-        return TranslateTourOutputSchema.parse(parsedJson);
-    } catch (e) {
-        console.error("Failed to parse AI response:", e);
-        console.error("Raw AI response:", combinedJsonText);
-        throw new Error("AI returned invalid JSON format.");
+    
+    // The response from a streaming API is often a series of JSON objects.
+    // Let's combine the text parts.
+    const chunks = JSON.parse(rawResponseText);
+    const combinedText = chunks.map((chunk: any) => chunk.candidates[0].content.parts[0].text).join('');
+
+    // The model sometimes wraps the JSON in markdown. Let's remove it.
+    const jsonMatch = combinedText.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) {
+      throw new Error("AI returned invalid JSON format.");
     }
+    const jsonString = jsonMatch[0];
+
+    const parsedJson = JSON.parse(jsonString);
+    return TranslateTourOutputSchema.parse(parsedJson);
+
   } catch (error: any) {
     console.error("[Vertex AI Error] Failed to generate content:", error);
+    if (error.message.includes("invalid JSON")) {
+        throw new Error(`Vertex AI API call failed: AI returned invalid JSON format. Raw response: ${rawResponseText}`);
+    }
     throw new Error(`Vertex AI API call failed: ${error.message}`);
   }
 }
+
+    
