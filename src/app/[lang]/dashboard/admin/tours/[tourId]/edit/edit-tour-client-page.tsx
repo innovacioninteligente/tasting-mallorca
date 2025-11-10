@@ -36,6 +36,16 @@ const pickupPointSchema = z.object({
     description: multilingualStringSchema,
 });
 
+const detailsSchema = z.object({
+    highlights: multilingualStringSchema,
+    fullDescription: multilingualStringSchema,
+    included: multilingualStringSchema,
+    notIncluded: multilingualStringSchema,
+    notSuitableFor: multilingualStringSchema,
+    whatToBring: multilingualStringSchema,
+    beforeYouGo: multilingualStringSchema,
+})
+
 const itineraryItemSchema = z.object({
     id: z.string(),
     type: z.enum(["stop", "travel"]),
@@ -57,12 +67,13 @@ const formSchema = z.object({
   slug: multilingualStringSchema,
   description: multilingualStringSchema,
   overview: multilingualStringSchema,
-   generalInfo: z.object({
+  generalInfo: z.object({
     cancellationPolicy: multilingualStringSchema,
     bookingPolicy: multilingualStringSchema,
     guideInfo: multilingualStringSchema,
     pickupInfo: multilingualStringSchema,
   }),
+  details: detailsSchema,
   pickupPoint: pickupPointSchema,
   price: z.coerce.number().min(0, "El precio debe ser un número positivo."),
   region: z.enum(["North", "East", "South", "West", "Central"]),
@@ -122,6 +133,7 @@ export function EditTourClientPage({ initialData, lang }: EditTourClientPageProp
         galleryImages: initialData.galleryImages || [],
         itinerary: initialData.itinerary || [],
         pickupPoint: initialData.pickupPoint || { title: { en: '' }, description: { en: '' } },
+        details: initialData.details || { highlights: { en: ''}, fullDescription: { en: '' }, included: { en: '' }, notIncluded: { en: '' }, notSuitableFor: { en: '' }, whatToBring: { en: '' }, beforeYouGo: { en: '' } },
     };
 
     const form = useForm<TourFormValues>({
@@ -238,6 +250,15 @@ export function EditTourClientPage({ initialData, lang }: EditTourClientPageProp
                     guideInfo: values.generalInfo.guideInfo.en,
                     pickupInfo: values.generalInfo.pickupInfo.en,
                 },
+                 details: {
+                    highlights: values.details.highlights.en,
+                    fullDescription: values.details.fullDescription.en,
+                    included: values.details.included.en,
+                    notIncluded: values.details.notIncluded.en,
+                    notSuitableFor: values.details.notSuitableFor.en,
+                    whatToBring: values.details.whatToBring.en,
+                    beforeYouGo: values.details.beforeYouGo.en,
+                },
                 pickupPoint: {
                     title: values.pickupPoint.title.en,
                     description: values.pickupPoint.description.en,
@@ -267,6 +288,15 @@ export function EditTourClientPage({ initialData, lang }: EditTourClientPageProp
                     bookingPolicy: { ...currentValues.generalInfo.bookingPolicy, ...translations.generalInfo.bookingPolicy },
                     guideInfo: { ...currentValues.generalInfo.guideInfo, ...translations.generalInfo.guideInfo },
                     pickupInfo: { ...currentValues.generalInfo.pickupInfo, ...translations.generalInfo.pickupInfo },
+                },
+                 details: {
+                    highlights: { ...currentValues.details.highlights, ...translations.details.highlights },
+                    fullDescription: { ...currentValues.details.fullDescription, ...translations.details.fullDescription },
+                    included: { ...currentValues.details.included, ...translations.details.included },
+                    notIncluded: { ...currentValues.details.notIncluded, ...translations.details.notIncluded },
+                    notSuitableFor: { ...currentValues.details.notSuitableFor, ...translations.details.notSuitableFor },
+                    whatToBring: { ...currentValues.details.whatToBring, ...translations.details.whatToBring },
+                    beforeYouGo: { ...currentValues.details.beforeYouGo, ...translations.details.beforeYouGo },
                 },
                 pickupPoint: {
                     title: { ...currentValues.pickupPoint.title, ...translations.pickupPoint.title },

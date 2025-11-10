@@ -12,6 +12,16 @@ export type PickupPoint = {
     description: { [key: string]: string };
 };
 
+export type TourDetails = {
+    highlights: { [key: string]: string };
+    fullDescription: { [key: string]: string };
+    included: { [key: string]: string };
+    notIncluded: { [key: string]: string };
+    notSuitableFor: { [key: string]: string };
+    whatToBring: { [key: string]: string };
+    beforeYouGo: { [key: string]: string };
+}
+
 export interface Tour {
   id: string;
   slug: { [key: string]: string };
@@ -29,6 +39,7 @@ export interface Tour {
     guideInfo: { [key: string]: string };
     pickupInfo: { [key: string]: string };
   };
+  details: TourDetails;
   pickupPoint: PickupPoint;
   itinerary: ItineraryItem[]; 
   availabilityPeriods: {

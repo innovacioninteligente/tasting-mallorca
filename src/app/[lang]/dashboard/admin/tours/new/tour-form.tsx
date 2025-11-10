@@ -44,6 +44,17 @@ const pickupPointSchema = z.object({
     description: multilingualStringSchema,
 });
 
+const detailsSchema = z.object({
+    highlights: multilingualStringSchema,
+    fullDescription: multilingualStringSchema,
+    included: multilingualStringSchema,
+    notIncluded: multilingualStringSchema,
+    notSuitableFor: multilingualStringSchema,
+    whatToBring: multilingualStringSchema,
+    beforeYouGo: multilingualStringSchema,
+});
+
+
 const itineraryItemSchema = z.object({
     id: z.string(),
     type: z.enum(["stop", "travel"]),
@@ -71,6 +82,7 @@ const formSchema = z.object({
     guideInfo: multilingualStringSchema,
     pickupInfo: multilingualStringSchema,
   }),
+  details: detailsSchema,
   pickupPoint: pickupPointSchema,
   price: z.coerce.number().min(0, "El precio debe ser un número positivo."),
   region: z.enum(["North", "East", "South", "West", "Central"]),
@@ -299,9 +311,10 @@ export function TourForm({ initialData, isSubmitting, uploadProgress, uploadMess
         <form className="space-y-8">
             <div className="pt-2">
                 <Tabs defaultValue="main" className="w-full">
-                <TabsList className="grid w-full grid-cols-4">
+                <TabsList className="grid w-full grid-cols-5">
                     <TabsTrigger value="main">Content & Images</TabsTrigger>
                     <TabsTrigger value="availability">Availability & Pricing</TabsTrigger>
+                    <TabsTrigger value="details">Details</TabsTrigger>
                     <TabsTrigger value="itinerary">Itinerary</TabsTrigger>
                     <TabsTrigger value="translations">Translations</TabsTrigger>
                 </TabsList>
@@ -581,6 +594,103 @@ export function TourForm({ initialData, isSubmitting, uploadProgress, uploadMess
                         <FormMessage>{form.formState.errors.availabilityPeriods?.message}</FormMessage>
                         </div>
                     </CardContent>
+                    </Card>
+                </TabsContent>
+
+                <TabsContent value="details" className="mt-6">
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Tour Details (English)</CardTitle>
+                            <FormDescription>
+                                This content populates the accordion on the tour detail page. For lists, write one item per line.
+                            </FormDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-6">
+                             <FormField
+                                control={form.control}
+                                name="details.highlights.en"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Highlights</FormLabel>
+                                        <FormControl><Textarea rows={4} placeholder="e.g., Enjoy a traditional Mallorcan lunch..." {...field} /></FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                             <FormField
+                                control={form.control}
+                                name="details.fullDescription.en"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Full Description ("In Detail" section)</FormLabel>
+                                        <FormControl><Textarea rows={6} placeholder="Escape the tourist crowds and discover the authentic side of Mallorca..." {...field} /></FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <FormField
+                                    control={form.control}
+                                    name="details.included.en"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>What's Included</FormLabel>
+                                            <FormControl><Textarea rows={4} placeholder="e.g., Scenic drive along the coastal cliffs" {...field} /></FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="details.notIncluded.en"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>What's Not Included</FormLabel>
+                                            <FormControl><Textarea rows={4} placeholder="e.g., Personal expenses" {...field} /></FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                            </div>
+                             <Card className="bg-secondary/30">
+                                <CardHeader><CardTitle className="text-xl">Important Information</CardTitle></CardHeader>
+                                <CardContent className="space-y-4">
+                                     <FormField
+                                        control={form.control}
+                                        name="details.notSuitableFor.en"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Not suitable for</FormLabel>
+                                                <FormControl><Textarea rows={2} placeholder="e.g., People with mobility impairments" {...field} /></FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+                                    <FormField
+                                        control={form.control}
+                                        name="details.whatToBring.en"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>What to bring</FormLabel>
+                                                <FormControl><Textarea rows={3} placeholder="e.g., Comfortable shoes" {...field} /></FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+                                    <FormField
+                                        control={form.control}
+                                        name="details.beforeYouGo.en"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Before you go</FormLabel>
+                                                <FormControl><Textarea rows={3} placeholder="e.g., Wear comfortable shoes for walking." {...field} /></FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+                                </CardContent>
+                             </Card>
+                        </CardContent>
                     </Card>
                 </TabsContent>
 
@@ -874,6 +984,85 @@ export function TourForm({ initialData, isSubmitting, uploadProgress, uploadMess
                                                 </FormItem>
                                             )}
                                         />
+
+                                        <FormField
+                                            control={form.control}
+                                            name={`details.highlights.${lang.code as 'de' | 'fr' | 'nl'}`}
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                <FormLabel>Highlights ({lang.code.toUpperCase()})</FormLabel>
+                                                <FormControl><Textarea rows={4} {...field} /></FormControl>
+                                                <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                        <FormField
+                                            control={form.control}
+                                            name={`details.fullDescription.${lang.code as 'de' | 'fr' | 'nl'}`}
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                <FormLabel>Full Description ({lang.code.toUpperCase()})</FormLabel>
+                                                <FormControl><Textarea rows={6} {...field} /></FormControl>
+                                                <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                         <FormField
+                                            control={form.control}
+                                            name={`details.included.${lang.code as 'de' | 'fr' | 'nl'}`}
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                <FormLabel>Included ({lang.code.toUpperCase()})</FormLabel>
+                                                <FormControl><Textarea rows={4} {...field} /></FormControl>
+                                                <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                         <FormField
+                                            control={form.control}
+                                            name={`details.notIncluded.${lang.code as 'de' | 'fr' | 'nl'}`}
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                <FormLabel>Not Included ({lang.code.toUpperCase()})</FormLabel>
+                                                <FormControl><Textarea rows={4} {...field} /></FormControl>
+                                                <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                         <FormField
+                                            control={form.control}
+                                            name={`details.notSuitableFor.${lang.code as 'de' | 'fr' | 'nl'}`}
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                <FormLabel>Not Suitable For ({lang.code.toUpperCase()})</FormLabel>
+                                                <FormControl><Textarea rows={2} {...field} /></FormControl>
+                                                <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                         <FormField
+                                            control={form.control}
+                                            name={`details.whatToBring.${lang.code as 'de' | 'fr' | 'nl'}`}
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                <FormLabel>What To Bring ({lang.code.toUpperCase()})</FormLabel>
+                                                <FormControl><Textarea rows={3} {...field} /></FormControl>
+                                                <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                         <FormField
+                                            control={form.control}
+                                            name={`details.beforeYouGo.${lang.code as 'de' | 'fr' | 'nl'}`}
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                <FormLabel>Before You Go ({lang.code.toUpperCase()})</FormLabel>
+                                                <FormControl><Textarea rows={3} {...field} /></FormControl>
+                                                <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+
 
                                         <div className="p-4 border rounded-md">
                                             <p className="text-sm font-medium text-muted-foreground mb-2">Pickup Point</p>

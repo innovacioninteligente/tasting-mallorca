@@ -26,6 +26,15 @@ export const TranslateTourInputSchema = z.object({
     guideInfo: z.string().describe('Guide information text in English.'),
     pickupInfo: z.string().describe('Pickup information text in English.'),
   }),
+  details: z.object({
+      highlights: z.string().describe('List of highlights, separated by newlines.'),
+      fullDescription: z.string().describe('The full, detailed description.'),
+      included: z.string().describe('List of what is included, separated by newlines.'),
+      notIncluded: z.string().describe('List of what is not included, separated by newlines.'),
+      notSuitableFor: z.string().describe('List of who this is not suitable for, separated by newlines.'),
+      whatToBring: z.string().describe('List of what to bring, separated by newlines.'),
+      beforeYouGo: z.string().describe('List of things to know before you go, separated by newlines.'),
+  }),
   pickupPoint: z.object({
     title: z.string().describe('Pickup point main title in English.'),
     description: z.string().describe('Pickup point detailed description in English.'),
@@ -62,6 +71,15 @@ export const TranslateTourOutputSchema = z.object({
     guideInfo: MultilingualStringSchema,
     pickupInfo: MultilingualStringSchema,
   }),
+  details: z.object({
+    highlights: MultilingualStringSchema,
+    fullDescription: MultilingualStringSchema,
+    included: MultilingualStringSchema,
+    notIncluded: MultilingualStringSchema,
+    notSuitableFor: MultilingualStringSchema,
+    whatToBring: MultilingualStringSchema,
+    beforeYouGo: MultilingualStringSchema,
+  }),
   pickupPoint: z.object({
     title: MultilingualStringSchema,
     description: MultilingualStringSchema,
@@ -83,9 +101,10 @@ const prompt = ai.definePrompt({
   **IMPORTANT INSTRUCTIONS:**
   1.  **Do not perform a literal, word-for-word translation.** Adapt the phrasing, tone, and cultural nuances to make the content appealing and natural for speakers of each target language.
   2.  **Maintain the original meaning and key information.** The core details of the tour must remain accurate.
-  3.  **Format your response strictly as a JSON object** that conforms to the provided output schema. Ensure all keys and nested structures are correct.
-  4.  For itinerary activities, translate each tag individually.
-  5.  If a source field is empty, the corresponding translated fields should also be empty strings.
+  3.  **Translate list items individually.** For fields that are newline-separated lists (like highlights, included, etc.), translate each line as a separate item and maintain the newline-separated format in your output.
+  4.  **Format your response strictly as a JSON object** that conforms to the provided output schema. Ensure all keys and nested structures are correct.
+  5.  For itinerary activities, translate each tag individually.
+  6.  If a source field is empty, the corresponding translated fields should also be empty strings.
 
   **Source Content (English):**
   - Title: {{{title}}}
@@ -96,6 +115,14 @@ const prompt = ai.definePrompt({
     - Booking Policy: {{{generalInfo.bookingPolicy}}}
     - Guide Info: {{{generalInfo.guideInfo}}}
     - Pickup Info: {{{generalInfo.pickupInfo}}}
+  - Details:
+    - Highlights: {{{details.highlights}}}
+    - Full Description: {{{details.fullDescription}}}
+    - Included: {{{details.included}}}
+    - Not Included: {{{details.notIncluded}}}
+    - Not Suitable For: {{{details.notSuitableFor}}}
+    - What To Bring: {{{details.whatToBring}}}
+    - Before You Go: {{{details.beforeYouGo}}}
   - Pickup Point:
     - Title: {{{pickupPoint.title}}}
     - Description: {{{pickupPoint.description}}}
