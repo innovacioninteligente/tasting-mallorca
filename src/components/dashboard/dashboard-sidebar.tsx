@@ -139,6 +139,7 @@ export function DashboardSidebar({ isMobileMenuOpen, setIsMobileMenuOpen }: Dash
       <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
         <SheetContent side="left" className="flex w-72 flex-col bg-card p-0">
           <SheetHeader className="flex h-20 flex-row items-center justify-between border-b px-6">
+             <SheetTitle className='sr-only'>Main Menu</SheetTitle>
              <Link href={`/${lang}/`} className="flex items-center gap-2 font-semibold" onClick={() => setIsMobileMenuOpen(false)}>
                 <Sprout className="h-7 w-7 text-primary" />
                 <span className="font-headline text-xl">Tasting Mallorca</span>

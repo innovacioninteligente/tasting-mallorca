@@ -9,7 +9,7 @@ import Link from "next/link";
 import { useFormContext } from "react-hook-form";
 import { Tour } from "@/backend/tours/domain/tour.model";
 import { cn } from "@/lib/utils";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetDescription } from "@/components/ui/sheet";
 import { useDashboardLayout } from "@/app/[lang]/dashboard/layout-context";
 
 interface TourFormHeaderProps {
@@ -105,6 +105,7 @@ export function TourFormHeader({
                     <SheetContent side="right" className="w-[300px] p-0">
                         <SheetHeader className="p-4 border-b">
                             <SheetTitle>Form Actions</SheetTitle>
+                            <SheetDescription className='sr-only'>Actions to save, translate, and publish the tour.</SheetDescription>
                         </SheetHeader>
                         <ActionPanel />
                     </SheetContent>

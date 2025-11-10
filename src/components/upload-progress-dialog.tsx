@@ -1,7 +1,7 @@
 
 'use client';
 
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Progress } from '@/components/ui/progress';
 import { Loader2 } from 'lucide-react';
 
@@ -17,11 +17,12 @@ export function UploadProgressDialog({ progress, message }: UploadProgressDialog
         className="max-w-md bg-background/80 backdrop-blur-xl border-border/50 shadow-2xl"
         hideCloseButton={true}
       >
-        <DialogHeader>
+        <DialogHeader className="text-center">
           <DialogTitle className="flex items-center justify-center gap-3 text-lg">
             <Loader2 className="h-5 w-5 animate-spin" />
             <span>Guardando Tour...</span>
           </DialogTitle>
+           <DialogDescription className="sr-only">Upload in progress</DialogDescription>
         </DialogHeader>
         <div className="space-y-3 pt-4">
           <Progress value={progress} />

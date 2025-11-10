@@ -8,6 +8,7 @@ import {
   Dialog,
   DialogContent,
   DialogTitle,
+  DialogDescription,
   DialogClose,
 } from "@/components/ui/dialog";
 import {
@@ -89,6 +90,7 @@ export function GallerySection({ dictionary }: GallerySectionProps) {
              <Dialog open={isLightboxOpen} onOpenChange={setIsLightboxOpen}>
                 <DialogContent className="max-w-none w-screen h-screen p-0 bg-black/90 border-0 flex items-center justify-center">
                     <DialogTitle className="sr-only">Image Gallery Lightbox</DialogTitle>
+                     <DialogDescription className="sr-only">A carousel of gallery images in a larger view.</DialogDescription>
                     <Carousel
                         opts={{
                             loop: true,
