@@ -1,12 +1,11 @@
-
 'use server';
 
 import { createSafeAction } from '@/app/server-actions/lib/safe-action';
 import { 
+    translateTour,
     TranslateTourInput,
     TranslateTourOutput,
-    TranslateTourInputSchema,
-    translateTourFlow
+    TranslateTourInputSchema
 } from '@/ai/flows/translate-tour.flow';
 
 export const translateTourAction = createSafeAction(
@@ -18,7 +17,7 @@ export const translateTourAction = createSafeAction(
     input: TranslateTourInput,
   ): Promise<{ data?: TranslateTourOutput; error?: string }> => {
     try {
-      const translatedData = await translateTourFlow(input);
+      const translatedData = await translateTour(input);
       return { data: translatedData };
     } catch (error: any) {
       console.error('Error translating tour content:', error);

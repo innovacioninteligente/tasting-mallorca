@@ -1,14 +1,5 @@
-
-/**
- * @fileOverview An AI flow to translate tour content from English to other supported languages.
- *
- * - translateTour - The main function to call the translation flow.
- * - TranslateTourInputSchema - The input type (English content).
- * - TranslateTourOutputSchema - The return type (translated content for es, de, fr, nl).
- */
-
-import { ai } from '@/ai/genkit';
 import { z } from 'zod';
+import { vertexAI } from '@/ai/vertex-client';
 
 const ItineraryItemTranslationInputSchema = z.object({
   title: z.string().optional(),
@@ -86,11 +77,8 @@ export const TranslateTourOutputSchema = z.object({
 });
 export type TranslateTourOutput = z.infer<typeof TranslateTourOutputSchema>;
 
-const translationPrompt = ai.definePrompt({
-  name: 'translationPrompt',
-  input: { schema: TranslateTourInputSchema },
-  output: { schema: TranslateTourOutputSchema },
-  prompt: `You are an expert translator specializing in creating engaging and natural-sounding tourism marketing content for a European audience. Your task is to translate the provided tour information from English into Spanish (es), German (de), French (fr), and Dutch (nl).
+function buildPrompt(input: TranslateTourInput): string {
+    return `You are an expert translator specializing in creating engaging and natural-sounding tourism marketing content for a European audience. Your task is to translate the provided tour information from English into Spanish (es), German (de), French (fr), and Dutch (nl).
 
     **IMPORTANT INSTRUCTIONS:**
     1.  **Do not perform a literal, word-for-word translation.** Adapt the phrasing, tone, and cultural nuances to make the content appealing and natural for speakers of each target language.
@@ -101,42 +89,58 @@ const translationPrompt = ai.definePrompt({
     6.  If a source field is empty, the corresponding translated fields should also be empty strings.
 
     **Source Content (English):**
-    - Title: {{{title}}}
-    - Description: {{{description}}}
-    - Overview: {{{overview}}}
+    - Title: ${input.title}
+    - Description: ${input.description}
+    - Overview: ${input.overview}
     - General Info:
-      - Cancellation Policy: {{{generalInfo.cancellationPolicy}}}
-      - Booking Policy: {{{generalInfo.bookingPolicy}}}
-      - Guide Info: {{{generalInfo.guideInfo}}}
-      - Pickup Info: {{{generalInfo.pickupInfo}}}
+      - Cancellation Policy: ${input.generalInfo.cancellationPolicy}
+      - Booking Policy: ${input.generalInfo.bookingPolicy}
+      - Guide Info: ${input.generalInfo.guideInfo}
+      - Pickup Info: ${input.generalInfo.pickupInfo}
     - Details:
-      - Highlights: {{{details.highlights}}}
-      - Full Description: {{{details.fullDescription}}}
-      - Included: {{{details.included}}}
-      - Not Included: {{{details.notIncluded}}}
-      - Not Suitable For: {{{details.notSuitableFor}}}
-      - What To Bring: {{{details.whatToBring}}}
-      - Before You Go: {{{details.beforeYouGo}}}
+      - Highlights: ${input.details?.highlights}
+      - Full Description: ${input.details?.fullDescription}
+      - Included: ${input.details?.included}
+      - Not Included: ${input.details?.notIncluded}
+      - Not Suitable For: ${input.details?.notSuitableFor}
+      - What To Bring: ${input.details?.whatToBring}
+      - Before You Go: ${input.details?.beforeYouGo}
     - Pickup Point:
-      - Title: {{{pickupPoint.title}}}
-      - Description: {{{pickupPoint.description}}}
+      - Title: ${input.pickupPoint.title}
+      - Description: ${input.pickupPoint.description}
     - Itinerary Items:
-    {{#each itinerary}}
-      - Item {{@index}}:
-        - Title: {{this.title}}
-        - Activities: {{#each this.activities}}"{{this}}"{{#unless @last}}, {{/unless}}{{/each}}
-    {{/each}}
-    `
-});
+    ${input.itinerary?.map((item, index) => `
+      - Item ${index}:
+        - Title: ${item.title}
+        - Activities: ${item.activities?.join(', ')}
+    `).join('')}
 
-export const translateTourFlow = ai.defineFlow(
-  {
-    name: 'translateTourFlow',
-    inputSchema: TranslateTourInputSchema,
-    outputSchema: TranslateTourOutputSchema,
-  },
-  async (input) => {
-    const { output } = await translationPrompt(input);
-    return output!;
-  }
-);
+    **Output JSON Schema:**
+    ${JSON.stringify(TranslateTourOutputSchema.shape, null, 2)}
+    `;
+}
+
+export async function translateTour(input: TranslateTourInput): Promise<TranslateTourOutput> {
+    const prompt = buildPrompt(input);
+    
+    const result = await vertexAI.models.generateContent({
+        model: 'gemini-2.5-flash',
+        contents: [{ role: 'user', parts: [{ text: prompt }] }],
+        generationConfig: {
+            responseMimeType: 'application/json',
+        }
+    });
+
+    const responseText = result.response.candidates?.[0]?.content.parts[0]?.text;
+    if (!responseText) {
+        throw new Error('No response text from AI model.');
+    }
+    
+    try {
+        const parsedJson = JSON.parse(responseText);
+        return TranslateTourOutputSchema.parse(parsedJson);
+    } catch (e) {
+        console.error("Failed to parse AI response:", e);
+        throw new Error("AI returned invalid JSON format.");
+    }
+}
