@@ -311,7 +311,7 @@ export function TourForm({ initialData }: TourFormProps) {
         <form className="space-y-8">
             <div className="pt-2">
                 <Tabs defaultValue="main" className="w-full">
-                <TabsList className="w-full md:grid md:w-full md:grid-cols-5 flex overflow-x-auto">
+                <TabsList className="w-full md:grid md:w-full md:grid-cols-5 flex justify-start overflow-x-auto">
                     <TabsTrigger value="main">Content & Images</TabsTrigger>
                     <TabsTrigger value="availability">Availability & Pricing</TabsTrigger>
                     <TabsTrigger value="details">Details</TabsTrigger>
@@ -969,3 +969,5 @@ export function TourForm({ initialData }: TourFormProps) {
     </>
   );
 }
+
+    
