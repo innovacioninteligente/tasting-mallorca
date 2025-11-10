@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@formatjs/intl-localematcher": "^0.5.4",
-    "@google/genai": "^0.14.0",
+    "@google/genai": "^0.15.0",
     "@hookform/resolvers": "^3.9.0",
     "@radix-ui/react-accordion": "^1.2.3",
     "@radix-ui/react-alert-dialog": "^1.1.6",
@@ -47,6 +47,7 @@
     "embla-carousel-autoplay": "^8.1.5",
     "embla-carousel-react": "^8.6.0",
     "firebase": "^10.12.3",
+    "firebase-admin": "^12.2.0",
     "framer-motion": "^11.2.10",
     "lodash": "^4.17.21",
     "lucide-react": "^0.475.0",
