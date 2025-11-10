@@ -14,7 +14,8 @@ import { initializeFirebase } from "@/firebase";
 import { useToast } from "@/hooks/use-toast";
 import { createTour } from "@/app/server-actions/tours/createTour";
 import { useFormPersistence } from "@/hooks/use-form-persistence";
-import { translateTourContent, TranslateTourInputSchema } from "@/ai/flows/translate-tour.flow";
+import { translateTourContent } from "@/app/server-actions/tours/translateTour";
+import { TranslateTourInputSchema } from "@/ai/flows/translate-tour.flow";
 import { UploadProgressDialog } from "@/components/upload-progress-dialog";
 
 const multilingualStringSchema = z.object({
@@ -31,7 +32,7 @@ const multilingualOptionalStringSchema = z.object({
     de: z.string().optional(),
     fr: z.string().optional(),
     nl: z.string().optional(),
-});
+}).optional();
 
 const availabilityPeriodSchema = z.object({
     startDate: z.date({ required_error: "Start date is required." }),
@@ -52,7 +53,7 @@ const detailsSchema = z.object({
     notSuitableFor: multilingualOptionalStringSchema,
     whatToBring: multilingualOptionalStringSchema,
     beforeYouGo: multilingualOptionalStringSchema,
-})
+}).optional();
 
 const itineraryItemSchema = z.object({
     id: z.string(),
@@ -81,7 +82,7 @@ const formSchema = z.object({
     guideInfo: multilingualStringSchema,
     pickupInfo: multilingualStringSchema,
   }),
-  details: detailsSchema.optional(),
+  details: detailsSchema,
   pickupPoint: pickupPointSchema,
   price: z.coerce.number().min(0, "El precio debe ser un número positivo."),
   region: z.enum(["North", "East", "South", "West", "Central"]),
@@ -99,7 +100,6 @@ const formSchema = z.object({
 type TourFormValues = z.infer<typeof formSchema>;
 
 const defaultMultilingual = { es: '', en: '', de: '', fr: '', nl: '' };
-const defaultMultilingualOptional = { es: '', en: '', de: '', fr: '', nl: '' };
 
 export default function NewTourPage() {
     const pathname = usePathname();
@@ -122,13 +122,13 @@ export default function NewTourPage() {
             pickupInfo: { ...defaultMultilingual },
         },
         details: {
-            highlights: { ...defaultMultilingualOptional },
-            fullDescription: { ...defaultMultilingualOptional },
-            included: { ...defaultMultilingualOptional },
-            notIncluded: { ...defaultMultilingualOptional },
-            notSuitableFor: { ...defaultMultilingualOptional },
-            whatToBring: { ...defaultMultilingualOptional },
-            beforeYouGo: { ...defaultMultilingualOptional },
+            highlights: { ...defaultMultilingual },
+            fullDescription: { ...defaultMultilingual },
+            included: { ...defaultMultilingual },
+            notIncluded: { ...defaultMultilingual },
+            notSuitableFor: { ...defaultMultilingual },
+            whatToBring: { ...defaultMultilingual },
+            beforeYouGo: { ...defaultMultilingual },
         },
         pickupPoint: {
             title: { ...defaultMultilingual },
@@ -373,5 +373,3 @@ export default function NewTourPage() {
         </AdminRouteGuard>
     );
 }
-
-    

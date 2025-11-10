@@ -1,4 +1,3 @@
-'use server';
 /**
  * @fileOverview An AI flow to translate tour content from English to other supported languages.
  *

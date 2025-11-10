@@ -15,7 +15,8 @@ import { getStorage, ref as storageRef, uploadBytesResumable, getDownloadURL } f
 import { initializeFirebase } from "@/firebase";
 import { updateTour } from "@/app/server-actions/tours/updateTour";
 import { useFormPersistence } from "@/hooks/use-form-persistence";
-import { translateTourContent, TranslateTourInputSchema } from "@/ai/flows/translate-tour.flow";
+import { translateTourContent } from "@/app/server-actions/tours/translateTour";
+import { TranslateTourInputSchema } from "@/ai/flows/translate-tour.flow";
 import { UploadProgressDialog } from "@/components/upload-progress-dialog";
 import { cloneDeep, mergeWith } from "lodash";
 
@@ -34,7 +35,7 @@ const multilingualOptionalStringSchema = z.object({
     de: z.string().optional(),
     fr: z.string().optional(),
     nl: z.string().optional(),
-});
+}).optional();
 
 const availabilityPeriodSchema = z.object({
     startDate: z.date({ required_error: "Start date is required." }),
@@ -55,7 +56,7 @@ const detailsSchema = z.object({
     notSuitableFor: multilingualOptionalStringSchema,
     whatToBring: multilingualOptionalStringSchema,
     beforeYouGo: multilingualOptionalStringSchema,
-})
+}).optional();
 
 const itineraryItemSchema = z.object({
     id: z.string(),
@@ -84,7 +85,7 @@ const formSchema = z.object({
     guideInfo: multilingualStringSchema,
     pickupInfo: multilingualStringSchema,
   }),
-  details: detailsSchema.optional(),
+  details: detailsSchema,
   pickupPoint: pickupPointSchema,
   price: z.coerce.number().min(0, "El precio debe ser un número positivo."),
   region: z.enum(["North", "East", "South", "West", "Central"]),
@@ -124,8 +125,7 @@ interface EditTourClientPageProps {
 
 const defaultMultilingual = { es: '', en: '', de: '', fr: '', nl: '' };
 
-const getSanitizedDefaultValues = (): TourFormValues => ({
-    id: '',
+const getSanitizedDefaultValues = (): Omit<TourFormValues, 'id'> => ({
     title: { ...defaultMultilingual },
     slug: { ...defaultMultilingual },
     description: { ...defaultMultilingual },
@@ -193,10 +193,13 @@ export function EditTourClientPage({ initialData, lang }: EditTourClientPageProp
 
     const form = useForm<TourFormValues>({
         resolver: zodResolver(formSchema),
-        defaultValues: mergedData,
+        defaultValues: {
+            ...mergedData,
+            id: initialData.id,
+        },
     });
 
-    const { clearPersistedData } = useFormPersistence(formPersistenceKey, form, mergedData);
+    const { clearPersistedData } = useFormPersistence(formPersistenceKey, form, { ...mergedData, id: initialData.id });
 
     const uploadFile = (file: File, tourId: string): Promise<string> => {
       return new Promise((resolve, reject) => {
@@ -414,7 +417,3 @@ export function EditTourClientPage({ initialData, lang }: EditTourClientPageProp
         </div>
     );
 }
-
-    
-
-    
