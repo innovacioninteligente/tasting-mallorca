@@ -21,7 +21,6 @@ type TourPageProps = {
   };
 };
 
-// Phase 2: Generate static paths for all tours in all languages at build time
 export async function generateStaticParams() {
   const result = await findAllTours({});
   if (!result.data) {
@@ -30,7 +29,7 @@ export async function generateStaticParams() {
 
   const paths = result.data.flatMap((tour: Tour) =>
     Object.entries(tour.slug)
-      .filter(([_, slugValue]) => slugValue) // Filter out empty slugs
+      .filter(([_, slugValue]) => slugValue) 
       .map(([lang, slug]) => ({
         lang,
         slug,
@@ -40,9 +39,9 @@ export async function generateStaticParams() {
   return paths;
 }
 
-// Phase 2: Generate dynamic metadata for each tour page
 export async function generateMetadata({ params }: TourPageProps): Promise<Metadata> {
-  const tourResult = await findTourBySlugAndLang({ slug: params.slug, lang: params.lang });
+  const { slug, lang } = params;
+  const tourResult = await findTourBySlugAndLang({ slug, lang });
 
   if (!tourResult.data) {
     return {
@@ -51,8 +50,8 @@ export async function generateMetadata({ params }: TourPageProps): Promise<Metad
   }
 
   const tour = tourResult.data;
-  const title = tour.title[params.lang] || tour.title.en;
-  const description = tour.description[params.lang] || tour.description.en;
+  const title = tour.title[lang] || tour.title.en;
+  const description = tour.description[lang] || tour.description.en;
 
   const allSlugs = tour.slug;
   const languages: { [key: string]: string } = {};
@@ -76,7 +75,7 @@ export async function generateMetadata({ params }: TourPageProps): Promise<Metad
           alt: title,
         },
       ],
-      locale: params.lang,
+      locale: lang,
       type: 'website',
     },
     twitter: {
@@ -86,7 +85,7 @@ export async function generateMetadata({ params }: TourPageProps): Promise<Metad
       images: [tour.mainImage],
     },
     alternates: {
-        canonical: `/${params.lang}/tours/${params.slug}`,
+        canonical: `/${lang}/tours/${slug}`,
         languages: languages,
     },
   };
@@ -102,9 +101,6 @@ export default async function TourPage({ params }: TourPageProps) {
     notFound();
   }
   const tour = tourResult.data;
-
-  // Since tour data is now fully dynamic, we need to adapt the dictionary-based components.
-  // For simplicity, we'll use the dictionary for static text and pass dynamic tour data directly.
   
   const tourHeaderProps = {
     title: tour.title[lang] || tour.title.en,
@@ -114,7 +110,6 @@ export default async function TourPage({ params }: TourPageProps) {
     overview: tour.overview[lang] || tour.overview.en,
   };
   
-  // This is a simplified mapping. A more robust solution might involve a dedicated mapping layer.
   const tourDetailsProps = {
       highlightsTitle: dictionary.tourDetail.tourDetails.highlightsTitle,
       highlights: (tour.details?.highlights?.[lang] || tour.details?.highlights?.en || '').split('\n').filter(Boolean),
@@ -163,7 +158,7 @@ export default async function TourPage({ params }: TourPageProps) {
               <TourBookingSection 
                 dictionary={dictionary.tourDetail.booking} 
                 price={tour.price} 
-                lang={params.lang} 
+                lang={lang} 
                 tourTitle={tour.title[lang] || tour.title.en} 
               />
             </aside>

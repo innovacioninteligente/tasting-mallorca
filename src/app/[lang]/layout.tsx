@@ -16,19 +16,19 @@ const poppins = Poppins({
 
 export default async function RootLayout({
   children,
-  params,
+  params: { lang },
 }: {
   children: React.ReactNode;
   params: { lang: Locale };
 }) {
-  const dictionary = await getDictionary(params.lang);
+  const dictionary = await getDictionary(lang);
 
   return (
-    <html lang={params.lang} className={`${poppins.variable}`}>
+    <html lang={lang} className={`${poppins.variable}`}>
       <body className="font-body antialiased bg-background text-foreground">
         <FirebaseProvider>
           <div className="flex flex-col min-h-screen">
-            <MainLayout dictionary={dictionary} lang={params.lang}>
+            <MainLayout dictionary={dictionary} lang={lang}>
               {children}
             </MainLayout>
           </div>
