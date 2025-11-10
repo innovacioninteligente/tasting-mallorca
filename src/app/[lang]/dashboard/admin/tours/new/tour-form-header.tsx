@@ -29,7 +29,7 @@ export function TourFormHeader({
     const { control } = useFormContext();
 
     return (
-        <div className="sticky top-0 z-10 flex items-center justify-between border-b bg-background/95 py-4 backdrop-blur-sm -mx-4 px-4 md:-mx-8 md:px-8 lg:-mx-10 lg:px-10">
+        <div className="sticky top-0 z-10 flex h-20 items-center justify-between border-b bg-background/95 px-4 backdrop-blur-sm md:px-8 lg:px-10">
             <div className="flex items-center gap-4">
                 <Button asChild variant="outline" size="sm">
                     <Link href={basePath}>
