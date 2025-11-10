@@ -17,7 +17,7 @@ import { updateTour } from "@/app/server-actions/tours/updateTour";
 import { useFormPersistence } from "@/hooks/use-form-persistence";
 import { UploadProgressDialog } from "@/components/upload-progress-dialog";
 import { cloneDeep, merge, mergeWith } from "lodash";
-import { TranslateTourInput, TranslateTourOutput } from "@/ai/flows/translate-tour.flow";
+import { TranslateTourInput, TranslateTourOutput } from "@/ai/flows/translate-tour-flow";
 
 
 const multilingualStringSchema = z.object({
@@ -370,14 +370,10 @@ export function EditTourClientPage({ initialData, lang, translateTourAction }: E
 
         } catch(error: any) {
             console.error("Translation failed:", error);
-            const errorMessage = error.message.includes('503') 
-                ? "The translation service is currently overloaded. Please try again in a few moments."
-                : error.message || "An unexpected issue occurred during translation.";
-            
             toast({
                 variant: "destructive",
                 title: "Translation Error",
-                description: errorMessage,
+                description: error.message || "An unexpected issue occurred during translation.",
             });
         } finally {
             setIsTranslating(false);

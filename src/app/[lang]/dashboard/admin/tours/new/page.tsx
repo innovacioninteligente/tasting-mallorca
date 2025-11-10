@@ -17,7 +17,7 @@ import { useFormPersistence } from "@/hooks/use-form-persistence";
 import { UploadProgressDialog } from "@/components/upload-progress-dialog";
 import { cloneDeep, merge, mergeWith } from "lodash";
 import { translateTourAction } from "@/app/server-actions/tours/translateTourAction";
-import { TranslateTourInput, TranslateTourOutput } from "@/ai/flows/translate-tour.flow";
+import { TranslateTourInput, TranslateTourOutput } from "@/ai/flows/translate-tour-flow";
 
 const multilingualStringSchema = z.object({
     es: z.string().optional(),

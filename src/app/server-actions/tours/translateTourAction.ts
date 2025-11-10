@@ -6,7 +6,7 @@ import {
     TranslateTourInput,
     TranslateTourOutput,
     TranslateTourInputSchema
-} from '@/ai/flows/translate-tour.flow';
+} from '@/ai/flows/translate-tour-flow';
 
 export const translateTourAction = createSafeAction(
   {
