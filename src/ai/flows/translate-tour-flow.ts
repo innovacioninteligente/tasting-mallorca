@@ -1,7 +1,8 @@
 'use server';
 
 import { z } from 'zod';
-import { vertexAI } from '@/ai/vertex-client';
+import { GoogleGenAI } from '@google/genai';
+import { adminApp } from '@/firebase/server/config';
 
 const ItineraryItemTranslationInputSchema = z.object({
   title: z.string().optional(),
@@ -122,8 +123,28 @@ function buildPrompt(input: TranslateTourInput): string {
     `;
 }
 
+async function getVertexAIClient() {
+    const project = process.env.GOOGLE_CLOUD_PROJECT;
+    const location = process.env.GOOGLE_CLOUD_LOCATION;
+
+    if (!project || !location) {
+        throw new Error('Google Cloud project and location must be set in environment variables.');
+    }
+    
+    // Ensure admin app is initialized to access credentials
+    adminApp;
+
+    return new GoogleGenAI({
+        vertexai: true,
+        project,
+        location,
+    });
+}
+
+
 export async function translateTour(input: TranslateTourInput): Promise<TranslateTourOutput> {
     const prompt = buildPrompt(input);
+    const vertexAI = await getVertexAIClient();
     const models = await vertexAI.getModels();
     
     const result = await models.generateContent({
