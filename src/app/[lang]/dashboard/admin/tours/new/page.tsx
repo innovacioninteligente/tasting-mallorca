@@ -301,7 +301,7 @@ export default function NewTourPage() {
                         onTranslate={handleTranslate}
                         isTranslating={isTranslating}
                     />
-                    <div className="flex-grow overflow-auto px-4 pt-6 md:px-8 lg:px-10">
+                    <div className="flex-grow overflow-auto px-4 md:px-8 lg:px-10">
                        <TourForm 
                          isSubmitting={isSubmitting}
                          uploadProgress={uploadProgress}
