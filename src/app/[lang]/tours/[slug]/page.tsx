@@ -1,4 +1,5 @@
 
+
 import React from 'react';
 import { notFound } from 'next/navigation';
 import { Locale } from '@/dictionaries/config';
@@ -21,7 +22,7 @@ type TourPageProps = {
   };
 };
 
-export async function generateStaticParams() {
+export async function generateStaticParams(): Promise<TourPageProps['params'][]> {
   const result = await findAllTours({});
   if (!result.data) {
     return [];
@@ -31,8 +32,8 @@ export async function generateStaticParams() {
     Object.entries(tour.slug)
       .filter(([_, slugValue]) => slugValue) 
       .map(([lang, slug]) => ({
-        lang,
-        slug,
+        lang: lang as Locale,
+        slug: encodeURIComponent(slug),
       }))
   );
 
@@ -40,7 +41,8 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: TourPageProps): Promise<Metadata> {
-  const { slug, lang } = params;
+  const { lang } = params;
+  const slug = decodeURIComponent(params.slug);
   const tourResult = await findTourBySlugAndLang({ slug, lang });
 
   if (!tourResult.data) {
@@ -55,10 +57,10 @@ export async function generateMetadata({ params }: TourPageProps): Promise<Metad
 
   const allSlugs = tour.slug;
   const languages: { [key: string]: string } = {};
-  if (allSlugs.en) languages['en-US'] = `/en/tours/${allSlugs.en}`;
-  if (allSlugs.de) languages['de-DE'] = `/de/tours/${allSlugs.de}`;
-  if (allSlugs.fr) languages['fr-FR'] = `/fr/tours/${allSlugs.fr}`;
-  if (allSlugs.nl) languages['nl-NL'] = `/nl/tours/${allSlugs.nl}`;
+  if (allSlugs.en) languages['en-US'] = `/en/tours/${encodeURIComponent(allSlugs.en)}`;
+  if (allSlugs.de) languages['de-DE'] = `/de/tours/${encodeURIComponent(allSlugs.de)}`;
+  if (allSlugs.fr) languages['fr-FR'] = `/fr/tours/${encodeURIComponent(allSlugs.fr)}`;
+  if (allSlugs.nl) languages['nl-NL'] = `/nl/tours/${encodeURIComponent(allSlugs.nl)}`;
 
 
   return {
@@ -92,7 +94,8 @@ export async function generateMetadata({ params }: TourPageProps): Promise<Metad
 }
 
 export default async function TourPage({ params }: TourPageProps) {
-  const { lang, slug } = params;
+  const { lang } = params;
+  const slug = decodeURIComponent(params.slug);
   const dictionary = await getDictionary(lang);
   
   const tourResult = await findTourBySlugAndLang({ slug, lang });

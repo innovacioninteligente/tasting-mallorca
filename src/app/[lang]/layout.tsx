@@ -1,4 +1,5 @@
 
+
 import '../globals.css';
 import { Toaster } from "@/components/ui/toaster";
 import { Poppins } from 'next/font/google';
@@ -14,13 +15,18 @@ const poppins = Poppins({
   variable: '--font-poppins',
 });
 
+interface RootLayoutProps {
+  children: React.ReactNode;
+  params: {
+    lang: Locale;
+  };
+}
+
 export default async function RootLayout({
   children,
-  params: { lang },
-}: {
-  children: React.ReactNode;
-  params: { lang: Locale };
-}) {
+  params,
+}: RootLayoutProps) {
+  const { lang } = params;
   const dictionary = await getDictionary(lang);
 
   return (

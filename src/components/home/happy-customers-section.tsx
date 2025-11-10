@@ -1,3 +1,4 @@
+
 'use client';
 
 import Image from 'next/image';
@@ -15,16 +16,16 @@ export function HappyCustomersSection({ dictionary }: HappyCustomersProps) {
                 {/* Image collage */}
                 <div className="relative h-[500px]">
                 <div className="absolute w-[70%] h-[70%] top-0 left-0 overflow-hidden rounded-full">
-                    <Image src="https://picsum.photos/seed/happy-cust1/800/800" alt="Tropical boat view" fill objectFit="cover" data-ai-hint="thailand boat beach" />
+                    <Image src="https://picsum.photos/seed/happy-cust1/800/800" alt="Tropical boat view" fill className="object-cover" data-ai-hint="thailand boat beach" />
                 </div>
                 <div className="absolute w-[40%] h-[40%] top-10 right-0 bg-gray-700 overflow-hidden rounded-full border-4 border-primary-dark">
-                    <Image src="https://picsum.photos/seed/happy-cust2/400/400" alt="Woman in hat" fill objectFit="cover" data-ai-hint="woman hat travel"/>
+                    <Image src="https://picsum.photos/seed/happy-cust2/400/400" alt="Woman in hat" fill className="object-cover" data-ai-hint="woman hat travel"/>
                 </div>
                 <div className="absolute w-[45%] h-[45%] bottom-0 right-1/4 bg-gray-700 overflow-hidden rounded-full border-4 border-primary-dark">
-                    <Image src="https://picsum.photos/seed/happy-cust3/400/400" alt="Moscow cathedral" fill objectFit="cover" data-ai-hint="moscow cathedral" />
+                    <Image src="https://picsum.photos/seed/happy-cust3/400/400" alt="Moscow cathedral" fill className="object-cover" data-ai-hint="moscow cathedral" />
                 </div>
                 <div className="absolute w-[35%] h-[35%] bottom-0 left-5 bg-gray-700 overflow-hidden rounded-full border-4 border-primary-dark">
-                    <Image src="https://picsum.photos/seed/happy-cust4/400/400" alt="Hiker looking at view" fill objectFit="cover" data-ai-hint="hiker cliff view" />
+                    <Image src="https://picsum.photos/seed/happy-cust4/400/400" alt="Hiker looking at view" fill className="object-cover" data-ai-hint="hiker cliff view" />
                 </div>
                 </div>
 
