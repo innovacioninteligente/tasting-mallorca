@@ -1,4 +1,3 @@
-
 import { z } from 'zod';
 import { GoogleGenAI } from '@google/genai';
 import { adminApp } from '@/firebase/server/config';
@@ -144,27 +143,35 @@ async function getVertexAIClient() {
 export async function translateTour(input: TranslateTourInput): Promise<TranslateTourOutput> {
     const prompt = buildPrompt(input);
     const vertexAI = await getVertexAIClient();
-    const models = await vertexAI.getModels();
     
-    const result = await models.generateContent({
-        model: 'gemini-2.5-flash',
-        contents: [{ role: 'user', parts: [{ text: prompt }] }],
-        generationConfig: {
-            responseMimeType: 'application/json',
-        }
-    });
+    // For debugging: log the prompt being sent to the AI
+    console.log("Sending a translation request to Vertex AI...");
 
-    const responseText = result.response.candidates?.[0]?.content.parts[0]?.text;
-    if (!responseText) {
-        throw new Error('No response text from AI model.');
-    }
-    
     try {
-        const parsedJson = JSON.parse(responseText);
-        return TranslateTourOutputSchema.parse(parsedJson);
-    } catch (e) {
-        console.error("Failed to parse AI response:", e);
-        console.error("Raw AI response:", responseText);
-        throw new Error("AI returned invalid JSON format.");
+        const models = await vertexAI.getModels();
+        const result = await models.generateContent({
+            model: 'gemini-2.5-flash',
+            contents: [{ role: 'user', parts: [{ text: prompt }] }],
+            generationConfig: {
+                responseMimeType: 'application/json',
+            }
+        });
+
+        const responseText = result.response.candidates?.[0]?.content.parts[0]?.text;
+        if (!responseText) {
+            throw new Error('No response text from AI model.');
+        }
+        
+        try {
+            const parsedJson = JSON.parse(responseText);
+            return TranslateTourOutputSchema.parse(parsedJson);
+        } catch (e) {
+            console.error("Failed to parse AI response:", e);
+            console.error("Raw AI response:", responseText);
+            throw new Error("AI returned invalid JSON format.");
+        }
+    } catch (error: any) {
+        console.error("[Vertex AI Error] Failed to generate content:", error);
+        throw new Error(`Vertex AI API call failed: ${error.message}`);
     }
 }

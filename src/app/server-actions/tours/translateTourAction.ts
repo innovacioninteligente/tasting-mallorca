@@ -20,7 +20,7 @@ export const translateTourAction = createSafeAction(
       const translatedData = await translateTour(input);
       return { data: translatedData };
     } catch (error: any) {
-      console.error('Error translating tour content:', error);
+      console.error('Error in translateTourAction:', error);
       return { error: error.message || 'Failed to translate content.' };
     }
   }
