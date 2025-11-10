@@ -9,6 +9,7 @@
  */
 
 import {ai} from '@/ai/genkit';
+import {googleAI} from '@genkit-ai/google-genai';
 import {z} from 'genkit';
 
 const OptimizePickupRouteInputSchema = z.object({
@@ -35,6 +36,7 @@ const routePrompt = ai.definePrompt({
     name: 'optimizeRoutePrompt',
     input: { schema: OptimizePickupRouteInputSchema },
     output: { schema: OptimizePickupRouteOutputSchema },
+    model: googleAI.model('gemini-pro'),
     prompt: `You are an expert route optimizer specializing in creating efficient routes for tour buses.
 
 You will receive a list of meeting points, each with a name and coordinates.
