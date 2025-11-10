@@ -16,7 +16,7 @@ import { initializeFirebase } from "@/firebase";
 import { updateTour } from "@/app/server-actions/tours/updateTour";
 import { useFormPersistence } from "@/hooks/use-form-persistence";
 import { UploadProgressDialog } from "@/components/upload-progress-dialog";
-import { cloneDeep, merge, mergeWith } from "lodash";
+import { cloneDeep, mergeWith } from "lodash";
 import { TranslateTourInput, TranslateTourOutput } from "@/ai/flows/translate-tour-flow";
 import { translateTourAction } from "@/app/server-actions/tours/translateTourAction";
 
@@ -309,6 +309,7 @@ export function EditTourClientPage({ initialData, lang }: EditTourClientPageProp
             
             const translationInput: TranslateTourInput = {
                 title: currentData.title.en,
+                slug: currentData.slug.en,
                 description: currentData.description.en,
                 overview: currentData.overview.en,
                 generalInfo: {

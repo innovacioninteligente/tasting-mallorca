@@ -1,6 +1,3 @@
-
-'use server';
-
 import { z } from 'zod';
 
 const ItineraryItemTranslationInputSchema = z.object({
@@ -10,6 +7,7 @@ const ItineraryItemTranslationInputSchema = z.object({
 
 export const TranslateTourInputSchema = z.object({
   title: z.string().describe('The title of the tour in English.'),
+  slug: z.string().describe('The URL-friendly slug in English.'),
   description: z.string().describe('The short description of the tour in English.'),
   overview: z.string().describe('The detailed overview of the tour in English.'),
   generalInfo: z.object({
@@ -51,6 +49,7 @@ const ItineraryItemTranslationOutputSchema = z.object({
 });
 
 export const TranslateTourOutputSchema = z.object({
+  slug: MultilingualStringSchema.optional(),
   title: MultilingualStringSchema.optional(),
   description: MultilingualStringSchema.optional(),
   overview: MultilingualStringSchema.optional(),
@@ -79,6 +78,7 @@ export type TranslateTourOutput = z.infer<typeof TranslateTourOutputSchema>;
 
 function buildPrompt(input: TranslateTourInput): string {
     const outputSchemaForPrompt = {
+        slug: { de: "string", fr: "string", nl: "string" },
         title: { de: "string", fr: "string", nl: "string" },
         description: { de: "string", fr: "string", nl: "string" },
         overview: { de: "string", fr: "string", nl: "string" },
@@ -113,14 +113,16 @@ function buildPrompt(input: TranslateTourInput): string {
 
     **CRITICAL INSTRUCTIONS:**
     1.  **Do not perform a literal, word-for-word translation.** Adapt the phrasing, tone, and cultural nuances to make the content appealing and natural for speakers of each target language.
-    2.  **Maintain the original meaning and key information.** The core details of the tour must remain accurate.
-    3.  **Handle list-based fields correctly:** For fields in the 'details' section (like highlights, included, etc.), the input is a single string with items separated by newlines. Your output for these fields MUST be an object with keys "de", "fr", "nl", where each value is a single string that preserves the newline-separated list format. For example, for "details.highlights", the output must be an object like { "de": "...", "fr": "...", "nl": "..." }.
-    4.  **Format your response STRICTLY as a JSON object.** Do not wrap it in markdown backticks (\`\`\`json) or any other text. The JSON object must conform to the schema provided at the end of this prompt.
-    5.  For itinerary activities, which are arrays of strings, translate each string tag individually and return them as arrays for each language.
-    6.  If a source field is empty or missing, the corresponding translated fields should also be empty strings or empty arrays.
+    2.  **Translate the 'slug' field.** It must be a URL-friendly version of the translated title (lowercase, hyphens for spaces, no special characters).
+    3.  **Maintain the original meaning and key information.** The core details of the tour must remain accurate.
+    4.  **Handle list-based fields correctly:** For fields in the 'details' section (like highlights, included, etc.), the input is a single string with items separated by newlines. Your output for these fields MUST be an object with keys "de", "fr", "nl", where each value is a single string that preserves the newline-separated list format.
+    5.  **Format your response STRICTLY as a JSON object.** Do not wrap it in markdown backticks (\`\`\`json) or any other text. The JSON object must conform to the schema provided at the end of this prompt.
+    6.  For itinerary activities, which are arrays of strings, translate each string tag individually and return them as arrays for each language.
+    7.  If a source field is empty or missing, the corresponding translated fields should also be empty strings or empty arrays.
 
     **Source Content (English):**
     - Title: ${input.title}
+    - Slug: ${input.slug}
     - Description: ${input.description}
     - Overview: ${input.overview}
     - General Info:
@@ -240,7 +242,6 @@ export async function translateTour(input: TranslateTourInput): Promise<Translat
   } catch (error: any) {
     console.error("[Vertex AI Error] Failed to generate content:", error);
     if (error instanceof z.ZodError) {
-        // IMPORTANT: Include the raw response in the error message for client-side debugging
         const detailedError = `The AI's response did not match the expected format. Details: ${JSON.stringify(error.issues, null, 2)}. Raw AI Response: ${rawResponseText}`;
         throw new Error(detailedError);
     }

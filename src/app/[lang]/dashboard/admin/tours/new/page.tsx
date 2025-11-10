@@ -15,7 +15,7 @@ import { useToast } from "@/hooks/use-toast";
 import { createTour } from "@/app/server-actions/tours/createTour";
 import { useFormPersistence } from "@/hooks/use-form-persistence";
 import { UploadProgressDialog } from "@/components/upload-progress-dialog";
-import { cloneDeep, merge, mergeWith } from "lodash";
+import { cloneDeep, mergeWith } from "lodash";
 import { translateTourAction } from "@/app/server-actions/tours/translateTourAction";
 import { TranslateTourInput, TranslateTourOutput } from "@/ai/flows/translate-tour-flow";
 
@@ -264,6 +264,7 @@ export default function NewTourPage() {
             
             const translationInput: TranslateTourInput = {
                 title: currentData.title.en,
+                slug: currentData.slug.en,
                 description: currentData.description.en,
                 overview: currentData.overview.en,
                 generalInfo: {
