@@ -41,8 +41,8 @@ export async function generateStaticParams(): Promise<TourPageProps['params'][]>
 }
 
 export async function generateMetadata({ params }: TourPageProps): Promise<Metadata> {
-  const { lang } = params;
-  const slug = decodeURIComponent(params.slug);
+  const { lang, slug: encodedSlug } = params;
+  const slug = decodeURIComponent(encodedSlug);
   const tourResult = await findTourBySlugAndLang({ slug, lang });
 
   if (!tourResult.data) {
@@ -93,9 +93,9 @@ export async function generateMetadata({ params }: TourPageProps): Promise<Metad
   };
 }
 
-export default async function TourPage({ params }: TourPageProps) {
-  const { lang } = params;
-  const slug = decodeURIComponent(params.slug);
+export default async function TourPage({ params }: { params: { lang: Locale, slug: string } }) {
+  const { lang, slug: encodedSlug } = params;
+  const slug = decodeURIComponent(encodedSlug);
   const dictionary = await getDictionary(lang);
   
   const tourResult = await findTourBySlugAndLang({ slug, lang });
@@ -145,10 +145,12 @@ export default async function TourPage({ params }: TourPageProps) {
       }))
   };
 
+  const allImages = [tour.mainImage, ...tour.galleryImages];
+
   return (
     <div className="bg-background">
         <TourHeaderSection tour={tourHeaderProps} dictionary={dictionary.tourDetail.header} />
-        <TourGallerySection />
+        <TourGallerySection images={allImages} />
 
         <main className="w-full md:w-[90vw] mx-auto px-4 py-16 grid grid-cols-1 lg:grid-cols-3 gap-12">
             <div className="lg:col-span-2 space-y-12">

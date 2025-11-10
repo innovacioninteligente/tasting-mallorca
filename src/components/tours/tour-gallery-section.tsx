@@ -4,7 +4,6 @@
 import Image from 'next/image';
 import { ImageIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from "@/components/ui/card";
 import {
   Carousel,
   CarouselContent,
@@ -14,21 +13,22 @@ import {
 } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
 import { useRef } from 'react';
-import { Tour } from '@/backend/tours/domain/tour.model';
 
-const images = [
-    { src: 'https://picsum.photos/seed/tour-gallery1/800/600', alt: 'Scenic view of Valldemossa', hint: 'valldemossa aerial view' },
-    { src: 'https://picsum.photos/seed/tour-gallery2/800/600', alt: 'Couple walking in a charming street', hint: 'couple walking old town' },
-    { src: 'https://picsum.photos/seed/tour-gallery3/800/600', alt: 'Narrow cobblestone street in a village', hint: 'cobblestone street mallorca' },
-    { src: 'https://picsum.photos/seed/tour-gallery4/800/600', alt: 'View of the coast from a viewpoint', hint: 'mallorca coast viewpoint' },
-    { src: 'https://picsum.photos/seed/tour-gallery5/800/600', alt: 'Extra view for carousel', hint: 'mallorca extra view' },
-];
+interface TourGallerySectionProps {
+    images: string[];
+}
 
-export function TourGallerySection() {
+export function TourGallerySection({ images }: TourGallerySectionProps) {
     const autoplayPlugin = useRef(Autoplay({ delay: 5000, stopOnInteraction: true }));
     
-    // In a real scenario, you'd pass the tour's gallery images here.
-    // For now, we'll continue using the placeholder images.
+    if (!images || images.length === 0) {
+        return null;
+    }
+
+    const mainImage = images[0];
+    const galleryGridImages = images.slice(1, 4); // Get up to 3 images for the grid
+    const remainingImageCount = images.length - 1 - galleryGridImages.length;
+
 
     return (
         <div className="w-full md:w-[90vw] mx-auto px-4 mt-8">
@@ -46,11 +46,11 @@ export function TourGallerySection() {
                             <CarouselItem key={index}>
                                 <div className="aspect-video relative rounded-lg overflow-hidden">
                                      <Image
-                                        src={image.src}
-                                        alt={image.alt}
+                                        src={image}
+                                        alt={`Tour gallery image ${index + 1}`}
                                         fill
+                                        sizes="100vw"
                                         className="object-cover w-full h-full"
-                                        data-ai-hint={image.hint}
                                         priority={index === 0}
                                     />
                                 </div>
@@ -67,50 +67,36 @@ export function TourGallerySection() {
                 {/* Main Image */}
                 <div className="col-span-1 md:col-span-2 lg:col-span-2 row-span-2 relative rounded-lg overflow-hidden">
                     <Image
-                        src={images[0].src}
-                        alt={images[0].alt}
+                        src={mainImage}
+                        alt="Main tour image"
                         fill
+                        sizes="(max-width: 1023px) 100vw, 50vw"
                         className="object-cover w-full h-full view-transition"
-                        data-ai-hint={images[0].hint}
                         priority
                         style={{ viewTransitionName: `tour-image-main` } as React.CSSProperties}
                     />
                 </div>
 
                 {/* Smaller Images */}
-                <div className="relative rounded-lg overflow-hidden">
-                    <Image
-                        src={images[1].src}
-                        alt={images[1].alt}
-                        fill
-                        className="object-cover w-full h-full"
-                        data-ai-hint={images[1].hint}
-                    />
-                </div>
-                 <div className="relative rounded-lg overflow-hidden">
-                    <Image
-                        src={images[2].src}
-                        alt={images[2].alt}
-                        fill
-                        className="object-cover w-full h-full"
-                        data-ai-hint={images[2].hint}
-                    />
-                </div>
-                 <div className="relative rounded-lg overflow-hidden">
-                    <Image
-                        src={images[3].src}
-                        alt={images[3].alt}
-                        fill
-                        className="object-cover w-full h-full"
-                        data-ai-hint={images[3].hint}
-                    />
-                     <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
-                        <Button variant="secondary" className="bg-white/80 hover:bg-white text-black">
-                            <ImageIcon className="w-5 h-5 mr-2" />
-                            +29
-                        </Button>
+                {galleryGridImages.map((image, index) => (
+                     <div key={index} className="relative rounded-lg overflow-hidden">
+                        <Image
+                            src={image}
+                            alt={`Tour gallery image ${index + 2}`}
+                            fill
+                            sizes="25vw"
+                            className="object-cover w-full h-full"
+                        />
+                         {index === galleryGridImages.length - 1 && remainingImageCount > 0 && (
+                            <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
+                                <Button variant="secondary" className="bg-white/80 hover:bg-white text-black">
+                                    <ImageIcon className="w-5 h-5 mr-2" />
+                                    +{remainingImageCount}
+                                </Button>
+                            </div>
+                         )}
                     </div>
-                </div>
+                ))}
             </div>
         </div>
     );
