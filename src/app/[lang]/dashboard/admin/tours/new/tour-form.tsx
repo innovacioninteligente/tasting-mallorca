@@ -32,6 +32,14 @@ const multilingualStringSchema = z.object({
     nl: z.string().optional(),
 });
 
+const multilingualOptionalStringSchema = z.object({
+    es: z.string().optional(),
+    en: z.string().optional(),
+    de: z.string().optional(),
+    fr: z.string().optional(),
+    nl: z.string().optional(),
+});
+
 const availabilityPeriodSchema = z.object({
     startDate: z.date({ required_error: "Start date is required." }),
     endDate: z.date({ required_error: "End date is required." }),
@@ -44,13 +52,13 @@ const pickupPointSchema = z.object({
 });
 
 const detailsSchema = z.object({
-    highlights: multilingualStringSchema,
-    fullDescription: multilingualStringSchema,
-    included: multilingualStringSchema,
-    notIncluded: multilingualStringSchema,
-    notSuitableFor: multilingualStringSchema,
-    whatToBring: multilingualStringSchema,
-    beforeYouGo: multilingualStringSchema,
+    highlights: multilingualOptionalStringSchema,
+    fullDescription: multilingualOptionalStringSchema,
+    included: multilingualOptionalStringSchema,
+    notIncluded: multilingualOptionalStringSchema,
+    notSuitableFor: multilingualOptionalStringSchema,
+    whatToBring: multilingualOptionalStringSchema,
+    beforeYouGo: multilingualOptionalStringSchema,
 });
 
 
@@ -81,7 +89,7 @@ const formSchema = z.object({
     guideInfo: multilingualStringSchema,
     pickupInfo: multilingualStringSchema,
   }),
-  details: detailsSchema,
+  details: detailsSchema.optional(),
   pickupPoint: pickupPointSchema,
   price: z.coerce.number().min(0, "El precio debe ser un número positivo."),
   region: z.enum(["North", "East", "South", "West", "Central"]),
@@ -882,7 +890,7 @@ export function TourForm({ initialData }: TourFormProps) {
                                 </Button>
                                 <Button type="button" variant="secondary" className="w-full" onClick={() => {
                                     const newId = crypto.randomUUID();
-                                    appendItinerary({ id: newId, type: 'travel', icon: 'Bus', duration: '', title: { en: '' }, activities: { en: [] } });
+                                    appendItinerary({ id: newId, type: 'travel', icon: 'Bus', duration: '', title: { en: [] } });
                                     setEditingItineraryId(newId);
                                 }}>
                                     <PlusCircle className="mr-2 h-4 w-4" /> Add Travel Leg

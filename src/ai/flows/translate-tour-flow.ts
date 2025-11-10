@@ -1,4 +1,3 @@
-
 'use server';
 /**
  * @fileOverview An AI flow to translate tour content from English to other supported languages.
@@ -9,7 +8,7 @@
  */
 
 import { ai } from '@/ai/genkit';
-import { z } from 'genkit';
+import { z } from 'zod';
 
 const ItineraryItemTranslationInputSchema = z.object({
   title: z.string().optional(),
@@ -88,11 +87,14 @@ export const TranslateTourOutputSchema = z.object({
 });
 export type TranslateTourOutput = z.infer<typeof TranslateTourOutputSchema>;
 
-const prompt = ai.definePrompt({
-  name: 'translateTourPrompt',
-  input: { schema: TranslateTourInputSchema },
-  output: { schema: TranslateTourOutputSchema },
-  prompt: `You are an expert translator specializing in creating engaging and natural-sounding tourism marketing content for a European audience. Your task is to translate the provided tour information from English into Spanish (es), German (de), French (fr), and Dutch (nl).
+ai.defineFlow(
+  {
+    name: 'translateTourContentFlow',
+    inputSchema: TranslateTourInputSchema,
+    outputSchema: TranslateTourOutputSchema,
+  },
+  async (input) => {
+    const prompt = `You are an expert translator specializing in creating engaging and natural-sounding tourism marketing content for a European audience. Your task is to translate the provided tour information from English into Spanish (es), German (de), French (fr), and Dutch (nl).
 
   **IMPORTANT INSTRUCTIONS:**
   1.  **Do not perform a literal, word-for-word translation.** Adapt the phrasing, tone, and cultural nuances to make the content appealing and natural for speakers of each target language.
@@ -128,22 +130,22 @@ const prompt = ai.definePrompt({
       - Title: {{this.title}}
       - Activities: {{#each this.activities}}"{{this}}"{{#unless @last}}, {{/unless}}{{/each}}
   {{/each}}
-  `,
-});
+  `;
 
-const translateTourContentFlow = ai.defineFlow(
-  {
-    name: 'translateTourContentFlow',
-    inputSchema: TranslateTourInputSchema,
-    outputSchema: TranslateTourOutputSchema,
-  },
-  async (input) => {
-    const { output } = await prompt(input);
+    const { output } = await ai.generate({
+      prompt: prompt,
+      model: 'googleai/gemini-2.5-flash',
+      input: input,
+      output: {
+        schema: TranslateTourOutputSchema,
+      },
+    });
     return output!;
   }
 );
 
 
 export async function translateTourContent(input: TranslateTourInput): Promise<TranslateTourOutput> {
-  return translateTourContentFlow(input);
+  const {output} = await ai.getFlow('translateTourContentFlow')!.run(input);
+  return output;
 }

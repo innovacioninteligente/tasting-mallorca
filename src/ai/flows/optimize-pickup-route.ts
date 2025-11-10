@@ -31,12 +31,14 @@ const OptimizePickupRouteOutputSchema = z.object({
 });
 export type OptimizePickupRouteOutput = z.infer<typeof OptimizePickupRouteOutputSchema>;
 
-
-const prompt = ai.definePrompt({
-  name: 'optimizePickupRoutePrompt',
-  input: {schema: OptimizePickupRouteInputSchema},
-  output: {schema: OptimizePickupRouteOutputSchema},
-  prompt: `You are an expert route optimizer specializing in creating efficient routes for tour buses.
+ai.defineFlow(
+  {
+    name: 'optimizePickupRouteFlow',
+    inputSchema: OptimizePickupRouteInputSchema,
+    outputSchema: OptimizePickupRouteOutputSchema,
+  },
+  async input => {
+    const prompt = `You are an expert route optimizer specializing in creating efficient routes for tour buses.
 
 You will receive a list of meeting points, each with a name and coordinates.
 
@@ -49,17 +51,17 @@ Return an array of meeting point names in the optimized order.
 Meeting Points:
 {{#each meetingPoints}}
 - Name: {{this.name}}, Latitude: {{this.latitude}}, Longitude: {{this.longitude}}
-{{/each}}`,
-});
+{{/each}}`;
 
-const optimizePickupRouteFlow = ai.defineFlow(
-  {
-    name: 'optimizePickupRouteFlow',
-    inputSchema: OptimizePickupRouteInputSchema,
-    outputSchema: OptimizePickupRouteOutputSchema,
-  },
-  async input => {
-    const {output} = await prompt(input);
+    const {output} = await ai.generate({
+      prompt: prompt,
+      model: 'googleai/gemini-2.5-flash',
+      input: input,
+      output: {
+        schema: OptimizePickupRouteOutputSchema,
+      },
+    });
+
     return output!;
   }
 );
@@ -68,5 +70,6 @@ const optimizePickupRouteFlow = ai.defineFlow(
 export async function optimizePickupRoute(
   input: OptimizePickupRouteInput
 ): Promise<OptimizePickupRouteOutput> {
-  return optimizePickupRouteFlow(input);
+  const {output} = await ai.getFlow('optimizePickupRouteFlow')!.run(input);
+  return output;
 }
