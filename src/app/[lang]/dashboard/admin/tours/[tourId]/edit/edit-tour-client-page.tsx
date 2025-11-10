@@ -15,7 +15,6 @@ import { getStorage, ref as storageRef, uploadBytesResumable, getDownloadURL } f
 import { initializeFirebase } from "@/firebase";
 import { updateTour } from "@/app/server-actions/tours/updateTour";
 import { useFormPersistence } from "@/hooks/use-form-persistence";
-import { translateTourContentFlow, TranslateTourInputSchema } from "@/ai/flows/translate-tour.flow";
 import { UploadProgressDialog } from "@/components/upload-progress-dialog";
 import { cloneDeep, mergeWith } from "lodash";
 
@@ -128,7 +127,6 @@ export function EditTourClientPage({ initialData, lang }: EditTourClientPageProp
     const { toast } = useToast();
     const router = useRouter();
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [isTranslating, setIsTranslating] = useState(false);
     const [uploadProgress, setUploadProgress] = useState(0);
     const [uploadMessage, setUploadMessage] = useState('Starting...');
 
@@ -307,98 +305,6 @@ export function EditTourClientPage({ initialData, lang }: EditTourClientPageProp
     
     const basePath = `/${lang}/dashboard/admin/tours`;
 
-    const handleTranslate = async () => {
-        setIsTranslating(true);
-        try {
-            const values = form.getValues();
-            const sourceContent = {
-                title: values.title.en || '',
-                description: values.description.en || '',
-                overview: values.overview.en || '',
-                generalInfo: {
-                    cancellationPolicy: values.generalInfo.cancellationPolicy.en || '',
-                    bookingPolicy: values.generalInfo.bookingPolicy.en || '',
-                    guideInfo: values.generalInfo.guideInfo.en || '',
-                    pickupInfo: values.generalInfo.pickupInfo.en || '',
-                },
-                 details: {
-                    highlights: values.details?.highlights?.en || '',
-                    fullDescription: values.details?.fullDescription?.en || '',
-                    included: values.details?.included?.en || '',
-                    notIncluded: values.details?.notIncluded?.en || '',
-                    notSuitableFor: values.details?.notSuitableFor?.en || '',
-                    whatToBring: values.details?.whatToBring?.en || '',
-                    beforeYouGo: values.details?.beforeYouGo?.en || '',
-                },
-                pickupPoint: {
-                    title: values.pickupPoint.title.en || '',
-                    description: values.pickupPoint.description.en || '',
-                },
-                itinerary: values.itinerary?.map(item => ({
-                    title: item.title.en || '',
-                    activities: item.activities?.en || [],
-                })) || [],
-            };
-            
-            const validatedSourceContent = TranslateTourInputSchema.parse(sourceContent);
-
-            const translations = await translateTourContentFlow(validatedSourceContent);
-            
-            if (!translations) {
-                throw new Error("Failed to get translation data.");
-            }
-
-            // Resetting form with new translations
-            const currentValues = form.getValues();
-            form.reset({
-                ...currentValues,
-                title: { ...currentValues.title, ...translations.title },
-                description: { ...currentValues.description, ...translations.description },
-                overview: { ...currentValues.overview, ...translations.overview },
-                generalInfo: {
-                    cancellationPolicy: { ...currentValues.generalInfo.cancellationPolicy, ...translations.generalInfo.cancellationPolicy },
-                    bookingPolicy: { ...currentValues.generalInfo.bookingPolicy, ...translations.generalInfo.bookingPolicy },
-                    guideInfo: { ...currentValues.generalInfo.guideInfo, ...translations.generalInfo.guideInfo },
-                    pickupInfo: { ...currentValues.generalInfo.pickupInfo, ...translations.generalInfo.pickupInfo },
-                },
-                 details: {
-                    highlights: { ...currentValues.details?.highlights, ...translations.details.highlights },
-                    fullDescription: { ...currentValues.details?.fullDescription, ...translations.details.fullDescription },
-                    included: { ...currentValues.details?.included, ...translations.details.included },
-                    notIncluded: { ...currentValues.details?.notIncluded, ...translations.details.notIncluded },
-                    notSuitableFor: { ...currentValues.details?.notSuitableFor, ...translations.details.notSuitableFor },
-                    whatToBring: { ...currentValues.details?.whatToBring, ...translations.details.whatToBring },
-                    beforeYouGo: { ...currentValues.details?.beforeYouGo, ...translations.details.beforeYouGo },
-                },
-                pickupPoint: {
-                    title: { ...currentValues.pickupPoint.title, ...translations.pickupPoint.title },
-                    description: { ...currentValues.pickupPoint.description, ...translations.pickupPoint.description },
-                },
-                itinerary: currentValues.itinerary?.map((item, index) => ({
-                    ...item,
-                    title: { ...item.title, ...translations.itinerary[index]?.title },
-                    activities: { ...item.activities, ...translations.itinerary[index]?.activities },
-                })),
-            });
-            
-
-            toast({
-                title: "Translations Applied!",
-                description: "The content has been translated and fields have been updated.",
-            });
-        } catch (error: any) {
-            console.error("Translation failed:", error);
-            toast({
-                variant: "destructive",
-                title: "Translation Failed",
-                description: error.message || "Could not translate tour content.",
-            });
-        } finally {
-            setIsTranslating(false);
-        }
-    };
-
-
     return (
         <div className="flex flex-col h-full">
             {isSubmitting && <UploadProgressDialog progress={uploadProgress} message={uploadMessage} />}
@@ -408,8 +314,6 @@ export function EditTourClientPage({ initialData, lang }: EditTourClientPageProp
                     initialData={initialData}
                     basePath={basePath}
                     onSubmit={form.handleSubmit(onSubmit, handleInvalidSubmit)}
-                    onTranslate={handleTranslate}
-                    isTranslating={isTranslating}
                 />
                 <main className="flex-grow overflow-y-scroll px-4 md:px-8 lg:px-10">
                    <TourForm

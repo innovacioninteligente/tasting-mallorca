@@ -4,7 +4,7 @@
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form";
-import { ArrowLeft, Loader2, Languages, Circle } from "lucide-react";
+import { ArrowLeft, Loader2, Circle } from "lucide-react";
 import Link from "next/link";
 import { useFormContext } from "react-hook-form";
 import { Tour } from "@/backend/tours/domain/tour.model";
@@ -15,8 +15,6 @@ interface TourFormHeaderProps {
     initialData?: Tour;
     basePath: string;
     onSubmit: () => void;
-    onTranslate: () => void;
-    isTranslating: boolean;
 }
 
 export function TourFormHeader({
@@ -24,8 +22,6 @@ export function TourFormHeader({
     initialData,
     basePath,
     onSubmit,
-    onTranslate,
-    isTranslating,
 }: TourFormHeaderProps) {
     const { control, formState: { isDirty } } = useFormContext();
 
@@ -43,10 +39,6 @@ export function TourFormHeader({
                 </h1>
             </div>
             <div className="flex items-center gap-4">
-                 <Button onClick={onTranslate} variant="outline" size="sm" disabled={isTranslating || isSubmitting} type="button">
-                    {isTranslating ? <Loader2 className="animate-spin mr-2" /> : <Languages className="mr-2 h-4 w-4" />}
-                    Translate with AI
-                </Button>
                 <FormField
                     control={control}
                     name="published"
@@ -62,7 +54,7 @@ export function TourFormHeader({
                 <Button 
                     onClick={onSubmit} 
                     size="sm" 
-                    disabled={isSubmitting || isTranslating}
+                    disabled={isSubmitting}
                     className={cn(isDirty && "bg-accent text-accent-foreground hover:bg-accent/90")}
                     type="button"
                 >

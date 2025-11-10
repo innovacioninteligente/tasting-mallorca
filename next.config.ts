@@ -38,17 +38,6 @@ const nextConfig = {
       }
     ],
   },
-  webpack: (config, { isServer }) => {
-    // Exclude server-only modules from the client-side bundle
-    if (!isServer) {
-      config.resolve.alias = {
-        ...config.resolve.alias,
-        'async_hooks': false,
-      };
-    }
-
-    return config;
-  },
 };
 
 module.exports = nextConfig;
