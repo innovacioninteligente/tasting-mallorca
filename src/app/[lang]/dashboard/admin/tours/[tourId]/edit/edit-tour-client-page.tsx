@@ -15,8 +15,7 @@ import { getStorage, ref as storageRef, uploadBytesResumable, getDownloadURL } f
 import { initializeFirebase } from "@/firebase";
 import { updateTour } from "@/app/server-actions/tours/updateTour";
 import { useFormPersistence } from "@/hooks/use-form-persistence";
-import { translateTourContent } from "@/app/server-actions/tours/translateTour";
-import { TranslateTourInputSchema } from "@/ai/flows/translate-tour.flow";
+import { translateTourContentFlow, TranslateTourInputSchema } from "@/ai/flows/translate-tour.flow";
 import { UploadProgressDialog } from "@/components/upload-progress-dialog";
 import { cloneDeep, mergeWith } from "lodash";
 
@@ -125,45 +124,6 @@ interface EditTourClientPageProps {
 
 const defaultMultilingual = { es: '', en: '', de: '', fr: '', nl: '' };
 
-const getSanitizedDefaultValues = (id: string): TourFormValues => ({
-    id: id,
-    title: { ...defaultMultilingual },
-    slug: { ...defaultMultilingual },
-    description: { ...defaultMultilingual },
-    overview: { ...defaultMultilingual },
-    generalInfo: {
-        cancellationPolicy: { ...defaultMultilingual },
-        bookingPolicy: { ...defaultMultilingual },
-        guideInfo: { ...defaultMultilingual },
-        pickupInfo: { ...defaultMultilingual },
-    },
-    details: {
-        highlights: { ...defaultMultilingual },
-        fullDescription: { ...defaultMultilingual },
-        included: { ...defaultMultilingual },
-        notIncluded: { ...defaultMultilingual },
-        notSuitableFor: { ...defaultMultilingual },
-        whatToBring: { ...defaultMultilingual },
-        beforeYouGo: { ...defaultMultilingual },
-    },
-    pickupPoint: {
-        title: { ...defaultMultilingual },
-        description: { ...defaultMultilingual },
-    },
-    price: 0,
-    region: "South" as "South",
-    durationHours: 8,
-    isFeatured: false,
-    published: false,
-    allowDeposit: false,
-    depositPrice: 0,
-    itinerary: [],
-    galleryImages: [],
-    mainImage: undefined,
-    availabilityPeriods: [],
-});
-
-
 export function EditTourClientPage({ initialData, lang }: EditTourClientPageProps) {
     const { toast } = useToast();
     const router = useRouter();
@@ -195,8 +155,44 @@ export function EditTourClientPage({ initialData, lang }: EditTourClientPageProp
         })) || []
     };
     
-    const defaults = getSanitizedDefaultValues(initialData.id);
-    const mergedData = mergeWith(cloneDeep(defaults), parsedInitialData, (objValue, srcValue) => {
+    const defaultValues = {
+        id: initialData.id || '',
+        title: { ...defaultMultilingual },
+        slug: { ...defaultMultilingual },
+        description: { ...defaultMultilingual },
+        overview: { ...defaultMultilingual },
+        generalInfo: {
+            cancellationPolicy: { ...defaultMultilingual },
+            bookingPolicy: { ...defaultMultilingual },
+            guideInfo: { ...defaultMultilingual },
+            pickupInfo: { ...defaultMultilingual },
+        },
+        details: {
+            highlights: { ...defaultMultilingual },
+            fullDescription: { ...defaultMultilingual },
+            included: { ...defaultMultilingual },
+            notIncluded: { ...defaultMultilingual },
+            notSuitableFor: { ...defaultMultilingual },
+            whatToBring: { ...defaultMultilingual },
+            beforeYouGo: { ...defaultMultilingual },
+        },
+        pickupPoint: {
+            title: { ...defaultMultilingual },
+            description: { ...defaultMultilingual },
+        },
+        price: 0,
+        region: "South" as "South",
+        durationHours: 8,
+        isFeatured: false,
+        published: false,
+        allowDeposit: false,
+        depositPrice: 0,
+        itinerary: [],
+        galleryImages: [],
+        mainImage: undefined,
+        availabilityPeriods: [],
+    };
+    const mergedData = mergeWith(cloneDeep(defaultValues), parsedInitialData, (objValue, srcValue) => {
         if (srcValue !== undefined && srcValue !== null) {
             return srcValue;
         }
@@ -346,13 +342,11 @@ export function EditTourClientPage({ initialData, lang }: EditTourClientPageProp
             
             const validatedSourceContent = TranslateTourInputSchema.parse(sourceContent);
 
-            const result = await translateTourContent(validatedSourceContent);
+            const translations = await translateTourContentFlow(validatedSourceContent);
             
-            if (result.error || !result.data) {
-                throw new Error(result.error || "Failed to get translation data.");
+            if (!translations) {
+                throw new Error("Failed to get translation data.");
             }
-
-            const translations = result.data;
 
             // Resetting form with new translations
             const currentValues = form.getValues();

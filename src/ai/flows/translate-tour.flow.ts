@@ -1,7 +1,9 @@
+
+'use server';
 /**
  * @fileOverview An AI flow to translate tour content from English to other supported languages.
  *
- * - translateTourContent - A function that handles the tour content translation process.
+ * - translateTourContentFlow - The Genkit flow for translation.
  * - TranslateTourInput - The input type (English content).
  * - TranslateTourOutput - The return type (translated content for es, de, fr, nl).
  */
@@ -86,59 +88,63 @@ export const TranslateTourOutputSchema = z.object({
 });
 export type TranslateTourOutput = z.infer<typeof TranslateTourOutputSchema>;
 
-export const translateTourContentFlow = ai.defineFlow(
-  {
-    name: 'translateTourContentFlow',
-    inputSchema: TranslateTourInputSchema,
-    outputSchema: TranslateTourOutputSchema,
-  },
-  async (input) => {
-    const prompt = `You are an expert translator specializing in creating engaging and natural-sounding tourism marketing content for a European audience. Your task is to translate the provided tour information from English into Spanish (es), German (de), French (fr), and Dutch (nl).
+export async function translateTourContentFlow(input: TranslateTourInput): Promise<TranslateTourOutput> {
+  const translateTourFlow = ai.defineFlow(
+    {
+      name: 'translateTourContentFlow',
+      inputSchema: TranslateTourInputSchema,
+      outputSchema: TranslateTourOutputSchema,
+    },
+    async (input) => {
+      const prompt = `You are an expert translator specializing in creating engaging and natural-sounding tourism marketing content for a European audience. Your task is to translate the provided tour information from English into Spanish (es), German (de), French (fr), and Dutch (nl).
 
-  **IMPORTANT INSTRUCTIONS:**
-  1.  **Do not perform a literal, word-for-word translation.** Adapt the phrasing, tone, and cultural nuances to make the content appealing and natural for speakers of each target language.
-  2.  **Maintain the original meaning and key information.** The core details of the tour must remain accurate.
-  3.  **Translate list items individually.** For fields that are newline-separated lists (like highlights, included, etc.), translate each line as a separate item and maintain the newline-separated format in your output.
-  4.  **Format your response strictly as a JSON object** that conforms to the provided output schema.
-  5.  For itinerary activities, translate each tag individually.
-  6.  If a source field is empty, the corresponding translated fields should also be empty strings.
+    **IMPORTANT INSTRUCTIONS:**
+    1.  **Do not perform a literal, word-for-word translation.** Adapt the phrasing, tone, and cultural nuances to make the content appealing and natural for speakers of each target language.
+    2.  **Maintain the original meaning and key information.** The core details of the tour must remain accurate.
+    3.  **Translate list items individually.** For fields that are newline-separated lists (like highlights, included, etc.), translate each line as a separate item and maintain the newline-separated format in your output.
+    4.  **Format your response strictly as a JSON object** that conforms to the provided output schema.
+    5.  For itinerary activities, translate each tag individually.
+    6.  If a source field is empty, the corresponding translated fields should also be empty strings.
 
-  **Source Content (English):**
-  - Title: {{{title}}}
-  - Description: {{{description}}}
-  - Overview: {{{overview}}}
-  - General Info:
-    - Cancellation Policy: {{{generalInfo.cancellationPolicy}}}
-    - Booking Policy: {{{generalInfo.bookingPolicy}}}
-    - Guide Info: {{{generalInfo.guideInfo}}}
-    - Pickup Info: {{{generalInfo.pickupInfo}}}
-  - Details:
-    - Highlights: {{{details.highlights}}}
-    - Full Description: {{{details.fullDescription}}}
-    - Included: {{{details.included}}}
-    - Not Included: {{{details.notIncluded}}}
-    - Not Suitable For: {{{details.notSuitableFor}}}
-    - What To Bring: {{{details.whatToBring}}}
-    - Before You Go: {{{details.beforeYouGo}}}
-  - Pickup Point:
-    - Title: {{{pickupPoint.title}}}
-    - Description: {{{pickupPoint.description}}}
-  - Itinerary Items:
-  {{#each itinerary}}
-    - Item {{@index}}:
-      - Title: {{this.title}}
-      - Activities: {{#each this.activities}}"{{this}}"{{#unless @last}}, {{/unless}}{{/each}}
-  {{/each}}
-  `;
+    **Source Content (English):**
+    - Title: {{{title}}}
+    - Description: {{{description}}}
+    - Overview: {{{overview}}}
+    - General Info:
+      - Cancellation Policy: {{{generalInfo.cancellationPolicy}}}
+      - Booking Policy: {{{generalInfo.bookingPolicy}}}
+      - Guide Info: {{{generalInfo.guideInfo}}}
+      - Pickup Info: {{{generalInfo.pickupInfo}}}
+    - Details:
+      - Highlights: {{{details.highlights}}}
+      - Full Description: {{{details.fullDescription}}}
+      - Included: {{{details.included}}}
+      - Not Included: {{{details.notIncluded}}}
+      - Not Suitable For: {{{details.notSuitableFor}}}
+      - What To Bring: {{{details.whatToBring}}}
+      - Before You Go: {{{details.beforeYouGo}}}
+    - Pickup Point:
+      - Title: {{{pickupPoint.title}}}
+      - Description: {{{pickupPoint.description}}}
+    - Itinerary Items:
+    {{#each itinerary}}
+      - Item {{@index}}:
+        - Title: {{this.title}}
+        - Activities: {{#each this.activities}}"{{this}}"{{#unless @last}}, {{/unless}}{{/each}}
+    {{/each}}
+    `;
 
-    const { output } = await ai.generate({
-      prompt: prompt,
-      model: 'googleai/gemini-2.5-flash',
-      input: input,
-      output: {
-        schema: TranslateTourOutputSchema,
-      },
-    });
-    return output!;
-  }
-);
+      const { output } = await ai.generate({
+        prompt: prompt,
+        model: 'googleai/gemini-2.5-flash',
+        input: input,
+        output: {
+          schema: TranslateTourOutputSchema,
+        },
+      });
+      return output!;
+    }
+  );
+
+  return await translateTourFlow(input);
+}

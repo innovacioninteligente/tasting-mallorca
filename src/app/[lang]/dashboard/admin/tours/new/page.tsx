@@ -14,8 +14,7 @@ import { initializeFirebase } from "@/firebase";
 import { useToast } from "@/hooks/use-toast";
 import { createTour } from "@/app/server-actions/tours/createTour";
 import { useFormPersistence } from "@/hooks/use-form-persistence";
-import { translateTourContent } from "@/app/server-actions/tours/translateTour";
-import { TranslateTourInputSchema } from "@/ai/flows/translate-tour.flow";
+import { translateTourContentFlow, TranslateTourInputSchema } from "@/ai/flows/translate-tour.flow";
 import { UploadProgressDialog } from "@/components/upload-progress-dialog";
 
 const multilingualStringSchema = z.object({
@@ -294,13 +293,11 @@ export default function NewTourPage() {
             
             const validatedSourceContent = TranslateTourInputSchema.parse(sourceContent);
 
-            const result = await translateTourContent(validatedSourceContent);
+            const translations = await translateTourContentFlow(validatedSourceContent);
             
-            if (result.error || !result.data) {
-                throw new Error(result.error || "Failed to get translation data.");
+            if (!translations) {
+                throw new Error("Failed to get translation data.");
             }
-
-            const translations = result.data;
 
             // Resetting form with new translations
             const currentValues = form.getValues();
