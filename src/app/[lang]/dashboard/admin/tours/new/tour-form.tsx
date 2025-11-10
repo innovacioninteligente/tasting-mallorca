@@ -9,7 +9,7 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription as CardDescription } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { ImageUpload } from "./image-upload";
@@ -601,9 +601,9 @@ export function TourForm({ initialData, isSubmitting, uploadProgress, uploadMess
                     <Card>
                         <CardHeader>
                             <CardTitle>Tour Details (English)</CardTitle>
-                            <FormDescription>
+                            <CardDescription>
                                 This content populates the accordion on the tour detail page. For lists, write one item per line.
-                            </FormDescription>
+                            </CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-6">
                              <FormField
@@ -899,240 +899,63 @@ export function TourForm({ initialData, isSubmitting, uploadProgress, uploadMess
 
                 <TabsContent value="translations" className="mt-6">
                     <Card>
-                        <CardHeader><CardTitle>Translations</CardTitle></CardHeader>
+                        <CardHeader>
+                            <CardTitle>Translations</CardTitle>
+                            <CardDescription>Review and edit the AI-generated translations for each language.</CardDescription>
+                        </CardHeader>
                         <CardContent>
                             <Tabs defaultValue="de" className="w-full">
                                 <TabsList className="grid w-full grid-cols-3">
                                     {langTabs.map(lang => <TabsTrigger key={lang.code} value={lang.code}>{lang.name}</TabsTrigger>)}
                                 </TabsList>
                                 {langTabs.map(lang => (
-                                    <TabsContent key={lang.code} value={lang.code} className="mt-4 space-y-4">
-                                        <FormField
-                                            control={form.control}
-                                            name={`title.${lang.code as 'de' | 'fr' | 'nl'}`}
-                                            render={({ field }) => (
-                                                <FormItem>
-                                                <FormLabel>Title ({lang.code.toUpperCase()})</FormLabel>
-                                                <FormControl><Input {...field} /></FormControl>
-                                                <FormMessage />
-                                                </FormItem>
-                                            )}
-                                        />
-                                        <FormField
-                                            control={form.control}
-                                            name={`description.${lang.code as 'de' | 'fr' | 'nl'}`}
-                                            render={({ field }) => (
-                                                <FormItem>
-                                                <FormLabel>Short Description ({lang.code.toUpperCase()})</FormLabel>
-                                                <FormControl><Textarea rows={2} {...field} /></FormControl>
-                                                <FormMessage />
-                                                </FormItem>
-                                            )}
-                                        />
-                                        <FormField
-                                            control={form.control}
-                                            name={`overview.${lang.code as 'de' | 'fr' | 'nl'}`}
-                                            render={({ field }) => (
-                                                <FormItem>
-                                                <FormLabel>General Overview ({lang.code.toUpperCase()})</FormLabel>
-                                                <FormControl><Textarea rows={5} {...field} /></FormControl>
-                                                <FormMessage />
-                                                </FormItem>
-                                            )}
-                                        />
-                                        <FormField
-                                            control={form.control}
-                                            name={`generalInfo.cancellationPolicy.${lang.code as 'de' | 'fr' | 'nl'}`}
-                                            render={({ field }) => (
-                                                <FormItem>
-                                                    <FormLabel>Cancellation Policy ({lang.code.toUpperCase()})</FormLabel>
-                                                    <FormControl><Textarea rows={2} {...field} /></FormControl>
-                                                    <FormMessage />
-                                                </FormItem>
-                                            )}
-                                        />
-                                        <FormField
-                                            control={form.control}
-                                            name={`generalInfo.bookingPolicy.${lang.code as 'de' | 'fr' | 'nl'}`}
-                                            render={({ field }) => (
-                                                <FormItem>
-                                                    <FormLabel>Booking Policy ({lang.code.toUpperCase()})</FormLabel>
-                                                    <FormControl><Textarea rows={2} {...field} /></FormControl>
-                                                    <FormMessage />
-                                                </FormItem>
-                                            )}
-                                        />
-                                        <FormField
-                                            control={form.control}
-                                            name={`generalInfo.guideInfo.${lang.code as 'de' | 'fr' | 'nl'}`}
-                                            render={({ field }) => (
-                                                <FormItem>
-                                                    <FormLabel>Guide Information ({lang.code.toUpperCase()})</FormLabel>
-                                                    <FormControl><Textarea rows={1} {...field} /></FormControl>
-                                                    <FormMessage />
-                                                </FormItem>
-                                            )}
-                                        />
-                                        <FormField
-                                            control={form.control}
-                                            name={`generalInfo.pickupInfo.${lang.code as 'de' | 'fr' | 'nl'}`}
-                                            render={({ field }) => (
-                                                <FormItem>
-                                                    <FormLabel>Pickup Information ({lang.code.toUpperCase()})</FormLabel>
-                                                    <FormControl><Textarea rows={4} {...field} /></FormControl>
-                                                    <FormMessage />
-                                                </FormItem>
-                                            )}
-                                        />
+                                    <TabsContent key={lang.code} value={lang.code} className="mt-4 space-y-6">
+                                        
+                                        <Card className="bg-secondary/50">
+                                            <CardHeader><CardTitle className="text-lg">Main & General Content</CardTitle></CardHeader>
+                                            <CardContent className="space-y-4">
+                                                <FormField control={form.control} name={`title.${lang.code as 'de' | 'fr' | 'nl'}`} render={({ field }) => ( <FormItem> <FormLabel>Title ({lang.code.toUpperCase()})</FormLabel> <FormControl><Input {...field} /></FormControl> <FormMessage /> </FormItem> )}/>
+                                                <FormField control={form.control} name={`slug.${lang.code as 'de' | 'fr' | 'nl'}`} render={({ field }) => ( <FormItem> <FormLabel>Slug ({lang.code.toUpperCase()})</FormLabel> <FormControl><Input {...field} /></FormControl> <FormMessage /> </FormItem> )}/>
+                                                <FormField control={form.control} name={`description.${lang.code as 'de' | 'fr' | 'nl'}`} render={({ field }) => ( <FormItem> <FormLabel>Short Description ({lang.code.toUpperCase()})</FormLabel> <FormControl><Textarea rows={2} {...field} /></FormControl> <FormMessage /> </FormItem> )}/>
+                                                <FormField control={form.control} name={`overview.${lang.code as 'de' | 'fr' | 'nl'}`} render={({ field }) => ( <FormItem> <FormLabel>General Overview ({lang.code.toUpperCase()})</FormLabel> <FormControl><Textarea rows={5} {...field} /></FormControl> <FormMessage /> </FormItem> )}/>
+                                                <FormField control={form.control} name={`generalInfo.cancellationPolicy.${lang.code as 'de' | 'fr' | 'nl'}`} render={({ field }) => ( <FormItem> <FormLabel>Cancellation Policy ({lang.code.toUpperCase()})</FormLabel> <FormControl><Textarea rows={2} {...field} /></FormControl> <FormMessage /> </FormItem> )}/>
+                                                <FormField control={form.control} name={`generalInfo.bookingPolicy.${lang.code as 'de' | 'fr' | 'nl'}`} render={({ field }) => ( <FormItem> <FormLabel>Booking Policy ({lang.code.toUpperCase()})</FormLabel> <FormControl><Textarea rows={2} {...field} /></FormControl> <FormMessage /> </FormItem> )}/>
+                                                <FormField control={form.control} name={`generalInfo.guideInfo.${lang.code as 'de' | 'fr' | 'nl'}`} render={({ field }) => ( <FormItem> <FormLabel>Guide Information ({lang.code.toUpperCase()})</FormLabel> <FormControl><Textarea rows={1} {...field} /></FormControl> <FormMessage /> </FormItem> )}/>
+                                                <FormField control={form.control} name={`generalInfo.pickupInfo.${lang.code as 'de' | 'fr' | 'nl'}`} render={({ field }) => ( <FormItem> <FormLabel>Pickup Information ({lang.code.toUpperCase()})</FormLabel> <FormControl><Textarea rows={4} {...field} /></FormControl> <FormMessage /> </FormItem> )}/>
+                                            </CardContent>
+                                        </Card>
 
-                                        <FormField
-                                            control={form.control}
-                                            name={`details.highlights.${lang.code as 'de' | 'fr' | 'nl'}`}
-                                            render={({ field }) => (
-                                                <FormItem>
-                                                <FormLabel>Highlights ({lang.code.toUpperCase()})</FormLabel>
-                                                <FormControl><Textarea rows={4} {...field} /></FormControl>
-                                                <FormMessage />
-                                                </FormItem>
-                                            )}
-                                        />
-                                        <FormField
-                                            control={form.control}
-                                            name={`details.fullDescription.${lang.code as 'de' | 'fr' | 'nl'}`}
-                                            render={({ field }) => (
-                                                <FormItem>
-                                                <FormLabel>Full Description ({lang.code.toUpperCase()})</FormLabel>
-                                                <FormControl><Textarea rows={6} {...field} /></FormControl>
-                                                <FormMessage />
-                                                </FormItem>
-                                            )}
-                                        />
-                                         <FormField
-                                            control={form.control}
-                                            name={`details.included.${lang.code as 'de' | 'fr' | 'nl'}`}
-                                            render={({ field }) => (
-                                                <FormItem>
-                                                <FormLabel>Included ({lang.code.toUpperCase()})</FormLabel>
-                                                <FormControl><Textarea rows={4} {...field} /></FormControl>
-                                                <FormMessage />
-                                                </FormItem>
-                                            )}
-                                        />
-                                         <FormField
-                                            control={form.control}
-                                            name={`details.notIncluded.${lang.code as 'de' | 'fr' | 'nl'}`}
-                                            render={({ field }) => (
-                                                <FormItem>
-                                                <FormLabel>Not Included ({lang.code.toUpperCase()})</FormLabel>
-                                                <FormControl><Textarea rows={4} {...field} /></FormControl>
-                                                <FormMessage />
-                                                </FormItem>
-                                            )}
-                                        />
-                                         <FormField
-                                            control={form.control}
-                                            name={`details.notSuitableFor.${lang.code as 'de' | 'fr' | 'nl'}`}
-                                            render={({ field }) => (
-                                                <FormItem>
-                                                <FormLabel>Not Suitable For ({lang.code.toUpperCase()})</FormLabel>
-                                                <FormControl><Textarea rows={2} {...field} /></FormControl>
-                                                <FormMessage />
-                                                </FormItem>
-                                            )}
-                                        />
-                                         <FormField
-                                            control={form.control}
-                                            name={`details.whatToBring.${lang.code as 'de' | 'fr' | 'nl'}`}
-                                            render={({ field }) => (
-                                                <FormItem>
-                                                <FormLabel>What To Bring ({lang.code.toUpperCase()})</FormLabel>
-                                                <FormControl><Textarea rows={3} {...field} /></FormControl>
-                                                <FormMessage />
-                                                </FormItem>
-                                            )}
-                                        />
-                                         <FormField
-                                            control={form.control}
-                                            name={`details.beforeYouGo.${lang.code as 'de' | 'fr' | 'nl'}`}
-                                            render={({ field }) => (
-                                                <FormItem>
-                                                <FormLabel>Before You Go ({lang.code.toUpperCase()})</FormLabel>
-                                                <FormControl><Textarea rows={3} {...field} /></FormControl>
-                                                <FormMessage />
-                                                </FormItem>
-                                            )}
-                                        />
-
-
-                                        <div className="p-4 border rounded-md">
-                                            <p className="text-sm font-medium text-muted-foreground mb-2">Pickup Point</p>
-                                            <FormField
-                                                control={form.control}
-                                                name={`pickupPoint.title.${lang.code as 'de' | 'fr' | 'nl'}`}
-                                                render={({ field }) => (
-                                                    <FormItem>
-                                                        <FormLabel>Main Title ({lang.code.toUpperCase()})</FormLabel>
-                                                        <FormControl><Input {...field} /></FormControl>
-                                                        <FormMessage />
-                                                    </FormItem>
-                                                )}
-                                            />
-                                            <FormField
-                                                control={form.control}
-                                                name={`pickupPoint.description.${lang.code as 'de' | 'fr' | 'nl'}`}
-                                                render={({ field }) => (
-                                                    <FormItem className="mt-4">
-                                                        <FormLabel>Description ({lang.code.toUpperCase()})</FormLabel>
-                                                        <FormControl><Textarea rows={3} {...field} /></FormControl>
-                                                        <FormMessage />
-                                                    </FormItem>
-                                                )}
-                                            />
-                                        </div>
-
-                                        {Array.isArray(watchedItinerary) && watchedItinerary.map((_, index) => (
-                                            <div key={index} className="p-4 border rounded-md">
-                                                <p className="text-sm font-medium text-muted-foreground mb-2">Itinerary - Item {index + 1}</p>
-                                                <FormField
-                                                    control={form.control}
-                                                    name={`itinerary.${index}.title.${lang.code as 'de' | 'fr' | 'nl'}`}
-                                                    render={({ field }) => (
-                                                        <FormItem>
-                                                            <FormLabel>Title ({lang.code.toUpperCase()})</FormLabel>
-                                                            <FormControl><Input {...field} /></FormControl>
-                                                            <FormMessage />
-                                                        </FormItem>
-                                                    )}
-                                                />
-                                                {form.watch(`itinerary.${index}.type`) === 'stop' && (
-                                                    <FormField
-                                                        control={form.control}
-                                                        name={`itinerary.${index}.activities.${lang.code as 'de' | 'fr' | 'nl'}`}
-                                                        render={({ field }) => (
-                                                            <FormItem className="mt-4">
-                                                                <FormLabel>Activities ({lang.code.toUpperCase()})</FormLabel>
-                                                                <FormControl>
-                                                                    <ActivityTagsInput field={field} fieldName={`itinerary.${index}.activities.${lang.code as 'de' | 'fr' | 'nl'}`} />
-                                                                </FormControl>
-                                                                <FormMessage />
-                                                            </FormItem>
+                                        <Card className="bg-secondary/50">
+                                            <CardHeader><CardTitle className="text-lg">Tour Details Content</CardTitle></CardHeader>
+                                            <CardContent className="space-y-4">
+                                                <FormField control={form.control} name={`details.highlights.${lang.code as 'de' | 'fr' | 'nl'}`} render={({ field }) => ( <FormItem> <FormLabel>Highlights ({lang.code.toUpperCase()})</FormLabel> <FormControl><Textarea rows={4} {...field} /></FormControl> <FormMessage /> </FormItem> )}/>
+                                                <FormField control={form.control} name={`details.fullDescription.${lang.code as 'de' | 'fr' | 'nl'}`} render={({ field }) => ( <FormItem> <FormLabel>Full Description ({lang.code.toUpperCase()})</FormLabel> <FormControl><Textarea rows={6} {...field} /></FormControl> <FormMessage /> </FormItem> )}/>
+                                                <FormField control={form.control} name={`details.included.${lang.code as 'de' | 'fr' | 'nl'}`} render={({ field }) => ( <FormItem> <FormLabel>Included ({lang.code.toUpperCase()})</FormLabel> <FormControl><Textarea rows={4} {...field} /></FormControl> <FormMessage /> </FormItem> )}/>
+                                                <FormField control={form.control} name={`details.notIncluded.${lang.code as 'de' | 'fr' | 'nl'}`} render={({ field }) => ( <FormItem> <FormLabel>Not Included ({lang.code.toUpperCase()})</FormLabel> <FormControl><Textarea rows={4} {...field} /></FormControl> <FormMessage /> </FormItem> )}/>
+                                                <FormField control={form.control} name={`details.notSuitableFor.${lang.code as 'de' | 'fr' | 'nl'}`} render={({ field }) => ( <FormItem> <FormLabel>Not Suitable For ({lang.code.toUpperCase()})</FormLabel> <FormControl><Textarea rows={2} {...field} /></FormControl> <FormMessage /> </FormItem> )}/>
+                                                <FormField control={form.control} name={`details.whatToBring.${lang.code as 'de' | 'fr' | 'nl'}`} render={({ field }) => ( <FormItem> <FormLabel>What To Bring ({lang.code.toUpperCase()})</FormLabel> <FormControl><Textarea rows={3} {...field} /></FormControl> <FormMessage /> </FormItem> )}/>
+                                                <FormField control={form.control} name={`details.beforeYouGo.${lang.code as 'de' | 'fr' | 'nl'}`} render={({ field }) => ( <FormItem> <FormLabel>Before You Go ({lang.code.toUpperCase()})</FormLabel> <FormControl><Textarea rows={3} {...field} /></FormControl> <FormMessage /> </FormItem> )}/>
+                                            </CardContent>
+                                        </Card>
+                                        
+                                        <Card className="bg-secondary/50">
+                                            <CardHeader><CardTitle className="text-lg">Pickup & Itinerary Content</CardTitle></CardHeader>
+                                            <CardContent className="space-y-4">
+                                                <FormField control={form.control} name={`pickupPoint.title.${lang.code as 'de' | 'fr' | 'nl'}`} render={({ field }) => ( <FormItem> <FormLabel>Pickup Point Title ({lang.code.toUpperCase()})</FormLabel> <FormControl><Input {...field} /></FormControl> <FormMessage /> </FormItem> )}/>
+                                                <FormField control={form.control} name={`pickupPoint.description.${lang.code as 'de' | 'fr' | 'nl'}`} render={({ field }) => ( <FormItem> <FormLabel>Pickup Point Description ({lang.code.toUpperCase()})</FormLabel> <FormControl><Textarea rows={3} {...field} /></FormControl> <FormMessage /> </FormItem> )}/>
+                                                
+                                                {Array.isArray(watchedItinerary) && watchedItinerary.map((_, index) => (
+                                                    <div key={index} className="p-4 border rounded-md bg-background/50">
+                                                        <p className="text-sm font-medium text-muted-foreground mb-2">Itinerary - Item {index + 1}</p>
+                                                        <FormField control={form.control} name={`itinerary.${index}.title.${lang.code as 'de' | 'fr' | 'nl'}`} render={({ field }) => ( <FormItem> <FormLabel>Title ({lang.code.toUpperCase()})</FormLabel> <FormControl><Input {...field} /></FormControl> <FormMessage /> </FormItem> )}/>
+                                                        {form.watch(`itinerary.${index}.type`) === 'stop' && (
+                                                            <FormField control={form.control} name={`itinerary.${index}.activities.${lang.code as 'de' | 'fr' | 'nl'}`} render={({ field }) => ( <FormItem className="mt-4"> <FormLabel>Activities ({lang.code.toUpperCase()})</FormLabel> <FormControl><ActivityTagsInput field={field} fieldName={`itinerary.${index}.activities.${lang.code as 'de' | 'fr' | 'nl'}`} /></FormControl> <FormMessage /> </FormItem> )}/>
                                                         )}
-                                                    />
-                                                )}
-                                            </div>
-                                        ))}
+                                                    </div>
+                                                ))}
+                                            </CardContent>
+                                        </Card>
 
-                                        <FormField
-                                            control={form.control}
-                                            name={`slug.${lang.code as 'de' | 'fr' | 'nl'}`}
-                                            render={({ field }) => (
-                                                <FormItem>
-                                                <FormLabel>Slug ({lang.code.toUpperCase()})</FormLabel>
-                                                <FormControl><Input {...field} /></FormControl>
-                                                <FormMessage />
-                                                </FormItem>
-                                            )}
-                                        />
                                     </TabsContent>
                                 ))}
                             </Tabs>
