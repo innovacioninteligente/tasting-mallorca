@@ -42,8 +42,7 @@ export async function generateStaticParams() {
 
 // Phase 2: Generate dynamic metadata for each tour page
 export async function generateMetadata({ params }: TourPageProps): Promise<Metadata> {
-  const { lang, slug } = params;
-  const tourResult = await findTourBySlugAndLang({ slug, lang });
+  const tourResult = await findTourBySlugAndLang({ slug: params.slug, lang: params.lang });
 
   if (!tourResult.data) {
     return {
@@ -52,8 +51,8 @@ export async function generateMetadata({ params }: TourPageProps): Promise<Metad
   }
 
   const tour = tourResult.data;
-  const title = tour.title[lang] || tour.title.en;
-  const description = tour.description[lang] || tour.description.en;
+  const title = tour.title[params.lang] || tour.title.en;
+  const description = tour.description[params.lang] || tour.description.en;
 
   const allSlugs = tour.slug;
   const languages: { [key: string]: string } = {};
@@ -77,7 +76,7 @@ export async function generateMetadata({ params }: TourPageProps): Promise<Metad
           alt: title,
         },
       ],
-      locale: lang,
+      locale: params.lang,
       type: 'website',
     },
     twitter: {
@@ -87,7 +86,7 @@ export async function generateMetadata({ params }: TourPageProps): Promise<Metad
       images: [tour.mainImage],
     },
     alternates: {
-        canonical: `/${lang}/tours/${slug}`,
+        canonical: `/${params.lang}/tours/${params.slug}`,
         languages: languages,
     },
   };
