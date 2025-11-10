@@ -37,8 +37,8 @@ const optimizePickupRouteFlow = ai.defineFlow(
     inputSchema: OptimizePickupRouteInputSchema,
     outputSchema: OptimizePickupRouteOutputSchema,
   },
-  async input => {
-    const prompt = `You are an expert route optimizer specializing in creating efficient routes for tour buses.
+  async (input) => {
+    const routePrompt = await ai.prompt(`You are an expert route optimizer specializing in creating efficient routes for tour buses.
 
 You will receive a list of meeting points, each with a name and coordinates.
 
@@ -51,12 +51,12 @@ Return an array of meeting point names in the optimized order.
 Meeting Points:
 {{#each meetingPoints}}
 - Name: {{this.name}}, Latitude: {{this.latitude}}, Longitude: {{this.longitude}}
-{{/each}}`;
+{{/each}}`);
 
     const {output} = await ai.generate({
-      prompt: prompt,
+      prompt: routePrompt,
       model: 'googleai/gemini-2.5-flash',
-      input: input,
+      context: input,
       output: {
         schema: OptimizePickupRouteOutputSchema,
       },

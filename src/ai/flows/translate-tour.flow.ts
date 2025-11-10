@@ -88,14 +88,15 @@ export const TranslateTourOutputSchema = z.object({
 });
 export type TranslateTourOutput = z.infer<typeof TranslateTourOutputSchema>;
 
-const translateTourContentFlow = ai.defineFlow(
+export const translateTourContentFlow = ai.defineFlow(
   {
     name: 'translateTourContentFlow',
     inputSchema: TranslateTourInputSchema,
     outputSchema: TranslateTourOutputSchema,
   },
   async (input) => {
-    const prompt = `You are an expert translator specializing in creating engaging and natural-sounding tourism marketing content for a European audience. Your task is to translate the provided tour information from English into Spanish (es), German (de), French (fr), and Dutch (nl).
+    
+    const translationPrompt = await ai.prompt(`You are an expert translator specializing in creating engaging and natural-sounding tourism marketing content for a European audience. Your task is to translate the provided tour information from English into Spanish (es), German (de), French (fr), and Dutch (nl).
 
     **IMPORTANT INSTRUCTIONS:**
     1.  **Do not perform a literal, word-for-word translation.** Adapt the phrasing, tone, and cultural nuances to make the content appealing and natural for speakers of each target language.
@@ -131,12 +132,12 @@ const translateTourContentFlow = ai.defineFlow(
         - Title: {{this.title}}
         - Activities: {{#each this.activities}}"{{this}}"{{#unless @last}}, {{/unless}}{{/each}}
     {{/each}}
-    `;
+    `);
 
     const { output } = await ai.generate({
-      prompt: prompt,
+      prompt: translationPrompt,
       model: 'googleai/gemini-2.5-flash',
-      input: input,
+      context: input,
       output: {
         schema: TranslateTourOutputSchema,
       },
@@ -144,7 +145,3 @@ const translateTourContentFlow = ai.defineFlow(
     return output!;
   }
 );
-
-export async function translateTourContent(input: TranslateTourInput): Promise<TranslateTourOutput> {
-  return await translateTourContentFlow(input);
-}
