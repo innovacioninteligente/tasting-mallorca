@@ -29,7 +29,7 @@ export const findTourById = createSafeAction(
 
 export const findAllTours = createSafeAction(
   {
-    allowedRoles: ['admin'],
+    // Public action, no roles required.
   },
   async (_: {}): Promise<{ data?: Tour[]; error?: string }> => {
     try {
@@ -62,4 +62,3 @@ export const findTourBySlugAndLang = createSafeAction(
         }
     }
 );
-
