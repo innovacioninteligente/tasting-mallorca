@@ -102,7 +102,7 @@ export function TourGallerySection({ images }: TourGallerySectionProps) {
                             className="object-cover w-full h-full"
                         />
                          {index === galleryGridImages.length - 1 && remainingImageCount > 0 && (
-                            <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
+                            <div className="absolute inset-0 bg-black/30 flex items-center justify-center" onClick={() => openLightbox(index + 1)}>
                                 <Button variant="secondary" className="bg-white/80 hover:bg-white text-black">
                                     <ImageIcon className="w-5 h-5 mr-2" />
                                     +{remainingImageCount}
@@ -114,7 +114,7 @@ export function TourGallerySection({ images }: TourGallerySectionProps) {
             </div>
 
             <Dialog open={isLightboxOpen} onOpenChange={setIsLightboxOpen}>
-                <DialogContent className="max-w-none w-screen h-screen p-0 bg-black/90 border-0 flex items-center justify-center">
+                <DialogContent className="max-w-none w-screen h-screen p-0 bg-background/80 backdrop-blur-sm border-0 flex items-center justify-center">
                     <DialogTitle className="sr-only">Image Gallery Lightbox</DialogTitle>
                     <DialogDescription className="sr-only">A carousel of all tour images in a larger view.</DialogDescription>
                     <Carousel
@@ -139,10 +139,10 @@ export function TourGallerySection({ images }: TourGallerySectionProps) {
                                 </CarouselItem>
                             ))}
                         </CarouselContent>
-                        <CarouselPrevious className="absolute left-4 top-1/2 -translate-y-1/2 text-white bg-black/50 hover:bg-black/70 border-white/50 h-12 w-12" />
-                        <CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2 text-white bg-black/50 hover:bg-black/70 border-white/50 h-12 w-12" />
+                        <CarouselPrevious className="absolute left-4 top-1/2 -translate-y-1/2 text-foreground bg-background/50 hover:bg-background/70 border-border h-12 w-12" />
+                        <CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2 text-foreground bg-background/50 hover:bg-background/70 border-border h-12 w-12" />
                     </Carousel>
-                    <DialogClose className="absolute right-4 top-4 rounded-full p-2 bg-black/50 text-white opacity-80 hover:opacity-100 transition-opacity focus:outline-none focus:ring-2 focus:ring-white">
+                    <DialogClose className="absolute right-4 top-4 rounded-full p-2 bg-background/50 text-foreground opacity-80 hover:opacity-100 transition-opacity focus:outline-none focus:ring-2 focus:ring-ring">
                         <X className="h-8 w-8" />
                         <span className="sr-only">Close</span>
                     </DialogClose>
