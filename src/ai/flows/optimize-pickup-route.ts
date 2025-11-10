@@ -31,11 +31,6 @@ const OptimizePickupRouteOutputSchema = z.object({
 });
 export type OptimizePickupRouteOutput = z.infer<typeof OptimizePickupRouteOutputSchema>;
 
-export async function optimizePickupRoute(
-  input: OptimizePickupRouteInput
-): Promise<OptimizePickupRouteOutput> {
-  return optimizePickupRouteFlow(input);
-}
 
 const prompt = ai.definePrompt({
   name: 'optimizePickupRoutePrompt',
@@ -68,3 +63,10 @@ const optimizePickupRouteFlow = ai.defineFlow(
     return output!;
   }
 );
+
+
+export async function optimizePickupRoute(
+  input: OptimizePickupRouteInput
+): Promise<OptimizePickupRouteOutput> {
+  return optimizePickupRouteFlow(input);
+}

@@ -88,10 +88,6 @@ export const TranslateTourOutputSchema = z.object({
 });
 export type TranslateTourOutput = z.infer<typeof TranslateTourOutputSchema>;
 
-export async function translateTourContent(input: TranslateTourInput): Promise<TranslateTourOutput> {
-  return translateTourContentFlow(input);
-}
-
 const prompt = ai.definePrompt({
   name: 'translateTourPrompt',
   input: { schema: TranslateTourInputSchema },
@@ -102,7 +98,7 @@ const prompt = ai.definePrompt({
   1.  **Do not perform a literal, word-for-word translation.** Adapt the phrasing, tone, and cultural nuances to make the content appealing and natural for speakers of each target language.
   2.  **Maintain the original meaning and key information.** The core details of the tour must remain accurate.
   3.  **Translate list items individually.** For fields that are newline-separated lists (like highlights, included, etc.), translate each line as a separate item and maintain the newline-separated format in your output.
-  4.  **Format your response strictly as a JSON object** that conforms to the provided output schema. Ensure all keys and nested structures are correct.
+  4.  **Format your response strictly as a JSON object** that conforms to the provided output schema.
   5.  For itinerary activities, translate each tag individually.
   6.  If a source field is empty, the corresponding translated fields should also be empty strings.
 
@@ -146,3 +142,8 @@ const translateTourContentFlow = ai.defineFlow(
     return output!;
   }
 );
+
+
+export async function translateTourContent(input: TranslateTourInput): Promise<TranslateTourOutput> {
+  return translateTourContentFlow(input);
+}

@@ -43,7 +43,7 @@ export function TourFormHeader({
                 </h1>
             </div>
             <div className="flex items-center gap-4">
-                 <Button onClick={onTranslate} variant="outline" size="sm" disabled={isTranslating || isSubmitting}>
+                 <Button onClick={onTranslate} variant="outline" size="sm" disabled={isTranslating || isSubmitting} type="button">
                     {isTranslating ? <Loader2 className="animate-spin mr-2" /> : <Languages className="mr-2 h-4 w-4" />}
                     Translate with AI
                 </Button>
@@ -64,6 +64,7 @@ export function TourFormHeader({
                     size="sm" 
                     disabled={isSubmitting || isTranslating}
                     className={cn(isDirty && "bg-accent text-accent-foreground hover:bg-accent/90")}
+                    type="button"
                 >
                     {isSubmitting ? <Loader2 className="animate-spin" /> : 'Save Tour'}
                     {isDirty && !isSubmitting && <Circle className="ml-2 h-3 w-3 fill-current" />}
