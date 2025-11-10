@@ -31,7 +31,7 @@ export function TourHeaderSection({ tour, dictionary }: TourHeaderSectionProps) 
 
                 <div className="flex flex-col md:flex-row md:items-center md:justify-between">
                     <div>
-                        <h1 className="text-4xl md:text-5xl font-extrabold text-foreground">
+                        <h1 className="text-4xl md:text-5xl font-extrabold text-foreground" style={{ viewTransitionName: `tour-title-${tour.title}` }}>
                             {tour.title}
                         </h1>
                         <div className="flex flex-col items-start gap-2 md:flex-row md:items-center md:gap-4 mt-4">

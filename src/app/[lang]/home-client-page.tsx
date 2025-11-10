@@ -14,20 +14,23 @@ import { TourGuidesSection } from '@/components/home/tour-guides-section';
 import { TestimonialsSection } from '@/components/home/testimonials-section';
 import { BlogSection } from '@/components/home/blog-section';
 import { type Locale } from '@/dictionaries/config';
+import { Tour } from '@/backend/tours/domain/tour.model';
 
 
 export default function HomeClientPage({
   dictionary,
   lang,
+  tours
 }: {
   dictionary: Awaited<ReturnType<typeof getDictionary>>;
   lang: Locale;
+  tours: Tour[];
 }) {
   return (
     <div className="flex flex-col bg-background">
       <HeroSection dictionary={dictionary.home} />
       <ImmersiveCarouselSection />
-      <FeaturedToursSection dictionary={dictionary} lang={lang} />
+      <FeaturedToursSection dictionary={dictionary.featuredTours} lang={lang} tours={tours} />
       <WhatsIncludedSection dictionary={dictionary.whatsIncluded} />
       <WhyChooseUsSection dictionary={dictionary.whyChooseUs} />
       <GallerySection dictionary={dictionary.gallery} />

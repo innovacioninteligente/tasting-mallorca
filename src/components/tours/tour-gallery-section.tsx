@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
 import { useRef } from 'react';
+import { Tour } from '@/backend/tours/domain/tour.model';
 
 const images = [
     { src: 'https://picsum.photos/seed/tour-gallery1/800/600', alt: 'Scenic view of Valldemossa', hint: 'valldemossa aerial view' },
@@ -26,6 +27,9 @@ const images = [
 export function TourGallerySection() {
     const autoplayPlugin = useRef(Autoplay({ delay: 5000, stopOnInteraction: true }));
     
+    // In a real scenario, you'd pass the tour's gallery images here.
+    // For now, we'll continue using the placeholder images.
+
     return (
         <div className="w-full md:w-[90vw] mx-auto px-4 mt-8">
             {/* Mobile Carousel View */}
@@ -66,9 +70,10 @@ export function TourGallerySection() {
                         src={images[0].src}
                         alt={images[0].alt}
                         fill
-                        className="object-cover w-full h-full"
+                        className="object-cover w-full h-full view-transition"
                         data-ai-hint={images[0].hint}
                         priority
+                        style={{ viewTransitionName: `tour-image-main` } as React.CSSProperties}
                     />
                 </div>
 
