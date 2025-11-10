@@ -26,6 +26,14 @@ const multilingualStringSchema = z.object({
     nl: z.string().optional(),
 });
 
+const multilingualOptionalStringSchema = z.object({
+    es: z.string().optional(),
+    en: z.string().optional(),
+    de: z.string().optional(),
+    fr: z.string().optional(),
+    nl: z.string().optional(),
+});
+
 const availabilityPeriodSchema = z.object({
     startDate: z.date({ required_error: "Start date is required." }),
     endDate: z.date({ required_error: "End date is required." }),
@@ -38,13 +46,13 @@ const pickupPointSchema = z.object({
 });
 
 const detailsSchema = z.object({
-    highlights: multilingualStringSchema,
-    fullDescription: multilingualStringSchema,
-    included: multilingualStringSchema,
-    notIncluded: multilingualStringSchema,
-    notSuitableFor: multilingualStringSchema,
-    whatToBring: multilingualStringSchema,
-    beforeYouGo: multilingualStringSchema,
+    highlights: multilingualOptionalStringSchema,
+    fullDescription: multilingualOptionalStringSchema,
+    included: multilingualOptionalStringSchema,
+    notIncluded: multilingualOptionalStringSchema,
+    notSuitableFor: multilingualOptionalStringSchema,
+    whatToBring: multilingualOptionalStringSchema,
+    beforeYouGo: multilingualOptionalStringSchema,
 })
 
 const itineraryItemSchema = z.object({
@@ -169,6 +177,14 @@ export function EditTourClientPage({ initialData, lang }: EditTourClientPageProp
       });
     };
 
+    const handleInvalidSubmit = () => {
+        toast({
+            variant: "destructive",
+            title: "Validation Error",
+            description: "Please review all tabs for required fields and correct any errors.",
+        });
+    }
+
     const onSubmit = async (data: TourFormValues) => {
         setIsSubmitting(true);
         const basePath = `/${lang}/dashboard/admin/tours`;
@@ -217,6 +233,7 @@ export function EditTourClientPage({ initialData, lang }: EditTourClientPageProp
             if (result.error) throw new Error(result.error);
 
             clearPersistedData();
+            form.reset(tourData, { keepDirty: false });
     
             toast({
                 title: "Tour Saved!",
@@ -242,30 +259,30 @@ export function EditTourClientPage({ initialData, lang }: EditTourClientPageProp
         try {
             const values = form.getValues();
             const sourceContent = {
-                title: values.title.en,
-                description: values.description.en,
-                overview: values.overview.en,
+                title: values.title.en || '',
+                description: values.description.en || '',
+                overview: values.overview.en || '',
                 generalInfo: {
-                    cancellationPolicy: values.generalInfo.cancellationPolicy.en,
-                    bookingPolicy: values.generalInfo.bookingPolicy.en,
-                    guideInfo: values.generalInfo.guideInfo.en,
-                    pickupInfo: values.generalInfo.pickupInfo.en,
+                    cancellationPolicy: values.generalInfo.cancellationPolicy.en || '',
+                    bookingPolicy: values.generalInfo.bookingPolicy.en || '',
+                    guideInfo: values.generalInfo.guideInfo.en || '',
+                    pickupInfo: values.generalInfo.pickupInfo.en || '',
                 },
                  details: {
-                    highlights: values.details.highlights.en,
-                    fullDescription: values.details.fullDescription.en,
-                    included: values.details.included.en,
-                    notIncluded: values.details.notIncluded.en,
-                    notSuitableFor: values.details.notSuitableFor.en,
-                    whatToBring: values.details.whatToBring.en,
-                    beforeYouGo: values.details.beforeYouGo.en,
+                    highlights: values.details.highlights.en || '',
+                    fullDescription: values.details.fullDescription.en || '',
+                    included: values.details.included.en || '',
+                    notIncluded: values.details.notIncluded.en || '',
+                    notSuitableFor: values.details.notSuitableFor.en || '',
+                    whatToBring: values.details.whatToBring.en || '',
+                    beforeYouGo: values.details.beforeYouGo.en || '',
                 },
                 pickupPoint: {
-                    title: values.pickupPoint.title.en,
-                    description: values.pickupPoint.description.en,
+                    title: values.pickupPoint.title.en || '',
+                    description: values.pickupPoint.description.en || '',
                 },
                 itinerary: values.itinerary?.map(item => ({
-                    title: item.title.en,
+                    title: item.title.en || '',
                     activities: item.activities?.en || [],
                 })) || [],
             };
@@ -336,7 +353,7 @@ export function EditTourClientPage({ initialData, lang }: EditTourClientPageProp
                     isSubmitting={isSubmitting}
                     initialData={initialData}
                     basePath={basePath}
-                    onSubmit={form.handleSubmit(onSubmit)}
+                    onSubmit={form.handleSubmit(onSubmit, handleInvalidSubmit)}
                     onTranslate={handleTranslate}
                     isTranslating={isTranslating}
                 />

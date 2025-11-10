@@ -4,10 +4,11 @@
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form";
-import { ArrowLeft, Loader2, Languages } from "lucide-react";
+import { ArrowLeft, Loader2, Languages, Circle } from "lucide-react";
 import Link from "next/link";
 import { useFormContext } from "react-hook-form";
 import { Tour } from "@/backend/tours/domain/tour.model";
+import { cn } from "@/lib/utils";
 
 interface TourFormHeaderProps {
     isSubmitting: boolean;
@@ -26,7 +27,7 @@ export function TourFormHeader({
     onTranslate,
     isTranslating,
 }: TourFormHeaderProps) {
-    const { control } = useFormContext();
+    const { control, formState: { isDirty } } = useFormContext();
 
     return (
         <div className="sticky top-0 z-10 flex h-20 items-center justify-between border-b bg-background/95 px-8 py-4 backdrop-blur-sm">
@@ -58,8 +59,14 @@ export function TourFormHeader({
                         </FormItem>
                     )}
                 />
-                <Button onClick={onSubmit} size="sm" disabled={isSubmitting || isTranslating}>
+                <Button 
+                    onClick={onSubmit} 
+                    size="sm" 
+                    disabled={isSubmitting || isTranslating}
+                    className={cn(isDirty && "bg-accent text-accent-foreground hover:bg-accent/90")}
+                >
                     {isSubmitting ? <Loader2 className="animate-spin" /> : 'Save Tour'}
+                    {isDirty && !isSubmitting && <Circle className="ml-2 h-3 w-3 fill-current" />}
                 </Button>
             </div>
         </div>
