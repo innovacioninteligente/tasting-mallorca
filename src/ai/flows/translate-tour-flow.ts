@@ -1,3 +1,4 @@
+
 import { z } from 'zod';
 import { GoogleGenAI } from '@google/genai';
 import { adminApp } from '@/firebase/server/config';
@@ -148,8 +149,7 @@ export async function translateTour(input: TranslateTourInput): Promise<Translat
     console.log("Sending a translation request to Vertex AI...");
 
     try {
-        const models = await vertexAI.getModels();
-        const result = await models.generateContent({
+        const result = await vertexAI.models.generateContent({
             model: 'gemini-2.5-flash',
             contents: [{ role: 'user', parts: [{ text: prompt }] }],
             generationConfig: {
