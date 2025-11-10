@@ -2,7 +2,11 @@
 'use server';
 
 import { createSafeAction } from '@/app/server-actions/lib/safe-action';
-import { translateTourContent as translateTourContentFlow, type TranslateTourInput, type TranslateTourOutput } from '@/ai/flows/translate-tour-flow';
+import { translateTourContent as translateTourContentFlow, TranslateTourInputSchema as FlowInputSchema, type TranslateTourOutput } from '@/ai/flows/translate-tour.flow';
+import { z } from 'zod';
+
+export const TranslateTourInputSchema = FlowInputSchema;
+export type TranslateTourInput = z.infer<typeof TranslateTourInputSchema>;
 
 export const translateTourContent = createSafeAction(
     {
@@ -20,3 +24,5 @@ export const translateTourContent = createSafeAction(
         }
     }
 );
+
+    

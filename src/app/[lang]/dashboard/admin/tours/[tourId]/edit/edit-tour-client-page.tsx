@@ -15,7 +15,7 @@ import { getStorage, ref as storageRef, uploadBytesResumable, getDownloadURL } f
 import { initializeFirebase } from "@/firebase";
 import { updateTour } from "@/app/server-actions/tours/updateTour";
 import { useFormPersistence } from "@/hooks/use-form-persistence";
-import { translateTourContent } from "@/app/server-actions/tours/translateTour";
+import { translateTourContent, TranslateTourInputSchema } from "@/app/server-actions/tours/translateTour";
 import { UploadProgressDialog } from "@/components/upload-progress-dialog";
 import { cloneDeep, mergeWith } from "lodash";
 
@@ -231,7 +231,6 @@ export function EditTourClientPage({ initialData, lang }: EditTourClientPageProp
 
     const onSubmit = async (data: TourFormValues) => {
         setIsSubmitting(true);
-        const basePath = `/${lang}/dashboard/admin/tours`;
     
         try {
             let tourId = data.id;
@@ -330,8 +329,11 @@ export function EditTourClientPage({ initialData, lang }: EditTourClientPageProp
                     activities: item.activities?.en || [],
                 })) || [],
             };
+            
+            const validatedSourceContent = TranslateTourInputSchema.parse(sourceContent);
 
-            const result = await translateTourContent(sourceContent);
+            const result = await translateTourContent(validatedSourceContent);
+            
             if (result.error || !result.data) {
                 throw new Error(result.error || "Failed to get translation data.");
             }
@@ -352,13 +354,13 @@ export function EditTourClientPage({ initialData, lang }: EditTourClientPageProp
                     pickupInfo: { ...currentValues.generalInfo.pickupInfo, ...translations.generalInfo.pickupInfo },
                 },
                  details: {
-                    highlights: { ...currentValues.details?.highlights, ...translations.details?.highlights },
-                    fullDescription: { ...currentValues.details?.fullDescription, ...translations.details?.fullDescription },
-                    included: { ...currentValues.details?.included, ...translations.details?.included },
-                    notIncluded: { ...currentValues.details?.notIncluded, ...translations.details?.notIncluded },
-                    notSuitableFor: { ...currentValues.details?.notSuitableFor, ...translations.details?.notSuitableFor },
-                    whatToBring: { ...currentValues.details?.whatToBring, ...translations.details?.whatToBring },
-                    beforeYouGo: { ...currentValues.details?.beforeYouGo, ...translations.details?.beforeYouGo },
+                    highlights: { ...currentValues.details?.highlights, ...translations.details.highlights },
+                    fullDescription: { ...currentValues.details?.fullDescription, ...translations.details.fullDescription },
+                    included: { ...currentValues.details?.included, ...translations.details.included },
+                    notIncluded: { ...currentValues.details?.notIncluded, ...translations.details.notIncluded },
+                    notSuitableFor: { ...currentValues.details?.notSuitableFor, ...translations.details.notSuitableFor },
+                    whatToBring: { ...currentValues.details?.whatToBring, ...translations.details.whatToBring },
+                    beforeYouGo: { ...currentValues.details?.beforeYouGo, ...translations.details.beforeYouGo },
                 },
                 pickupPoint: {
                     title: { ...currentValues.pickupPoint.title, ...translations.pickupPoint.title },
@@ -410,5 +412,7 @@ export function EditTourClientPage({ initialData, lang }: EditTourClientPageProp
         </div>
     );
 }
+
+    
 
     

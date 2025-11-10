@@ -14,7 +14,7 @@ import { initializeFirebase } from "@/firebase";
 import { useToast } from "@/hooks/use-toast";
 import { createTour } from "@/app/server-actions/tours/createTour";
 import { useFormPersistence } from "@/hooks/use-form-persistence";
-import { translateTourContent } from "@/app/server-actions/tours/translateTour";
+import { translateTourContent, TranslateTourInputSchema } from "@/app/server-actions/tours/translateTour";
 import { UploadProgressDialog } from "@/components/upload-progress-dialog";
 
 const multilingualStringSchema = z.object({
@@ -81,7 +81,7 @@ const formSchema = z.object({
     guideInfo: multilingualStringSchema,
     pickupInfo: multilingualStringSchema,
   }),
-  details: detailsSchema,
+  details: detailsSchema.optional(),
   pickupPoint: pickupPointSchema,
   price: z.coerce.number().min(0, "El precio debe ser un número positivo."),
   region: z.enum(["North", "East", "South", "West", "Central"]),
@@ -99,6 +99,7 @@ const formSchema = z.object({
 type TourFormValues = z.infer<typeof formSchema>;
 
 const defaultMultilingual = { es: '', en: '', de: '', fr: '', nl: '' };
+const defaultMultilingualOptional = { es: '', en: '', de: '', fr: '', nl: '' };
 
 export default function NewTourPage() {
     const pathname = usePathname();
@@ -108,7 +109,7 @@ export default function NewTourPage() {
 
     const formPersistenceKey = 'tour-form-new';
 
-    const defaultValues = {
+    const defaultValues: TourFormValues = {
         id: '',
         title: { ...defaultMultilingual },
         slug: { ...defaultMultilingual },
@@ -121,13 +122,13 @@ export default function NewTourPage() {
             pickupInfo: { ...defaultMultilingual },
         },
         details: {
-            highlights: { ...defaultMultilingual },
-            fullDescription: { ...defaultMultilingual },
-            included: { ...defaultMultilingual },
-            notIncluded: { ...defaultMultilingual },
-            notSuitableFor: { ...defaultMultilingual },
-            whatToBring: { ...defaultMultilingual },
-            beforeYouGo: { ...defaultMultilingual },
+            highlights: { ...defaultMultilingualOptional },
+            fullDescription: { ...defaultMultilingualOptional },
+            included: { ...defaultMultilingualOptional },
+            notIncluded: { ...defaultMultilingualOptional },
+            notSuitableFor: { ...defaultMultilingualOptional },
+            whatToBring: { ...defaultMultilingualOptional },
+            beforeYouGo: { ...defaultMultilingualOptional },
         },
         pickupPoint: {
             title: { ...defaultMultilingual },
@@ -271,13 +272,13 @@ export default function NewTourPage() {
                     pickupInfo: values.generalInfo.pickupInfo.en || '',
                 },
                 details: {
-                    highlights: values.details.highlights?.en || '',
-                    fullDescription: values.details.fullDescription?.en || '',
-                    included: values.details.included?.en || '',
-                    notIncluded: values.details.notIncluded?.en || '',
-                    notSuitableFor: values.details.notSuitableFor?.en || '',
-                    whatToBring: values.details.whatToBring?.en || '',
-                    beforeYouGo: values.details.beforeYouGo?.en || '',
+                    highlights: values.details?.highlights?.en || '',
+                    fullDescription: values.details?.fullDescription?.en || '',
+                    included: values.details?.included?.en || '',
+                    notIncluded: values.details?.notIncluded?.en || '',
+                    notSuitableFor: values.details?.notSuitableFor?.en || '',
+                    whatToBring: values.details?.whatToBring?.en || '',
+                    beforeYouGo: values.details?.beforeYouGo?.en || '',
                 },
                 pickupPoint: {
                     title: values.pickupPoint.title.en || '',
@@ -288,8 +289,11 @@ export default function NewTourPage() {
                     activities: item.activities?.en || [],
                 })) || [],
             };
+            
+            const validatedSourceContent = TranslateTourInputSchema.parse(sourceContent);
 
-            const result = await translateTourContent(sourceContent);
+            const result = await translateTourContent(validatedSourceContent);
+            
             if (result.error || !result.data) {
                 throw new Error(result.error || "Failed to get translation data.");
             }
@@ -310,13 +314,13 @@ export default function NewTourPage() {
                     pickupInfo: { ...currentValues.generalInfo.pickupInfo, ...translations.generalInfo.pickupInfo },
                 },
                  details: {
-                    highlights: { ...currentValues.details.highlights, ...translations.details.highlights },
-                    fullDescription: { ...currentValues.details.fullDescription, ...translations.details.fullDescription },
-                    included: { ...currentValues.details.included, ...translations.details.included },
-                    notIncluded: { ...currentValues.details.notIncluded, ...translations.details.notIncluded },
-                    notSuitableFor: { ...currentValues.details.notSuitableFor, ...translations.details.notSuitableFor },
-                    whatToBring: { ...currentValues.details.whatToBring, ...translations.details.whatToBring },
-                    beforeYouGo: { ...currentValues.details.beforeYouGo, ...translations.details.beforeYouGo },
+                    highlights: { ...currentValues.details?.highlights, ...translations.details.highlights },
+                    fullDescription: { ...currentValues.details?.fullDescription, ...translations.details.fullDescription },
+                    included: { ...currentValues.details?.included, ...translations.details.included },
+                    notIncluded: { ...currentValues.details?.notIncluded, ...translations.details.notIncluded },
+                    notSuitableFor: { ...currentValues.details?.notSuitableFor, ...translations.details.notSuitableFor },
+                    whatToBring: { ...currentValues.details?.whatToBring, ...translations.details.whatToBring },
+                    beforeYouGo: { ...currentValues.details?.beforeYouGo, ...translations.details.beforeYouGo },
                 },
                 pickupPoint: {
                     title: { ...currentValues.pickupPoint.title, ...translations.pickupPoint.title },
@@ -367,3 +371,5 @@ export default function NewTourPage() {
         </AdminRouteGuard>
     );
 }
+
+    
