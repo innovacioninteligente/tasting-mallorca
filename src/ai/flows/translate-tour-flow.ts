@@ -125,17 +125,13 @@ export async function translateTour(input: TranslateTourInput): Promise<Translat
   const prompt = buildPrompt(input);
   
   const apiKey = process.env.VERTEX_AI_API_KEY;
-  const projectId = process.env.GOOGLE_CLOUD_PROJECT;
-  const location = process.env.GOOGLE_CLOUD_LOCATION || 'us-central1';
   
   if (!apiKey) {
     throw new Error('VERTEX_AI_API_KEY environment variable is not set.');
   }
-  if (!projectId) {
-    throw new Error('GOOGLE_CLOUD_PROJECT environment variable is not set.');
-  }
 
-  const endpoint = `https://${location}-aiplatform.googleapis.com/v1/projects/${projectId}/locations/${location}/publishers/google/models/gemini-2.5-flash-lite:streamGenerateContent?key=${apiKey}`;
+  // This is the global endpoint, not tied to a specific project or location.
+  const endpoint = `https://aiplatform.googleapis.com/v1/publishers/google/models/gemini-2.5-flash-lite:streamGenerateContent?key=${apiKey}`;
 
   console.log("Sending translation request to Vertex AI REST API...");
   console.log("Prompt:", prompt.substring(0, 500) + "..."); // Log first 500 chars
