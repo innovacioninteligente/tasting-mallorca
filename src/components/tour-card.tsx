@@ -20,7 +20,7 @@ export function TourCard({ tour, lang }: TourCardProps) {
 
     return (
         <Link
-            href={`/${lang}/tours/${encodeURIComponent(slug)}`}
+            href={`/${lang}/tours/${slug}`}
             className="block group"
             prefetch={false}
         >

@@ -1,3 +1,4 @@
+
 'use client';
 
 import { Button } from '@/components/ui/button';
@@ -12,12 +13,6 @@ import { usePathname, useRouter } from 'next/navigation';
 import { i18n, type Locale } from '@/dictionaries/config';
 import { useState, useEffect } from 'react';
 
-// Import all tour dictionaries
-import toursDe from '@/dictionaries/de/tours.json';
-import toursEn from '@/dictionaries/en/tours.json';
-import toursFr from '@/dictionaries/fr/tours.json';
-import toursNl from '@/dictionaries/nl/tours.json';
-
 type Language = {
   code: Locale;
   name: string;
@@ -31,12 +26,6 @@ const languages: Language[] = [
   { code: 'nl', name: 'Nederlands', flag: '🇳🇱' },
 ];
 
-const allTours = {
-  de: toursDe,
-  en: toursEn,
-  fr: toursFr,
-  nl: toursNl,
-};
 
 export function LanguageSwitcher({ currentLocale }: { currentLocale: Locale }) {
   const pathname = usePathname();
@@ -53,29 +42,10 @@ export function LanguageSwitcher({ currentLocale }: { currentLocale: Locale }) {
 
   const handleLanguageChange = (newLang: Language) => {
     const newLocale = newLang.code;
-    const pathSegments = pathname.split('/').filter(Boolean);
     
-    // Check if we are on a tour detail page
-    if (pathSegments.length === 3 && pathSegments[1] === 'tours') {
-      const currentSlug = pathSegments[2];
-      
-      // Find the current tour by its slug in the current language's dictionary
-      const currentTour = (allTours as any)[currentLocale]?.find((t: any) => t.slug === currentSlug);
-
-      if (currentTour) {
-        // Find the corresponding tour in the new language's dictionary using the ID
-        const newTour = (allTours as any)[newLocale]?.find((t: any) => t.id === currentTour.id);
-        
-        if (newTour) {
-          // If found, redirect to the new URL with the correct slug
-          router.push(`/${newLocale}/tours/${newTour.slug}`);
-          return;
-        }
-      }
-    }
-    
-    // Fallback for non-tour pages or if the tour isn't found
-    const newPath = pathname.replace(`/${currentLocale}`, `/${newLocale}`);
+    // For simplicity and robustness, we will redirect to the home page of the new locale.
+    // The previous logic was based on static JSON files and is no longer valid with dynamic data.
+    const newPath = `/${newLocale}`;
     router.push(newPath);
   };
 
