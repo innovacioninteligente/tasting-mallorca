@@ -1,3 +1,5 @@
+'use server';
+
 import { z } from 'zod';
 import { vertexAI } from '@/ai/vertex-client';
 
@@ -84,7 +86,7 @@ function buildPrompt(input: TranslateTourInput): string {
     1.  **Do not perform a literal, word-for-word translation.** Adapt the phrasing, tone, and cultural nuances to make the content appealing and natural for speakers of each target language.
     2.  **Maintain the original meaning and key information.** The core details of the tour must remain accurate.
     3.  **Translate list items individually.** For fields that are newline-separated lists (like highlights, included, etc.), translate each line as a separate item and maintain the newline-separated format in your output.
-    4.  **Format your response strictly as a JSON object** that conforms to the provided output schema.
+    4.  **Format your response strictly as a JSON object** that conforms to the provided output schema. Do not wrap it in markdown backticks or any other text.
     5.  For itinerary activities, translate each tag individually.
     6.  If a source field is empty, the corresponding translated fields should also be empty strings.
 
@@ -122,8 +124,9 @@ function buildPrompt(input: TranslateTourInput): string {
 
 export async function translateTour(input: TranslateTourInput): Promise<TranslateTourOutput> {
     const prompt = buildPrompt(input);
+    const models = await vertexAI.getModels();
     
-    const result = await vertexAI.models.generateContent({
+    const result = await models.generateContent({
         model: 'gemini-2.5-flash',
         contents: [{ role: 'user', parts: [{ text: prompt }] }],
         generationConfig: {
@@ -141,6 +144,7 @@ export async function translateTour(input: TranslateTourInput): Promise<Translat
         return TranslateTourOutputSchema.parse(parsedJson);
     } catch (e) {
         console.error("Failed to parse AI response:", e);
+        console.error("Raw AI response:", responseText);
         throw new Error("AI returned invalid JSON format.");
     }
 }
