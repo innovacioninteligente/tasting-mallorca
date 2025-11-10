@@ -5,7 +5,7 @@ import { TourForm } from "@/app/[lang]/dashboard/admin/tours/new/tour-form";
 import { useForm, FormProvider } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { TourFormHeader } from "@/app/[lang]/dashboard/admin/tours/new/tour-form-header";
+import { TourFormHeader } from "@/app/./[lang]/dashboard/admin/tours/new/tour-form-header";
 import { useState } from "react";
 import { Tour } from "@/backend/tours/domain/tour.model";
 import { parseISO } from 'date-fns';
@@ -16,7 +16,9 @@ import { initializeFirebase } from "@/firebase";
 import { updateTour } from "@/app/server-actions/tours/updateTour";
 import { useFormPersistence } from "@/hooks/use-form-persistence";
 import { UploadProgressDialog } from "@/components/upload-progress-dialog";
-import { cloneDeep, mergeWith } from "lodash";
+import { cloneDeep, merge, mergeWith } from "lodash";
+import { translateTourAction } from "@/app/server-actions/tours/translateTour";
+import { TranslateTourInputSchema, TranslateTourOutputSchema } from "@/ai/flows/translate-tour.flow";
 
 
 const multilingualStringSchema = z.object({
@@ -127,6 +129,7 @@ export function EditTourClientPage({ initialData, lang }: EditTourClientPageProp
     const { toast } = useToast();
     const router = useRouter();
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isTranslating, setIsTranslating] = useState(false);
     const [uploadProgress, setUploadProgress] = useState(0);
     const [uploadMessage, setUploadMessage] = useState('Starting...');
 
@@ -303,6 +306,67 @@ export function EditTourClientPage({ initialData, lang }: EditTourClientPageProp
         }
     };
     
+    const handleTranslate = async () => {
+        setIsTranslating(true);
+        try {
+            const currentData = form.getValues();
+            
+            const translationInput = {
+                title: currentData.title.en,
+                description: currentData.description.en,
+                overview: currentData.overview.en,
+                generalInfo: {
+                    cancellationPolicy: currentData.generalInfo.cancellationPolicy.en,
+                    bookingPolicy: currentData.generalInfo.bookingPolicy.en,
+                    guideInfo: currentData.generalInfo.guideInfo.en,
+                    pickupInfo: currentData.generalInfo.pickupInfo.en,
+                },
+                details: {
+                    highlights: currentData.details?.highlights?.en || '',
+                    fullDescription: currentData.details?.fullDescription?.en || '',
+                    included: currentData.details?.included?.en || '',
+                    notIncluded: currentData.details?.notIncluded?.en || '',
+                    notSuitableFor: currentData.details?.notSuitableFor?.en || '',
+                    whatToBring: currentData.details?.whatToBring?.en || '',
+                    beforeYouGo: currentData.details?.beforeYouGo?.en || '',
+                },
+                pickupPoint: {
+                    title: currentData.pickupPoint.title.en,
+                    description: currentData.pickupPoint.description.en,
+                },
+                itinerary: currentData.itinerary?.map(item => ({
+                    title: item.title.en,
+                    activities: item.activities.en || [],
+                })) || []
+            };
+
+            const result = await translateTourAction(translationInput);
+
+            if (result.error) throw new Error(result.error);
+            if (!result.data) throw new Error("No translation data returned.");
+
+            const translatedData = result.data;
+            const updatedData = merge({}, currentData, translatedData);
+            
+            form.reset(updatedData);
+
+            toast({
+                title: "Content Translated!",
+                description: "The tour content has been translated automatically.",
+            });
+
+        } catch(error: any) {
+            console.error("Translation failed:", error);
+            toast({
+                variant: "destructive",
+                title: "Translation Error",
+                description: error.message || "An unexpected issue occurred during translation.",
+            });
+        } finally {
+            setIsTranslating(false);
+        }
+    }
+    
     const basePath = `/${lang}/dashboard/admin/tours`;
 
     return (
@@ -311,6 +375,8 @@ export function EditTourClientPage({ initialData, lang }: EditTourClientPageProp
             <FormProvider {...form}>
                 <TourFormHeader
                     isSubmitting={isSubmitting}
+                    isTranslating={isTranslating}
+                    onTranslate={handleTranslate}
                     initialData={initialData}
                     basePath={basePath}
                     onSubmit={form.handleSubmit(onSubmit, handleInvalidSubmit)}

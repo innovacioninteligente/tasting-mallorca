@@ -15,6 +15,8 @@ import { useToast } from "@/hooks/use-toast";
 import { createTour } from "@/app/server-actions/tours/createTour";
 import { useFormPersistence } from "@/hooks/use-form-persistence";
 import { UploadProgressDialog } from "@/components/upload-progress-dialog";
+import { translateTourAction } from "@/app/server-actions/tours/translateTour";
+import { merge } from "lodash";
 
 const multilingualStringSchema = z.object({
     es: z.string().optional(),
@@ -153,6 +155,7 @@ export default function NewTourPage() {
     const { clearPersistedData } = useFormPersistence(formPersistenceKey, form, defaultValues);
 
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isTranslating, setIsTranslating] = useState(false);
     const [uploadProgress, setUploadProgress] = useState(0);
     const [uploadMessage, setUploadMessage] = useState('Starting...');
     const basePath = `/${lang}/dashboard/admin/tours`;
@@ -255,6 +258,68 @@ export default function NewTourPage() {
             setIsSubmitting(false);
         }
     };
+    
+    const handleTranslate = async () => {
+        setIsTranslating(true);
+        try {
+            const currentData = form.getValues();
+            
+            const translationInput = {
+                title: currentData.title.en,
+                description: currentData.description.en,
+                overview: currentData.overview.en,
+                generalInfo: {
+                    cancellationPolicy: currentData.generalInfo.cancellationPolicy.en,
+                    bookingPolicy: currentData.generalInfo.bookingPolicy.en,
+                    guideInfo: currentData.generalInfo.guideInfo.en,
+                    pickupInfo: currentData.generalInfo.pickupInfo.en,
+                },
+                details: {
+                    highlights: currentData.details?.highlights?.en || '',
+                    fullDescription: currentData.details?.fullDescription?.en || '',
+                    included: currentData.details?.included?.en || '',
+                    notIncluded: currentData.details?.notIncluded?.en || '',
+                    notSuitableFor: currentData.details?.notSuitableFor?.en || '',
+                    whatToBring: currentData.details?.whatToBring?.en || '',
+                    beforeYouGo: currentData.details?.beforeYouGo?.en || '',
+                },
+                pickupPoint: {
+                    title: currentData.pickupPoint.title.en,
+                    description: currentData.pickupPoint.description.en,
+                },
+                itinerary: currentData.itinerary?.map(item => ({
+                    title: item.title.en,
+                    activities: item.activities.en || [],
+                })) || []
+            };
+
+            const result = await translateTourAction(translationInput);
+
+            if (result.error) throw new Error(result.error);
+            if (!result.data) throw new Error("No translation data returned.");
+
+            const translatedData = result.data;
+            const updatedData = merge({}, currentData, translatedData);
+            
+            form.reset(updatedData);
+
+            toast({
+                title: "Content Translated!",
+                description: "The tour content has been translated automatically.",
+            });
+
+        } catch(error: any) {
+            console.error("Translation failed:", error);
+            toast({
+                variant: "destructive",
+                title: "Translation Error",
+                description: error.message || "An unexpected issue occurred during translation.",
+            });
+        } finally {
+            setIsTranslating(false);
+        }
+    }
+
 
     return (
         <AdminRouteGuard>
@@ -263,6 +328,8 @@ export default function NewTourPage() {
                 <FormProvider {...form}>
                     <TourFormHeader
                         isSubmitting={isSubmitting}
+                        isTranslating={isTranslating}
+                        onTranslate={handleTranslate}
                         basePath={basePath}
                         onSubmit={form.handleSubmit(onSubmit, handleInvalidSubmit)} 
                     />

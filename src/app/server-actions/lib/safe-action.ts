@@ -1,3 +1,4 @@
+
 // This is a higher-order function to create safe server actions.
 // It should not contain 'use server'; itself. Instead, the files
 // that use this function to define actions should have 'use server';
@@ -9,6 +10,7 @@ import { adminApp } from '@/firebase/server/config';
 import { findUserById } from '@/backend/users/application/findUser';
 import { FirestoreUserRepository } from '@/backend/users/infrastructure/firestore-user.repository';
 import { User, UserRole } from '@/backend/users/domain/user.model';
+import { ZodSchema } from 'zod';
 
 // Initialize Firebase Admin SDK
 adminApp;
@@ -22,17 +24,27 @@ type Action<TInput, TOutput> = (
   }
 ) => Promise<{ data?: TOutput; error?: string }>;
 
-interface AuthOptions {
+interface AuthOptions<TInput> {
   allowedRoles?: UserRole[];
+  inputSchema?: ZodSchema<TInput>;
 }
 
 export function createSafeAction<TInput, TOutput>(
-  authOptions: AuthOptions,
+  authOptions: AuthOptions<TInput>,
   action: Action<TInput, TOutput>
 ) {
   return async (
     input: TInput
   ): Promise<{ data?: TOutput; error?: string }> => {
+    
+    // Validate input with Zod schema if provided
+    if (authOptions.inputSchema) {
+        const validationResult = authOptions.inputSchema.safeParse(input);
+        if (!validationResult.success) {
+            return { error: 'Invalid input: ' + validationResult.error.format()._errors.join(', ') };
+        }
+    }
+
     const sessionCookie = cookies().get('session')?.value;
 
     if (!sessionCookie) {

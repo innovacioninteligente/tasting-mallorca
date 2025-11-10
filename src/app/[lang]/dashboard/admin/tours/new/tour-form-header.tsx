@@ -4,7 +4,7 @@
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form";
-import { ArrowLeft, Loader2, Circle } from "lucide-react";
+import { ArrowLeft, Loader2, Circle, Languages } from "lucide-react";
 import Link from "next/link";
 import { useFormContext } from "react-hook-form";
 import { Tour } from "@/backend/tours/domain/tour.model";
@@ -12,6 +12,8 @@ import { cn } from "@/lib/utils";
 
 interface TourFormHeaderProps {
     isSubmitting: boolean;
+    isTranslating: boolean;
+    onTranslate: () => void;
     initialData?: Tour;
     basePath: string;
     onSubmit: () => void;
@@ -19,6 +21,8 @@ interface TourFormHeaderProps {
 
 export function TourFormHeader({
     isSubmitting,
+    isTranslating,
+    onTranslate,
     initialData,
     basePath,
     onSubmit,
@@ -39,6 +43,14 @@ export function TourFormHeader({
                 </h1>
             </div>
             <div className="flex items-center gap-4">
+                <Button 
+                    onClick={onTranslate} 
+                    size="sm" 
+                    variant="outline"
+                    disabled={isTranslating || isSubmitting}
+                >
+                    {isTranslating ? <Loader2 className="animate-spin" /> : <><Languages className="mr-2" /> Translate with AI</>}
+                </Button>
                 <FormField
                     control={control}
                     name="published"
@@ -56,7 +68,7 @@ export function TourFormHeader({
                     size="sm" 
                     disabled={isSubmitting}
                     className={cn(isDirty && "bg-accent text-accent-foreground hover:bg-accent/90")}
-                    type="button"
+                    type="submit"
                 >
                     {isSubmitting ? <Loader2 className="animate-spin" /> : 'Save Tour'}
                     {isDirty && !isSubmitting && <Circle className="ml-2 h-3 w-3 fill-current" />}
