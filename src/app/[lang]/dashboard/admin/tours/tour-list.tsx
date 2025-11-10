@@ -51,13 +51,13 @@ export function TourList({ tours, error }: TourListProps) {
                         <TableCell>
                             <Image
                                 src={tour.mainImage}
-                                alt={tour.title.es}
+                                alt={tour.title.en}
                                 width={64}
                                 height={64}
                                 className="rounded-md object-cover aspect-square"
                             />
                         </TableCell>
-                        <TableCell className="font-medium">{tour.title.es}</TableCell>
+                        <TableCell className="font-medium">{tour.title.en}</TableCell>
                         <TableCell>
                             <Badge variant={tour.published ? 'default' : 'secondary'}>
                                 {tour.published ? 'Publicado' : 'Borrador'}
@@ -74,7 +74,7 @@ export function TourList({ tours, error }: TourListProps) {
                                     </Link>
                                 </Button>
                                 <Button asChild variant="ghost" size="sm" disabled={!tour.published}>
-                                    <Link href={`/tours/${tour.slug.es}`} target="_blank">
+                                    <Link href={`/tours/${tour.slug.en}`} target="_blank">
                                         <Eye className="mr-2 h-4 w-4" />
                                         Ver
                                     </Link>

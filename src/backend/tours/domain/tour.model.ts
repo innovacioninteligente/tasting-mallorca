@@ -4,7 +4,7 @@ export type ItineraryItem = {
     icon: string;
     title: { [key: string]: string };
     duration: string;
-    activities: { [key: "es" | "en" | "de" | "fr" | "nl"]: string[] };
+    activities: { [key: "en" | "de" | "fr" | "nl"]: string[] };
 };
 
 export type PickupPoint = {

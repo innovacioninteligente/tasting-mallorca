@@ -20,7 +20,6 @@ import { translateTourAction } from "@/app/server-actions/tours/translateTourAct
 import { TranslateTourInput, TranslateTourOutput } from "@/ai/flows/translate-tour-flow";
 
 const multilingualStringSchema = z.object({
-    es: z.string().optional(),
     en: z.string().min(1, { message: "El texto en inglés es requerido." }),
     de: z.string().optional(),
     fr: z.string().optional(),
@@ -28,7 +27,6 @@ const multilingualStringSchema = z.object({
 });
 
 const multilingualOptionalStringSchema = z.object({
-    es: z.string().optional(),
     en: z.string().optional(),
     de: z.string().optional(),
     fr: z.string().optional(),
@@ -63,7 +61,6 @@ const itineraryItemSchema = z.object({
     duration: z.string().min(1, "La duración es requerida."),
     title: multilingualStringSchema,
     activities: z.object({
-        es: z.array(z.string()).optional(),
         en: z.array(z.string()).optional(),
         de: z.array(z.string()).optional(),
         fr: z.array(z.string()).optional(),
@@ -100,7 +97,7 @@ const formSchema = z.object({
 
 type TourFormValues = z.infer<typeof formSchema>;
 
-const defaultMultilingual = { es: '', en: '', de: '', fr: '', nl: '' };
+const defaultMultilingual = { en: '', de: '', fr: '', nl: '' };
 
 export default function NewTourPage() {
     const pathname = usePathname();

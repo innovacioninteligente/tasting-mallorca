@@ -40,9 +40,9 @@
         "id": { "type": "string" },
         "type": { "type": "string", "enum": ["stop", "travel"] },
         "icon": { "type": "string" },
-        "title": { "type": "object", "properties": { "en": { "type": "string" }, "es": { "type": "string" }, "de": { "type": "string" }, "fr": { "type": "string" }, "nl": { "type": "string" } } },
+        "title": { "type": "object", "properties": { "en": { "type": "string" }, "de": { "type": "string" }, "fr": { "type": "string" }, "nl": { "type": "string" } } },
         "duration": { "type": "string" },
-        "activities": { "type": "object", "properties": { "en": { "type": "array", "items": {"type": "string"} }, "es": { "type": "array", "items": {"type": "string"} }, "de": { "type": "array", "items": {"type": "string"} }, "fr": { "type": "array", "items": {"type": "string"} }, "nl": { "type": "array", "items": {"type": "string"} } } }
+        "activities": { "type": "object", "properties": { "en": { "type": "array", "items": {"type": "string"} }, "de": { "type": "array", "items": {"type": "string"} }, "fr": { "type": "array", "items": {"type": "string"} }, "nl": { "type": "array", "items": {"type": "string"} } } }
       },
       "required": ["id", "type", "title", "duration"]
     },
@@ -51,8 +51,8 @@
         "description": "Represents the main pickup information for a tour.",
         "type": "object",
         "properties": {
-            "title": { "type": "object", "properties": { "en": { "type": "string" }, "es": { "type": "string" }, "de": { "type": "string" }, "fr": { "type": "string" }, "nl": { "type": "string" } } },
-            "description": { "type": "object", "properties": { "en": { "type": "string" }, "es": { "type": "string" }, "de": { "type": "string" }, "fr": { "type": "string" }, "nl": { "type": "string" } } }
+            "title": { "type": "object", "properties": { "en": { "type": "string" }, "de": { "type": "string" }, "fr": { "type": "string" }, "nl": { "type": "string" } } },
+            "description": { "type": "object", "properties": { "en": { "type": "string" }, "de": { "type": "string" }, "fr": { "type": "string" }, "nl": { "type": "string" } } }
         },
         "required": ["title", "description"]
     },
@@ -66,7 +66,6 @@
           "description": "URL-friendly slugs for each language.",
           "properties": {
             "en": { "type": "string" },
-            "es": { "type": "string" },
             "de": { "type": "string" },
             "fr": { "type": "string" },
             "nl": { "type": "string" }
@@ -75,12 +74,12 @@
         "title": {
           "type": "object",
           "description": "The title of the tour in multiple languages.",
-           "properties": { "en": { "type": "string" }, "es": { "type": "string" }, "de": { "type": "string" }, "fr": { "type": "string" }, "nl": { "type": "string" } }
+           "properties": { "en": { "type": "string" }, "de": { "type": "string" }, "fr": { "type": "string" }, "nl": { "type": "string" } }
         },
         "description": {
           "type": "object",
           "description": "A short description for tour cards, in multiple languages.",
-           "properties": { "en": { "type": "string" }, "es": { "type": "string" }, "de": { "type": "string" }, "fr": { "type": "string" }, "nl": { "type": "string" } }
+           "properties": { "en": { "type": "string" }, "de": { "type": "string" }, "fr": { "type": "string" }, "nl": { "type": "string" } }
         },
         "price": {
           "type": "number",
@@ -97,16 +96,16 @@
         "overview": {
           "type": "object",
           "description": "General overview of the tour in multiple languages.",
-           "properties": { "en": { "type": "string" }, "es": { "type": "string" }, "de": { "type": "string" }, "fr": { "type": "string" }, "nl": { "type": "string" } }
+           "properties": { "en": { "type": "string" }, "de": { "type": "string" }, "fr": { "type": "string" }, "nl": { "type": "string" } }
         },
         "generalInfo": {
           "type": "object",
           "description": "General information about the tour in multiple languages.",
           "properties": {
-            "cancellationPolicy": { "type": "object", "properties": { "en": { "type": "string" }, "es": { "type": "string" }, "de": { "type": "string" }, "fr": { "type": "string" }, "nl": { "type": "string" } } },
-            "bookingPolicy": { "type": "object", "properties": { "en": { "type": "string" }, "es": { "type": "string" }, "de": { "type": "string" }, "fr": { "type": "string" }, "nl": { "type": "string" } } },
-            "guideInfo": { "type": "object", "properties": { "en": { "type": "string" }, "es": { "type": "string" }, "de": { "type": "string" }, "fr": { "type": "string" }, "nl": { "type": "string" } } },
-            "pickupInfo": { "type": "object", "properties": { "en": { "type": "string" }, "es": { "type": "string" }, "de": { "type": "string" }, "fr": { "type": "string" }, "nl": { "type": "string" } } }
+            "cancellationPolicy": { "type": "object", "properties": { "en": { "type": "string" }, "de": { "type": "string" }, "fr": { "type": "string" }, "nl": { "type": "string" } } },
+            "bookingPolicy": { "type": "object", "properties": { "en": { "type": "string" }, "de": { "type": "string" }, "fr": { "type": "string" }, "nl": { "type": "string" } } },
+            "guideInfo": { "type": "object", "properties": { "en": { "type": "string" }, "de": { "type": "string" }, "fr": { "type": "string" }, "nl": { "type": "string" } } },
+            "pickupInfo": { "type": "object", "properties": { "en": { "type": "string" }, "de": { "type": "string" }, "fr": { "type": "string" }, "nl": { "type": "string" } } }
           }
         },
         "pickupPoint": {

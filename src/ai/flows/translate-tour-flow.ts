@@ -1,5 +1,3 @@
-
-'use server';
 import { z } from 'zod';
 
 const ItineraryItemTranslationInputSchema = z.object({
@@ -22,7 +20,7 @@ export const TranslateTourInputSchema = z.object({
       fullDescription: z.string().describe('The full, detailed description.'),
       included: z.string().describe('List of what is included, separated by newlines.'),
       notIncluded: z.string().describe('List of what is not included, separated by newlines.'),
-      notSuitableFor: z.string().describe('List of who this is not suitable for, separated by newlines.'),
+      notSuitableFor: zstring().describe('List of who this is not suitable for, separated by newlines.'),
       whatToBring: z.string().describe('List of what to bring, separated by newlines.'),
       beforeYouGo: z.string().describe('List of things to know before you go, separated by newlines.'),
   }),
@@ -35,7 +33,6 @@ export const TranslateTourInputSchema = z.object({
 export type TranslateTourInput = z.infer<typeof TranslateTourInputSchema>;
 
 const MultilingualStringSchema = z.object({
-    es: z.string().optional(),
     de: z.string().optional(),
     fr: z.string().optional(),
     nl: z.string().optional(),
@@ -44,7 +41,6 @@ const MultilingualStringSchema = z.object({
 const ItineraryItemTranslationOutputSchema = z.object({
     title: MultilingualStringSchema.optional(),
     activities: z.object({
-        es: z.array(z.string()).optional(),
         de: z.array(z.string()).optional(),
         fr: z.array(z.string()).optional(),
         nl: z.array(z.string()).optional(),
@@ -80,37 +76,37 @@ export type TranslateTourOutput = z.infer<typeof TranslateTourOutputSchema>;
 
 function buildPrompt(input: TranslateTourInput): string {
     const outputSchemaForPrompt = {
-        title: { es: "string", de: "string", fr: "string", nl: "string" },
-        description: { es: "string", de: "string", fr: "string", nl: "string" },
-        overview: { es: "string", de: "string", fr: "string", nl: "string" },
+        title: { de: "string", fr: "string", nl: "string" },
+        description: { de: "string", fr: "string", nl: "string" },
+        overview: { de: "string", fr: "string", nl: "string" },
         generalInfo: {
-            cancellationPolicy: { es: "string", de: "string", fr: "string", nl: "string" },
-            bookingPolicy: { es: "string", de: "string", fr: "string", nl: "string" },
-            guideInfo: { es: "string", de: "string", fr: "string", nl: "string" },
-            pickupInfo: { es: "string", de: "string", fr: "string", nl: "string" },
+            cancellationPolicy: { de: "string", fr: "string", nl: "string" },
+            bookingPolicy: { de: "string", fr: "string", nl: "string" },
+            guideInfo: { de: "string", fr: "string", nl: "string" },
+            pickupInfo: { de: "string", fr: "string", nl: "string" },
         },
         details: {
-            highlights: { es: "string", de: "string", fr: "string", nl: "string" },
-            fullDescription: { es: "string", de: "string", fr: "string", nl: "string" },
-            included: { es: "string", de: "string", fr: "string", nl: "string" },
-            notIncluded: { es: "string", de: "string", fr: "string", nl: "string" },
-            notSuitableFor: { es: "string", de: "string", fr: "string", nl: "string" },
-            whatToBring: { es: "string", de: "string", fr: "string", nl: "string" },
-            beforeYouGo: { es: "string", de: "string", fr: "string", nl: "string" },
+            highlights: { de: "string", fr: "string", nl: "string" },
+            fullDescription: { de: "string", fr: "string", nl: "string" },
+            included: { de: "string", fr: "string", nl: "string" },
+            notIncluded: { de: "string", fr: "string", nl: "string" },
+            notSuitableFor: { de: "string", fr: "string", nl: "string" },
+            whatToBring: { de: "string", fr: "string", nl: "string" },
+            beforeYouGo: { de: "string", fr: "string", nl: "string" },
         },
         pickupPoint: {
-            title: { es: "string", de: "string", fr: "string", nl: "string" },
-            description: { es: "string", de: "string", fr: "string", nl: "string" },
+            title: { de: "string", fr: "string", nl: "string" },
+            description: { de: "string", fr: "string", nl: "string" },
         },
         itinerary: [
             {
-                title: { es: "string", de: "string", fr: "string", nl: "string" },
-                activities: { es: ["string"], de: ["string"], fr: ["string"], nl: ["string"] },
+                title: { de: "string", fr: "string", nl: "string" },
+                activities: { de: ["string"], fr: ["string"], nl: ["string"] },
             }
         ]
     };
 
-    return `You are an expert translator specializing in creating engaging and natural-sounding tourism marketing content for a European audience. Your task is to translate the provided tour information from English into Spanish (es), German (de), French (fr), and Dutch (nl).
+    return `You are an expert translator specializing in creating engaging and natural-sounding tourism marketing content for a European audience. Your task is to translate the provided tour information from English into German (de), French (fr), and Dutch (nl).
 
     **IMPORTANT INSTRUCTIONS:**
     1.  **Do not perform a literal, word-for-word translation.** Adapt the phrasing, tone, and cultural nuances to make the content appealing and natural for speakers of each target language.

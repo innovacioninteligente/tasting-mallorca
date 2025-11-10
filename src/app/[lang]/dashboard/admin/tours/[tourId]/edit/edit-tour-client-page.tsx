@@ -22,7 +22,6 @@ import { translateTourAction } from "@/app/server-actions/tours/translateTourAct
 
 
 const multilingualStringSchema = z.object({
-    es: z.string().optional(),
     en: z.string().min(1, { message: "El texto en inglés es requerido." }),
     de: z.string().optional(),
     fr: z.string().optional(),
@@ -30,7 +29,6 @@ const multilingualStringSchema = z.object({
 });
 
 const multilingualOptionalStringSchema = z.object({
-    es: z.string().optional(),
     en: z.string().optional(),
     de: z.string().optional(),
     fr: z.string().optional(),
@@ -65,7 +63,6 @@ const itineraryItemSchema = z.object({
     duration: z.string().min(1, "La duración es requerida."),
     title: multilingualStringSchema,
     activities: z.object({
-        es: z.array(z.string()).optional(),
         en: z.array(z.string()).optional(),
         de: z.array(z.string()).optional(),
         fr: z.array(z.string()).optional(),
@@ -123,7 +120,7 @@ interface EditTourClientPageProps {
     lang: string;
 }
 
-const defaultMultilingual = { es: '', en: '', de: '', fr: '', nl: '' };
+const defaultMultilingual = { en: '', de: '', fr: '', nl: '' };
 
 export function EditTourClientPage({ initialData, lang }: EditTourClientPageProps) {
     const { toast } = useToast();
@@ -148,7 +145,6 @@ export function EditTourClientPage({ initialData, lang }: EditTourClientPageProp
             title: { ...defaultMultilingual, ...item.title },
             activities: { 
                 en: item.activities?.en || [],
-                es: item.activities?.es || [],
                 de: item.activities?.de || [],
                 fr: item.activities?.fr || [],
                 nl: item.activities?.nl || [],

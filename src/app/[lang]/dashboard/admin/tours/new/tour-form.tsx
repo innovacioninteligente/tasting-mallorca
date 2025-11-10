@@ -25,7 +25,6 @@ import { Tour } from "@/backend/tours/domain/tour.model";
 import { Badge } from "@/components/ui/badge";
 
 const multilingualStringSchema = z.object({
-    es: z.string().optional(),
     en: z.string().min(1, { message: "El texto en inglés es requerido." }),
     de: z.string().optional(),
     fr: z.string().optional(),
@@ -33,7 +32,6 @@ const multilingualStringSchema = z.object({
 });
 
 const multilingualOptionalStringSchema = z.object({
-    es: z.string().optional(),
     en: z.string().optional(),
     de: z.string().optional(),
     fr: z.string().optional(),
@@ -69,7 +67,6 @@ const itineraryItemSchema = z.object({
     duration: z.string().min(1, "La duración es requerida."),
     title: multilingualStringSchema,
     activities: z.object({
-        es: z.array(z.string()).optional(),
         en: z.array(z.string()).optional(),
         de: z.array(z.string()).optional(),
         fr: z.array(z.string()).optional(),
@@ -890,7 +887,7 @@ export function TourForm({ initialData }: TourFormProps) {
                                 </Button>
                                 <Button type="button" variant="secondary" className="w-full" onClick={() => {
                                     const newId = crypto.randomUUID();
-                                    appendItinerary({ id: newId, type: 'travel', icon: 'Bus', duration: '', title: { en: [] } });
+                                    appendItinerary({ id: newId, type: 'travel', icon: 'Bus', duration: '', title: { en: '' }, activities: {en: []} });
                                     setEditingItineraryId(newId);
                                 }}>
                                     <PlusCircle className="mr-2 h-4 w-4" /> Add Travel Leg
