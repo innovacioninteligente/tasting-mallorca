@@ -6,6 +6,8 @@
  * - OptimizePickupRouteOutput - The return type for the optimizePickupRoute function.
  */
 
+'use server';
+
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 

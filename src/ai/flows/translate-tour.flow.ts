@@ -86,7 +86,7 @@ export const TranslateTourOutputSchema = z.object({
 });
 export type TranslateTourOutput = z.infer<typeof TranslateTourOutputSchema>;
 
-const translateTourContentFlow = ai.defineFlow(
+export const translateTourContentFlow = ai.defineFlow(
   {
     name: 'translateTourContentFlow',
     inputSchema: TranslateTourInputSchema,
@@ -142,13 +142,3 @@ const translateTourContentFlow = ai.defineFlow(
     return output!;
   }
 );
-
-export async function translateTourContent(input: TranslateTourInput): Promise<{ data?: TranslateTourOutput; error?: string }> {
-  try {
-    const output = await translateTourContentFlow(input);
-    return { data: output };
-  } catch (error: any) {
-    console.error("Translation flow failed:", error);
-    return { error: error.message || "Failed to translate tour content." };
-  }
-}
