@@ -130,13 +130,16 @@ async function getVertexAIClient() {
         throw new Error('Google Cloud project and location must be set in environment variables.');
     }
     
-    // This ensures firebase-admin is initialized and can provide auth context
+    // This ensures firebase-admin is initialized, which makes its service account
+    // credentials available to the broader Google Cloud environment (Application Default Credentials).
     adminApp;
 
+    // The GoogleGenAI SDK will automatically find the project, location, and credentials
+    // from the environment when running in a Google Cloud environment.
     return new GoogleGenAI({
         vertexai: true,
-        project,
-        location,
+        project: project,
+        location: location,
     });
 }
 
@@ -145,7 +148,6 @@ export async function translateTour(input: TranslateTourInput): Promise<Translat
     const prompt = buildPrompt(input);
     const vertexAI = await getVertexAIClient();
     
-    // For debugging: log the prompt being sent to the AI
     console.log("Sending a translation request to Vertex AI...");
 
     try {
@@ -175,3 +177,5 @@ export async function translateTour(input: TranslateTourInput): Promise<Translat
         throw new Error(`Vertex AI API call failed: ${error.message}`);
     }
 }
+
+    
