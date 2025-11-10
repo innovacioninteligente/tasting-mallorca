@@ -318,9 +318,7 @@ export default function NewTourPage() {
 
         } catch(error: any) {
             console.error("Translation failed:", error);
-            const errorMessage = error.message.includes('503') 
-                ? "The translation service is currently overloaded. Please try again in a few moments."
-                : error.message || "An unexpected issue occurred during translation.";
+            const errorMessage = error.message || "An unexpected issue occurred during translation.";
 
             toast({
                 variant: "destructive",

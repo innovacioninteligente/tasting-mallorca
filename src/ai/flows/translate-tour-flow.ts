@@ -146,9 +146,12 @@ async function getVertexAIClient() {
 
 export async function translateTour(input: TranslateTourInput): Promise<TranslateTourOutput> {
     const prompt = buildPrompt(input);
+    
+    console.log("Attempting to get Vertex AI client...");
     const vertexAI = await getVertexAIClient();
     
     console.log("Sending a translation request to Vertex AI...");
+    console.log("Prompt:", prompt.substring(0, 500) + "..."); // Log first 500 chars
 
     try {
         const result = await vertexAI.models.generateContent({

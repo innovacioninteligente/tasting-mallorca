@@ -6,7 +6,6 @@ import { findTourById as findTourByIdAction } from "@/app/server-actions/tours/f
 import { notFound } from "next/navigation";
 import { EditTourClientPage } from "./edit-tour-client-page";
 import { Tour } from "@/backend/tours/domain/tour.model";
-import { translateTourAction } from "@/app/server-actions/tours/translateTourAction";
 
 interface EditTourPageProps {
     params: {
@@ -30,7 +29,6 @@ export default async function EditTourPage({ params }: EditTourPageProps) {
             <EditTourClientPage 
                 initialData={tour} 
                 lang={params.lang}
-                translateTourAction={translateTourAction}
             />
         </AdminRouteGuard>
     );
