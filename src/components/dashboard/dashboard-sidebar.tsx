@@ -13,9 +13,12 @@ import {
   LogOut,
   Users,
   Mountain,
+  X,
 } from 'lucide-react';
 import { useAuth, useUser } from '@/firebase';
 import { cn } from '@/lib/utils';
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from '../ui/sheet';
+import React from 'react';
 
 const navItems = [
   { href: '/dashboard/overview', label: 'Overview', icon: LayoutDashboard },
@@ -32,7 +35,12 @@ const bottomNavItems = [
     { href: '/dashboard/settings', label: 'Settings', icon: Settings },
 ];
 
-export function DashboardSidebar() {
+interface DashboardSidebarProps {
+  isMobileMenuOpen: boolean;
+  setIsMobileMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export function DashboardSidebar({ isMobileMenuOpen, setIsMobileMenuOpen }: DashboardSidebarProps) {
   const pathname = usePathname();
   const auth = useAuth();
   const { user } = useUser();
@@ -43,7 +51,6 @@ export function DashboardSidebar() {
   const handleSignOut = async () => {
     if (auth) {
       await auth.signOut();
-      // Clear session cookie by calling the API route
       await fetch('/api/auth/logout', { method: 'POST' });
       router.push(`/${lang}/`);
     }
@@ -51,14 +58,8 @@ export function DashboardSidebar() {
 
   const userRole = user?.customClaims?.role;
 
-  return (
-    <aside className="hidden w-64 flex-col border-r bg-card md:flex">
-      <div className="flex h-20 items-center border-b px-6">
-        <Link href={`/${lang}/`} className="flex items-center gap-2 font-semibold">
-          <Sprout className="h-7 w-7 text-primary" />
-          <span className="font-headline text-xl">Tasting Mallorca</span>
-        </Link>
-      </div>
+  const SidebarContent = () => (
+    <>
       <div className="flex-1 overflow-y-auto">
         <nav className="space-y-2 p-4">
           {navItems.map((item) => {
@@ -69,6 +70,7 @@ export function DashboardSidebar() {
                 <Button
                   variant={pathname.startsWith(href) ? 'secondary' : 'ghost'}
                   className="w-full justify-start text-base"
+                  onClick={() => setIsMobileMenuOpen(false)}
                 >
                   <Icon className="mr-3 h-5 w-5" />
                   {item.label}
@@ -77,8 +79,7 @@ export function DashboardSidebar() {
             );
           })}
 
-          {adminNavItems.map((item) => {
-              if (item.role && userRole !== item.role) return null;
+          {userRole === 'admin' && adminNavItems.map((item) => {
               const href = `/${lang}${item.href}`;
               const Icon = item.icon;
               return (
@@ -86,6 +87,7 @@ export function DashboardSidebar() {
                   <Button
                       variant={pathname.startsWith(href) ? 'secondary' : 'ghost'}
                       className="w-full justify-start text-base"
+                      onClick={() => setIsMobileMenuOpen(false)}
                   >
                       <Icon className="mr-3 h-5 w-5" />
                       {item.label}
@@ -104,6 +106,7 @@ export function DashboardSidebar() {
                  <Button
                      variant={pathname.startsWith(href) ? 'secondary' : 'ghost'}
                      className="w-full justify-start text-base"
+                     onClick={() => setIsMobileMenuOpen(false)}
                  >
                      <Icon className="mr-3 h-5 w-5" />
                      {item.label}
@@ -116,6 +119,34 @@ export function DashboardSidebar() {
           Sign Out
         </Button>
       </div>
-    </aside>
+    </>
+  );
+
+  return (
+    <>
+      {/* Desktop Sidebar */}
+      <aside className="hidden w-64 flex-col border-r bg-card md:flex">
+        <div className="flex h-20 items-center border-b px-6">
+          <Link href={`/${lang}/`} className="flex items-center gap-2 font-semibold">
+            <Sprout className="h-7 w-7 text-primary" />
+            <span className="font-headline text-xl">Tasting Mallorca</span>
+          </Link>
+        </div>
+        <SidebarContent />
+      </aside>
+
+      {/* Mobile Sidebar */}
+      <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
+        <SheetContent side="left" className="flex w-72 flex-col bg-card p-0">
+          <SheetHeader className="flex h-20 flex-row items-center justify-between border-b px-6">
+             <Link href={`/${lang}/`} className="flex items-center gap-2 font-semibold" onClick={() => setIsMobileMenuOpen(false)}>
+                <Sprout className="h-7 w-7 text-primary" />
+                <span className="font-headline text-xl">Tasting Mallorca</span>
+            </Link>
+          </SheetHeader>
+          <SidebarContent />
+        </SheetContent>
+      </Sheet>
+    </>
   );
 }

@@ -4,11 +4,13 @@
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form";
-import { ArrowLeft, Loader2, Circle, Languages } from "lucide-react";
+import { ArrowLeft, Loader2, Circle, Languages, Settings2, Menu } from "lucide-react";
 import Link from "next/link";
 import { useFormContext } from "react-hook-form";
 import { Tour } from "@/backend/tours/domain/tour.model";
 import { cn } from "@/lib/utils";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { useDashboardLayout } from "@/app/[lang]/dashboard/layout-context";
 
 interface TourFormHeaderProps {
     isSubmitting: boolean;
@@ -28,10 +30,48 @@ export function TourFormHeader({
     onSubmit,
 }: TourFormHeaderProps) {
     const { control, formState: { isDirty } } = useFormContext();
+    const { setIsMobileMenuOpen } = useDashboardLayout();
+
+    const ActionPanel = () => (
+        <div className="flex flex-col gap-4 p-4">
+             <Button 
+                onClick={onTranslate} 
+                size="lg" 
+                variant="outline"
+                disabled={isTranslating || isSubmitting}
+                className="w-full justify-center"
+            >
+                {isTranslating ? <Loader2 className="animate-spin" /> : <><Languages className="mr-2" /> Translate with AI</>}
+            </Button>
+            <FormField
+                control={control}
+                name="published"
+                render={({ field }) => (
+                    <FormItem className="flex items-center justify-between rounded-lg border p-3">
+                        <FormLabel className="text-base font-normal">
+                            {field.value ? 'Published' : 'Draft'}
+                        </FormLabel>
+                        <FormControl><Switch checked={field.value} onCheckedChange={field.onChange} /></FormControl>
+                    </FormItem>
+                )}
+            />
+            <Button 
+                onClick={onSubmit} 
+                size="lg" 
+                disabled={isSubmitting}
+                className={cn("w-full", isDirty && "bg-accent text-accent-foreground hover:bg-accent/90")}
+                type="submit"
+            >
+                {isSubmitting ? <Loader2 className="animate-spin" /> : 'Save Tour'}
+                {isDirty && !isSubmitting && <Circle className="ml-2 h-3 w-3 fill-current" />}
+            </Button>
+        </div>
+    );
 
     return (
-        <div className="sticky top-0 z-10 flex h-20 items-center justify-between border-b bg-background/95 px-8 py-4 backdrop-blur-sm">
-            <div className="flex items-center gap-4">
+        <div className="sticky top-0 z-10 flex h-20 items-center justify-between border-b bg-background/95 px-4 md:px-8 backdrop-blur-sm">
+            {/* Desktop View */}
+            <div className="hidden md:flex items-center gap-4">
                 <Button asChild variant="outline" size="sm">
                     <Link href={basePath}>
                         <ArrowLeft className="mr-2 h-4 w-4" />
@@ -42,37 +82,33 @@ export function TourFormHeader({
                     {initialData ? 'Edit Tour' : 'Create New Tour'}
                 </h1>
             </div>
-            <div className="flex items-center gap-4">
-                <Button 
-                    onClick={onTranslate} 
-                    size="sm" 
-                    variant="outline"
-                    disabled={isTranslating || isSubmitting}
-                >
-                    {isTranslating ? <Loader2 className="animate-spin" /> : <><Languages className="mr-2" /> Translate with AI</>}
+            <div className="hidden md:flex items-center gap-4">
+                <ActionPanel />
+            </div>
+
+            {/* Mobile View */}
+            <div className="flex md:hidden items-center justify-between w-full">
+                 <Button asChild variant="ghost" size="icon">
+                    <Link href={basePath}>
+                        <ArrowLeft />
+                    </Link>
                 </Button>
-                <FormField
-                    control={control}
-                    name="published"
-                    render={({ field }) => (
-                        <FormItem className="flex items-center gap-2 space-y-0">
-                            <FormControl><Switch checked={field.value} onCheckedChange={field.onChange} /></FormControl>
-                            <FormLabel className="text-base font-normal">
-                                {field.value ? 'Published' : 'Draft'}
-                            </FormLabel>
-                        </FormItem>
-                    )}
-                />
-                <Button 
-                    onClick={onSubmit} 
-                    size="sm" 
-                    disabled={isSubmitting}
-                    className={cn(isDirty && "bg-accent text-accent-foreground hover:bg-accent/90")}
-                    type="submit"
-                >
-                    {isSubmitting ? <Loader2 className="animate-spin" /> : 'Save Tour'}
-                    {isDirty && !isSubmitting && <Circle className="ml-2 h-3 w-3 fill-current" />}
+                <Button variant="ghost" size="icon" onClick={() => setIsMobileMenuOpen(true)}>
+                    <Menu />
                 </Button>
+                <Sheet>
+                    <SheetTrigger asChild>
+                        <Button variant="ghost" size="icon">
+                            <Settings2 />
+                        </Button>
+                    </SheetTrigger>
+                    <SheetContent side="right" className="w-[300px] p-0">
+                        <SheetHeader className="p-4 border-b">
+                            <SheetTitle>Form Actions</SheetTitle>
+                        </SheetHeader>
+                        <ActionPanel />
+                    </SheetContent>
+                </Sheet>
             </div>
         </div>
     );

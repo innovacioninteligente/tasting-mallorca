@@ -299,7 +299,6 @@ export default function NewTourPage() {
             
             const translatedData = result.data as TranslateTourOutput;
             
-            // Deep merge, but overwrite entire arrays instead of merging them
             const customizer = (objValue: any, srcValue: any) => {
                 if (Array.isArray(objValue)) {
                     return srcValue;
@@ -341,7 +340,7 @@ export default function NewTourPage() {
                         basePath={basePath}
                         onSubmit={form.handleSubmit(onSubmit, handleInvalidSubmit)} 
                     />
-                    <main className="flex-grow overflow-y-scroll px-4 md:px-8 lg:px-10">
+                    <main className="flex-grow overflow-y-scroll px-4 pt-4 md:px-8 lg:px-10">
                        <TourForm />
                     </main>
                 </FormProvider>

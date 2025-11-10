@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { TourForm } from "@/app/[lang]/dashboard/admin/tours/new/tour-form";
@@ -132,7 +133,6 @@ export function EditTourClientPage({ initialData, lang }: EditTourClientPageProp
 
     const formPersistenceKey = `tour-form-edit-${initialData.id}`;
     
-    // The dates come as strings from the server action, so we need to parse them.
     const parsedInitialData = {
         ...initialData,
         availabilityPeriods: initialData.availabilityPeriods?.map(p => ({
@@ -344,7 +344,6 @@ export function EditTourClientPage({ initialData, lang }: EditTourClientPageProp
 
             const translatedData = result.data as TranslateTourOutput;
             
-            // Deep merge, but overwrite entire arrays instead of merging them
             const customizer = (objValue: any, srcValue: any) => {
                 if (Array.isArray(objValue)) {
                     return srcValue;
@@ -385,7 +384,7 @@ export function EditTourClientPage({ initialData, lang }: EditTourClientPageProp
                     basePath={basePath}
                     onSubmit={form.handleSubmit(onSubmit, handleInvalidSubmit)}
                 />
-                <main className="flex-grow overflow-y-scroll px-4 md:px-8 lg:px-10">
+                <main className="flex-grow overflow-y-scroll px-4 pt-4 md:px-8 lg:px-10">
                    <TourForm
                      initialData={initialData}
                     />
