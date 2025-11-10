@@ -22,7 +22,6 @@ import { addDays, format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Tour } from "@/backend/tours/domain/tour.model";
-import { UploadProgressDialog } from "@/components/upload-progress-dialog";
 import { Badge } from "@/components/ui/badge";
 
 const multilingualStringSchema = z.object({
@@ -275,12 +274,9 @@ const iconMap = {
 
 interface TourFormProps {
   initialData?: Tour;
-  isSubmitting: boolean;
-  uploadProgress: number;
-  uploadMessage: string;
 }
 
-export function TourForm({ initialData, isSubmitting, uploadProgress, uploadMessage }: TourFormProps) {
+export function TourForm({ initialData }: TourFormProps) {
   const [editingItineraryId, setEditingItineraryId] = useState<string | null>(null);
   const form = useFormContext<TourFormValues>();
 
@@ -306,7 +302,6 @@ export function TourForm({ initialData, isSubmitting, uploadProgress, uploadMess
 
   return (
     <>
-      {isSubmitting && <UploadProgressDialog progress={uploadProgress} message={uploadMessage} />}
       <Form {...form}>
         <form className="space-y-8">
             <div className="pt-2">

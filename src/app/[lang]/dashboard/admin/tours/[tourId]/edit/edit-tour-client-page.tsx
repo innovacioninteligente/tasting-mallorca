@@ -16,6 +16,7 @@ import { initializeFirebase } from "@/firebase";
 import { updateTour } from "@/app/server-actions/tours/updateTour";
 import { useFormPersistence } from "@/hooks/use-form-persistence";
 import { translateTourContent } from "@/app/server-actions/tours/translateTour";
+import { UploadProgressDialog } from "@/components/upload-progress-dialog";
 
 const multilingualStringSchema = z.object({
     es: z.string().optional(),
@@ -328,7 +329,8 @@ export function EditTourClientPage({ initialData, lang }: EditTourClientPageProp
 
 
     return (
-        <div className="flex flex-col h-full -mx-4 -pb-4 md:-mx-8 md:-pb-8 lg:-px-10 lg:-pb-10">
+        <div className="flex flex-col h-full">
+            {isSubmitting && <UploadProgressDialog progress={uploadProgress} message={uploadMessage} />}
             <FormProvider {...form}>
                 <TourFormHeader
                     isSubmitting={isSubmitting}
@@ -338,12 +340,9 @@ export function EditTourClientPage({ initialData, lang }: EditTourClientPageProp
                     onTranslate={handleTranslate}
                     isTranslating={isTranslating}
                 />
-                <div className="flex-grow overflow-auto px-4 md:px-8 lg:px-10">
+                <div className="flex-grow overflow-y-scroll px-4 md:px-8 lg:px-10">
                    <TourForm
                      initialData={initialData}
-                     isSubmitting={isSubmitting}
-                     uploadProgress={uploadProgress}
-                     uploadMessage={uploadMessage}
                     />
                 </div>
             </FormProvider>
