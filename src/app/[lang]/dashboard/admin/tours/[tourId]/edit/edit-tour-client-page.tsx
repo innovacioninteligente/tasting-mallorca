@@ -125,7 +125,8 @@ interface EditTourClientPageProps {
 
 const defaultMultilingual = { es: '', en: '', de: '', fr: '', nl: '' };
 
-const getSanitizedDefaultValues = (): Omit<TourFormValues, 'id'> => ({
+const getSanitizedDefaultValues = (id: string): TourFormValues => ({
+    id: id,
     title: { ...defaultMultilingual },
     slug: { ...defaultMultilingual },
     description: { ...defaultMultilingual },
@@ -181,9 +182,20 @@ export function EditTourClientPage({ initialData, lang }: EditTourClientPageProp
             startDate: p.startDate ? parseISO(p.startDate) : new Date(),
             endDate: p.endDate ? parseISO(p.endDate) : new Date()
         })) || [],
+        itinerary: initialData.itinerary?.map(item => ({
+            ...item,
+            title: { ...defaultMultilingual, ...item.title },
+            activities: { 
+                en: item.activities?.en || [],
+                es: item.activities?.es || [],
+                de: item.activities?.de || [],
+                fr: item.activities?.fr || [],
+                nl: item.activities?.nl || [],
+            }
+        })) || []
     };
     
-    const defaults = getSanitizedDefaultValues();
+    const defaults = getSanitizedDefaultValues(initialData.id);
     const mergedData = mergeWith(cloneDeep(defaults), parsedInitialData, (objValue, srcValue) => {
         if (srcValue !== undefined && srcValue !== null) {
             return srcValue;
@@ -193,13 +205,10 @@ export function EditTourClientPage({ initialData, lang }: EditTourClientPageProp
 
     const form = useForm<TourFormValues>({
         resolver: zodResolver(formSchema),
-        defaultValues: {
-            ...mergedData,
-            id: initialData.id,
-        },
+        defaultValues: mergedData,
     });
 
-    const { clearPersistedData } = useFormPersistence(formPersistenceKey, form, { ...mergedData, id: initialData.id });
+    const { clearPersistedData } = useFormPersistence(formPersistenceKey, form, mergedData);
 
     const uploadFile = (file: File, tourId: string): Promise<string> => {
       return new Promise((resolve, reject) => {

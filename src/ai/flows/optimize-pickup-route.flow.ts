@@ -1,4 +1,3 @@
-'use server';
 /**
  * @fileOverview A route optimization AI agent.
  *
