@@ -1,4 +1,3 @@
-'use server';
 
 import { z } from 'zod';
 import { GoogleGenAI } from '@google/genai';
@@ -131,7 +130,7 @@ async function getVertexAIClient() {
         throw new Error('Google Cloud project and location must be set in environment variables.');
     }
     
-    // Ensure admin app is initialized to access credentials
+    // This ensures firebase-admin is initialized and can provide auth context
     adminApp;
 
     return new GoogleGenAI({
