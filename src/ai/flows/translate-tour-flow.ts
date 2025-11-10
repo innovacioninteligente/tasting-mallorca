@@ -130,7 +130,7 @@ const translationPrompt = ai.definePrompt({
     `
 });
 
-export const translateTourContentFlow = ai.defineFlow(
+const translateTourContentFlow = ai.defineFlow(
   {
     name: 'translateTourContentFlow',
     inputSchema: TranslateTourInputSchema,
@@ -141,3 +141,8 @@ export const translateTourContentFlow = ai.defineFlow(
     return output!;
   }
 );
+
+
+export async function translateTour(input: TranslateTourInput): Promise<TranslateTourOutput> {
+  return translateTourContentFlow(input);
+}

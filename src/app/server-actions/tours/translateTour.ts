@@ -3,11 +3,11 @@
 
 import { createSafeAction } from '@/app/server-actions/lib/safe-action';
 import { 
-    translateTourContent,
-    TranslateTourInput,
-    TranslateTourOutput,
+    translateTour,
+    type TranslateTourInput,
+    type TranslateTourOutput,
     TranslateTourInputSchema
-} from '@/ai/flows/translate-tour.flow';
+} from '@/ai/flows/translate-tour-flow';
 
 export const translateTourAction = createSafeAction(
   {
@@ -18,7 +18,7 @@ export const translateTourAction = createSafeAction(
     input: TranslateTourInput,
   ): Promise<{ data?: TranslateTourOutput; error?: string }> => {
     try {
-      const translatedData = await translateTourContent(input);
+      const translatedData = await translateTour(input);
       return { data: translatedData };
     } catch (error: any) {
       console.error('Error translating tour content:', error);

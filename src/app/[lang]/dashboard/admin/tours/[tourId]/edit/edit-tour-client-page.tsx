@@ -18,7 +18,7 @@ import { useFormPersistence } from "@/hooks/use-form-persistence";
 import { UploadProgressDialog } from "@/components/upload-progress-dialog";
 import { cloneDeep, merge, mergeWith } from "lodash";
 import { translateTourAction } from "@/app/server-actions/tours/translateTour";
-import { TranslateTourInputSchema, TranslateTourOutputSchema } from "@/ai/flows/translate-tour.flow";
+import { TranslateTourOutput } from "@/ai/flows/translate-tour-flow";
 
 
 const multilingualStringSchema = z.object({
@@ -345,9 +345,16 @@ export function EditTourClientPage({ initialData, lang }: EditTourClientPageProp
             if (result.error) throw new Error(result.error);
             if (!result.data) throw new Error("No translation data returned.");
 
-            const translatedData = result.data;
-            const updatedData = merge({}, currentData, translatedData);
+            const translatedData = result.data as TranslateTourOutput;
             
+            // Deep merge, but overwrite entire arrays instead of merging them
+            const customizer = (objValue: any, srcValue: any) => {
+                if (Array.isArray(objValue)) {
+                    return srcValue;
+                }
+            };
+            const updatedData = mergeWith(cloneDeep(currentData), translatedData, customizer);
+
             form.reset(updatedData);
 
             toast({
