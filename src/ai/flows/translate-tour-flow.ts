@@ -1,3 +1,6 @@
+
+'use server';
+
 import { z } from 'zod';
 
 const ItineraryItemTranslationInputSchema = z.object({
@@ -20,7 +23,7 @@ export const TranslateTourInputSchema = z.object({
       fullDescription: z.string().describe('The full, detailed description.'),
       included: z.string().describe('List of what is included, separated by newlines.'),
       notIncluded: z.string().describe('List of what is not included, separated by newlines.'),
-      notSuitableFor: zstring().describe('List of who this is not suitable for, separated by newlines.'),
+      notSuitableFor: z.string().describe('List of who this is not suitable for, separated by newlines.'),
       whatToBring: z.string().describe('List of what to bring, separated by newlines.'),
       beforeYouGo: z.string().describe('List of things to know before you go, separated by newlines.'),
   }),
@@ -111,7 +114,7 @@ function buildPrompt(input: TranslateTourInput): string {
     **IMPORTANT INSTRUCTIONS:**
     1.  **Do not perform a literal, word-for-word translation.** Adapt the phrasing, tone, and cultural nuances to make the content appealing and natural for speakers of each target language.
     2.  **Maintain the original meaning and key information.** The core details of the tour must remain accurate.
-    3.  **Translate list items individually.** For fields that are newline-separated lists (like highlights, included, etc.), translate each line as a separate item and maintain the newline-separated format in your output.
+    3.  **Translate list items individually.** For fields that are newline-separated lists (like highlights, included, etc.), translate each line as a separate item and maintain the newline-separated format in your output. For example, for "details.highlights", the output must be an object like { "de": "...", "fr": "...", "nl": "..." }.
     4.  **Format your response STRICTLY as a JSON object.** Do not wrap it in markdown backticks (\`\`\`json) or any other text. The JSON object must conform to the schema provided at the end of this prompt.
     5.  For itinerary activities, translate each tag individually.
     6.  If a source field is empty or missing, the corresponding translated fields should also be empty strings or empty arrays.
@@ -177,6 +180,7 @@ export async function translateTour(input: TranslateTourInput): Promise<Translat
   const endpoint = `https://aiplatform.googleapis.com/v1/publishers/google/models/gemini-2.5-flash-lite:streamGenerateContent?key=${apiKey}`;
 
   console.log("Sending translation request to Vertex AI REST API...");
+  console.log("Prompt:", prompt);
 
   let rawResponseText = '';
 
@@ -215,12 +219,9 @@ export async function translateTour(input: TranslateTourInput): Promise<Translat
         throw new Error('No response text from AI model.');
     }
     
-    // The response from a streaming API is often a series of JSON objects.
-    // Let's combine the text parts.
     const chunks = JSON.parse(rawResponseText);
     const combinedText = chunks.map((chunk: any) => chunk.candidates[0].content.parts[0].text).join('');
 
-    // The model sometimes wraps the JSON in markdown. Let's remove it.
     const jsonMatch = combinedText.match(/\{[\s\S]*\}/);
     if (!jsonMatch) {
       throw new Error(`AI returned invalid JSON format. Raw response: ${combinedText}`);
@@ -232,9 +233,8 @@ export async function translateTour(input: TranslateTourInput): Promise<Translat
 
   } catch (error: any) {
     console.error("[Vertex AI Error] Failed to generate content:", error);
-    // If it's a Zod error, it's a validation issue.
     if (error instanceof z.ZodError) {
-        throw new Error(`Vertex AI API call failed: The AI's response did not match the expected format. Details: ${JSON.stringify(error.issues, null, 2)}`);
+        throw new Error(`The AI's response did not match the expected format. Details: ${JSON.stringify(error.issues, null, 2)}`);
     }
     if (error.message.includes("invalid JSON")) {
         throw new Error(`Vertex AI API call failed: AI returned invalid JSON format. Raw response: ${rawResponseText}`);
@@ -242,3 +242,5 @@ export async function translateTour(input: TranslateTourInput): Promise<Translat
     throw new Error(`Vertex AI API call failed: ${error.message}`);
   }
 }
+
+    
