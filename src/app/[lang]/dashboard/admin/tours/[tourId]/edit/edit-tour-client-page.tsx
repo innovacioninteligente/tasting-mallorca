@@ -84,7 +84,7 @@ const formSchema = z.object({
     guideInfo: multilingualStringSchema,
     pickupInfo: multilingualStringSchema,
   }),
-  details: detailsSchema,
+  details: detailsSchema.optional(),
   pickupPoint: pickupPointSchema,
   price: z.coerce.number().min(0, "El precio debe ser un número positivo."),
   region: z.enum(["North", "East", "South", "West", "Central"]),
@@ -127,7 +127,7 @@ const defaultMultilingual = { es: '', en: '', de: '', fr: '', nl: '' };
 const getSanitizedDefaultValues = () => ({
     id: '',
     title: { ...defaultMultilingual },
-    slug: { ...default multilingual },
+    slug: { ...defaultMultilingual },
     description: { ...defaultMultilingual },
     overview: { ...defaultMultilingual },
     generalInfo: {
@@ -176,17 +176,17 @@ export function EditTourClientPage({ initialData, lang }: EditTourClientPageProp
         ...initialData,
         availabilityPeriods: initialData.availabilityPeriods?.map(p => ({
             ...p,
-            startDate: parseISO(p.startDate),
-            endDate: parseISO(p.endDate)
+            startDate: p.startDate ? parseISO(p.startDate) : new Date(),
+            endDate: p.endDate ? parseISO(p.endDate) : new Date()
         })) || [],
     };
     
     const defaults = getSanitizedDefaultValues();
     const mergedData = mergeWith(cloneDeep(defaults), parsedInitialData, (objValue, srcValue) => {
-      if (srcValue !== undefined) {
-        return srcValue;
-      }
-      return objValue;
+        if (srcValue !== undefined && srcValue !== null) {
+            return srcValue;
+        }
+        return objValue;
     });
 
     const form = useForm<TourFormValues>({
@@ -313,13 +313,13 @@ export function EditTourClientPage({ initialData, lang }: EditTourClientPageProp
                     pickupInfo: values.generalInfo.pickupInfo.en || '',
                 },
                  details: {
-                    highlights: values.details.highlights?.en || '',
-                    fullDescription: values.details.fullDescription?.en || '',
-                    included: values.details.included?.en || '',
-                    notIncluded: values.details.notIncluded?.en || '',
-                    notSuitableFor: values.details.notSuitableFor?.en || '',
-                    whatToBring: values.details.whatToBring?.en || '',
-                    beforeYouGo: values.details.beforeYouGo?.en || '',
+                    highlights: values.details?.highlights?.en || '',
+                    fullDescription: values.details?.fullDescription?.en || '',
+                    included: values.details?.included?.en || '',
+                    notIncluded: values.details?.notIncluded?.en || '',
+                    notSuitableFor: values.details?.notSuitableFor?.en || '',
+                    whatToBring: values.details?.whatToBring?.en || '',
+                    beforeYouGo: values.details?.beforeYouGo?.en || '',
                 },
                 pickupPoint: {
                     title: values.pickupPoint.title.en || '',
@@ -352,13 +352,13 @@ export function EditTourClientPage({ initialData, lang }: EditTourClientPageProp
                     pickupInfo: { ...currentValues.generalInfo.pickupInfo, ...translations.generalInfo.pickupInfo },
                 },
                  details: {
-                    highlights: { ...currentValues.details.highlights, ...translations.details.highlights },
-                    fullDescription: { ...currentValues.details.fullDescription, ...translations.details.fullDescription },
-                    included: { ...currentValues.details.included, ...translations.details.included },
-                    notIncluded: { ...currentValues.details.notIncluded, ...translations.details.notIncluded },
-                    notSuitableFor: { ...currentValues.details.notSuitableFor, ...translations.details.notSuitableFor },
-                    whatToBring: { ...currentValues.details.whatToBring, ...translations.details.whatToBring },
-                    beforeYouGo: { ...currentValues.details.beforeYouGo, ...translations.details.beforeYouGo },
+                    highlights: { ...currentValues.details?.highlights, ...translations.details?.highlights },
+                    fullDescription: { ...currentValues.details?.fullDescription, ...translations.details?.fullDescription },
+                    included: { ...currentValues.details?.included, ...translations.details?.included },
+                    notIncluded: { ...currentValues.details?.notIncluded, ...translations.details?.notIncluded },
+                    notSuitableFor: { ...currentValues.details?.notSuitableFor, ...translations.details?.notSuitableFor },
+                    whatToBring: { ...currentValues.details?.whatToBring, ...translations.details?.whatToBring },
+                    beforeYouGo: { ...currentValues.details?.beforeYouGo, ...translations.details?.beforeYouGo },
                 },
                 pickupPoint: {
                     title: { ...currentValues.pickupPoint.title, ...translations.pickupPoint.title },
@@ -410,3 +410,5 @@ export function EditTourClientPage({ initialData, lang }: EditTourClientPageProp
         </div>
     );
 }
+
+    
