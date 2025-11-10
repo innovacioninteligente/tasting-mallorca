@@ -1,4 +1,5 @@
 
+'use server';
 import { z } from 'zod';
 
 const ItineraryItemTranslationInputSchema = z.object({
@@ -51,42 +52,73 @@ const ItineraryItemTranslationOutputSchema = z.object({
 });
 
 export const TranslateTourOutputSchema = z.object({
-  title: MultilingualStringSchema,
-  description: MultilingualStringSchema,
-  overview: MultilingualStringSchema,
+  title: MultilingualStringSchema.optional(),
+  description: MultilingualStringSchema.optional(),
+  overview: MultilingualStringSchema.optional(),
   generalInfo: z.object({
-    cancellationPolicy: MultilingualStringSchema,
-    bookingPolicy: MultilingualStringSchema,
-    guideInfo: MultilingualStringSchema,
-    pickupInfo: MultilingualStringSchema,
-  }),
+    cancellationPolicy: MultilingualStringSchema.optional(),
+    bookingPolicy: MultilingualStringSchema.optional(),
+    guideInfo: MultilingualStringSchema.optional(),
+    pickupInfo: MultilingualStringSchema.optional(),
+  }).optional(),
   details: z.object({
-    highlights: MultilingualStringSchema,
-    fullDescription: MultilingualStringSchema,
-    included: MultilingualStringSchema,
-    notIncluded: MultilingualStringSchema,
-    notSuitableFor: MultilingualStringSchema,
-    whatToBring: MultilingualStringSchema,
-    beforeYouGo: MultilingualStringSchema,
-  }),
+    highlights: MultilingualStringSchema.optional(),
+    fullDescription: MultilingualStringSchema.optional(),
+    included: MultilingualStringSchema.optional(),
+    notIncluded: MultilingualStringSchema.optional(),
+    notSuitableFor: MultilingualStringSchema.optional(),
+    whatToBring: MultilingualStringSchema.optional(),
+    beforeYouGo: MultilingualStringSchema.optional(),
+  }).optional(),
   pickupPoint: z.object({
-    title: MultilingualStringSchema,
-    description: MultilingualStringSchema,
-  }),
-  itinerary: z.array(ItineraryItemTranslationOutputSchema),
+    title: MultilingualStringSchema.optional(),
+    description: MultilingualStringSchema.optional(),
+  }).optional(),
+  itinerary: z.array(ItineraryItemTranslationOutputSchema).optional(),
 });
 export type TranslateTourOutput = z.infer<typeof TranslateTourOutputSchema>;
 
 function buildPrompt(input: TranslateTourInput): string {
+    const outputSchemaForPrompt = {
+        title: { es: "string", de: "string", fr: "string", nl: "string" },
+        description: { es: "string", de: "string", fr: "string", nl: "string" },
+        overview: { es: "string", de: "string", fr: "string", nl: "string" },
+        generalInfo: {
+            cancellationPolicy: { es: "string", de: "string", fr: "string", nl: "string" },
+            bookingPolicy: { es: "string", de: "string", fr: "string", nl: "string" },
+            guideInfo: { es: "string", de: "string", fr: "string", nl: "string" },
+            pickupInfo: { es: "string", de: "string", fr: "string", nl: "string" },
+        },
+        details: {
+            highlights: { es: "string", de: "string", fr: "string", nl: "string" },
+            fullDescription: { es: "string", de: "string", fr: "string", nl: "string" },
+            included: { es: "string", de: "string", fr: "string", nl: "string" },
+            notIncluded: { es: "string", de: "string", fr: "string", nl: "string" },
+            notSuitableFor: { es: "string", de: "string", fr: "string", nl: "string" },
+            whatToBring: { es: "string", de: "string", fr: "string", nl: "string" },
+            beforeYouGo: { es: "string", de: "string", fr: "string", nl: "string" },
+        },
+        pickupPoint: {
+            title: { es: "string", de: "string", fr: "string", nl: "string" },
+            description: { es: "string", de: "string", fr: "string", nl: "string" },
+        },
+        itinerary: [
+            {
+                title: { es: "string", de: "string", fr: "string", nl: "string" },
+                activities: { es: ["string"], de: ["string"], fr: ["string"], nl: ["string"] },
+            }
+        ]
+    };
+
     return `You are an expert translator specializing in creating engaging and natural-sounding tourism marketing content for a European audience. Your task is to translate the provided tour information from English into Spanish (es), German (de), French (fr), and Dutch (nl).
 
     **IMPORTANT INSTRUCTIONS:**
     1.  **Do not perform a literal, word-for-word translation.** Adapt the phrasing, tone, and cultural nuances to make the content appealing and natural for speakers of each target language.
     2.  **Maintain the original meaning and key information.** The core details of the tour must remain accurate.
     3.  **Translate list items individually.** For fields that are newline-separated lists (like highlights, included, etc.), translate each line as a separate item and maintain the newline-separated format in your output.
-    4.  **Format your response strictly as a JSON object** that conforms to the provided output schema. Do not wrap it in markdown backticks (\`\`\`json) or any other text.
+    4.  **Format your response STRICTLY as a JSON object.** Do not wrap it in markdown backticks (\`\`\`json) or any other text. The JSON object must conform to the schema provided at the end of this prompt.
     5.  For itinerary activities, translate each tag individually.
-    6.  If a source field is empty, the corresponding translated fields should also be empty strings.
+    6.  If a source field is empty or missing, the corresponding translated fields should also be empty strings or empty arrays.
 
     **Source Content (English):**
     - Title: ${input.title}
@@ -114,6 +146,11 @@ function buildPrompt(input: TranslateTourInput): string {
         - Title: ${item.title}
         - Activities: ${item.activities?.join(', ')}
     `).join('')}
+
+    **Required Output JSON Schema:**
+    \`\`\`json
+    ${JSON.stringify(outputSchemaForPrompt, null, 2)}
+    \`\`\`
     `;
 }
 
@@ -190,7 +227,7 @@ export async function translateTour(input: TranslateTourInput): Promise<Translat
     // The model sometimes wraps the JSON in markdown. Let's remove it.
     const jsonMatch = combinedText.match(/\{[\s\S]*\}/);
     if (!jsonMatch) {
-      throw new Error("AI returned invalid JSON format.");
+      throw new Error(`AI returned invalid JSON format. Raw response: ${combinedText}`);
     }
     const jsonString = jsonMatch[0];
 
@@ -199,11 +236,13 @@ export async function translateTour(input: TranslateTourInput): Promise<Translat
 
   } catch (error: any) {
     console.error("[Vertex AI Error] Failed to generate content:", error);
+    // If it's a Zod error, it's a validation issue.
+    if (error instanceof z.ZodError) {
+        throw new Error(`Vertex AI API call failed: The AI's response did not match the expected format. Details: ${JSON.stringify(error.issues, null, 2)}`);
+    }
     if (error.message.includes("invalid JSON")) {
         throw new Error(`Vertex AI API call failed: AI returned invalid JSON format. Raw response: ${rawResponseText}`);
     }
     throw new Error(`Vertex AI API call failed: ${error.message}`);
   }
 }
-
-    
