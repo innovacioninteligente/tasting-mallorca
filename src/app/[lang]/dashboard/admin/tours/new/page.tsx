@@ -14,7 +14,7 @@ import { initializeFirebase } from "@/firebase";
 import { useToast } from "@/hooks/use-toast";
 import { createTour } from "@/app/server-actions/tours/createTour";
 import { useFormPersistence } from "@/hooks/use-form-persistence";
-import { translateTourContent, TranslateTourInputSchema } from "@/app/server-actions/tours/translateTour";
+import { translateTourContent, TranslateTourInputSchema } from "@/ai/flows/translate-tour.flow";
 import { UploadProgressDialog } from "@/components/upload-progress-dialog";
 
 const multilingualStringSchema = z.object({
@@ -140,9 +140,11 @@ export default function NewTourPage() {
         isFeatured: false,
         published: false,
         allowDeposit: false,
+        depositPrice: 0,
         itinerary: [],
         galleryImages: [],
-        mainImage: undefined
+        mainImage: undefined,
+        availabilityPeriods: [],
     };
 
     const form = useForm<TourFormValues>({

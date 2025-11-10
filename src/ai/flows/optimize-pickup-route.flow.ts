@@ -1,4 +1,4 @@
-
+'use server';
 /**
  * @fileOverview A route optimization AI agent.
  *
@@ -68,9 +68,12 @@ Meeting Points:
 
 export async function optimizePickupRoute(
   input: OptimizePickupRouteInput
-): Promise<OptimizePickupRouteOutput> {
-  const {output} = await optimizePickupRouteFlow(input);
-  return output;
+): Promise<{ data?: OptimizePickupRouteOutput; error?: string; }> {
+  try {
+    const output = await optimizePickupRouteFlow(input);
+    return { data: output };
+  } catch(e: any) {
+    console.error('Error optimizing pickup route:', e);
+    return { error: e.message || 'Failed to optimize pickup route.' };
+  }
 }
-
-    

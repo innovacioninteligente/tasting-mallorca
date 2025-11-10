@@ -1,4 +1,4 @@
-
+'use server';
 /**
  * @fileOverview An AI flow to translate tour content from English to other supported languages.
  *
@@ -144,10 +144,12 @@ const translateTourContentFlow = ai.defineFlow(
   }
 );
 
-
-export async function translateTourContent(input: TranslateTourInput): Promise<TranslateTourOutput> {
-  const {output} = await translateTourContentFlow(input);
-  return output;
+export async function translateTourContent(input: TranslateTourInput): Promise<{ data?: TranslateTourOutput; error?: string }> {
+  try {
+    const output = await translateTourContentFlow(input);
+    return { data: output };
+  } catch (error: any) {
+    console.error("Translation flow failed:", error);
+    return { error: error.message || "Failed to translate tour content." };
+  }
 }
-
-    

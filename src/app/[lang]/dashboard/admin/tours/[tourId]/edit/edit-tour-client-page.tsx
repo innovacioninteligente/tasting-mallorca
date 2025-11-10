@@ -15,7 +15,7 @@ import { getStorage, ref as storageRef, uploadBytesResumable, getDownloadURL } f
 import { initializeFirebase } from "@/firebase";
 import { updateTour } from "@/app/server-actions/tours/updateTour";
 import { useFormPersistence } from "@/hooks/use-form-persistence";
-import { translateTourContent, TranslateTourInputSchema } from "@/app/server-actions/tours/translateTour";
+import { translateTourContent, TranslateTourInputSchema } from "@/ai/flows/translate-tour.flow";
 import { UploadProgressDialog } from "@/components/upload-progress-dialog";
 import { cloneDeep, mergeWith } from "lodash";
 
@@ -124,7 +124,7 @@ interface EditTourClientPageProps {
 
 const defaultMultilingual = { es: '', en: '', de: '', fr: '', nl: '' };
 
-const getSanitizedDefaultValues = () => ({
+const getSanitizedDefaultValues = (): TourFormValues => ({
     id: '',
     title: { ...defaultMultilingual },
     slug: { ...defaultMultilingual },
@@ -155,9 +155,11 @@ const getSanitizedDefaultValues = () => ({
     isFeatured: false,
     published: false,
     allowDeposit: false,
+    depositPrice: 0,
     itinerary: [],
     galleryImages: [],
-    mainImage: undefined
+    mainImage: undefined,
+    availabilityPeriods: [],
 });
 
 
