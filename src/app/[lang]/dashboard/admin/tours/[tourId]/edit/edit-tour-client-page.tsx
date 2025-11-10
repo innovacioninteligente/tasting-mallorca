@@ -17,6 +17,8 @@ import { updateTour } from "@/app/server-actions/tours/updateTour";
 import { useFormPersistence } from "@/hooks/use-form-persistence";
 import { translateTourContent } from "@/app/server-actions/tours/translateTour";
 import { UploadProgressDialog } from "@/components/upload-progress-dialog";
+import { cloneDeep, mergeWith } from "lodash";
+
 
 const multilingualStringSchema = z.object({
     es: z.string().optional(),
@@ -120,6 +122,45 @@ interface EditTourClientPageProps {
     lang: string;
 }
 
+const defaultMultilingual = { es: '', en: '', de: '', fr: '', nl: '' };
+
+const getSanitizedDefaultValues = () => ({
+    id: '',
+    title: { ...defaultMultilingual },
+    slug: { ...default multilingual },
+    description: { ...defaultMultilingual },
+    overview: { ...defaultMultilingual },
+    generalInfo: {
+        cancellationPolicy: { ...defaultMultilingual },
+        bookingPolicy: { ...defaultMultilingual },
+        guideInfo: { ...defaultMultilingual },
+        pickupInfo: { ...defaultMultilingual },
+    },
+    details: {
+        highlights: { ...defaultMultilingual },
+        fullDescription: { ...defaultMultilingual },
+        included: { ...defaultMultilingual },
+        notIncluded: { ...defaultMultilingual },
+        notSuitableFor: { ...defaultMultilingual },
+        whatToBring: { ...defaultMultilingual },
+        beforeYouGo: { ...defaultMultilingual },
+    },
+    pickupPoint: {
+        title: { ...defaultMultilingual },
+        description: { ...defaultMultilingual },
+    },
+    price: 0,
+    region: "South" as "South",
+    durationHours: 8,
+    isFeatured: false,
+    published: false,
+    allowDeposit: false,
+    itinerary: [],
+    galleryImages: [],
+    mainImage: undefined
+});
+
+
 export function EditTourClientPage({ initialData, lang }: EditTourClientPageProps) {
     const { toast } = useToast();
     const router = useRouter();
@@ -138,19 +179,22 @@ export function EditTourClientPage({ initialData, lang }: EditTourClientPageProp
             startDate: parseISO(p.startDate),
             endDate: parseISO(p.endDate)
         })) || [],
-        mainImage: initialData.mainImage,
-        galleryImages: initialData.galleryImages || [],
-        itinerary: initialData.itinerary || [],
-        pickupPoint: initialData.pickupPoint || { title: { en: '' }, description: { en: '' } },
-        details: initialData.details || { highlights: { en: ''}, fullDescription: { en: '' }, included: { en: '' }, notIncluded: { en: '' }, notSuitableFor: { en: '' }, whatToBring: { en: '' }, beforeYouGo: { en: '' } },
     };
+    
+    const defaults = getSanitizedDefaultValues();
+    const mergedData = mergeWith(cloneDeep(defaults), parsedInitialData, (objValue, srcValue) => {
+      if (srcValue !== undefined) {
+        return srcValue;
+      }
+      return objValue;
+    });
 
     const form = useForm<TourFormValues>({
         resolver: zodResolver(formSchema),
-        defaultValues: parsedInitialData,
+        defaultValues: mergedData,
     });
 
-    const { clearPersistedData } = useFormPersistence(formPersistenceKey, form, parsedInitialData);
+    const { clearPersistedData } = useFormPersistence(formPersistenceKey, form, mergedData);
 
     const uploadFile = (file: File, tourId: string): Promise<string> => {
       return new Promise((resolve, reject) => {
@@ -269,13 +313,13 @@ export function EditTourClientPage({ initialData, lang }: EditTourClientPageProp
                     pickupInfo: values.generalInfo.pickupInfo.en || '',
                 },
                  details: {
-                    highlights: values.details.highlights.en || '',
-                    fullDescription: values.details.fullDescription.en || '',
-                    included: values.details.included.en || '',
-                    notIncluded: values.details.notIncluded.en || '',
-                    notSuitableFor: values.details.notSuitableFor.en || '',
-                    whatToBring: values.details.whatToBring.en || '',
-                    beforeYouGo: values.details.beforeYouGo.en || '',
+                    highlights: values.details.highlights?.en || '',
+                    fullDescription: values.details.fullDescription?.en || '',
+                    included: values.details.included?.en || '',
+                    notIncluded: values.details.notIncluded?.en || '',
+                    notSuitableFor: values.details.notSuitableFor?.en || '',
+                    whatToBring: values.details.whatToBring?.en || '',
+                    beforeYouGo: values.details.beforeYouGo?.en || '',
                 },
                 pickupPoint: {
                     title: values.pickupPoint.title.en || '',
@@ -357,11 +401,11 @@ export function EditTourClientPage({ initialData, lang }: EditTourClientPageProp
                     onTranslate={handleTranslate}
                     isTranslating={isTranslating}
                 />
-                <div className="flex-grow overflow-y-scroll px-4 md:px-8 lg:px-10">
+                <main className="flex-grow overflow-y-scroll px-4 md:px-8 lg:px-10">
                    <TourForm
                      initialData={initialData}
                     />
-                </div>
+                </main>
             </FormProvider>
         </div>
     );

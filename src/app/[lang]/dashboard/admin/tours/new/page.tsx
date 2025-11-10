@@ -20,7 +20,7 @@ import { UploadProgressDialog } from "@/components/upload-progress-dialog";
 const multilingualStringSchema = z.object({
     es: z.string().optional(),
     en: z.string().min(1, { message: "El texto en inglés es requerido." }),
-    de: z_string().optional(),
+    de: z.string().optional(),
     fr: z.string().optional(),
     nl: z.string().optional(),
 });
@@ -98,6 +98,8 @@ const formSchema = z.object({
 
 type TourFormValues = z.infer<typeof formSchema>;
 
+const defaultMultilingual = { es: '', en: '', de: '', fr: '', nl: '' };
+
 export default function NewTourPage() {
     const pathname = usePathname();
     const router = useRouter();
@@ -108,28 +110,28 @@ export default function NewTourPage() {
 
     const defaultValues = {
         id: '',
-        title: { es: '', en: '', de: '', fr: '', nl: '' },
-        slug: { es: '', en: '', de: '', fr: '', nl: '' },
-        description: { es: '', en: '', de: '', fr: '', nl: '' },
-        overview: { es: '', en: '', de: '', fr: '', nl: '' },
+        title: { ...defaultMultilingual },
+        slug: { ...defaultMultilingual },
+        description: { ...defaultMultilingual },
+        overview: { ...defaultMultilingual },
         generalInfo: {
-            cancellationPolicy: { es: '', en: '', de: '', fr: '', nl: '' },
-            bookingPolicy: { es: '', en: '', de: '', fr: '', nl: '' },
-            guideInfo: { es: '', en: '', de: '', fr: '', nl: '' },
-            pickupInfo: { es: '', en: '', de: '', fr: '', nl: '' },
+            cancellationPolicy: { ...defaultMultilingual },
+            bookingPolicy: { ...defaultMultilingual },
+            guideInfo: { ...defaultMultilingual },
+            pickupInfo: { ...defaultMultilingual },
         },
         details: {
-            highlights: { es: '', en: '', de: '', fr: '', nl: '' },
-            fullDescription: { es: '', en: '', de: '', fr: '', nl: '' },
-            included: { es: '', en: '', de: '', fr: '', nl: '' },
-            notIncluded: { es: '', en: '', de: '', fr: '', nl: '' },
-            notSuitableFor: { es: '', en: '', de: '', fr: '', nl: '' },
-            whatToBring: { es: '', en: '', de: '', fr: '', nl: '' },
-            beforeYouGo: { es: '', en: '', de: '', fr: '', nl: '' },
+            highlights: { ...defaultMultilingual },
+            fullDescription: { ...defaultMultilingual },
+            included: { ...defaultMultilingual },
+            notIncluded: { ...defaultMultilingual },
+            notSuitableFor: { ...defaultMultilingual },
+            whatToBring: { ...defaultMultilingual },
+            beforeYouGo: { ...defaultMultilingual },
         },
         pickupPoint: {
-            title: { es: '', en: '', de: '', fr: '', nl: '' },
-            description: { es: '', en: '', de: '', fr: '', nl: '' },
+            title: { ...defaultMultilingual },
+            description: { ...defaultMultilingual },
         },
         price: 0,
         region: "South" as "South",
@@ -269,13 +271,13 @@ export default function NewTourPage() {
                     pickupInfo: values.generalInfo.pickupInfo.en || '',
                 },
                 details: {
-                    highlights: values.details.highlights.en || '',
-                    fullDescription: values.details.fullDescription.en || '',
-                    included: values.details.included.en || '',
-                    notIncluded: values.details.notIncluded.en || '',
-                    notSuitableFor: values.details.notSuitableFor.en || '',
-                    whatToBring: values.details.whatToBring.en || '',
-                    beforeYouGo: values.details.beforeYouGo.en || '',
+                    highlights: values.details.highlights?.en || '',
+                    fullDescription: values.details.fullDescription?.en || '',
+                    included: values.details.included?.en || '',
+                    notIncluded: values.details.notIncluded?.en || '',
+                    notSuitableFor: values.details.notSuitableFor?.en || '',
+                    whatToBring: values.details.whatToBring?.en || '',
+                    beforeYouGo: values.details.beforeYouGo?.en || '',
                 },
                 pickupPoint: {
                     title: values.pickupPoint.title.en || '',
@@ -357,9 +359,9 @@ export default function NewTourPage() {
                         onTranslate={handleTranslate}
                         isTranslating={isTranslating}
                     />
-                    <div className="flex-grow overflow-y-scroll px-4 md:px-8 lg:px-10">
+                    <main className="flex-grow overflow-y-scroll px-4 md:px-8 lg:px-10">
                        <TourForm />
-                    </div>
+                    </main>
                 </FormProvider>
             </div>
         </AdminRouteGuard>
