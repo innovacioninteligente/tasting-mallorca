@@ -33,7 +33,7 @@ export async function generateStaticParams() {
       .filter(([_, slugValue]) => slugValue) // Filter out empty slugs
       .map(([lang, slug]) => ({
         lang,
-        slug,
+        slug: encodeURIComponent(slug),
       }))
   );
 
