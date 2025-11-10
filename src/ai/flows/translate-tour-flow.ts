@@ -1,7 +1,6 @@
+'use server';
 
 import { z } from 'zod';
-import { GoogleGenAI } from '@google/genai';
-import { adminApp } from '@/firebase/server/config';
 
 const ItineraryItemTranslationInputSchema = z.object({
   title: z.string().optional(),
@@ -122,63 +121,78 @@ function buildPrompt(input: TranslateTourInput): string {
     `;
 }
 
-async function getVertexAIClient() {
-    const project = process.env.GOOGLE_CLOUD_PROJECT;
-    const location = process.env.GOOGLE_CLOUD_LOCATION;
-
-    if (!project || !location) {
-        throw new Error('Google Cloud project and location must be set in environment variables.');
-    }
-    
-    // This ensures firebase-admin is initialized, which makes its service account
-    // credentials available to the broader Google Cloud environment (Application Default Credentials).
-    adminApp;
-
-    // The GoogleGenAI SDK will automatically find the project, location, and credentials
-    // from the environment when running in a Google Cloud environment.
-    return new GoogleGenAI({
-        vertexai: true,
-        project: project,
-        location: location,
-    });
-}
-
-
 export async function translateTour(input: TranslateTourInput): Promise<TranslateTourOutput> {
-    const prompt = buildPrompt(input);
-    
-    console.log("Attempting to get Vertex AI client...");
-    const vertexAI = await getVertexAIClient();
-    
-    console.log("Sending a translation request to Vertex AI...");
-    console.log("Prompt:", prompt.substring(0, 500) + "..."); // Log first 500 chars
+  const prompt = buildPrompt(input);
+  
+  const apiKey = process.env.VERTEX_AI_API_KEY;
+  const projectId = process.env.GOOGLE_CLOUD_PROJECT;
+  const location = process.env.GOOGLE_CLOUD_LOCATION || 'us-central1';
+  
+  if (!apiKey) {
+    throw new Error('VERTEX_AI_API_KEY environment variable is not set.');
+  }
+  if (!projectId) {
+    throw new Error('GOOGLE_CLOUD_PROJECT environment variable is not set.');
+  }
 
-    try {
-        const result = await vertexAI.models.generateContent({
-            model: 'gemini-2.5-flash',
-            contents: [{ role: 'user', parts: [{ text: prompt }] }],
-            generationConfig: {
-                responseMimeType: 'application/json',
-            }
-        });
+  const endpoint = `https://${location}-aiplatform.googleapis.com/v1/projects/${projectId}/locations/${location}/publishers/google/models/gemini-2.5-flash-lite:streamGenerateContent?key=${apiKey}`;
 
-        const responseText = result.response.candidates?.[0]?.content.parts[0]?.text;
-        if (!responseText) {
-            throw new Error('No response text from AI model.');
+  console.log("Sending translation request to Vertex AI REST API...");
+  console.log("Prompt:", prompt.substring(0, 500) + "..."); // Log first 500 chars
+
+  try {
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        contents: [
+          {
+            role: "user",
+            parts: [
+              {
+                text: prompt,
+              }
+            ]
+          }
+        ],
+        generationConfig: {
+          responseMimeType: "application/json",
         }
-        
-        try {
-            const parsedJson = JSON.parse(responseText);
-            return TranslateTourOutputSchema.parse(parsedJson);
-        } catch (e) {
-            console.error("Failed to parse AI response:", e);
-            console.error("Raw AI response:", responseText);
-            throw new Error("AI returned invalid JSON format.");
-        }
-    } catch (error: any) {
-        console.error("[Vertex AI Error] Failed to generate content:", error);
-        throw new Error(`Vertex AI API call failed: ${error.message}`);
+      })
+    });
+
+    if (!response.ok) {
+        const errorBody = await response.text();
+        console.error("Vertex AI API Error Body:", errorBody);
+        throw new Error(`Vertex AI API call failed with status ${response.status}: ${response.statusText}`);
     }
-}
 
-    
+    const responseText = await response.text();
+    // The response is a stream of JSON objects. We need to parse them.
+    // It's typically an array of chunks, let's combine them.
+    // Example: '[{"candidates":...}]' or multiple JSON objects in a stream
+    // A simple approach is to remove brackets and join.
+    const combinedJsonText = responseText.replace(/\]\[/g, ',').slice(1, -1);
+
+    if (!combinedJsonText) {
+        throw new Error('No response text from AI model.');
+    }
+        
+    try {
+        // Since it's a stream, we might get multiple JSON objects. We'll parse the first one that has the content.
+        const streamData = JSON.parse(combinedJsonText);
+        const contentText = streamData.candidates[0].content.parts[0].text;
+        const parsedJson = JSON.parse(contentText);
+        return TranslateTourOutputSchema.parse(parsedJson);
+    } catch (e) {
+        console.error("Failed to parse AI response:", e);
+        console.error("Raw AI response:", combinedJsonText);
+        throw new Error("AI returned invalid JSON format.");
+    }
+  } catch (error: any) {
+    console.error("[Vertex AI Error] Failed to generate content:", error);
+    throw new Error(`Vertex AI API call failed: ${error.message}`);
+  }
+}
