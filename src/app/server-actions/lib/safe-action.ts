@@ -17,7 +17,7 @@ adminApp;
 
 type Action<TInput, TOutput> = (
   input: TInput,
-  user: {
+  user?: { // User is now optional for public actions
     uid: string;
     role: UserRole;
     user: User;
@@ -45,6 +45,18 @@ export function createSafeAction<TInput, TOutput>(
         }
     }
 
+    const isPublicAction = !authOptions.allowedRoles || authOptions.allowedRoles.length === 0;
+
+    if (isPublicAction) {
+        try {
+            return await action(input);
+        } catch (error: any) {
+             console.error('Error in public safe action:', error);
+             return { error: error.message || 'An unexpected server error occurred in public action.' };
+        }
+    }
+    
+    // If it's not a public action, proceed with authentication
     const sessionCookie = cookies().get('session')?.value;
 
     if (!sessionCookie) {
@@ -57,8 +69,7 @@ export function createSafeAction<TInput, TOutput>(
       const userRole = (decodedToken.role as UserRole) || 'customer';
 
       if (
-        authOptions.allowedRoles &&
-        authOptions.allowedRoles.length > 0 &&
+        authOptions.allowedRoles && // This check is now redundant due to the public check, but good for safety
         !authOptions.allowedRoles.includes(userRole)
       ) {
         return {

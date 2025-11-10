@@ -5,13 +5,13 @@ import { createSafeAction } from '@/app/server-actions/lib/safe-action';
 import { findAllTours as findAllToursUseCase, findTourById as findTourByIdUseCase, findTourBySlug } from '@/backend/tours/application/findTours';
 import { FirestoreTourRepository } from '@/backend/tours/infrastructure/firestore-tour.repository';
 import { Tour } from '@/backend/tours/domain/tour.model';
-import { User } from '@/backend/users/domain/user.model';
 
 export const findTourById = createSafeAction(
     {
         allowedRoles: ['admin'],
     },
-    async (tourId: string): Promise<{ data?: Tour; error?: string }> => {
+    async (tourId: string, user): Promise<{ data?: Tour; error?: string }> => {
+        if (!user) return { error: "Authentication required" };
         try {
             const tourRepository = new FirestoreTourRepository();
             const tour = await findTourByIdUseCase(tourRepository, tourId);
@@ -62,4 +62,3 @@ export const findTourBySlugAndLang = createSafeAction(
         }
     }
 );
-
