@@ -1,4 +1,5 @@
 
+
 'use server';
 
 import { Suspense } from 'react';
@@ -48,8 +49,8 @@ async function getBookingData(paymentIntentId: string) {
         const tour = tourSnapshot.exists ? tourSnapshot.data() as Tour : null;
 
         // Get hotel and meeting point
-        const hotelSnapshot = await db.collection('hotels').doc(booking.hotelId).get();
-        const hotel = hotelSnapshot.exists ? hotelSnapshot.data() as Hotel : null;
+        const hotelSnapshot = hotel.address ? await db.collection('hotels').doc(booking.hotelId).get(): null;
+        const hotel = hotelSnapshot?.exists ? hotelSnapshot.data() as Hotel : null;
         
         const meetingPointSnapshot = await db.collection('meetingPoints').doc(booking.meetingPointId).get();
         const meetingPoint = meetingPointSnapshot.exists ? meetingPointSnapshot.data() as MeetingPoint : null;
