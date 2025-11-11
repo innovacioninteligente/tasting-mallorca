@@ -42,6 +42,15 @@ export function HotelForm({ setSheetOpen, initialData }: HotelFormProps) {
 
     const form = useForm<HotelFormValues>({
         resolver: zodResolver(formSchema),
+        defaultValues: {
+            id: undefined,
+            name: '',
+            address: '',
+            region: 'South',
+            subRegion: '',
+            latitude: 0,
+            longitude: 0,
+        }
     });
 
     useEffect(() => {
