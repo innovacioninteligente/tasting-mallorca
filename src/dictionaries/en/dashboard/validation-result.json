@@ -1,0 +1,26 @@
+
+{
+    "pageTitle": "Validation Result",
+    "loadingText": "Searching for booking...",
+    "noBookingId": "No booking ID provided.",
+    "validationFailed": "Validation Failed",
+    "ticketValidated": "Ticket Validated!",
+    "ticketRedeemedSuccess": "The ticket has been successfully redeemed.",
+    "status": {
+        "valid": "Ticket Valid",
+        "redeemed": "Ticket Already Redeemed",
+        "expired": "Ticket Expired",
+        "notFound": "Ticket Not Found"
+    },
+    "paymentPending": "Payment Pending",
+    "paymentPendingText": "The amount of",
+    "bookingDetails": "Booking Details",
+    "bookingIdLabel": "Booking ID",
+    "tourLabel": "Tour",
+    "dateLabel": "Date",
+    "participantsLabel": "Participants",
+    "confirmCheckIn": "Confirm Check-in",
+    "scanAnother": "Scan Another Ticket"
+}
+
+    

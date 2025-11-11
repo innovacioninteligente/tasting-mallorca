@@ -1,0 +1,26 @@
+
+{
+    "pageTitle": "Validatieresultaat",
+    "loadingText": "Boeking zoeken...",
+    "noBookingId": "Geen boekings-ID opgegeven.",
+    "validationFailed": "Validatie mislukt",
+    "ticketValidated": "Ticket gevalideerd!",
+    "ticketRedeemedSuccess": "Het ticket is succesvol ingewisseld.",
+    "status": {
+        "valid": "Geldig ticket",
+        "redeemed": "Ticket al ingewisseld",
+        "expired": "Ticket verlopen",
+        "notFound": "Ticket niet gevonden"
+    },
+    "paymentPending": "Betaling in behandeling",
+    "paymentPendingText": "Het bedrag van",
+    "bookingDetails": "Boekingsdetails",
+    "bookingIdLabel": "Boekings-ID",
+    "tourLabel": "Tour",
+    "dateLabel": "Datum",
+    "participantsLabel": "Deelnemers",
+    "confirmCheckIn": "Check-in bevestigen",
+    "scanAnother": "Nog een ticket scannen"
+}
+
+    

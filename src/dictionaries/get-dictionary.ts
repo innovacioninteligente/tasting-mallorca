@@ -25,6 +25,9 @@ const dictionaries = {
       tourDetails: () => import('./en/tour-detail/tour-details.json').then(m => m.default),
       itinerary: () => import('./en/tour-detail/itinerary.json').then(m => m.default),
       booking: () => import('./en/tour-detail/booking.json').then(m => m.default),
+    },
+    dashboard: {
+      validationResult: () => import('./en/dashboard/validation-result.json').then(m => m.default),
     }
   },
   fr: {
@@ -47,6 +50,9 @@ const dictionaries = {
       tourDetails: () => import('./fr/tour-detail/tour-details.json').then(m => m.default),
       itinerary: () => import('./fr/tour-detail/itinerary.json').then(m => m.default),
       booking: () => import('./fr/tour-detail/booking.json').then(m => m.default),
+    },
+    dashboard: {
+        validationResult: () => import('./fr/dashboard/validation-result.json').then(m => m.default),
     }
   },
   de: {
@@ -69,6 +75,9 @@ const dictionaries = {
       tourDetails: () => import('./de/tour-detail/tour-details.json').then(m => m.default),
       itinerary: () => import('./de/tour-detail/itinerary.json').then(m => m.default),
       booking: () => import('./de/tour-detail/booking.json').then(m => m.default),
+    },
+    dashboard: {
+        validationResult: () => import('./de/dashboard/validation-result.json').then(m => m.default),
     }
   },
   nl: {
@@ -91,33 +100,58 @@ const dictionaries = {
       tourDetails: () => import('./nl/tour-detail/tour-details.json').then(m => m.default),
       itinerary: () => import('./nl/tour-detail/itinerary.json').then(m => m.default),
       booking: () => import('./nl/tour-detail/booking.json').then(m => m.default),
+    },
+    dashboard: {
+        validationResult: () => import('./nl/dashboard/validation-result.json').then(m => m.default),
     }
   },
 };
 
-export const getDictionary = async (locale: Locale) => {
-  const lang = dictionaries[locale] ?? dictionaries.en;
-  
-  return {
-    home: await lang.home(),
-    header: await lang.header(),
-    whatsIncluded: await lang.whatsIncluded(),
-    whyChooseUs: await lang.whyChooseUs(),
-    tours: await lang.tours(),
-    featuredTours: await lang.featuredTours(),
-    gallery: await lang.gallery(),
-    happyCustomers: await lang.happyCustomers(),
-    destinations: await lang.destinations(),
-    tourGuides: await lang.tourGuides(),
-    testimonials: await lang.testimonials(),
-    blog: await lang.blog(),
-    tourDetail: {
-      header: await lang.tourDetail.header(),
-      overview: await lang.tourDetail.overview(),
-      tourInfo: await lang.tourDetail.tourInfo(),
-      itinerary: await lang.tourDetail.itinerary(),
-      booking: await lang.tourDetail.booking(),
-      tourDetails: await lang.tourDetail.tourDetails(),
-    }
-  };
-}
+const loadDictionary = async (locale: Locale) => {
+    const lang = dictionaries[locale] ?? dictionaries.en;
+    const tourDetail = {
+        header: await lang.tourDetail.header(),
+        overview: await lang.tourDetail.overview(),
+        tourInfo: await lang.tourDetail.tourInfo(),
+        itinerary: await lang.tourDetail.itinerary(),
+        booking: await lang.tourDetail.booking(),
+        tourDetails: await lang.tourDetail.tourDetails(),
+    };
+    const dashboard = {
+        validationResult: await lang.dashboard.validationResult(),
+    };
+
+    return {
+        home: await lang.home(),
+        header: await lang.header(),
+        whatsIncluded: await lang.whatsIncluded(),
+        whyChooseUs: await lang.whyChooseUs(),
+        tours: await lang.tours(),
+        featuredTours: await lang.featuredTours(),
+        gallery: await lang.gallery(),
+        happyCustomers: await lang.happyCustomers(),
+        destinations: await lang.destinations(),
+        tourGuides: await lang.tourGuides(),
+        testimonials: await lang.testimonials(),
+        blog: await lang.blog(),
+        tourDetail,
+        dashboard,
+    };
+};
+
+// Define a type for the dictionary
+export type DictionaryType = Awaited<ReturnType<typeof loadDictionary>>;
+
+// Cache the dictionaries
+const dictionaryCache: { [key in Locale]?: DictionaryType } = {};
+
+export const getDictionary = async (locale: Locale): Promise<DictionaryType> => {
+  if (dictionaryCache[locale]) {
+    return dictionaryCache[locale] as DictionaryType;
+  }
+  const dict = await loadDictionary(locale);
+  dictionaryCache[locale] = dict;
+  return dict;
+};
+
+    

@@ -1,0 +1,26 @@
+
+{
+    "pageTitle": "Résultat de la Validation",
+    "loadingText": "Recherche de la réservation...",
+    "noBookingId": "Aucun ID de réservation fourni.",
+    "validationFailed": "Échec de la validation",
+    "ticketValidated": "Ticket validé !",
+    "ticketRedeemedSuccess": "Le ticket a été utilisé avec succès.",
+    "status": {
+        "valid": "Ticket Valide",
+        "redeemed": "Ticket déjà utilisé",
+        "expired": "Ticket expiré",
+        "notFound": "Ticket non trouvé"
+    },
+    "paymentPending": "Paiement en attente",
+    "paymentPendingText": "Le montant de",
+    "bookingDetails": "Détails de la réservation",
+    "bookingIdLabel": "ID de réservation",
+    "tourLabel": "Tour",
+    "dateLabel": "Date",
+    "participantsLabel": "Participants",
+    "confirmCheckIn": "Confirmer l'enregistrement",
+    "scanAnother": "Scanner un autre ticket"
+}
+
+    

@@ -1,0 +1,26 @@
+
+{
+    "pageTitle": "Validierungsergebnis",
+    "loadingText": "Suche nach Buchung...",
+    "noBookingId": "Keine Buchungs-ID angegeben.",
+    "validationFailed": "Validierung fehlgeschlagen",
+    "ticketValidated": "Ticket validiert!",
+    "ticketRedeemedSuccess": "Das Ticket wurde erfolgreich eingelöst.",
+    "status": {
+        "valid": "Gültiges Ticket",
+        "redeemed": "Ticket bereits eingelöst",
+        "expired": "Ticket abgelaufen",
+        "notFound": "Ticket nicht gefunden"
+    },
+    "paymentPending": "Zahlung ausstehend",
+    "paymentPendingText": "Der Betrag von",
+    "bookingDetails": "Buchungsdetails",
+    "bookingIdLabel": "Buchungs-ID",
+    "tourLabel": "Tour",
+    "dateLabel": "Datum",
+    "participantsLabel": "Teilnehmer",
+    "confirmCheckIn": "Check-in bestätigen",
+    "scanAnother": "Weiteres Ticket scannen"
+}
+
+    
