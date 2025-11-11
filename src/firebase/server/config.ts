@@ -1,4 +1,6 @@
+
 import { initializeApp, getApp, getApps, cert, ServiceAccount } from 'firebase-admin/app';
+import { getFirestore } from 'firebase-admin/firestore';
 
 const createFirebaseAdminApp = () => {
   if (getApps().length > 0) {
@@ -24,9 +26,18 @@ const createFirebaseAdminApp = () => {
   };
 
   try {
-    return initializeApp({
+    const app = initializeApp({
       credential: cert(serviceAccount)
     });
+    
+    // Set Firestore to ignore undefined properties
+    const firestore = getFirestore(app);
+    firestore.settings({
+        ignoreUndefinedProperties: true,
+    });
+    
+    return app;
+
   } catch (error: any) {
     console.error('Firebase Admin SDK initialization failed:', error);
     throw new Error(`Failed to initialize Firebase Admin: ${error.message}`);
