@@ -9,8 +9,5 @@ export interface Hotel {
   subRegion: string;
   latitude: number;
   longitude: number;
-  assignedMeetingPointId?: string;
+  assignedMeetingPointId?: string | null;
 }
-
-    
-    

@@ -8,16 +8,18 @@ import { PlusCircle, Upload } from "lucide-react";
 import { Hotel } from "@/backend/hotels/domain/hotel.model";
 import { HotelList } from "./hotel-list";
 import { AssignMeetingPointsButton } from "./assign-meeting-points-button";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { HotelForm } from "./hotel-form";
 import { CsvImporter } from "./csv-importer/csv-importer";
+import { MeetingPoint } from "@/backend/meeting-points/domain/meeting-point.model";
 
 interface HotelManagementClientPageProps {
     initialHotels: Hotel[];
+    meetingPoints: MeetingPoint[];
     error?: string;
 }
 
-export function HotelManagementClientPage({ initialHotels, error }: HotelManagementClientPageProps) {
+export function HotelManagementClientPage({ initialHotels, meetingPoints, error }: HotelManagementClientPageProps) {
     const [isSheetOpen, setIsSheetOpen] = useState(false);
     const [isImportSheetOpen, setIsImportSheetOpen] = useState(false);
     const [editingHotel, setEditingHotel] = useState<Hotel | null>(null);
@@ -74,7 +76,12 @@ export function HotelManagementClientPage({ initialHotels, error }: HotelManagem
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <HotelList hotels={initialHotels} error={error} onEdit={handleEdit} />
+                    <HotelList
+                        hotels={initialHotels}
+                        meetingPoints={meetingPoints}
+                        error={error}
+                        onEdit={handleEdit}
+                    />
                 </CardContent>
             </Card>
 
@@ -92,6 +99,7 @@ export function HotelManagementClientPage({ initialHotels, error }: HotelManagem
                     <HotelForm 
                         setSheetOpen={setIsSheetOpen} 
                         initialData={editingHotel}
+                        meetingPoints={meetingPoints}
                     />
                 </SheetContent>
             </Sheet>

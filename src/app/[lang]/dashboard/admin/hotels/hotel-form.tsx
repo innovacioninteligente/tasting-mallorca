@@ -12,9 +12,10 @@ import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
 import { createHotel } from "@/app/server-actions/hotels/createHotel";
 import { updateHotel } from "@/app/server-actions/hotels/updateHotel";
-import { useEffect, useState } from "react";
-import { Loader2 } from "lucide-react";
+import { useEffect, useState, useMemo } from "react";
+import { Loader2, Link2 } from "lucide-react";
 import { Hotel } from "@/backend/hotels/domain/hotel.model";
+import { MeetingPoint } from "@/backend/meeting-points/domain/meeting-point.model";
 
 const formSchema = z.object({
   id: z.string().optional(),
@@ -26,6 +27,7 @@ const formSchema = z.object({
   subRegion: z.string().min(1, 'La sub-región es requerida'),
   latitude: z.coerce.number({ required_error: 'La latitud es requerida' }),
   longitude: z.coerce.number({ required_error: 'La longitud es requerida' }),
+  assignedMeetingPointId: z.string().optional(),
 });
 
 type HotelFormValues = z.infer<typeof formSchema>;
@@ -33,25 +35,36 @@ type HotelFormValues = z.infer<typeof formSchema>;
 interface HotelFormProps {
     setSheetOpen: (open: boolean) => void;
     initialData?: Hotel | null;
+    meetingPoints: MeetingPoint[];
 }
 
-export function HotelForm({ setSheetOpen, initialData }: HotelFormProps) {
+export function HotelForm({ setSheetOpen, initialData, meetingPoints }: HotelFormProps) {
     const { toast } = useToast();
     const router = useRouter();
     const [isSubmitting, setIsSubmitting] = useState(false);
 
+    const defaultValues = {
+        id: undefined,
+        name: '',
+        address: '',
+        region: 'South' as 'South',
+        subRegion: '',
+        latitude: 0,
+        longitude: 0,
+        assignedMeetingPointId: undefined,
+    };
+
     const form = useForm<HotelFormValues>({
         resolver: zodResolver(formSchema),
-        defaultValues: {
-            id: undefined,
-            name: '',
-            address: '',
-            region: 'South',
-            subRegion: '',
-            latitude: 0,
-            longitude: 0,
-        }
+        defaultValues
     });
+
+    const assignedMeetingPointName = useMemo(() => {
+        if (initialData?.assignedMeetingPointId) {
+            return meetingPoints.find(mp => mp.id === initialData.assignedMeetingPointId)?.name;
+        }
+        return null;
+    }, [initialData, meetingPoints]);
 
     useEffect(() => {
         if (initialData) {
@@ -62,17 +75,9 @@ export function HotelForm({ setSheetOpen, initialData }: HotelFormProps) {
                 longitude: initialData.longitude,
             });
         } else {
-            form.reset({
-                id: undefined,
-                name: '',
-                address: '',
-                region: 'South',
-                subRegion: '',
-                latitude: 0,
-                longitude: 0,
-            });
+            form.reset(defaultValues);
         }
-    }, [initialData, form]);
+    }, [initialData, form, defaultValues]);
 
     const onSubmit = async (data: HotelFormValues) => {
         setIsSubmitting(true);
@@ -204,6 +209,17 @@ export function HotelForm({ setSheetOpen, initialData }: HotelFormProps) {
                         )}
                     />
                 </div>
+
+                {assignedMeetingPointName && (
+                    <FormItem>
+                        <FormLabel>Punto de Encuentro Asignado</FormLabel>
+                        <div className="flex items-center gap-2 text-sm p-3 bg-secondary/50 rounded-md border border-dashed">
+                             <Link2 className="h-4 w-4 text-muted-foreground" />
+                             <span className="font-medium">{assignedMeetingPointName}</span>
+                        </div>
+                    </FormItem>
+                )}
+
                 <div className="pt-4 flex justify-end">
                     <Button type="submit" disabled={isSubmitting}>
                          {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}

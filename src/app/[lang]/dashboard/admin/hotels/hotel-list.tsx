@@ -4,7 +4,7 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Hotel } from "@/backend/hotels/domain/hotel.model";
 import { Button } from "@/components/ui/button";
-import { Edit, Trash2 } from "lucide-react";
+import { Edit, Link2, Trash2 } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -19,14 +19,17 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { deleteHotel } from "@/app/server-actions/hotels/deleteHotel";
 import { useRouter } from "next/navigation";
+import { MeetingPoint } from "@/backend/meeting-points/domain/meeting-point.model";
+import { Badge } from "@/components/ui/badge";
 
 interface HotelListProps {
     hotels?: Hotel[];
+    meetingPoints: MeetingPoint[];
     error?: string;
     onEdit: (hotel: Hotel) => void;
 }
 
-export function HotelList({ hotels, error, onEdit }: HotelListProps) {
+export function HotelList({ hotels, meetingPoints, error, onEdit }: HotelListProps) {
     const router = useRouter();
     const { toast } = useToast();
     
@@ -58,6 +61,11 @@ export function HotelList({ hotels, error, onEdit }: HotelListProps) {
             router.refresh();
         }
     }
+    
+    const getMeetingPointName = (id: string | null | undefined) => {
+        if (!id) return null;
+        return meetingPoints.find(mp => mp.id === id)?.name;
+    };
 
     return (
         <Table>
@@ -65,48 +73,60 @@ export function HotelList({ hotels, error, onEdit }: HotelListProps) {
                 <TableRow>
                     <TableHead>Nombre</TableHead>
                     <TableHead>Región</TableHead>
-                    <TableHead>Sub-Región</TableHead>
+                    <TableHead>Punto de Encuentro</TableHead>
                     <TableHead>Acciones</TableHead>
                 </TableRow>
             </TableHeader>
             <TableBody>
-                {hotels.map((hotel) => (
-                    <TableRow key={hotel.id}>
-                        <TableCell className="font-medium">{hotel.name}</TableCell>
-                        <TableCell>{hotel.region}</TableCell>
-                        <TableCell>{hotel.subRegion}</TableCell>
-                        <TableCell>
-                            <div className="flex gap-2">
-                                <Button variant="outline" size="sm" onClick={() => onEdit(hotel)}>
-                                    <Edit className="mr-2 h-4 w-4" />
-                                    Editar
-                                </Button>
-                                <AlertDialog>
-                                    <AlertDialogTrigger asChild>
-                                        <Button variant="destructive" size="sm">
-                                            <Trash2 className="mr-2 h-4 w-4" />
-                                            Eliminar
-                                        </Button>
-                                    </AlertDialogTrigger>
-                                    <AlertDialogContent>
-                                        <AlertDialogHeader>
-                                        <AlertDialogTitle>¿Estás seguro?</AlertDialogTitle>
-                                        <AlertDialogDescription>
-                                            Esta acción no se puede deshacer. Se eliminará permanentemente el hotel de la base de datos.
-                                        </AlertDialogDescription>
-                                        </AlertDialogHeader>
-                                        <AlertDialogFooter>
-                                        <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                                        <AlertDialogAction onClick={() => handleDelete(hotel.id)}>
-                                            Continuar
-                                        </AlertDialogAction>
-                                        </AlertDialogFooter>
-                                    </AlertDialogContent>
-                                </AlertDialog>
-                            </div>
-                        </TableCell>
-                    </TableRow>
-                ))}
+                {hotels.map((hotel) => {
+                    const meetingPointName = getMeetingPointName(hotel.assignedMeetingPointId);
+                    return (
+                        <TableRow key={hotel.id}>
+                            <TableCell className="font-medium">{hotel.name}</TableCell>
+                            <TableCell>{hotel.region}</TableCell>
+                            <TableCell>
+                                {meetingPointName ? (
+                                    <Badge variant="outline" className="text-primary border-primary/30">
+                                        <Link2 className="mr-2 h-3 w-3" />
+                                        {meetingPointName}
+                                    </Badge>
+                                ) : (
+                                    <span className="text-muted-foreground text-xs">No asignado</span>
+                                )}
+                            </TableCell>
+                            <TableCell>
+                                <div className="flex gap-2">
+                                    <Button variant="outline" size="sm" onClick={() => onEdit(hotel)}>
+                                        <Edit className="mr-2 h-4 w-4" />
+                                        Editar
+                                    </Button>
+                                    <AlertDialog>
+                                        <AlertDialogTrigger asChild>
+                                            <Button variant="destructive" size="sm">
+                                                <Trash2 className="mr-2 h-4 w-4" />
+                                                Eliminar
+                                            </Button>
+                                        </AlertDialogTrigger>
+                                        <AlertDialogContent>
+                                            <AlertDialogHeader>
+                                            <AlertDialogTitle>¿Estás seguro?</AlertDialogTitle>
+                                            <AlertDialogDescription>
+                                                Esta acción no se puede deshacer. Se eliminará permanentemente el hotel de la base de datos.
+                                            </AlertDialogDescription>
+                                            </AlertDialogHeader>
+                                            <AlertDialogFooter>
+                                            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                                            <AlertDialogAction onClick={() => handleDelete(hotel.id)}>
+                                                Continuar
+                                            </AlertDialogAction>
+                                            </AlertDialogFooter>
+                                        </AlertDialogContent>
+                                    </AlertDialog>
+                                </div>
+                            </TableCell>
+                        </TableRow>
+                    )
+                })}
             </TableBody>
         </Table>
     );
