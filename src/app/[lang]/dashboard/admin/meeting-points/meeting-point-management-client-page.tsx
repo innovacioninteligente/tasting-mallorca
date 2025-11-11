@@ -4,11 +4,12 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
-import { PlusCircle } from "lucide-react";
+import { PlusCircle, Upload } from "lucide-react";
 import { MeetingPoint } from "@/backend/meeting-points/domain/meeting-point.model";
 import { MeetingPointList } from "./meeting-point-list";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetTrigger } from "@/components/ui/sheet";
 import { MeetingPointForm } from "./meeting-point-form";
+import { CsvImporter } from "./csv-importer/csv-importer";
 
 interface MeetingPointManagementClientPageProps {
     initialMeetingPoints: MeetingPoint[];
@@ -17,6 +18,7 @@ interface MeetingPointManagementClientPageProps {
 
 export function MeetingPointManagementClientPage({ initialMeetingPoints, error }: MeetingPointManagementClientPageProps) {
     const [isSheetOpen, setIsSheetOpen] = useState(false);
+    const [isImportSheetOpen, setIsImportSheetOpen] = useState(false);
     const [editingPoint, setEditingPoint] = useState<MeetingPoint | null>(null);
 
     const handleCreate = () => {
@@ -38,10 +40,29 @@ export function MeetingPointManagementClientPage({ initialMeetingPoints, error }
                         Crea, edita y gestiona todos los puntos de encuentro para los tours.
                     </p>
                 </div>
-                <Button onClick={handleCreate}>
-                    <PlusCircle className="mr-2 h-4 w-4" />
-                    Crear Nuevo Punto
-                </Button>
+                <div className="flex items-center gap-2">
+                    <Sheet open={isImportSheetOpen} onOpenChange={setIsImportSheetOpen}>
+                        <SheetTrigger asChild>
+                            <Button variant="outline">
+                                <Upload className="mr-2 h-4 w-4" />
+                                Importar desde CSV
+                            </Button>
+                        </SheetTrigger>
+                        <SheetContent className="sm:max-w-2xl">
+                            <SheetHeader>
+                                <SheetTitle>Importar Puntos de Encuentro desde CSV</SheetTitle>
+                                <SheetDescription>
+                                    Sigue los pasos para subir tu archivo CSV y mapear las columnas a la base de datos.
+                                </SheetDescription>
+                            </SheetHeader>
+                            <CsvImporter setSheetOpen={setIsImportSheetOpen} />
+                        </SheetContent>
+                    </Sheet>
+                    <Button onClick={handleCreate}>
+                        <PlusCircle className="mr-2 h-4 w-4" />
+                        Crear Nuevo Punto
+                    </Button>
+                </div>
             </div>
             <Card>
                 <CardHeader>
