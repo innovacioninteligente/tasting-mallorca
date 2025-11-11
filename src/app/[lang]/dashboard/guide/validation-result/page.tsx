@@ -2,7 +2,7 @@
 'use client';
 
 import { Suspense, useEffect, useState } from 'react';
-import { useSearchParams, useRouter, usePathname } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
@@ -18,7 +18,7 @@ import { Locale } from '@/dictionaries/config';
 
 type Dictionary = Awaited<ReturnType<typeof getDictionary>>['dashboard']['validationResult'];
 
-function ValidationResult({ dictionary, lang }: { dictionary: Dictionary, lang: Locale }) {
+function ValidationResultClient({ dictionary, lang }: { dictionary: Dictionary, lang: Locale }) {
     const searchParams = useSearchParams();
     const router = useRouter();
     const bookingId = searchParams.get('bookingId');
@@ -174,28 +174,15 @@ function ValidationResult({ dictionary, lang }: { dictionary: Dictionary, lang: 
     );
 }
 
-export default function ValidationResultPageWrapper({ params: { lang } }: { params: { lang: Locale }}) {
-    const [dictionary, setDictionary] = useState<Dictionary | null>(null);
+// Server Component Wrapper
+export default async function ValidationResultPage({ params: { lang } }: { params: { lang: Locale }}) {
+    const dictionary = await getDictionary(lang);
 
-    useEffect(() => {
-        getDictionary(lang).then(d => setDictionary(d.dashboard.validationResult));
-    }, [lang]);
-
-    if (!dictionary) {
-        return (
-            <div className="flex h-screen w-full items-center justify-center">
-                <Loader2 className="h-12 w-12 animate-spin text-primary" />
-            </div>
-        );
-    }
-    
     return (
         <GuideRouteGuard>
             <Suspense fallback={<div className="flex h-screen w-full items-center justify-center"><Loader2 className="h-12 w-12 animate-spin text-primary" /></div>}>
-                <ValidationResult dictionary={dictionary} lang={lang} />
+                <ValidationResultClient dictionary={dictionary.dashboard.validationResult} lang={lang} />
             </Suspense>
         </GuideRouteGuard>
-    )
+    );
 }
-
-    
