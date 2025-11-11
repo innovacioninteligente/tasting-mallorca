@@ -24,6 +24,17 @@ const hotelSchemaForValidation = z.object({
   address: z.string().optional(),
 });
 
+const regionTranslationMap: { [key: string]: HotelRegion } = {
+    'north': 'North',
+    'norte': 'North',
+    'east': 'East',
+    'este': 'East',
+    'south': 'South',
+    'sur': 'South',
+    'west': 'West',
+    'oeste': 'West',
+    'central': 'Central'
+};
 
 export const importHotelsFromCsv = createSafeAction(
   {
@@ -56,13 +67,16 @@ export const importHotelsFromCsv = createSafeAction(
         for (const csvHeader in columnMapping) {
             const dbField = columnMapping[csvHeader];
             if (dbField !== 'ignore' && row[csvHeader]) {
-                if (dbField === 'region') {
-                    // Normalize the region value: trim whitespace and capitalize first letter
-                    const rawRegion = row[csvHeader].trim();
-                    hotelData.region = (rawRegion.charAt(0).toUpperCase() + rawRegion.slice(1).toLowerCase()) as HotelRegion;
-                } else {
-                     (hotelData as any)[dbField] = row[csvHeader];
-                }
+                 (hotelData as any)[dbField] = row[csvHeader];
+            }
+        }
+
+        // Normalize and translate the region field
+        if (hotelData.region) {
+            const normalizedRegionKey = hotelData.region.trim().toLowerCase();
+            const translatedRegion = regionTranslationMap[normalizedRegionKey];
+            if (translatedRegion) {
+                hotelData.region = translatedRegion;
             }
         }
         
