@@ -39,7 +39,7 @@ export function ColumnMappingStep({ file, headers, data, onBack, setSheetOpen }:
     };
     
     const handleSubmit = async () => {
-        const requiredFields = ['name', 'address', 'region', 'subRegion', 'latitude', 'longitude'];
+        const requiredFields = ['name', 'region', 'subRegion', 'latitude', 'longitude'];
         const mappedDbFields = Object.values(mapping);
 
         const missingFields = requiredFields.filter(field => !mappedDbFields.includes(field));
@@ -128,4 +128,3 @@ export function ColumnMappingStep({ file, headers, data, onBack, setSheetOpen }:
         </div>
     );
 }
-
