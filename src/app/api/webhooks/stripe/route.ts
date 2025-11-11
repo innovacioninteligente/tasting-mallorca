@@ -4,7 +4,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
 import { adminApp } from '@/firebase/server/config';
 import { getFirestore } from 'firebase-admin/firestore';
-import { Booking } from '@/backend/bookings/domain/booking.model';
 import { Payment, PaymentStatus } from '@/backend/payments/domain/payment.model';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
@@ -36,34 +35,26 @@ export async function POST(req: NextRequest) {
 
             try {
                 const metadata = paymentIntent.metadata;
+                const bookingId = metadata.bookingId;
+
+                if (!bookingId) {
+                    console.error('❌ Missing bookingId in payment intent metadata.');
+                    return NextResponse.json({ error: 'Missing bookingId in metadata' }, { status: 400 });
+                }
 
                 const amountPaid = paymentIntent.amount / 100;
                 const totalPrice = parseFloat(metadata.totalPrice);
                 const amountDue = totalPrice - amountPaid;
 
-                const bookingData: Booking = {
-                    id: crypto.randomUUID(),
-                    tourId: metadata.tourId,
-                    userId: metadata.userId,
-                    date: new Date(metadata.bookingDate),
-                    participants: parseInt(metadata.participants, 10),
-                    language: metadata.language,
-                    hotelId: metadata.hotelId,
-                    hotelName: metadata.hotelName,
-                    meetingPointId: metadata.meetingPointId,
-                    meetingPointName: metadata.meetingPointName,
-                    totalPrice: totalPrice,
+                // Update the existing booking from 'pending' to 'confirmed'
+                await db.collection('bookings').doc(bookingId).update({
+                    status: 'confirmed',
                     amountPaid: amountPaid,
                     amountDue: amountDue,
-                    paymentType: metadata.paymentType as 'deposit' | 'full',
-                    status: 'confirmed',
-                    ticketStatus: 'valid', // Set default ticket status
-                };
-
-                await db.collection('bookings').doc(bookingData.id).set(bookingData);
+                });
                 
                 const paymentData: Omit<Payment, 'id'> = {
-                    bookingId: bookingData.id,
+                    bookingId: bookingId,
                     stripePaymentIntentId: paymentIntent.id,
                     amount: amountPaid,
                     currency: paymentIntent.currency,
@@ -71,7 +62,7 @@ export async function POST(req: NextRequest) {
                 };
                 await db.collection('payments').add(paymentData);
 
-                console.log(`✅ Successfully created booking ${bookingData.id} and payment record.`);
+                console.log(`✅ Successfully confirmed booking ${bookingId} and created payment record.`);
             
             } catch (error) {
                 console.error("❌ Error processing successful payment:", error);
@@ -81,7 +72,14 @@ export async function POST(req: NextRequest) {
             break;
         case 'payment_intent.payment_failed':
             const paymentIntentFailed = event.data.object;
-            console.log(`❌ PaymentIntent failed: ${paymentIntentFailed.id}`);
+            const failedBookingId = paymentIntentFailed.metadata.bookingId;
+            if (failedBookingId) {
+                // Optionally, update the booking to 'cancelled' or 'failed'
+                await db.collection('bookings').doc(failedBookingId).update({ status: 'cancelled' });
+                 console.log(`❌ PaymentIntent failed: ${paymentIntentFailed.id}. Booking ${failedBookingId} marked as cancelled.`);
+            } else {
+                console.log(`❌ PaymentIntent failed: ${paymentIntentFailed.id}. No bookingId found.`);
+            }
             break;
         default:
             console.log(`🤷‍♀️ Unhandled event type: ${event.type}`);

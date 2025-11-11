@@ -17,48 +17,42 @@ import { MeetingPoint } from '@/backend/meeting-points/domain/meeting-point.mode
 import { format } from 'date-fns';
 import { es, fr, de, nl } from 'date-fns/locale';
 import QRCode from "react-qr-code";
+import { adminApp } from '@/firebase/server/config';
 
 interface SearchParams {
-    payment_intent: string;
+    booking_id: string;
     lang: string;
 }
 
 const locales: { [key: string]: Locale } = { es, fr, de, nl };
 
-async function getBookingData(paymentIntentId: string) {
+async function getBookingData(bookingId: string) {
     try {
+        adminApp; // Ensure Firebase Admin is initialized
         const db = getFirestore();
         
-        const paymentsSnapshot = await db.collection('payments').where('stripePaymentIntentId', '==', paymentIntentId).limit(1).get();
-        if (paymentsSnapshot.empty) {
-            console.warn(`No payment found for intent ID: ${paymentIntentId}`);
-            return null;
-        }
-        const payment = paymentsSnapshot.docs[0].data();
-
-        const bookingSnapshot = await db.collection('bookings').doc(payment.bookingId).get();
+        const bookingSnapshot = await db.collection('bookings').doc(bookingId).get();
         if (!bookingSnapshot.exists) {
-            console.warn(`No booking found for ID: ${payment.bookingId}`);
+            console.warn(`No booking found for ID: ${bookingId}`);
             return null;
         }
         const booking = bookingSnapshot.data() as Booking;
-
-        const tourSnapshot = await db.collection('tours').doc(booking.tourId).get();
-        const tour = tourSnapshot.exists ? tourSnapshot.data() as Tour : null;
         
-        let hotel: Hotel | null = null;
-        if (booking.hotelId) {
-            const hotelSnapshot = await db.collection('hotels').doc(booking.hotelId).get();
-            hotel = hotelSnapshot.exists ? hotelSnapshot.data() as Hotel : null;
+        // Wait a moment for webhook to potentially update the status
+        if (booking.status === 'pending') {
+             await new Promise(resolve => setTimeout(resolve, 2000));
+             const updatedSnapshot = await db.collection('bookings').doc(bookingId).get();
+             if (updatedSnapshot.exists) {
+                 const updatedBooking = updatedSnapshot.data() as Booking;
+                 if (updatedBooking.status !== 'confirmed') {
+                    console.warn(`Booking ${bookingId} is still not confirmed after delay.`);
+                    return null;
+                 }
+                  return getFullBookingDetails(updatedBooking);
+             }
         }
         
-        let meetingPoint: MeetingPoint | null = null;
-        if (booking.meetingPointId) {
-            const meetingPointSnapshot = await db.collection('meetingPoints').doc(booking.meetingPointId).get();
-            meetingPoint = meetingPointSnapshot.exists ? meetingPointSnapshot.data() as MeetingPoint : null;
-        }
-
-        return { booking, tour, hotel, meetingPoint };
+        return getFullBookingDetails(booking);
 
     } catch (error) {
         console.error("Error fetching booking data:", error);
@@ -66,15 +60,35 @@ async function getBookingData(paymentIntentId: string) {
     }
 }
 
+async function getFullBookingDetails(booking: Booking) {
+    const db = getFirestore();
+    const tourSnapshot = await db.collection('tours').doc(booking.tourId).get();
+    const tour = tourSnapshot.exists ? tourSnapshot.data() as Tour : null;
+    
+    let hotel: Hotel | null = null;
+    if (booking.hotelId) {
+        const hotelSnapshot = await db.collection('hotels').doc(booking.hotelId).get();
+        hotel = hotelSnapshot.exists ? hotelSnapshot.data() as Hotel : null;
+    }
+    
+    let meetingPoint: MeetingPoint | null = null;
+    if (booking.meetingPointId) {
+        const meetingPointSnapshot = await db.collection('meetingPoints').doc(booking.meetingPointId).get();
+        meetingPoint = meetingPointSnapshot.exists ? meetingPointSnapshot.data() as MeetingPoint : null;
+    }
+
+    return { booking, tour, hotel, meetingPoint };
+}
+
 
 export default async function BookingSuccessPage({ searchParams, params }: { searchParams: SearchParams, params: { lang: string } }) {
-    const { payment_intent } = searchParams;
+    const { booking_id } = searchParams;
 
-    if (!payment_intent) {
+    if (!booking_id) {
         return notFound();
     }
 
-    const data = await getBookingData(payment_intent);
+    const data = await getBookingData(booking_id);
 
     if (!data) {
         return (
@@ -96,7 +110,8 @@ export default async function BookingSuccessPage({ searchParams, params }: { sea
     
     const { booking, tour, hotel, meetingPoint } = data;
     const locale = locales[params.lang] || undefined;
-    const formattedDate = booking.date ? format(new Date((booking.date as any).seconds * 1000), "PPP", { locale }) : 'N/A';
+    const bookingDate = (booking.date as any).toDate ? (booking.date as any).toDate() : new Date(booking.date);
+    const formattedDate = format(bookingDate, "PPP", { locale });
     
     const tourTitle = tour?.title[params.lang] || tour?.title.en || 'Tour';
     const isDeposit = booking.paymentType === 'deposit';

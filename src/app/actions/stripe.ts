@@ -25,6 +25,10 @@ export async function createPaymentIntent(
         });
     }
 
+    if (!metadata.bookingId) {
+        throw new Error('Booking ID is missing in metadata.');
+    }
+
     const paymentIntent = await stripe.paymentIntents.create({
       amount: Math.round(amount * 100), // Amount in cents
       currency: 'eur',

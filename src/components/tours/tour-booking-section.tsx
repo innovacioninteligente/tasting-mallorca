@@ -20,8 +20,9 @@ import { StripeProvider } from '@/components/stripe-provider';
 import CheckoutForm from '@/components/checkout-form';
 import { Hotel as HotelModel } from "@/backend/hotels/domain/hotel.model";
 import { MeetingPoint } from "@/backend/meeting-points/domain/meeting-point.model";
-import { useUser } from "@/firebase";
+import { useAuth, useFirestore, useUser } from "@/firebase";
 import { Tour } from "@/backend/tours/domain/tour.model";
+import { doc, setDoc } from "firebase/firestore";
 
 interface TourBookingSectionProps {
     dictionary: {
@@ -59,6 +60,7 @@ const locales: { [key: string]: Locale } = { fr, de, nl };
 
 export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoints }: TourBookingSectionProps) {
     const { user } = useUser();
+    const firestore = useFirestore();
     const [isSheetOpen, setIsSheetOpen] = useState(false);
     const [step, setStep] = useState(1);
     
@@ -67,6 +69,7 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
     const [date, setDate] = useState<Date | undefined>(new Date());
     const [language, setLanguage] = useState(lang);
     const [paymentOption, setPaymentOption] = useState<'full' | 'deposit'>('full');
+    const [bookingId, setBookingId] = useState<string | null>(null);
     
     const [isSearchingHotel, setIsSearchingHotel] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
@@ -82,11 +85,48 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
         ? meetingPoints.find(mp => mp.id === selectedHotel.assignedMeetingPointId)
         : null;
 
-    const handleNextStep = () => setStep(step + 1);
+    const handleContinueToPayment = async () => {
+        if (!firestore || !date || !selectedHotel || !suggestedMeetingPoint) return;
+        
+        const newBookingId = crypto.randomUUID();
+        setBookingId(newBookingId);
+        
+        const bookingData = {
+            id: newBookingId,
+            tourId: tour.id,
+            userId: user?.uid || 'anonymous',
+            date: date,
+            participants: totalParticipants,
+            language: language,
+            hotelId: selectedHotel.id,
+            hotelName: selectedHotel.name,
+            meetingPointId: suggestedMeetingPoint.id,
+            meetingPointName: suggestedMeetingPoint.name,
+            totalPrice: totalPrice,
+            amountPaid: 0,
+            amountDue: totalPrice,
+            paymentType: paymentOption,
+            status: 'pending',
+            ticketStatus: 'valid',
+        };
+
+        try {
+            await setDoc(doc(firestore, "bookings", newBookingId), bookingData);
+            setStep(step + 1);
+        } catch (error) {
+            console.error("Error creating pending booking:", error);
+            // Handle error (e.g., show a toast message)
+        }
+    };
+
     const handlePrevStep = () => {
         if (isSearchingHotel) {
             setIsSearchingHotel(false);
         } else {
+             if (step === 3) {
+                // Optionally delete the pending booking if the user goes back
+                setBookingId(null);
+            }
             setStep(step - 1);
         }
     };
@@ -102,24 +142,17 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
     const formattedDate = date ? format(date, "PPP", { locale }) : "Pick a date";
 
     const getReturnUrl = () => {
-        if (typeof window === 'undefined') return '';
-        const baseUrl = `${window.location.origin}/${lang}/booking-success`;
+        if (typeof window === 'undefined' || !bookingId) return '';
+        const baseUrl = `${window.location.origin}/${lang}/booking-success?booking_id=${bookingId}`;
         return baseUrl;
     }
 
     const paymentMetadata = {
+        bookingId: bookingId || '',
         tourId: tour.id,
         userId: user?.uid || 'anonymous',
-        bookingDate: date?.toISOString() || '',
-        participants: totalParticipants.toString(),
         totalPrice: totalPrice.toString(),
-        language: language,
-        hotelId: selectedHotel?.id || '',
-        hotelName: selectedHotel?.name || '',
-        meetingPointId: suggestedMeetingPoint?.id || '',
-        meetingPointName: suggestedMeetingPoint?.name || '',
         paymentType: paymentOption,
-        amountPaid: amountToPay.toString(),
     };
 
 
@@ -222,7 +255,7 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
                     </Select>
                 </div>
             </div>
-            <Button size="lg" className="w-full font-bold text-lg py-7" onClick={handleNextStep} disabled={!user}>
+            <Button size="lg" className="w-full font-bold text-lg py-7" onClick={() => setStep(step + 1)} disabled={!user}>
                  {!user ? "Please sign in to book" : dictionary.checkAvailability}
             </Button>
         </motion.div>
@@ -344,7 +377,7 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
                 )}
             </div>
             <div className="space-y-3">
-                 <Button size="lg" className="w-full font-bold text-lg py-7" onClick={handleNextStep} disabled={!selectedHotel || !suggestedMeetingPoint}>
+                 <Button size="lg" className="w-full font-bold text-lg py-7" onClick={handleContinueToPayment} disabled={!selectedHotel || !suggestedMeetingPoint}>
                     {dictionary.continueToPayment}
                 </Button>
                  <Button variant="ghost" size="lg" className="w-full" onClick={handlePrevStep}>
