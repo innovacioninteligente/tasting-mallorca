@@ -1,25 +1,28 @@
 
 'use server';
 
-async function followRedirects(url: string): Promise<string> {
+async function getFinalUrl(url: string): Promise<string> {
     try {
-        const response = await fetch(url, { method: 'HEAD', redirect: 'manual' });
-        if (response.status >= 300 && response.status < 400 && response.headers.has('location')) {
-            const location = response.headers.get('location')!;
-            // Recursively follow redirects, but with a limit to prevent infinite loops
-            return followRedirects(new URL(location, url).href);
-        }
-        return url;
+        const response = await fetch(url, { 
+            method: 'GET',
+            redirect: 'follow', // Default behavior, but explicit
+            headers: {
+                 // Mimic a browser user-agent to ensure Google serves the redirecting page
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+            }
+        });
+        return response.url;
     } catch (error) {
-        // If HEAD request fails (e.g. CORS or network issue), just return the original URL
-        console.warn(`Could not follow redirect for ${url}, proceeding with original URL. Error: ${(error as Error).message}`);
+        console.error(`Could not resolve URL ${url}. Error: ${(error as Error).message}`);
+        // If fetch fails, return the original URL and hope for the best
         return url;
     }
 }
 
+
 export async function getCoordsFromUrl(url: string): Promise<{ latitude: number, longitude: number }> {
     try {
-        const finalUrl = await followRedirects(url);
+        const finalUrl = await getFinalUrl(url);
 
         // Regex patterns to try
         const patterns = [
