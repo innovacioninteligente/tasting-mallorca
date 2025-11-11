@@ -85,7 +85,7 @@ export function ValidationResultClient({ dictionary, lang }: { dictionary: Dicti
             expired: { icon: <AlertTriangle className="h-12 w-12 text-red-500" />, title: dictionary.status.expired, color: 'red' },
             'not-found': { icon: <AlertTriangle className="h-12 w-12 text-red-500" />, title: dictionary.status.notFound, color: 'red' }
         };
-        const currentStatus = statusConfig[status];
+        const currentStatus = statusConfig[status] || statusConfig['not-found'];
 
         return (
              <Card className={`bg-${currentStatus.color}-50 border-${currentStatus.color}-200`}>
