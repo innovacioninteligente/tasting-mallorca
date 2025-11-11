@@ -67,7 +67,7 @@ export default function CheckoutForm({ dictionary, handlePrevStep, returnUrl }: 
     <form id="payment-form" onSubmit={handleSubmit} className="space-y-6">
         <PaymentElement id="payment-element" />
         <div className="space-y-3">
-            <Button disabled={isLoading || !stripe || !elements} id="submit" size="lg" className="w-full font-bold text-lg py-7">
+            <Button disabled={isLoading || !stripe || !elements} id="submit" size="lg" className="w-full font-bold text-lg py-7 bg-secondary text-white hover:bg-secondary/80">
                 <span id="button-text">
                 {isLoading ? <Loader2 className="animate-spin h-5 w-5" /> : dictionary.confirmAndPay}
                 </span>
