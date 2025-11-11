@@ -1,0 +1,115 @@
+'use client';
+
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Eye, CheckCircle, Ticket, AlertCircle } from 'lucide-react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { format } from 'date-fns';
+import { Booking } from '@/backend/bookings/domain/booking.model';
+import { Locale } from '@/dictionaries/config';
+
+interface BookingListProps {
+  bookings?: any[]; // Allow 'any' for flexibility with serialized data
+  error?: string;
+  lang: Locale;
+}
+
+export function BookingList({ bookings, error, lang }: BookingListProps) {
+  const pathname = usePathname();
+
+  if (error) {
+    return <p className="text-destructive text-center py-12">Error: {error}</p>;
+  }
+
+  if (!bookings || bookings.length === 0) {
+    return (
+      <div className="text-center py-12 border-2 border-dashed rounded-lg">
+        <h3 className="text-lg font-medium text-muted-foreground">
+          No bookings found.
+        </h3>
+        <p className="text-sm text-muted-foreground mt-1">
+          When you book a tour, it will appear here.
+        </p>
+        <Button asChild className="mt-4">
+            <Link href={`/${lang}/tours`}>Explore Tours</Link>
+        </Button>
+      </div>
+    );
+  }
+  
+  const getStatusVariant = (status: string) => {
+    switch (status) {
+        case 'confirmed': return 'default';
+        case 'pending': return 'secondary';
+        case 'cancelled': return 'destructive';
+        default: return 'outline';
+    }
+  }
+
+  const getTicketStatusVariant = (status: string) => {
+    switch (status) {
+        case 'valid': return 'default';
+        case 'redeemed': return 'secondary';
+        case 'expired': return 'destructive';
+        default: return 'outline';
+    }
+  }
+
+  return (
+    <Table>
+      <TableHeader>
+        <TableRow>
+          <TableHead>Tour</TableHead>
+          <TableHead>Date</TableHead>
+          <TableHead>Participants</TableHead>
+          <TableHead>Payment Status</TableHead>
+          <TableHead>Ticket Status</TableHead>
+          <TableHead>Actions</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {bookings.map((booking: Booking) => (
+          <TableRow key={booking.id}>
+            <TableCell className="font-medium">
+              {(booking as any).tour?.title?.[lang] || (booking as any).tour?.title?.en || 'N/A'}
+            </TableCell>
+            <TableCell>
+              {format(new Date(booking.date), 'PPP')}
+            </TableCell>
+             <TableCell>{booking.participants}</TableCell>
+            <TableCell>
+              <Badge variant={getStatusVariant(booking.status)}>
+                {booking.status}
+              </Badge>
+            </TableCell>
+            <TableCell>
+                 <Badge variant={getTicketStatusVariant(booking.ticketStatus)} className="capitalize">
+                    {booking.ticketStatus === 'valid' && <CheckCircle className="mr-2 h-3 w-3" />}
+                    {booking.ticketStatus === 'redeemed' && <Ticket className="mr-2 h-3 w-3" />}
+                    {booking.ticketStatus === 'expired' && <AlertCircle className="mr-2 h-3 w-3" />}
+                    {booking.ticketStatus}
+                </Badge>
+            </TableCell>
+            <TableCell>
+              <Button asChild variant="outline" size="sm">
+                <Link href={`${pathname}/${booking.id}`}>
+                  <Eye className="mr-2 h-4 w-4" />
+                  View
+                </Link>
+              </Button>
+            </TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
+  );
+}

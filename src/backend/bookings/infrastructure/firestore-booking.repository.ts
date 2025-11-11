@@ -11,12 +11,17 @@ export class FirestoreBookingRepository implements BookingRepository {
     if (!doc.exists) {
       return null;
     }
-    return doc.data() as Booking;
+    return { id: doc.id, ...doc.data() } as Booking;
   }
 
   async findByUserId(userId: string): Promise<Booking[]> {
     const snapshot = await this.collection.where('userId', '==', userId).get();
-    return snapshot.docs.map(doc => doc.data() as Booking);
+    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Booking));
+  }
+
+  async findAll(): Promise<Booking[]> {
+    const snapshot = await this.collection.orderBy('date', 'desc').get();
+    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Booking));
   }
 
   async save(booking: Booking): Promise<Booking> {

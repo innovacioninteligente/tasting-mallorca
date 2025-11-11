@@ -24,7 +24,7 @@ import React from 'react';
 
 const navItems = [
   { href: '/dashboard/overview', label: 'Overview', icon: LayoutDashboard },
-  { href: '/dashboard/bookings', label: 'My Bookings', icon: Ticket },
+  { href: '/dashboard/bookings', label: 'Bookings', icon: Ticket },
   { href: '/dashboard/profile', label: 'Profile', icon: User },
 ];
 

@@ -1,14 +1,28 @@
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+'use server';
 
-export default function DashboardBookingsPage() {
-  return (
-    <Card>
-      <CardHeader>
-        <CardTitle>My Bookings</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <p>You have no bookings yet.</p>
-      </CardContent>
-    </Card>
-  );
+import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
+import { findBookings } from "@/app/server-actions/bookings/findBookings";
+import { BookingList } from "./booking-list";
+import { Locale } from "@/dictionaries/config";
+
+export default async function BookingsPage({ params }: { params: { lang: Locale }}) {
+    const result = await findBookings({});
+    
+    return (
+        <Card>
+            <CardHeader>
+                <CardTitle>Bookings</CardTitle>
+                <CardDescription>
+                    View and manage all tour bookings.
+                </CardDescription>
+            </CardHeader>
+            <CardContent>
+                <BookingList
+                    bookings={result.data || []}
+                    error={result.error}
+                    lang={params.lang}
+                />
+            </CardContent>
+        </Card>
+    );
 }

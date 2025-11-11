@@ -14,3 +14,9 @@ export async function findBookingsByUserId(
 ): Promise<Booking[]> {
   return bookingRepository.findByUserId(userId);
 }
+
+export async function findAllBookings(
+    bookingRepository: BookingRepository
+): Promise<Booking[]> {
+    return bookingRepository.findAll();
+}
