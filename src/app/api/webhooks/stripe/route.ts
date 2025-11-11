@@ -57,6 +57,7 @@ export async function POST(req: NextRequest) {
                     amountDue: amountDue,
                     paymentType: metadata.paymentType as 'deposit' | 'full',
                     status: 'confirmed',
+                    ticketStatus: 'valid', // Set default ticket status
                 };
 
                 await db.collection('bookings').doc(bookingData.id).set(bookingData);

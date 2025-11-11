@@ -2,6 +2,7 @@
 
 export type BookingStatus = 'pending' | 'confirmed' | 'cancelled';
 export type PaymentType = 'deposit' | 'full';
+export type TicketStatus = 'valid' | 'redeemed' | 'expired';
 
 export interface Booking {
   id: string;
@@ -14,6 +15,7 @@ export interface Booking {
   amountDue: number;
   paymentType: PaymentType;
   status: BookingStatus;
+  ticketStatus: TicketStatus;
   language: string;
   hotelId: string;
   hotelName: string;

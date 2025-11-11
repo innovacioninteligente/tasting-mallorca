@@ -5,7 +5,7 @@
 import { Suspense } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { CheckCircle, Home, Map, DollarSign } from 'lucide-react';
+import { CheckCircle, Home, Map, DollarSign, QrCode } from 'lucide-react';
 import Link from 'next/link';
 import { RouteMap } from '@/components/route-map';
 import { notFound } from 'next/navigation';
@@ -16,6 +16,7 @@ import { Hotel } from '@/backend/hotels/domain/hotel.model';
 import { MeetingPoint } from '@/backend/meeting-points/domain/meeting-point.model';
 import { format } from 'date-fns';
 import { es, fr, de, nl } from 'date-fns/locale';
+import QRCode from "react-qr-code";
 
 interface SearchParams {
     payment_intent: string;
@@ -100,8 +101,8 @@ export default async function BookingSuccessPage({ searchParams, params }: { sea
     const tourTitle = tour?.title[params.lang] || tour?.title.en || 'Tour';
     const isDeposit = booking.paymentType === 'deposit';
 
-    const originCoords = hotel ? { lat: hotel.latitude, lng: hotel.longitude } : null;
-    const destinationCoords = meetingPoint ? { lat: meetingPoint.latitude, lng: meetingPoint.longitude } : null;
+    const originCoords = (hotel?.latitude && hotel?.longitude) ? { lat: hotel.latitude, lng: hotel.longitude } : null;
+    const destinationCoords = (meetingPoint?.latitude && meetingPoint?.longitude) ? { lat: meetingPoint.latitude, lng: meetingPoint.longitude } : null;
 
     return (
         <Suspense fallback={<div className="h-screen w-full flex items-center justify-center">Loading confirmation...</div>}>
@@ -120,6 +121,28 @@ export default async function BookingSuccessPage({ searchParams, params }: { sea
                                 Hemos enviado un correo de confirmación con todos los detalles de tu reserva. Por favor, revisa tu bandeja de entrada.
                             </p>
                             
+                             <Card>
+                                <CardHeader>
+                                    <CardTitle className="flex items-center gap-3">
+                                        <QrCode className="h-6 w-6"/>
+                                        Tu Ticket Digital
+                                    </CardTitle>
+                                </CardHeader>
+                                <CardContent className="flex flex-col md:flex-row items-center justify-center gap-6 p-6">
+                                    <div className="bg-white p-4 rounded-lg border">
+                                        <QRCode
+                                            size={256}
+                                            style={{ height: "auto", maxWidth: "100%", width: "160px" }}
+                                            value={booking.id}
+                                            viewBox={`0 0 256 256`}
+                                        />
+                                    </div>
+                                    <p className="text-muted-foreground text-center md:text-left max-w-xs">
+                                        Presenta este código QR a tu guía al subir al autobús. Este es tu ticket personal e intransferible.
+                                    </p>
+                                </CardContent>
+                            </Card>
+
                             <div className="border border-border bg-secondary/30 rounded-lg p-4 space-y-3">
                                 <h3 className="font-bold text-xl mb-2 text-foreground">Resumen de tu Aventura</h3>
                                 <div className="flex justify-between">

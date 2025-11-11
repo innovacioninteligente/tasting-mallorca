@@ -156,10 +156,18 @@
         "date": { "type": "string", "format": "date-time" },
         "participants": { "type": "number" },
         "totalPrice": { "type": "number" },
+        "amountPaid": { "type": "number" },
+        "amountDue": { "type": "number" },
+        "paymentType": { "type": "string", "enum": ["deposit", "full"] },
         "status": { "type": "string", "enum": ["pending", "confirmed", "cancelled"] },
-        "paymentId": { "type": "string" }
+        "ticketStatus": { "type": "string", "enum": ["valid", "redeemed", "expired"], "description": "The validation status of the ticket." },
+        "language": { "type": "string" },
+        "hotelId": { "type": "string" },
+        "hotelName": { "type": "string" },
+        "meetingPointId": { "type": "string" },
+        "meetingPointName": { "type": "string" }
       },
-      "required": ["tourId", "userId", "date", "participants", "totalPrice", "status"]
+      "required": ["tourId", "userId", "date", "participants", "totalPrice", "status", "ticketStatus"]
     },
     "Payment": {
         "title": "Payment",
