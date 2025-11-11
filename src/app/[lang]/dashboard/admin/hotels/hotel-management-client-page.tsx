@@ -4,12 +4,13 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
-import { PlusCircle } from "lucide-react";
+import { PlusCircle, Upload } from "lucide-react";
 import { Hotel } from "@/backend/hotels/domain/hotel.model";
 import { HotelList } from "./hotel-list";
 import { AssignMeetingPointsButton } from "./assign-meeting-points-button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetTrigger } from "@/components/ui/sheet";
 import { HotelForm } from "./hotel-form";
+import { CsvImporter } from "./csv-importer/csv-importer";
 
 interface HotelManagementClientPageProps {
     initialHotels: Hotel[];
@@ -18,6 +19,7 @@ interface HotelManagementClientPageProps {
 
 export function HotelManagementClientPage({ initialHotels, error }: HotelManagementClientPageProps) {
     const [isSheetOpen, setIsSheetOpen] = useState(false);
+    const [isImportSheetOpen, setIsImportSheetOpen] = useState(false);
     
     return (
         <>
@@ -30,6 +32,23 @@ export function HotelManagementClientPage({ initialHotels, error }: HotelManagem
                 </div>
                 <div className="flex items-center gap-2">
                     <AssignMeetingPointsButton />
+                     <Sheet open={isImportSheetOpen} onOpenChange={setIsImportSheetOpen}>
+                        <SheetTrigger asChild>
+                            <Button variant="outline">
+                                <Upload className="mr-2 h-4 w-4" />
+                                Importar desde CSV
+                            </Button>
+                        </SheetTrigger>
+                        <SheetContent className="sm:max-w-2xl">
+                            <SheetHeader>
+                                <SheetTitle>Importar Hoteles desde CSV</SheetTitle>
+                                <SheetDescription>
+                                    Sigue los pasos para subir tu archivo CSV y mapear las columnas a la base de datos.
+                                </SheetDescription>
+                            </SheetHeader>
+                            <CsvImporter setSheetOpen={setIsImportSheetOpen} />
+                        </SheetContent>
+                    </Sheet>
                     <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
                         <SheetTrigger asChild>
                             <Button>
