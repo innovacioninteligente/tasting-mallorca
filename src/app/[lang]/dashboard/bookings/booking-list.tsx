@@ -100,7 +100,7 @@ export function BookingList({ bookings, error, lang }: BookingListProps) {
                 </Badge>
             </TableCell>
             <TableCell>
-              <Button asChild variant="outline" size="sm">
+              <Button asChild variant="outline" size="sm" disabled>
                 <Link href={`${pathname}/${booking.id}`}>
                   <Eye className="mr-2 h-4 w-4" />
                   View

@@ -31,10 +31,13 @@ export const findBookings = createSafeAction(
       const detailedBookings = await Promise.all(
         bookings.map(async (booking) => {
           const tour = await findTourById(tourRepository, booking.tourId);
-          return {
+          // Ensure date is a serializable string
+          const serializedBooking = {
             ...booking,
+            date: (booking.date as any).toDate ? (booking.date as any).toDate().toISOString() : booking.date,
             tour, // Attach the full tour object
           };
+          return serializedBooking;
         })
       );
       
