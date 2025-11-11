@@ -1,13 +1,12 @@
-
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { AlertTriangle } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Result } from '@zxing/library';
-import { Scanner } from 'react-zxing';
+import { useZxing } from 'react-zxing';
 import { GuideRouteGuard } from '@/components/auth/guide-route-guard';
 
 export default function ValidateTicketPage() {
@@ -16,16 +15,26 @@ export default function ValidateTicketPage() {
     const lang = pathname.split('/')[1] || 'en';
     const [error, setError] = useState<string | null>(null);
 
-    const handleScanResult = (result: Result | null | undefined) => {
-        if (result) {
-            const bookingId = result.getText();
-            if (bookingId) {
-                const validationResultUrl = `/${lang}/dashboard/guide/validation-result?bookingId=${bookingId}`;
-                router.push(validationResultUrl);
-            }
+    const handleScanResult = (result: Result) => {
+        const bookingId = result.getText();
+        if (bookingId) {
+            const validationResultUrl = `/${lang}/dashboard/guide/validation-result?bookingId=${bookingId}`;
+            router.push(validationResultUrl);
         }
     };
     
+    const { ref } = useZxing({
+        onDecodeResult: handleScanResult,
+        onError: (e) => {
+            if (e?.name === 'NotAllowedError') {
+                setError('Camera access denied. Please enable camera permissions in your browser settings.');
+            } else if (e) {
+                console.error(e);
+                setError('Failed to start camera. Please ensure another app is not using it or try refreshing the page.');
+            }
+        },
+    });
+
     return (
         <GuideRouteGuard>
             <div className="container mx-auto p-4 md:p-8">
@@ -36,23 +45,7 @@ export default function ValidateTicketPage() {
 
                 <Card className="max-w-2xl mx-auto overflow-hidden">
                     <CardContent className="p-0 relative">
-                         <Scanner
-                            onResult={handleScanResult}
-                            onError={(e) => {
-                                if (e?.name === 'NotAllowedError') {
-                                    setError('Camera access denied. Please enable camera permissions in your browser settings.');
-                                } else if (e) {
-                                    setError('Failed to start camera. Please ensure another app is not using it.');
-                                }
-                            }}
-                            components={{
-                                tracker: true,
-                                audio: false,
-                            }}
-                            styles={{
-                                container: { width: '100%' }
-                            }}
-                        />
+                        <video ref={ref} className="w-full h-auto" />
                          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3/4 h-1/2 pointer-events-none">
                             <div className="absolute top-0 left-0 w-8 h-8 border-t-4 border-l-4 border-primary rounded-tl-lg" />
                             <div className="absolute top-0 right-0 w-8 h-8 border-t-4 border-r-4 border-primary rounded-tr-lg" />
