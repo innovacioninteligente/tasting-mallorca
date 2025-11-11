@@ -27,4 +27,8 @@ export class FirestoreBookingRepository implements BookingRepository {
   async updateStatus(id: string, status: BookingStatus): Promise<void> {
     await this.collection.doc(id).update({ status });
   }
+
+  async update(id: string, data: Partial<Booking>): Promise<void> {
+    await this.collection.doc(id).update(data);
+  }
 }

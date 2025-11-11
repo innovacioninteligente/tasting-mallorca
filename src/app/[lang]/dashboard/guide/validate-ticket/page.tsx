@@ -4,11 +4,11 @@
 import { useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Camera, AlertTriangle } from 'lucide-react';
+import { AlertTriangle } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
-import { AdminRouteGuard } from '@/components/auth/admin-route-guard';
-import { BarcodeScanner } from 'react-zxing';
 import { Result } from '@zxing/library';
+import { BarcodeScanner } from 'react-zxing';
+import { GuideRouteGuard } from '@/components/auth/guide-route-guard';
 
 export default function ValidateTicketPage() {
     const router = useRouter();
@@ -26,13 +26,6 @@ export default function ValidateTicketPage() {
         }
     };
     
-    // This component is a placeholder until we have a proper guard
-    const GuideRouteGuard = ({ children }: { children: React.ReactNode }) => (
-      <AdminRouteGuard>
-        {children}
-      </AdminRouteGuard>
-    )
-
     return (
         <GuideRouteGuard>
             <div className="container mx-auto p-4 md:p-8">
