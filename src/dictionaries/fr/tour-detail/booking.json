@@ -22,5 +22,10 @@
     "total": "Total",
     "paymentOption": "Option de paiement",
     "payFull": "Payer en totalité",
-    "payDeposit": "Payer un acompte"
+    "payDeposit": "Payer un acompte",
+    "availabilityInfo": "Informations de Disponibilité",
+    "operatesOn": "Opère le",
+    "from": "du",
+    "to": "au",
+    "and": "et"
 }

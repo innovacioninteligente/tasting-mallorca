@@ -22,5 +22,10 @@
     "total": "Gesamt",
     "paymentOption": "Zahlungsoption",
     "payFull": "Vollständig bezahlen",
-    "payDeposit": "Anzahlung leisten"
+    "payDeposit": "Anzahlung leisten",
+    "availabilityInfo": "Verfügbarkeitsinformationen",
+    "operatesOn": "Verfügbar am",
+    "from": "von",
+    "to": "bis",
+    "and": "und"
 }

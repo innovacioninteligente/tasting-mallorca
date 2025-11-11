@@ -22,5 +22,10 @@
     "total": "Total",
     "paymentOption": "Payment Option",
     "payFull": "Pay in full",
-    "payDeposit": "Pay deposit"
+    "payDeposit": "Pay deposit",
+    "availabilityInfo": "Availability Info",
+    "operatesOn": "Operates on",
+    "from": "from",
+    "to": "to",
+    "and": "and"
 }

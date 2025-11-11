@@ -22,5 +22,10 @@
     "total": "Total",
     "paymentOption": "Opción de Pago",
     "payFull": "Pagar completo",
-    "payDeposit": "Pagar depósito"
+    "payDeposit": "Pagar depósito",
+    "availabilityInfo": "Información de Disponibilidad",
+    "operatesOn": "Opera los",
+    "from": "del",
+    "to": "al",
+    "and": "y"
 }

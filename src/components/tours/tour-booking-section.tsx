@@ -4,25 +4,26 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { Input } from "@/components/ui/input";
-import { Calendar as CalendarIcon, Users, DollarSign, Minus, Plus, Languages, ArrowLeft, Hotel, CheckCircle, MapPin, Search, X, CreditCard, Banknote } from "lucide-react";
+import { Calendar as CalendarIcon, Users, DollarSign, Minus, Plus, Languages, ArrowLeft, Hotel, CheckCircle, MapPin, Search, X, CreditCard, Banknote, Info } from "lucide-react";
 import { useState } from "react";
 import { Calendar } from "@/components/ui/calendar";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { format } from "date-fns";
+import { format, isWithinInterval, parseISO } from "date-fns";
+import { fr, de, nl, enUS, es } from 'date-fns/locale';
 import { AnimatePresence, motion } from "framer-motion";
-import { fr, de, nl } from 'date-fns/locale';
 import { StripeProvider } from '@/components/stripe-provider';
 import CheckoutForm from '@/components/checkout-form';
 import { Hotel as HotelModel } from "@/backend/hotels/domain/hotel.model";
 import { MeetingPoint } from "@/backend/meeting-points/domain/meeting-point.model";
-import { useAuth, useFirestore, useUser } from "@/firebase";
+import { useUser, useFirestore } from "@/firebase";
 import { Tour } from "@/backend/tours/domain/tour.model";
 import { doc, setDoc } from "firebase/firestore";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 interface TourBookingSectionProps {
     dictionary: {
@@ -49,6 +50,11 @@ interface TourBookingSectionProps {
         paymentOption: string;
         payFull: string;
         payDeposit: string;
+        availabilityInfo: string;
+        operatesOn: string;
+        from: string;
+        to: string;
+        and: string;
     };
     tour: Tour;
     lang: string;
@@ -56,7 +62,17 @@ interface TourBookingSectionProps {
     meetingPoints: MeetingPoint[];
 }
 
-const locales: { [key: string]: Locale } = { fr, de, nl };
+const locales: { [key: string]: Locale } = { en: enUS, fr, de, nl, es };
+
+const dayNameToIndex: { [key: string]: number } = {
+    Sunday: 0,
+    Monday: 1,
+    Tuesday: 2,
+    Wednesday: 3,
+    Thursday: 4,
+    Friday: 5,
+    Saturday: 6
+};
 
 export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoints }: TourBookingSectionProps) {
     const { user } = useUser();
@@ -66,7 +82,7 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
     
     const [adults, setAdults] = useState(2);
     const [children, setChildren] = useState(0);
-    const [date, setDate] = useState<Date | undefined>(new Date());
+    const [date, setDate] = useState<Date | undefined>();
     const [language, setLanguage] = useState(lang);
     const [paymentOption, setPaymentOption] = useState<'full' | 'deposit'>('full');
     const [bookingId, setBookingId] = useState<string | null>(null);
@@ -124,7 +140,7 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
             setIsSearchingHotel(false);
         } else {
              if (step === 3) {
-                // Optionally delete the pending booking if the user goes back
+                // When going back from payment, reset bookingId to ensure Stripe element re-mounts
                 setBookingId(null);
             }
             setStep(step - 1);
@@ -138,7 +154,7 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
       )
     : hotels;
 
-    const locale = locales[lang] || undefined;
+    const locale = locales[lang] || enUS;
     const formattedDate = date ? format(date, "PPP", { locale }) : "Pick a date";
 
     const getReturnUrl = () => {
@@ -154,6 +170,34 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
         totalPrice: totalPrice.toString(),
         paymentType: paymentOption,
     };
+    
+    const isDateDisabled = (day: Date): boolean => {
+        if (!tour.availabilityPeriods || tour.availabilityPeriods.length === 0) {
+            return false; // No restrictions if not defined
+        }
+    
+        const dayOfWeek = day.getDay();
+    
+        for (const period of tour.availabilityPeriods) {
+            const start = parseISO(period.startDate);
+            const end = parseISO(period.endDate);
+    
+            if (isWithinInterval(day, { start, end })) {
+                const activeWeekDays = period.activeDays.map(d => dayNameToIndex[d]);
+                if (activeWeekDays.includes(dayOfWeek)) {
+                    return false; // Date is valid
+                }
+            }
+        }
+        return true; // Date is not in any valid period/day
+    };
+    
+     const availabilitySummary = tour.availabilityPeriods?.map((period, index) => {
+        const start = format(parseISO(period.startDate), 'dd MMM', { locale });
+        const end = format(parseISO(period.endDate), 'dd MMM', { locale });
+        const days = period.activeDays.join(', ');
+        return `${dictionary.operatesOn} ${days} ${dictionary.from} ${start} ${dictionary.to} ${end}`;
+    }).join(` ${dictionary.and} `);
 
 
     const Step1 = (
@@ -219,7 +263,7 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
                         <PopoverTrigger asChild>
                            <Button variant="outline" className="w-full justify-start text-left font-normal mt-1 text-base h-11">
                                 <CalendarIcon className="mr-2 h-4 w-4" />
-                                {formattedDate}
+                                {date ? formattedDate : "Pick a date"}
                             </Button>
                         </PopoverTrigger>
                         <PopoverContent className="w-auto p-0">
@@ -227,6 +271,7 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
                                 mode="single"
                                 selected={date}
                                 onSelect={setDate}
+                                disabled={isDateDisabled}
                                 initialFocus
                                 classNames={{
                                     day: "text-base h-11 w-11",
@@ -236,6 +281,15 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
                             />
                         </PopoverContent>
                     </Popover>
+                     {availabilitySummary && (
+                        <Alert variant="default" className="mt-2 text-sm bg-secondary/50">
+                            <Info className="h-4 w-4" />
+                            <AlertTitle className="font-semibold">{dictionary.availabilityInfo}</AlertTitle>
+                            <AlertDescription>
+                                {availabilitySummary}
+                            </AlertDescription>
+                        </Alert>
+                    )}
                 </div>
                 <div>
                      <label className="text-sm font-medium text-muted-foreground">{dictionary.language}</label>
@@ -255,7 +309,7 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
                     </Select>
                 </div>
             </div>
-            <Button size="lg" className="w-full font-bold text-lg py-7" onClick={() => setStep(step + 1)} disabled={!user}>
+            <Button size="lg" className="w-full font-bold text-lg py-7" onClick={() => setStep(step + 1)} disabled={!user || !date}>
                  {!user ? "Please sign in to book" : dictionary.checkAvailability}
             </Button>
         </motion.div>
@@ -322,7 +376,7 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
              <div className="border border-border bg-secondary/50 rounded-lg p-3 text-base">
                 <h4 className="font-bold mb-2">{dictionary.bookingSummary}</h4>
                 <div className="flex justify-between items-center text-muted-foreground">
-                    <span>{formattedDate}</span>
+                    <span>{date ? formattedDate : '...'}</span>
                     <span>{totalParticipants} {dictionary.participants.toLowerCase()}</span>
                 </div>
             </div>
@@ -361,7 +415,7 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
                                 <Label htmlFor="r1" className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary">
                                     <Banknote className="mb-3 h-6 w-6" />
                                     {dictionary.payFull}
-                                    <span className="font-bold text-lg mt-1">€{totalPrice}</span>
+                                    <span className="font-bold text-lg mt-1">€{totalPrice.toFixed(2)}</span>
                                 </Label>
                             </div>
                             <div>
@@ -369,7 +423,7 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
                                 <Label htmlFor="r2" className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary">
                                     <CreditCard className="mb-3 h-6 w-6" />
                                     {dictionary.payDeposit}
-                                    <span className="font-bold text-lg mt-1">€{depositPrice}</span>
+                                    <span className="font-bold text-lg mt-1">€{depositPrice.toFixed(2)}</span>
                                 </Label>
                             </div>
                         </RadioGroup>
@@ -399,24 +453,27 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
              <div className="border border-border bg-secondary/50 rounded-lg p-4 text-base">
                 <h4 className="font-bold mb-3">{dictionary.finalSummary}</h4>
                 <div className="space-y-2 text-muted-foreground">
-                    <div className="flex justify-between"><span>{dictionary.date}:</span> <span className="font-medium text-foreground">{formattedDate}</span></div>
+                    <div className="flex justify-between"><span>{dictionary.date}:</span> <span className="font-medium text-foreground">{date ? formattedDate : '...'}</span></div>
                     <div className="flex justify-between"><span>{dictionary.participants}:</span> <span className="font-medium text-foreground">{totalParticipants}</span></div>
                     <div className="flex justify-between"><span>{dictionary.pickupPoint}:</span> <span className="font-medium text-foreground truncate max-w-[150px]">{selectedHotel?.name}</span></div>
                     <div className="flex justify-between text-lg font-bold text-foreground pt-2 border-t mt-2">
                         <span>{paymentOption === 'deposit' ? dictionary.payDeposit : dictionary.total}:</span>
-                        <span>€{amountToPay}</span>
+                        <span>€{amountToPay.toFixed(2)}</span>
                     </div>
                 </div>
             </div>
 
-            <StripeProvider
-                amount={amountToPay}
-                name={user?.profile?.name || user?.displayName || 'Customer'}
-                email={user?.email || 'anonymous'}
-                metadata={paymentMetadata}
-            >
-                <CheckoutForm dictionary={dictionary} handlePrevStep={handlePrevStep} returnUrl={getReturnUrl()} />
-            </StripeProvider>
+            {bookingId && (
+                <StripeProvider
+                    key={bookingId} // Force re-mount when bookingId changes
+                    amount={amountToPay}
+                    name={user?.profile?.name || user?.displayName || 'Customer'}
+                    email={user?.email || 'anonymous'}
+                    metadata={paymentMetadata}
+                >
+                    <CheckoutForm dictionary={dictionary} handlePrevStep={handlePrevStep} returnUrl={getReturnUrl()} />
+                </StripeProvider>
+            )}
         </motion.div>
     );
 
@@ -447,7 +504,7 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
                 <div className="flex items-center justify-between gap-4">
                      <div>
                         <p className="text-sm text-muted-foreground">{dictionary.priceLabel}</p>
-                        <p className="text-2xl font-extrabold text-primary">€{tour.price}</p>
+                        <p className="text-2xl font-extrabold text-primary">€{tour.price.toFixed(2)}</p>
                     </div>
                     <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
                         <SheetTrigger asChild>
@@ -455,18 +512,19 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
                                 {dictionary.bookButton}
                             </Button>
                         </SheetTrigger>
-                        <SheetContent side="bottom" className="rounded-t-2xl max-h-[90vh] overflow-y-auto p-0">
+                        <SheetContent side="bottom" className="rounded-t-2xl max-h-[90vh] overflow-y-auto p-0 flex flex-col">
                            {isSearchingHotel ? (
                                 <div className="h-full"> {renderStep()} </div>
                            ) : (
                              <>
-                                <SheetHeader className="p-6 pb-4 text-left">
+                                <SheetHeader className="p-6 pb-4 text-left flex-shrink-0">
                                     <SheetTitle className="text-2xl font-bold">{
                                         step === 1 ? dictionary.title :
                                         step === 2 ? dictionary.bookingSummary : dictionary.finalSummary
                                     }</SheetTitle>
+                                    <SheetDescription />
                                 </SheetHeader>
-                                <div className="p-6 pt-0">
+                                <div className="p-6 pt-0 overflow-y-auto flex-grow">
                                     <AnimatePresence mode="wait">
                                         {renderStep()}
                                     </AnimatePresence>
@@ -480,5 +538,3 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
         </>
     );
 }
-
-    

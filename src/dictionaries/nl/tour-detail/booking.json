@@ -22,5 +22,10 @@
     "total": "Totaal",
     "paymentOption": "Betalingsoptie",
     "payFull": "Volledig betalen",
-    "payDeposit": "Aanbetaling doen"
+    "payDeposit": "Aanbetaling doen",
+    "availabilityInfo": "Beschikbaarheidsinfo",
+    "operatesOn": "Werkt op",
+    "from": "van",
+    "to": "tot",
+    "and": "en"
 }
