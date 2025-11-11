@@ -77,6 +77,10 @@ export const importHotelsFromCsv = createSafeAction(
             const translatedRegion = regionTranslationMap[normalizedRegionKey];
             if (translatedRegion) {
                 hotelData.region = translatedRegion;
+            } else {
+                // If region is present but not in our map, skip this row
+                console.warn(`Skipping row due to unmappable region: '${hotelData.region}'`, row);
+                continue;
             }
         }
         
@@ -98,7 +102,7 @@ export const importHotelsFromCsv = createSafeAction(
         const newHotel: Hotel = {
             id: crypto.randomUUID(),
             name: validatedData.name,
-            address: validatedData.address,
+            address: validatedData.address ?? null, // Convert undefined to null
             region: validatedData.region,
             subRegion: validatedData.subRegion,
             latitude: validatedData.latitude,
