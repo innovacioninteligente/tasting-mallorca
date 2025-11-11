@@ -15,6 +15,16 @@ const importSchema = z.object({
 
 type CsvRow = { [key: string]: string };
 
+const hotelSchemaForValidation = z.object({
+  name: z.string().min(1),
+  region: z.enum(["North", "East", "South", "West", "Central"]),
+  subRegion: z.string().min(1),
+  latitude: z.number(),
+  longitude: z.number(),
+  address: z.string().optional(),
+});
+
+
 export const importHotelsFromCsv = createSafeAction(
   {
     allowedRoles: ['admin'],
@@ -46,30 +56,40 @@ export const importHotelsFromCsv = createSafeAction(
         for (const csvHeader in columnMapping) {
             const dbField = columnMapping[csvHeader];
             if (dbField !== 'ignore' && row[csvHeader]) {
-                (hotelData as any)[dbField] = row[csvHeader];
+                if (dbField === 'region') {
+                    // Normalize the region value: trim whitespace and capitalize first letter
+                    const rawRegion = row[csvHeader].trim();
+                    hotelData.region = (rawRegion.charAt(0).toUpperCase() + rawRegion.slice(1).toLowerCase()) as HotelRegion;
+                } else {
+                     (hotelData as any)[dbField] = row[csvHeader];
+                }
             }
         }
         
-        // Basic validation and type coercion
-        if (!hotelData.name || !hotelData.region || !hotelData.subRegion || !hotelData.latitude || !hotelData.longitude) {
-            console.warn('Skipping row due to missing required fields:', row);
-            continue;
-        }
-
-        const newHotel: Hotel = {
-            id: crypto.randomUUID(),
-            name: hotelData.name,
-            address: hotelData.address,
-            region: hotelData.region as HotelRegion,
-            subRegion: hotelData.subRegion,
+        const validationInput = {
+            ...hotelData,
             latitude: parseFloat(hotelData.latitude as any),
             longitude: parseFloat(hotelData.longitude as any),
         };
 
-        if (isNaN(newHotel.latitude) || isNaN(newHotel.longitude)) {
-             console.warn('Skipping row due to invalid coordinates:', row);
+        const validation = hotelSchemaForValidation.safeParse(validationInput);
+
+        if (!validation.success) {
+            console.warn('Skipping row due to validation errors:', row, validation.error.format());
             continue;
         }
+
+        const validatedData = validation.data;
+        
+        const newHotel: Hotel = {
+            id: crypto.randomUUID(),
+            name: validatedData.name,
+            address: validatedData.address,
+            region: validatedData.region,
+            subRegion: validatedData.subRegion,
+            latitude: validatedData.latitude,
+            longitude: validatedData.longitude,
+        };
         
         await createHotelUseCase(hotelRepository, newHotel);
         importedCount++;
@@ -82,5 +102,3 @@ export const importHotelsFromCsv = createSafeAction(
     }
   }
 );
-
-    
