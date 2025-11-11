@@ -106,7 +106,7 @@ export const importMeetingPointsFromCsv = createSafeAction(
       }
 
       return { data: { importedCount } };
-    } catch (error: any) => {
+    } catch (error: any) {
       console.error("Error importing meeting points:", error);
       return { error: error.message || 'Failed to import meeting points from CSV.' };
     }
