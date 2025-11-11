@@ -15,6 +15,7 @@ import {
   X,
   Hotel,
   MapPin,
+  QrCode,
 } from 'lucide-react';
 import { useAuth, useUser } from '@/firebase';
 import { cn } from '@/lib/utils';
@@ -33,6 +34,10 @@ const adminNavItems = [
     { href: '/dashboard/admin/hotels', label: 'Manage Hotels', icon: Hotel, role: 'admin' },
     { href: '/dashboard/admin/meeting-points', label: 'Manage Meeting Points', icon: MapPin, role: 'admin' },
 ];
+
+const guideNavItems = [
+    { href: '/dashboard/guide/validate-ticket', label: 'Validate Ticket', icon: QrCode, roles: ['guide', 'admin'] }
+]
 
 const bottomNavItems = [
     { href: '/dashboard/settings', label: 'Settings', icon: Settings },
@@ -97,6 +102,26 @@ export function DashboardSidebar({ isMobileMenuOpen, setIsMobileMenuOpen }: Dash
                   </Button>
                   </Link>
               );
+          })}
+          
+          {guideNavItems.map((item) => {
+              const href = `/${lang}${item.href}`;
+              const Icon = item.icon;
+              if (userRole && item.roles.includes(userRole)) {
+                return (
+                    <Link key={item.href} href={href}>
+                    <Button
+                        variant={pathname.startsWith(href) ? 'secondary' : 'ghost'}
+                        className="w-full justify-start text-base"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                        <Icon className="mr-3 h-5 w-5" />
+                        {item.label}
+                    </Button>
+                    </Link>
+                );
+              }
+              return null;
           })}
         </nav>
       </div>
