@@ -186,6 +186,35 @@
             "details": { "type": "object" }
         },
         "required": ["bookingId", "userId", "issueDate"]
+    },
+    "Hotel": {
+        "title": "Hotel",
+        "description": "Represents a hotel with its location and pickup details.",
+        "type": "object",
+        "properties": {
+            "name": { "type": "string" },
+            "address": { "type": "string" },
+            "region": { "type": "string", "enum": ["North", "East", "South", "West", "Central"] },
+            "subRegion": { "type": "string" },
+            "latitude": { "type": "number" },
+            "longitude": { "type": "number" },
+            "assignedMeetingPointId": { "type": "string", "description": "The ID of the MeetingPoint assigned to this hotel." }
+        },
+        "required": ["name", "address", "region", "latitude", "longitude"]
+    },
+    "MeetingPoint": {
+        "title": "Meeting Point",
+        "description": "A specific location where tour participants are picked up.",
+        "type": "object",
+        "properties": {
+            "name": { "type": "string" },
+            "address": { "type": "string" },
+            "region": { "type": "string", "enum": ["North", "East", "South", "West", "Central"] },
+            "googleMapsUrl": { "type": "string", "format": "uri" },
+            "latitude": { "type": "number" },
+            "longitude": { "type": "number" }
+        },
+        "required": ["name", "region", "latitude", "longitude"]
     }
   },
   "auth": {
@@ -211,6 +240,16 @@
      "/invoices/{invoiceId}": {
       "schema": { "$ref": "#/entities/Invoice" },
       "description": "Stores all invoices."
+    },
+    "/hotels/{hotelId}": {
+        "schema": { "$ref": "#/entities/Hotel" },
+        "description": "Stores all registered hotels."
+    },
+    "/meetingPoints/{meetingPointId}": {
+        "schema": { "$ref": "#/entities/MeetingPoint" },
+        "description": "Stores all available tour meeting points."
     }
   }
 }
+
+    
