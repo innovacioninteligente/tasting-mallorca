@@ -1,7 +1,8 @@
+
 'use server';
 
 import { createSafeAction } from '@/app/server-actions/lib/safe-action';
-import { findBookingsByUserId, findAllBookings } from '@/backend/bookings/application/findBookings';
+import { findBookingsByUserId, findAllBookings } from '@/backend/bookings/application/findBooking';
 import { FirestoreBookingRepository } from '@/backend/bookings/infrastructure/firestore-booking.repository';
 import { Booking } from '@/backend/bookings/domain/booking.model';
 import { FirestoreTourRepository } from '@/backend/tours/infrastructure/firestore-tour.repository';
