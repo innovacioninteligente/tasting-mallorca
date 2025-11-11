@@ -359,7 +359,7 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
                     </Select>
                 </div>
             </div>
-            <Button size="lg" className="w-full font-bold text-lg py-7 bg-primary text-primary-foreground hover:bg-primary/90" onClick={() => setStep(step + 1)} disabled={!date}>
+             <Button size="lg" className="w-full font-bold text-lg py-7 bg-accent text-primary-foreground hover:bg-accent/90" onClick={() => setStep(step + 1)} disabled={!date}>
                  {dictionary.checkAvailability}
             </Button>
         </motion.div>
@@ -494,7 +494,7 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
                 )}
             </div>
             <div className="space-y-3">
-                 <Button size="lg" className="w-full font-bold text-lg py-7 bg-primary text-primary-foreground hover:bg-primary/90" onClick={handleContinueToPayment} disabled={!selectedHotel || !suggestedMeetingPoint || !customerName || !customerEmail || !customerPhone}>
+                 <Button size="lg" className="w-full font-bold text-lg py-7 bg-accent text-primary-foreground hover:bg-accent/90" onClick={handleContinueToPayment} disabled={!selectedHotel || !suggestedMeetingPoint || !customerName || !customerEmail || !customerPhone}>
                     {dictionary.continueToPayment}
                 </Button>
                  <Button variant="ghost" size="lg" className="w-full" onClick={handlePrevStep}>
@@ -571,7 +571,7 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
                     </div>
                     <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
                         <SheetTrigger asChild>
-                            <Button size="lg" className="font-bold text-lg flex-grow bg-primary text-primary-foreground hover:bg-primary/90">
+                            <Button size="lg" className="font-bold text-lg flex-grow bg-accent text-primary-foreground hover:bg-accent/90">
                                 {dictionary.bookButton}
                             </Button>
                         </SheetTrigger>
