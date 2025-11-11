@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -16,14 +17,15 @@ interface StripeProviderProps {
   amount: number;
   name: string;
   email: string;
+  metadata: { [key: string]: string };
 }
 
-export function StripeProvider({ children, amount, name, email }: StripeProviderProps) {
+export function StripeProvider({ children, amount, name, email, metadata }: StripeProviderProps) {
   const [clientSecret, setClientSecret] = useState('');
 
   useEffect(() => {
     if (amount > 0) {
-      createPaymentIntent(amount, name, email).then((data) => {
+      createPaymentIntent(amount, name, email, metadata).then((data) => {
         if (data.clientSecret) {
           setClientSecret(data.clientSecret);
         } else {
@@ -32,7 +34,7 @@ export function StripeProvider({ children, amount, name, email }: StripeProvider
         }
       });
     }
-  }, [amount, name, email]);
+  }, [amount, name, email, metadata]);
 
   const options: StripeElementsOptions = {
     clientSecret,

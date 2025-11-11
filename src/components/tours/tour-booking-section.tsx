@@ -17,6 +17,7 @@ import { StripeProvider } from '@/components/stripe-provider';
 import CheckoutForm from '@/components/checkout-form';
 import { Hotel as HotelModel } from "@/backend/hotels/domain/hotel.model";
 import { MeetingPoint } from "@/backend/meeting-points/domain/meeting-point.model";
+import { useUser } from "@/firebase";
 
 interface TourBookingSectionProps {
     dictionary: {
@@ -43,6 +44,7 @@ interface TourBookingSectionProps {
     };
     price: number;
     lang: string;
+    tourId: string;
     tourTitle: string;
     hotels: HotelModel[];
     meetingPoints: MeetingPoint[];
@@ -50,7 +52,8 @@ interface TourBookingSectionProps {
 
 const locales: { [key: string]: Locale } = { fr, de, nl };
 
-export function TourBookingSection({ dictionary, price, lang, tourTitle, hotels, meetingPoints }: TourBookingSectionProps) {
+export function TourBookingSection({ dictionary, price, lang, tourId, tourTitle, hotels, meetingPoints }: TourBookingSectionProps) {
+    const { user } = useUser();
     const [isSheetOpen, setIsSheetOpen] = useState(false);
     const [step, setStep] = useState(1);
     
@@ -62,8 +65,6 @@ export function TourBookingSection({ dictionary, price, lang, tourTitle, hotels,
     const [isSearchingHotel, setIsSearchingHotel] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
     const [selectedHotel, setSelectedHotel] = useState<HotelModel | null>(null);
-    const [name, setName] = useState("");
-    const [email, setEmail] = useState("");
 
     const totalParticipants = adults + children;
     const totalPrice = price * totalParticipants;
@@ -94,16 +95,21 @@ export function TourBookingSection({ dictionary, price, lang, tourTitle, hotels,
     const getReturnUrl = () => {
         if (typeof window === 'undefined') return '';
         const baseUrl = `${window.location.origin}/${lang}/booking-success`;
-        const params = new URLSearchParams({
-            tourTitle: tourTitle,
-            date: formattedDate,
-            participants: totalParticipants.toString(),
-            totalPrice: totalPrice.toString(),
-            pickupPoint: selectedHotel?.address || '',
-            name: name,
-        });
-        return `${baseUrl}?${params.toString()}`;
+        return baseUrl;
     }
+
+    const paymentMetadata = {
+        tourId: tourId,
+        userId: user?.uid || 'anonymous',
+        bookingDate: date?.toISOString() || '',
+        participants: totalParticipants.toString(),
+        totalPrice: totalPrice.toString(),
+        language: language,
+        hotelId: selectedHotel?.id || '',
+        hotelName: selectedHotel?.name || '',
+        meetingPointId: suggestedMeetingPoint?.id || '',
+        meetingPointName: suggestedMeetingPoint?.name || '',
+    };
 
 
     const Step1 = (
@@ -205,8 +211,8 @@ export function TourBookingSection({ dictionary, price, lang, tourTitle, hotels,
                     </Select>
                 </div>
             </div>
-            <Button size="lg" className="w-full font-bold text-lg py-7" onClick={handleNextStep}>
-                {dictionary.checkAvailability}
+            <Button size="lg" className="w-full font-bold text-lg py-7" onClick={handleNextStep} disabled={!user}>
+                 {!user ? "Please sign in to book" : dictionary.checkAvailability}
             </Button>
         </motion.div>
     );
@@ -302,17 +308,9 @@ export function TourBookingSection({ dictionary, price, lang, tourTitle, hotels,
                         </div>
                     )}
                 </div>
-                <div>
-                    <label htmlFor="name" className="text-base font-medium text-muted-foreground">{dictionary.yourName}</label>
-                    <Input id="name" placeholder="John Doe" value={name} onChange={(e) => setName(e.target.value)} className="mt-1 text-base h-11" />
-                </div>
-                 <div>
-                    <label htmlFor="email" className="text-base font-medium text-muted-foreground">{dictionary.yourEmail}</label>
-                    <Input id="email" type="email" placeholder="john.doe@example.com" value={email} onChange={(e) => setEmail(e.target.value)} className="mt-1 text-base h-11" />
-                </div>
             </div>
             <div className="space-y-3">
-                 <Button size="lg" className="w-full font-bold text-lg py-7" onClick={handleNextStep}>
+                 <Button size="lg" className="w-full font-bold text-lg py-7" onClick={handleNextStep} disabled={!selectedHotel || !suggestedMeetingPoint}>
                     {dictionary.continueToPayment}
                 </Button>
                  <Button variant="ghost" size="lg" className="w-full" onClick={handlePrevStep}>
@@ -341,7 +339,12 @@ export function TourBookingSection({ dictionary, price, lang, tourTitle, hotels,
                 </div>
             </div>
 
-            <StripeProvider amount={totalPrice} name={name} email={email}>
+            <StripeProvider
+                amount={totalPrice}
+                name={user?.profile?.name || user?.displayName || 'Customer'}
+                email={user?.email || 'anonymous'}
+                metadata={paymentMetadata}
+            >
                 <CheckoutForm dictionary={dictionary} handlePrevStep={handlePrevStep} returnUrl={getReturnUrl()} />
             </StripeProvider>
         </motion.div>

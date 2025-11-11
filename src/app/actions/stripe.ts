@@ -1,3 +1,4 @@
+
 'use server';
 
 import Stripe from 'stripe';
@@ -9,15 +10,20 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
 export async function createPaymentIntent(
   amount: number,
   name: string,
-  email: string
+  email: string,
+  metadata: { [key: string]: string }
 ) {
   try {
-    // Optionally, you can create a customer in Stripe
-    // to associate the payment with a user.
-    const customer = await stripe.customers.create({
-      name: name,
-      email: email,
-    });
+    let customer;
+    const customers = await stripe.customers.list({ email: email, limit: 1 });
+    if (customers.data.length > 0) {
+        customer = customers.data[0];
+    } else {
+        customer = await stripe.customers.create({
+            name: name,
+            email: email,
+        });
+    }
 
     const paymentIntent = await stripe.paymentIntents.create({
       amount: Math.round(amount * 100), // Amount in cents
@@ -26,10 +32,7 @@ export async function createPaymentIntent(
       automatic_payment_methods: {
         enabled: true,
       },
-      metadata: {
-        // You can add any other relevant information here
-        // e.g., tour_id, date, etc.
-      }
+      metadata: metadata,
     });
 
     return {
