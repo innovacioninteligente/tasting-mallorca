@@ -11,12 +11,15 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
 import { createHotel } from "@/app/server-actions/hotels/createHotel";
-import { useState } from "react";
+import { updateHotel } from "@/app/server-actions/hotels/updateHotel";
+import { useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
+import { Hotel } from "@/backend/hotels/domain/hotel.model";
 
 const formSchema = z.object({
+  id: z.string().optional(),
   name: z.string().min(1, 'El nombre es requerido'),
-  address: z.string().optional(),
+  address: z.string().nullable().optional(),
   region: z.enum(["North", "East", "South", "West", "Central"], {
       required_error: "La región es requerida"
   }),
@@ -29,43 +32,65 @@ type HotelFormValues = z.infer<typeof formSchema>;
 
 interface HotelFormProps {
     setSheetOpen: (open: boolean) => void;
-    // initialData?: Hotel; // To be used for editing
+    initialData?: Hotel | null;
 }
 
-export function HotelForm({ setSheetOpen }: HotelFormProps) {
+export function HotelForm({ setSheetOpen, initialData }: HotelFormProps) {
     const { toast } = useToast();
     const router = useRouter();
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const form = useForm<HotelFormValues>({
         resolver: zodResolver(formSchema),
-        defaultValues: {
-            name: '',
-            address: '',
-            region: 'South',
-            subRegion: '',
-            latitude: 0,
-            longitude: 0,
-        },
     });
+
+    useEffect(() => {
+        if (initialData) {
+            form.reset({
+                ...initialData,
+                latitude: initialData.latitude,
+                longitude: initialData.longitude,
+            });
+        } else {
+            form.reset({
+                id: undefined,
+                name: '',
+                address: '',
+                region: 'South',
+                subRegion: '',
+                latitude: 0,
+                longitude: 0,
+            });
+        }
+    }, [initialData, form]);
 
     const onSubmit = async (data: HotelFormValues) => {
         setIsSubmitting(true);
         try {
-            const result = await createHotel(data);
-            if (result.error) {
-                throw new Error(result.error);
+            let result;
+            if (initialData && initialData.id) { // Editing existing hotel
+                result = await updateHotel({ ...data, id: initialData.id });
+                 if (result.error) throw new Error(result.error);
+                toast({
+                    title: "Hotel Actualizado",
+                    description: "El hotel ha sido actualizado correctamente.",
+                });
+            } else { // Creating new hotel
+                const { id, ...createData } = data;
+                result = await createHotel(createData as any);
+                if (result.error) throw new Error(result.error);
+                toast({
+                    title: "Hotel Creado",
+                    description: "El nuevo hotel ha sido añadido correctamente.",
+                });
             }
-            toast({
-                title: "Hotel Creado",
-                description: "El nuevo hotel ha sido añadido correctamente.",
-            });
+           
             router.refresh();
             setSheetOpen(false);
         } catch (error: any) {
             toast({
                 variant: 'destructive',
-                title: 'Error creando el hotel',
+                title: initialData ? 'Error actualizando el hotel' : 'Error creando el hotel',
                 description: error.message,
             });
         } finally {
@@ -95,9 +120,9 @@ export function HotelForm({ setSheetOpen }: HotelFormProps) {
                     name="address"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Dirección</FormLabel>
+                            <FormLabel>Dirección (Opcional)</FormLabel>
                             <FormControl>
-                                <Input placeholder="e.g., Carrer de Felicià Fuster, 4" {...field} />
+                                <Input placeholder="e.g., Carrer de Felicià Fuster, 4" {...field} value={field.value || ''} />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -111,7 +136,7 @@ export function HotelForm({ setSheetOpen }: HotelFormProps) {
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel>Región</FormLabel>
-                                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                <Select onValueChange={field.onChange} value={field.value}>
                                     <FormControl>
                                         <SelectTrigger><SelectValue placeholder="Selecciona una región" /></SelectTrigger>
                                     </FormControl>
@@ -172,12 +197,10 @@ export function HotelForm({ setSheetOpen }: HotelFormProps) {
                 <div className="pt-4 flex justify-end">
                     <Button type="submit" disabled={isSubmitting}>
                          {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                        Guardar Hotel
+                        {initialData ? 'Guardar Cambios' : 'Guardar Hotel'}
                     </Button>
                 </div>
             </form>
         </Form>
     )
 }
-
-    

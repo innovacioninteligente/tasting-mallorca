@@ -20,6 +20,17 @@ interface HotelManagementClientPageProps {
 export function HotelManagementClientPage({ initialHotels, error }: HotelManagementClientPageProps) {
     const [isSheetOpen, setIsSheetOpen] = useState(false);
     const [isImportSheetOpen, setIsImportSheetOpen] = useState(false);
+    const [editingHotel, setEditingHotel] = useState<Hotel | null>(null);
+
+    const handleCreate = () => {
+        setEditingHotel(null);
+        setIsSheetOpen(true);
+    }
+
+    const handleEdit = (hotel: Hotel) => {
+        setEditingHotel(hotel);
+        setIsSheetOpen(true);
+    }
     
     return (
         <>
@@ -49,36 +60,41 @@ export function HotelManagementClientPage({ initialHotels, error }: HotelManagem
                             <CsvImporter setSheetOpen={setIsImportSheetOpen} />
                         </SheetContent>
                     </Sheet>
-                    <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
-                        <SheetTrigger asChild>
-                            <Button>
-                                <PlusCircle className="mr-2 h-4 w-4" />
-                                Crear Nuevo Hotel
-                            </Button>
-                        </SheetTrigger>
-                        <SheetContent className="sm:max-w-xl">
-                            <SheetHeader>
-                                <SheetTitle>Crear Nuevo Hotel</SheetTitle>
-                                <SheetDescription>
-                                    Rellena los detalles del nuevo hotel. Haz clic en guardar cuando hayas terminado.
-                                </SheetDescription>
-                            </SheetHeader>
-                            <HotelForm setSheetOpen={setIsSheetOpen} />
-                        </SheetContent>
-                    </Sheet>
+                    <Button onClick={handleCreate}>
+                        <PlusCircle className="mr-2 h-4 w-4" />
+                        Crear Nuevo Hotel
+                    </Button>
                 </div>
             </div>
             <Card>
                 <CardHeader>
-                    <CardTitle>Hoteles Existentes</CardTitle>
+                    <CardTitle>Hoteles Existentes ({initialHotels.length})</CardTitle>
                      <CardDescription>
                         Aquí puedes ver y gestionar todos los hoteles existentes.
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <HotelList hotels={initialHotels} error={error} />
+                    <HotelList hotels={initialHotels} error={error} onEdit={handleEdit} />
                 </CardContent>
             </Card>
+
+            <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
+                <SheetContent className="sm:max-w-xl">
+                    <SheetHeader>
+                        <SheetTitle>{editingHotel ? 'Editar Hotel' : 'Crear Nuevo Hotel'}</SheetTitle>
+                        <SheetDescription>
+                           {editingHotel 
+                                ? "Modifica los detalles del hotel. Haz clic en guardar cuando hayas terminado."
+                                : "Rellena los detalles del nuevo hotel. Haz clic en guardar cuando hayas terminado."
+                           }
+                        </SheetDescription>
+                    </SheetHeader>
+                    <HotelForm 
+                        setSheetOpen={setIsSheetOpen} 
+                        initialData={editingHotel}
+                    />
+                </SheetContent>
+            </Sheet>
         </>
     );
 }

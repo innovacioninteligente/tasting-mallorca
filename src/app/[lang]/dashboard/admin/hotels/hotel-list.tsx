@@ -5,8 +5,6 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Hotel } from "@/backend/hotels/domain/hotel.model";
 import { Button } from "@/components/ui/button";
 import { Edit, Trash2 } from "lucide-react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -25,10 +23,10 @@ import { useRouter } from "next/navigation";
 interface HotelListProps {
     hotels?: Hotel[];
     error?: string;
+    onEdit: (hotel: Hotel) => void;
 }
 
-export function HotelList({ hotels, error }: HotelListProps) {
-    const pathname = usePathname();
+export function HotelList({ hotels, error, onEdit }: HotelListProps) {
     const router = useRouter();
     const { toast } = useToast();
     
@@ -79,11 +77,9 @@ export function HotelList({ hotels, error }: HotelListProps) {
                         <TableCell>{hotel.subRegion}</TableCell>
                         <TableCell>
                             <div className="flex gap-2">
-                                <Button asChild variant="outline" size="sm">
-                                    <Link href={`${pathname}/${hotel.id}/edit`}>
-                                        <Edit className="mr-2 h-4 w-4" />
-                                        Editar
-                                    </Link>
+                                <Button variant="outline" size="sm" onClick={() => onEdit(hotel)}>
+                                    <Edit className="mr-2 h-4 w-4" />
+                                    Editar
                                 </Button>
                                 <AlertDialog>
                                     <AlertDialogTrigger asChild>
