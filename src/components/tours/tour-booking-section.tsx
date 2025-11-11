@@ -115,15 +115,6 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
     const [isSearchingHotel, setIsSearchingHotel] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
 
-    // Pre-fill user data if logged in
-    useEffect(() => {
-        if (user) {
-            setCustomerName(user.displayName || user.profile?.name || '');
-            setCustomerEmail(user.email || '');
-        }
-    }, [user]);
-
-
     // Effect to save state to localStorage
     useEffect(() => {
         try {
@@ -149,7 +140,7 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
         : null;
 
     const handleContinueToPayment = async () => {
-        if (!firestore || !date || !selectedHotel || !suggestedMeetingPoint || !customerName || !customerEmail) return;
+        if (!firestore || !date || !selectedHotel || !suggestedMeetingPoint || !customerName || !customerEmail || !customerPhone) return;
         
         const newBookingId = crypto.randomUUID();
         setBookingId(newBookingId);
@@ -368,8 +359,8 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
                     </Select>
                 </div>
             </div>
-            <Button size="lg" className="w-full font-bold text-lg py-7" onClick={() => setStep(step + 1)} disabled={!user || !date}>
-                 {!user ? "Please sign in to book" : dictionary.checkAvailability}
+            <Button size="lg" className="w-full font-bold text-lg py-7" onClick={() => setStep(step + 1)} disabled={!date}>
+                 {dictionary.checkAvailability}
             </Button>
         </motion.div>
     );
@@ -503,7 +494,7 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
                 )}
             </div>
             <div className="space-y-3">
-                 <Button size="lg" className="w-full font-bold text-lg py-7" onClick={handleContinueToPayment} disabled={!selectedHotel || !suggestedMeetingPoint || !customerName || !customerEmail}>
+                 <Button size="lg" className="w-full font-bold text-lg py-7" onClick={handleContinueToPayment} disabled={!selectedHotel || !suggestedMeetingPoint || !customerName || !customerEmail || !customerPhone}>
                     {dictionary.continueToPayment}
                 </Button>
                  <Button variant="ghost" size="lg" className="w-full" onClick={handlePrevStep}>
