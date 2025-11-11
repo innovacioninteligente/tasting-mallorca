@@ -143,7 +143,7 @@ export function ValidationResultClient({ dictionary, lang }: { dictionary: Dicti
                         </div>
                         <div className="flex items-center justify-between">
                             <span className="text-muted-foreground flex items-center gap-2"><Calendar className="h-4 w-4"/>{dictionary.dateLabel}</span>
-                            <span className="font-medium">{format(new Date(bookingDetails.date.seconds * 1000), "PPP")}</span>
+                            <span className="font-medium">{format(new Date(bookingDetails.date), "PPP")}</span>
                         </div>
                         <div className="flex items-center justify-between">
                             <span className="text-muted-foreground flex items-center gap-2"><Users className="h-4 w-4"/>{dictionary.participantsLabel}</span>
@@ -172,4 +172,3 @@ export function ValidationResultClient({ dictionary, lang }: { dictionary: Dicti
         </div>
     );
 }
-

@@ -29,7 +29,12 @@ export const findBookingById = createSafeAction(
         return { error: 'Booking not found.' };
       }
       
-      let bookingDetails: BookingDetails = JSON.parse(JSON.stringify(booking));
+      let bookingDetails: any = { ...booking };
+
+      // Convert Firestore Timestamp to ISO string for client-side compatibility
+      if (bookingDetails.date && typeof bookingDetails.date.toDate === 'function') {
+        bookingDetails.date = bookingDetails.date.toDate().toISOString();
+      }
 
       const tour = await findTourById(tourRepository, booking.tourId);
       if (tour) {
