@@ -1,3 +1,4 @@
+
 'use client';
 
 import { Button } from "@/components/ui/button";
@@ -14,6 +15,8 @@ import { AnimatePresence, motion } from "framer-motion";
 import { fr, de, nl } from 'date-fns/locale';
 import { StripeProvider } from '@/components/stripe-provider';
 import CheckoutForm from '@/components/checkout-form';
+import { Hotel as HotelModel } from "@/backend/hotels/domain/hotel.model";
+import { MeetingPoint } from "@/backend/meeting-points/domain/meeting-point.model";
 
 interface TourBookingSectionProps {
     dictionary: {
@@ -41,22 +44,13 @@ interface TourBookingSectionProps {
     price: number;
     lang: string;
     tourTitle: string;
+    hotels: HotelModel[];
+    meetingPoints: MeetingPoint[];
 }
-
-const mockHotels = [
-  "Can Bordoy Grand House & Garden, Carrer del Forn de la Glòria, 14, Centre, 07012 Palma, Illes Balears, España",
-  "MHOUSE Hotel Palma, Carrer de Can Maçanet, 1A, Centre, 07003 Palma, Illes Balears, España",
-  "Castillo Hotel Son Vida, a Luxury Collection Hotel, Mallorca, Carrer Raixa, 2, Urbanizacion, Poniente, 07013 Son Vida, Illes Balears, España",
-  "Hotel Son Bunyola Villas, Ctra. C, 710, 07191 Banyalbufar, Illes Balears, España",
-  "El Llorenç Parc de la Mar (+16), Plaça de Llorenç Villalonga, 4, Centre, 07001 Palma, Illes Balears, España",
-  "Meliá Palma Bay, Carrer de Felicià Fuster, 4, Llevant, 07006 Palma, Illes Balears, España",
-  "Nakar Hotel, Av. de Jaume III, 21, Centre, 07012 Palma, Illes Balears, España",
-  "Concepció by Nobis, C/ de la Concepció, 34, Centre, 07012 Palma, Illes Balears, España"
-];
 
 const locales: { [key: string]: Locale } = { fr, de, nl };
 
-export function TourBookingSection({ dictionary, price, lang, tourTitle }: TourBookingSectionProps) {
+export function TourBookingSection({ dictionary, price, lang, tourTitle, hotels, meetingPoints }: TourBookingSectionProps) {
     const [isSheetOpen, setIsSheetOpen] = useState(false);
     const [step, setStep] = useState(1);
     
@@ -67,12 +61,16 @@ export function TourBookingSection({ dictionary, price, lang, tourTitle }: TourB
     
     const [isSearchingHotel, setIsSearchingHotel] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
-    const [selectedHotel, setSelectedHotel] = useState("");
+    const [selectedHotel, setSelectedHotel] = useState<HotelModel | null>(null);
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
 
     const totalParticipants = adults + children;
     const totalPrice = price * totalParticipants;
+
+    const suggestedMeetingPoint = selectedHotel?.assignedMeetingPointId
+        ? meetingPoints.find(mp => mp.id === selectedHotel.assignedMeetingPointId)
+        : null;
 
     const handleNextStep = () => setStep(step + 1);
     const handlePrevStep = () => {
@@ -84,10 +82,11 @@ export function TourBookingSection({ dictionary, price, lang, tourTitle }: TourB
     };
     
     const filteredHotels = searchQuery
-    ? mockHotels.filter(hotel =>
-        hotel.toLowerCase().includes(searchQuery.toLowerCase())
+    ? hotels.filter(hotel =>
+        hotel.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (hotel.address && hotel.address.toLowerCase().includes(searchQuery.toLowerCase()))
       )
-    : mockHotels;
+    : hotels;
 
     const locale = locales[lang] || undefined;
     const formattedDate = date ? format(date, "PPP", { locale }) : "Pick a date";
@@ -100,7 +99,7 @@ export function TourBookingSection({ dictionary, price, lang, tourTitle }: TourB
             date: formattedDate,
             participants: totalParticipants.toString(),
             totalPrice: totalPrice.toString(),
-            pickupPoint: selectedHotel,
+            pickupPoint: selectedHotel?.address || '',
             name: name,
         });
         return `${baseUrl}?${params.toString()}`;
@@ -242,7 +241,7 @@ export function TourBookingSection({ dictionary, price, lang, tourTitle }: TourB
                     {filteredHotels.length > 0 ? (
                         filteredHotels.map((hotel) => (
                             <button
-                                key={hotel}
+                                key={hotel.id}
                                 className="relative flex w-full cursor-default select-none items-center rounded-sm px-2 py-3 text-base outline-none hover:bg-accent hover:text-accent-foreground text-left"
                                 onClick={() => {
                                     setSelectedHotel(hotel);
@@ -250,7 +249,7 @@ export function TourBookingSection({ dictionary, price, lang, tourTitle }: TourB
                                     setSearchQuery("");
                                 }}
                             >
-                                {hotel}
+                                {hotel.name}
                             </button>
                         ))
                     ) : (
@@ -288,16 +287,17 @@ export function TourBookingSection({ dictionary, price, lang, tourTitle }: TourB
                     >
                         <div className="flex items-center gap-2 text-left">
                             <Hotel className="h-4 w-4 flex-shrink-0" />
-                            <span className="truncate">{selectedHotel || dictionary.searchHotel}</span>
+                            <span className="truncate">{selectedHotel?.name || dictionary.searchHotel}</span>
                         </div>
                         <Search className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                     </Button>
-                    {selectedHotel && (
+                    {suggestedMeetingPoint && (
                         <div className="mt-2 text-sm text-muted-foreground flex items-start gap-3 p-3 bg-secondary/30 rounded-md border border-primary/20">
                             <MapPin className="h-5 w-5 text-primary flex-shrink-0 mt-0.5"/>
                             <div>
                                 <span className="font-semibold text-foreground">{dictionary.suggestedPickup}:</span>
-                                <p>Meeting Point - Parque Infantil de Tráfico</p>
+                                <p>{suggestedMeetingPoint.name}</p>
+                                <p className="text-xs">{suggestedMeetingPoint.address}</p>
                             </div>
                         </div>
                     )}
@@ -336,7 +336,7 @@ export function TourBookingSection({ dictionary, price, lang, tourTitle }: TourB
                 <div className="space-y-2 text-muted-foreground">
                     <div className="flex justify-between"><span>{dictionary.date}:</span> <span className="font-medium text-foreground">{formattedDate}</span></div>
                     <div className="flex justify-between"><span>{dictionary.participants}:</span> <span className="font-medium text-foreground">{totalParticipants}</span></div>
-                    <div className="flex justify-between"><span>{dictionary.pickupPoint}:</span> <span className="font-medium text-foreground truncate max-w-[150px]">{selectedHotel}</span></div>
+                    <div className="flex justify-between"><span>{dictionary.pickupPoint}:</span> <span className="font-medium text-foreground truncate max-w-[150px]">{selectedHotel?.name}</span></div>
                      <div className="flex justify-between text-lg font-bold text-foreground pt-2 border-t mt-2"><span>{dictionary.total}:</span> <span>€{totalPrice}</span></div>
                 </div>
             </div>

@@ -26,7 +26,7 @@ export const findHotelById = createSafeAction(
 
 export const findAllHotels = createSafeAction(
   {
-    allowedRoles: ['admin'],
+    // Public action, no roles required
   },
   async (_: {}): Promise<{ data?: Hotel[]; error?: string }> => {
     try {

@@ -14,6 +14,8 @@ import { TourOverviewSection } from '@/components/tours/tour-overview-section';
 import { TourDetailsAccordion } from '@/components/tours/tour-details-accordion';
 import { findAllTours, findTourBySlugAndLang } from '@/app/server-actions/tours/findTours';
 import { Tour } from '@/backend/tours/domain/tour.model';
+import { findAllHotels } from '@/app/server-actions/hotels/findHotels';
+import { findAllMeetingPoints } from '@/app/server-actions/meeting-points/findMeetingPoints';
 
 type TourPageProps = {
   params: {
@@ -96,9 +98,20 @@ export async function generateMetadata({ params }: TourPageProps): Promise<Metad
 export default async function TourPage({ params }: { params: { lang: Locale, slug: string } }) {
   const { lang, slug: encodedSlug } = params;
   const slug = decodeURIComponent(encodedSlug);
-  const dictionary = await getDictionary(lang);
   
-  const tourResult = await findTourBySlugAndLang({ slug, lang });
+  // Fetch all necessary data in parallel
+  const [
+    dictionary, 
+    tourResult, 
+    hotelsResult, 
+    meetingPointsResult
+  ] = await Promise.all([
+    getDictionary(lang),
+    findTourBySlugAndLang({ slug, lang }),
+    findAllHotels({}),
+    findAllMeetingPoints({})
+  ]);
+
 
   if (!tourResult.data) {
     notFound();
@@ -164,7 +177,9 @@ export default async function TourPage({ params }: { params: { lang: Locale, slu
                 dictionary={dictionary.tourDetail.booking} 
                 price={tour.price} 
                 lang={lang} 
-                tourTitle={tour.title[lang] || tour.title.en} 
+                tourTitle={tour.title[lang] || tour.title.en}
+                hotels={hotelsResult.data || []}
+                meetingPoints={meetingPointsResult.data || []}
               />
             </aside>
         </main>

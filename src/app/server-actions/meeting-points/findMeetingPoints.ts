@@ -26,7 +26,7 @@ export const findMeetingPointById = createSafeAction(
 
 export const findAllMeetingPoints = createSafeAction(
   {
-    allowedRoles: ['admin'],
+    // Public action, no roles required
   },
   async (_: {}): Promise<{ data?: MeetingPoint[]; error?: string }> => {
     try {
