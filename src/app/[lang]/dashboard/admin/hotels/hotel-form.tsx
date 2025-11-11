@@ -48,6 +48,7 @@ export function HotelForm({ setSheetOpen, initialData }: HotelFormProps) {
         if (initialData) {
             form.reset({
                 ...initialData,
+                address: initialData.address || '',
                 latitude: initialData.latitude,
                 longitude: initialData.longitude,
             });
