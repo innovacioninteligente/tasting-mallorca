@@ -9,7 +9,7 @@ import Link from "next/link";
 import { useFormContext } from "react-hook-form";
 import { Tour } from "@/backend/tours/domain/tour.model";
 import { cn } from "@/lib/utils";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetDescription } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { useDashboardLayout } from "@/app/[lang]/dashboard/layout-context";
 
 interface TourFormHeaderProps {
@@ -33,22 +33,22 @@ export function TourFormHeader({
     const { setIsMobileMenuOpen } = useDashboardLayout();
 
     const ActionPanel = () => (
-        <div className="flex flex-col gap-4 p-4">
+        <div className="flex flex-col md:flex-row md:items-center gap-4 p-4 md:p-0">
              <Button 
                 onClick={onTranslate} 
                 size="lg" 
                 variant="outline"
                 disabled={isTranslating || isSubmitting}
-                className="w-full justify-center"
+                className="w-full md:w-auto justify-center md:size-auto md:px-4 md:py-2 md:text-sm"
             >
-                {isTranslating ? <Loader2 className="animate-spin" /> : <><Languages className="mr-2" /> Translate with AI</>}
+                {isTranslating ? <Loader2 className="animate-spin" /> : <><Languages className="mr-2" /> <span>Translate with AI</span></>}
             </Button>
             <FormField
                 control={control}
                 name="published"
                 render={({ field }) => (
-                    <FormItem className="flex items-center justify-between rounded-lg border p-3">
-                        <FormLabel className="text-base font-normal">
+                    <FormItem className="flex items-center justify-between rounded-lg border p-3 md:border-0 md:p-0">
+                        <FormLabel className="text-base font-normal md:text-sm">
                             {field.value ? 'Published' : 'Draft'}
                         </FormLabel>
                         <FormControl><Switch checked={field.value} onCheckedChange={field.onChange} /></FormControl>
@@ -59,7 +59,7 @@ export function TourFormHeader({
                 onClick={onSubmit} 
                 size="lg" 
                 disabled={isSubmitting}
-                className={cn("w-full", isDirty && "bg-accent text-accent-foreground hover:bg-accent/90")}
+                className={cn("w-full md:w-auto md:h-11 md:px-8", isDirty && "bg-accent text-accent-foreground hover:bg-accent/90")}
                 type="submit"
             >
                 {isSubmitting ? <Loader2 className="animate-spin" /> : 'Save Tour'}
@@ -82,7 +82,7 @@ export function TourFormHeader({
                     {initialData ? 'Edit Tour' : 'Create New Tour'}
                 </h1>
             </div>
-            <div className="hidden md:flex items-center gap-4">
+            <div className="hidden md:flex">
                 <ActionPanel />
             </div>
 
