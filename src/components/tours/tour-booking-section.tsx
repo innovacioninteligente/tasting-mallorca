@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { Button } from "@/components/ui/button";
@@ -6,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetTrigger } from "@/components/ui/sheet";
 import { Input } from "@/components/ui/input";
 import { Calendar as CalendarIcon, Users, DollarSign, Minus, Plus, Languages, ArrowLeft, Hotel, CheckCircle, MapPin, Search, X, CreditCard, Banknote, Info } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Calendar } from "@/components/ui/calendar";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
@@ -73,22 +74,64 @@ const dayNameToIndex: { [key: string]: number } = {
     Saturday: 6
 };
 
+const getInitialState = <T,>(key: string, defaultValue: T): T => {
+    if (typeof window === 'undefined') return defaultValue;
+    try {
+        const item = window.localStorage.getItem(key);
+        if (!item) return defaultValue;
+        
+        const parsed = JSON.parse(item);
+        // Handle date strings
+        if (key.toLowerCase().includes('date') && typeof parsed === 'string') {
+            return new Date(parsed) as T;
+        }
+        return parsed;
+    } catch (error) {
+        console.warn(`Error reading localStorage key “${key}”:`, error);
+        return defaultValue;
+    }
+};
+
 export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoints }: TourBookingSectionProps) {
     const { user } = useUser();
     const firestore = useFirestore();
     const [isSheetOpen, setIsSheetOpen] = useState(false);
     const [step, setStep] = useState(1);
     
-    const [adults, setAdults] = useState(2);
-    const [children, setChildren] = useState(0);
-    const [date, setDate] = useState<Date | undefined>();
-    const [language, setLanguage] = useState(lang);
-    const [paymentOption, setPaymentOption] = useState<'full' | 'deposit'>('full');
-    const [bookingId, setBookingId] = useState<string | null>(null);
+    const bookingCacheKey = `booking-form-${tour.id}`;
+
+    const [adults, setAdults] = useState<number>(() => getInitialState(`${bookingCacheKey}-adults`, 2));
+    const [children, setChildren] = useState<number>(() => getInitialState(`${bookingCacheKey}-children`, 0));
+    const [date, setDate] = useState<Date | undefined>(() => getInitialState(`${bookingCacheKey}-date`, undefined));
+    const [language, setLanguage] = useState<string>(() => getInitialState(`${bookingCacheKey}-language`, lang));
+    const [paymentOption, setPaymentOption] = useState<'full' | 'deposit'>(() => getInitialState(`${bookingCacheKey}-paymentOption`, 'full'));
+    const [selectedHotel, setSelectedHotel] = useState<HotelModel | null>(() => getInitialState(`${bookingCacheKey}-hotel`, null));
     
+    const [bookingId, setBookingId] = useState<string | null>(null);
     const [isSearchingHotel, setIsSearchingHotel] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
-    const [selectedHotel, setSelectedHotel] = useState<HotelModel | null>(null);
+
+    // Effect to save state to localStorage
+    useEffect(() => {
+        const stateToSave = {
+            adults,
+            children,
+            date,
+            language,
+            paymentOption,
+            selectedHotel
+        };
+        try {
+            localStorage.setItem(`${bookingCacheKey}-adults`, JSON.stringify(adults));
+            localStorage.setItem(`${bookingCacheKey}-children`, JSON.stringify(children));
+            localStorage.setItem(`${bookingCacheKey}-date`, JSON.stringify(date));
+            localStorage.setItem(`${bookingCacheKey}-language`, JSON.stringify(language));
+            localStorage.setItem(`${bookingCacheKey}-paymentOption`, JSON.stringify(paymentOption));
+            localStorage.setItem(`${bookingCacheKey}-hotel`, JSON.stringify(selectedHotel));
+        } catch (error) {
+            console.warn("Could not save booking form state to localStorage", error);
+        }
+    }, [adults, children, date, language, paymentOption, selectedHotel, bookingCacheKey]);
 
     const totalParticipants = adults + children;
     const totalPrice = tour.price * totalParticipants;
@@ -159,6 +202,15 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
     const getReturnUrl = () => {
         if (typeof window === 'undefined' || !bookingId) return '';
         const baseUrl = `${window.location.origin}/${lang}/booking-success?booking_id=${bookingId}`;
+        
+        // On successful payment, clear the cache.
+        localStorage.removeItem(`${bookingCacheKey}-adults`);
+        localStorage.removeItem(`${bookingCacheKey}-children`);
+        localStorage.removeItem(`${bookingCacheKey}-date`);
+        localStorage.removeItem(`${bookingCacheKey}-language`);
+        localStorage.removeItem(`${bookingCacheKey}-paymentOption`);
+        localStorage.removeItem(`${bookingCacheKey}-hotel`);
+
         return baseUrl;
     }
 
@@ -408,7 +460,7 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
                 {tour.allowDeposit && (
                     <div>
                         <label className="text-base font-medium text-muted-foreground">{dictionary.paymentOption}</label>
-                        <RadioGroup defaultValue="full" className="mt-2 grid grid-cols-2 gap-4" onValueChange={(value: 'full' | 'deposit') => setPaymentOption(value)}>
+                        <RadioGroup defaultValue={paymentOption} value={paymentOption} className="mt-2 grid grid-cols-2 gap-4" onValueChange={(value: 'full' | 'deposit') => setPaymentOption(value)}>
                             <div>
                                 <RadioGroupItem value="full" id="r1" className="peer sr-only" />
                                 <Label htmlFor="r1" className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary">
