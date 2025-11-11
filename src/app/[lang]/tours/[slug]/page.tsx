@@ -175,9 +175,8 @@ export default async function TourPage({ params }: { params: { lang: Locale, slu
             <aside className="lg:col-span-1">
               <TourBookingSection 
                 dictionary={dictionary.tourDetail.booking} 
-                price={tour.price} 
-                lang={lang} 
-                tourTitle={tour.title[lang] || tour.title.en}
+                tour={tour}
+                lang={lang}
                 hotels={hotelsResult.data || []}
                 meetingPoints={meetingPointsResult.data || []}
               />

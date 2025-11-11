@@ -19,5 +19,8 @@
     "goBack": "Ga Terug",
     "confirmAndPay": "Bevestig en Betaal",
     "finalSummary": "Eindoverzicht",
-    "total": "Totaal"
+    "total": "Totaal",
+    "paymentOption": "Betalingsoptie",
+    "payFull": "Volledig betalen",
+    "payDeposit": "Aanbetaling doen"
 }

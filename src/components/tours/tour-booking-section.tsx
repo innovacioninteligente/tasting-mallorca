@@ -1,13 +1,16 @@
 
+
 'use client';
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Input } from "@/components/ui/input";
-import { Calendar as CalendarIcon, Users, DollarSign, Minus, Plus, Languages, ArrowLeft, Hotel, CheckCircle, MapPin, Search, X } from "lucide-react";
+import { Calendar as CalendarIcon, Users, DollarSign, Minus, Plus, Languages, ArrowLeft, Hotel, CheckCircle, MapPin, Search, X, CreditCard, Banknote } from "lucide-react";
 import { useState } from "react";
 import { Calendar } from "@/components/ui/calendar";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { format } from "date-fns";
@@ -18,6 +21,7 @@ import CheckoutForm from '@/components/checkout-form';
 import { Hotel as HotelModel } from "@/backend/hotels/domain/hotel.model";
 import { MeetingPoint } from "@/backend/meeting-points/domain/meeting-point.model";
 import { useUser } from "@/firebase";
+import { Tour } from "@/backend/tours/domain/tour.model";
 
 interface TourBookingSectionProps {
     dictionary: {
@@ -41,18 +45,19 @@ interface TourBookingSectionProps {
         confirmAndPay: string;
         finalSummary: string;
         total: string;
+        paymentOption: string;
+        payFull: string;
+        payDeposit: string;
     };
-    price: number;
+    tour: Tour;
     lang: string;
-    tourId: string;
-    tourTitle: string;
     hotels: HotelModel[];
     meetingPoints: MeetingPoint[];
 }
 
 const locales: { [key: string]: Locale } = { fr, de, nl };
 
-export function TourBookingSection({ dictionary, price, lang, tourId, tourTitle, hotels, meetingPoints }: TourBookingSectionProps) {
+export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoints }: TourBookingSectionProps) {
     const { user } = useUser();
     const [isSheetOpen, setIsSheetOpen] = useState(false);
     const [step, setStep] = useState(1);
@@ -61,13 +66,17 @@ export function TourBookingSection({ dictionary, price, lang, tourId, tourTitle,
     const [children, setChildren] = useState(0);
     const [date, setDate] = useState<Date | undefined>(new Date());
     const [language, setLanguage] = useState(lang);
+    const [paymentOption, setPaymentOption] = useState<'full' | 'deposit'>('full');
     
     const [isSearchingHotel, setIsSearchingHotel] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
     const [selectedHotel, setSelectedHotel] = useState<HotelModel | null>(null);
 
     const totalParticipants = adults + children;
-    const totalPrice = price * totalParticipants;
+    const totalPrice = tour.price * totalParticipants;
+    const depositPrice = tour.depositPrice ? tour.depositPrice * totalParticipants : 0;
+    
+    const amountToPay = paymentOption === 'deposit' ? depositPrice : totalPrice;
 
     const suggestedMeetingPoint = selectedHotel?.assignedMeetingPointId
         ? meetingPoints.find(mp => mp.id === selectedHotel.assignedMeetingPointId)
@@ -99,7 +108,7 @@ export function TourBookingSection({ dictionary, price, lang, tourId, tourTitle,
     }
 
     const paymentMetadata = {
-        tourId: tourId,
+        tourId: tour.id,
         userId: user?.uid || 'anonymous',
         bookingDate: date?.toISOString() || '',
         participants: totalParticipants.toString(),
@@ -109,6 +118,8 @@ export function TourBookingSection({ dictionary, price, lang, tourId, tourTitle,
         hotelName: selectedHotel?.name || '',
         meetingPointId: suggestedMeetingPoint?.id || '',
         meetingPointName: suggestedMeetingPoint?.name || '',
+        paymentType: paymentOption,
+        amountPaid: amountToPay.toString(),
     };
 
 
@@ -126,7 +137,7 @@ export function TourBookingSection({ dictionary, price, lang, tourId, tourTitle,
                     <DollarSign className="w-6 h-6 text-primary" />
                     <span className="text-lg font-semibold">{dictionary.priceLabel}</span>
                 </div>
-                <span className="text-3xl font-extrabold text-primary">€{price}</span>
+                <span className="text-3xl font-extrabold text-primary">€{tour.price}</span>
             </div>
 
             <div className="space-y-4">
@@ -308,6 +319,29 @@ export function TourBookingSection({ dictionary, price, lang, tourId, tourTitle,
                         </div>
                     )}
                 </div>
+                {tour.allowDeposit && (
+                    <div>
+                        <label className="text-base font-medium text-muted-foreground">{dictionary.paymentOption}</label>
+                        <RadioGroup defaultValue="full" className="mt-2 grid grid-cols-2 gap-4" onValueChange={(value: 'full' | 'deposit') => setPaymentOption(value)}>
+                            <div>
+                                <RadioGroupItem value="full" id="r1" className="peer sr-only" />
+                                <Label htmlFor="r1" className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary">
+                                    <Banknote className="mb-3 h-6 w-6" />
+                                    {dictionary.payFull}
+                                    <span className="font-bold text-lg mt-1">€{totalPrice}</span>
+                                </Label>
+                            </div>
+                            <div>
+                                <RadioGroupItem value="deposit" id="r2" className="peer sr-only" />
+                                <Label htmlFor="r2" className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary">
+                                    <CreditCard className="mb-3 h-6 w-6" />
+                                    {dictionary.payDeposit}
+                                    <span className="font-bold text-lg mt-1">€{depositPrice}</span>
+                                </Label>
+                            </div>
+                        </RadioGroup>
+                    </div>
+                )}
             </div>
             <div className="space-y-3">
                  <Button size="lg" className="w-full font-bold text-lg py-7" onClick={handleNextStep} disabled={!selectedHotel || !suggestedMeetingPoint}>
@@ -335,12 +369,15 @@ export function TourBookingSection({ dictionary, price, lang, tourId, tourTitle,
                     <div className="flex justify-between"><span>{dictionary.date}:</span> <span className="font-medium text-foreground">{formattedDate}</span></div>
                     <div className="flex justify-between"><span>{dictionary.participants}:</span> <span className="font-medium text-foreground">{totalParticipants}</span></div>
                     <div className="flex justify-between"><span>{dictionary.pickupPoint}:</span> <span className="font-medium text-foreground truncate max-w-[150px]">{selectedHotel?.name}</span></div>
-                     <div className="flex justify-between text-lg font-bold text-foreground pt-2 border-t mt-2"><span>{dictionary.total}:</span> <span>€{totalPrice}</span></div>
+                    <div className="flex justify-between text-lg font-bold text-foreground pt-2 border-t mt-2">
+                        <span>{paymentOption === 'deposit' ? dictionary.payDeposit : dictionary.total}:</span>
+                        <span>€{amountToPay}</span>
+                    </div>
                 </div>
             </div>
 
             <StripeProvider
-                amount={totalPrice}
+                amount={amountToPay}
                 name={user?.profile?.name || user?.displayName || 'Customer'}
                 email={user?.email || 'anonymous'}
                 metadata={paymentMetadata}
@@ -377,7 +414,7 @@ export function TourBookingSection({ dictionary, price, lang, tourId, tourTitle,
                 <div className="flex items-center justify-between gap-4">
                      <div>
                         <p className="text-sm text-muted-foreground">{dictionary.priceLabel}</p>
-                        <p className="text-2xl font-extrabold text-primary">€{price}</p>
+                        <p className="text-2xl font-extrabold text-primary">€{tour.price}</p>
                     </div>
                     <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
                         <SheetTrigger asChild>

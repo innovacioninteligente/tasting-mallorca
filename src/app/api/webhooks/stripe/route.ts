@@ -1,12 +1,11 @@
 
+
 import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
 import { adminApp } from '@/firebase/server/config';
 import { getFirestore } from 'firebase-admin/firestore';
 import { Booking } from '@/backend/bookings/domain/booking.model';
 import { Payment, PaymentStatus } from '@/backend/payments/domain/payment.model';
-import { findTourById } from '@/backend/tours/application/findTours';
-import { FirestoreTourRepository } from '@/backend/tours/infrastructure/firestore-tour.repository';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2024-06-20',
@@ -27,11 +26,9 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ error: `Webhook Error: ${err.message}` }, { status: 400 });
     }
 
-    // Initialize Firestore Admin SDK
     adminApp;
     const db = getFirestore();
 
-    // Handle the event
     switch (event.type) {
         case 'payment_intent.succeeded':
             const paymentIntent = event.data.object;
@@ -40,31 +37,34 @@ export async function POST(req: NextRequest) {
             try {
                 const metadata = paymentIntent.metadata;
 
-                const bookingData = {
+                const amountPaid = paymentIntent.amount / 100;
+                const totalPrice = parseFloat(metadata.totalPrice);
+                const amountDue = totalPrice - amountPaid;
+
+                const bookingData: Booking = {
                     id: crypto.randomUUID(),
                     tourId: metadata.tourId,
                     userId: metadata.userId,
                     date: new Date(metadata.bookingDate),
                     participants: parseInt(metadata.participants, 10),
-                    totalPrice: parseFloat(metadata.totalPrice),
-                    status: 'confirmed',
-                    paymentId: paymentIntent.id,
                     language: metadata.language,
                     hotelId: metadata.hotelId,
                     hotelName: metadata.hotelName,
                     meetingPointId: metadata.meetingPointId,
                     meetingPointName: metadata.meetingPointName,
-                } as Omit<Booking, 'paymentId'> & { paymentId: string };
+                    totalPrice: totalPrice,
+                    amountPaid: amountPaid,
+                    amountDue: amountDue,
+                    paymentType: metadata.paymentType as 'deposit' | 'full',
+                    status: 'confirmed',
+                };
 
-
-                // Create Booking
                 await db.collection('bookings').doc(bookingData.id).set(bookingData);
                 
-                // Create Payment record
                 const paymentData: Omit<Payment, 'id'> = {
                     bookingId: bookingData.id,
                     stripePaymentIntentId: paymentIntent.id,
-                    amount: paymentIntent.amount / 100, // convert from cents
+                    amount: amountPaid,
                     currency: paymentIntent.currency,
                     status: paymentIntent.status as PaymentStatus,
                 };
@@ -81,7 +81,6 @@ export async function POST(req: NextRequest) {
         case 'payment_intent.payment_failed':
             const paymentIntentFailed = event.data.object;
             console.log(`❌ PaymentIntent failed: ${paymentIntentFailed.id}`);
-            // Optionally: Update booking status to 'failed' or notify user
             break;
         default:
             console.log(`🤷‍♀️ Unhandled event type: ${event.type}`);

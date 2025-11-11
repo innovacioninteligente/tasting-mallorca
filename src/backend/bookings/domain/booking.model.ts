@@ -1,5 +1,7 @@
 
+
 export type BookingStatus = 'pending' | 'confirmed' | 'cancelled';
+export type PaymentType = 'deposit' | 'full';
 
 export interface Booking {
   id: string;
@@ -8,8 +10,10 @@ export interface Booking {
   date: Date;
   participants: number;
   totalPrice: number;
+  amountPaid: number;
+  amountDue: number;
+  paymentType: PaymentType;
   status: BookingStatus;
-  paymentId: string; // Corresponds to Stripe Payment Intent ID
   language: string;
   hotelId: string;
   hotelName: string;

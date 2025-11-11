@@ -19,5 +19,8 @@
     "goBack": "Zurück",
     "confirmAndPay": "Bestätigen und Bezahlen",
     "finalSummary": "Endgültige Zusammenfassung",
-    "total": "Gesamt"
+    "total": "Gesamt",
+    "paymentOption": "Zahlungsoption",
+    "payFull": "Vollständig bezahlen",
+    "payDeposit": "Anzahlung leisten"
 }
