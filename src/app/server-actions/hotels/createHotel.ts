@@ -9,7 +9,7 @@ import { z } from 'zod';
 
 const hotelSchema = z.object({
   name: z.string().min(1, 'Name is required'),
-  address: z.string().min(1, 'Address is required'),
+  address: z.string().optional(),
   region: z.enum(["North", "East", "South", "West", "Central"]),
   subRegion: z.string().min(1, 'Sub-region is required'),
   latitude: z.coerce.number(),
@@ -42,4 +42,5 @@ export const createHotel = createSafeAction(
   }
 );
 
+    
     

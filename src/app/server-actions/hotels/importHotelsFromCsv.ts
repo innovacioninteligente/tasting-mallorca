@@ -51,7 +51,7 @@ export const importHotelsFromCsv = createSafeAction(
         }
         
         // Basic validation and type coercion
-        if (!hotelData.name || !hotelData.address || !hotelData.region || !hotelData.subRegion || !hotelData.latitude || !hotelData.longitude) {
+        if (!hotelData.name || !hotelData.region || !hotelData.subRegion || !hotelData.latitude || !hotelData.longitude) {
             console.warn('Skipping row due to missing required fields:', row);
             continue;
         }
@@ -82,3 +82,5 @@ export const importHotelsFromCsv = createSafeAction(
     }
   }
 );
+
+    

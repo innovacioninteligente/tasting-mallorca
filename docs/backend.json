@@ -200,7 +200,7 @@
             "longitude": { "type": "number" },
             "assignedMeetingPointId": { "type": "string", "description": "The ID of the MeetingPoint assigned to this hotel." }
         },
-        "required": ["name", "address", "region", "latitude", "longitude"]
+        "required": ["name", "region", "latitude", "longitude"]
     },
     "MeetingPoint": {
         "title": "Meeting Point",

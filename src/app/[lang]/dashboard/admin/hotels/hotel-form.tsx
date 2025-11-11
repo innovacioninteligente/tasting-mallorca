@@ -16,7 +16,7 @@ import { Loader2 } from "lucide-react";
 
 const formSchema = z.object({
   name: z.string().min(1, 'El nombre es requerido'),
-  address: z.string().min(1, 'La dirección es requerida'),
+  address: z.string().optional(),
   region: z.enum(["North", "East", "South", "West", "Central"], {
       required_error: "La región es requerida"
   }),
@@ -179,3 +179,5 @@ export function HotelForm({ setSheetOpen }: HotelFormProps) {
         </Form>
     )
 }
+
+    
