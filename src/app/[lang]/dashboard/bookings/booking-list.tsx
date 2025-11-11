@@ -12,7 +12,6 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Eye, CheckCircle, Ticket, AlertCircle } from 'lucide-react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
 import { format } from 'date-fns';
 import { Booking } from '@/backend/bookings/domain/booking.model';
 import { Locale } from '@/dictionaries/config';
@@ -21,10 +20,10 @@ interface BookingListProps {
   bookings?: any[]; // Allow 'any' for flexibility with serialized data
   error?: string;
   lang: Locale;
+  onView: (booking: any) => void;
 }
 
-export function BookingList({ bookings, error, lang }: BookingListProps) {
-  const pathname = usePathname();
+export function BookingList({ bookings, error, lang, onView }: BookingListProps) {
 
   if (error) {
     return <p className="text-destructive text-center py-12">Error: {error}</p>;
@@ -100,11 +99,9 @@ export function BookingList({ bookings, error, lang }: BookingListProps) {
                 </Badge>
             </TableCell>
             <TableCell>
-              <Button asChild variant="outline" size="sm" disabled>
-                <Link href={`${pathname}/${booking.id}`}>
-                  <Eye className="mr-2 h-4 w-4" />
-                  View
-                </Link>
+              <Button variant="outline" size="sm" onClick={() => onView(booking)}>
+                <Eye className="mr-2 h-4 w-4" />
+                View
               </Button>
             </TableCell>
           </TableRow>
