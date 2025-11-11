@@ -8,7 +8,7 @@ import { PlusCircle, Upload } from "lucide-react";
 import { Hotel } from "@/backend/hotels/domain/hotel.model";
 import { HotelList } from "./hotel-list";
 import { AssignMeetingPointsButton } from "./assign-meeting-points-button";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetTrigger } from "@/components/ui/sheet";
 import { HotelForm } from "./hotel-form";
 import { CsvImporter } from "./csv-importer/csv-importer";
 import { MeetingPoint } from "@/backend/meeting-points/domain/meeting-point.model";
