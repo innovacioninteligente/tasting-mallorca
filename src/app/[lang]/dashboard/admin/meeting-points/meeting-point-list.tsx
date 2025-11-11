@@ -5,8 +5,6 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { MeetingPoint } from "@/backend/meeting-points/domain/meeting-point.model";
 import { Button } from "@/components/ui/button";
 import { Edit, Trash2, ExternalLink } from "lucide-react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -25,10 +23,10 @@ import { useRouter } from "next/navigation";
 interface MeetingPointListProps {
     meetingPoints?: MeetingPoint[];
     error?: string;
+    onEdit: (point: MeetingPoint) => void;
 }
 
-export function MeetingPointList({ meetingPoints, error }: MeetingPointListProps) {
-    const pathname = usePathname();
+export function MeetingPointList({ meetingPoints, error, onEdit }: MeetingPointListProps) {
     const router = useRouter();
     const { toast } = useToast();
     
@@ -83,11 +81,9 @@ export function MeetingPointList({ meetingPoints, error }: MeetingPointListProps
                         </TableCell>
                         <TableCell>
                             <div className="flex gap-2">
-                                <Button asChild variant="outline" size="sm">
-                                    <Link href={`${pathname}/${point.id}/edit`}>
-                                        <Edit className="mr-2 h-4 w-4" />
-                                        Editar
-                                    </Link>
+                                <Button variant="outline" size="sm" onClick={() => onEdit(point)}>
+                                    <Edit className="mr-2 h-4 w-4" />
+                                    Editar
                                 </Button>
                                 <AlertDialog>
                                     <AlertDialogTrigger asChild>
