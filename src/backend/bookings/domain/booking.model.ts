@@ -21,4 +21,7 @@ export interface Booking {
   hotelName: string;
   meetingPointId: string;
   meetingPointName: string;
+  customerName: string;
+  customerEmail: string;
+  customerPhone: string;
 }

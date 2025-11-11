@@ -165,9 +165,12 @@
         "hotelId": { "type": "string" },
         "hotelName": { "type": "string" },
         "meetingPointId": { "type": "string" },
-        "meetingPointName": { "type": "string" }
+        "meetingPointName": { "type": "string" },
+        "customerName": { "type": "string", "description": "The full name of the customer who made the booking." },
+        "customerEmail": { "type": "string", "format": "email", "description": "The email address of the customer." },
+        "customerPhone": { "type": "string", "description": "The phone number of the customer." }
       },
-      "required": ["tourId", "userId", "date", "participants", "totalPrice", "status", "ticketStatus"]
+      "required": ["tourId", "userId", "date", "participants", "totalPrice", "status", "ticketStatus", "customerName", "customerEmail"]
     },
     "Payment": {
         "title": "Payment",

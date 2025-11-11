@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetTrigger } from "@/components/ui/sheet";
 import { Input } from "@/components/ui/input";
-import { Calendar as CalendarIcon, Users, DollarSign, Minus, Plus, Languages, ArrowLeft, Hotel, CheckCircle, MapPin, Search, X, CreditCard, Banknote, Info } from "lucide-react";
+import { Calendar as CalendarIcon, Users, DollarSign, Minus, Plus, Languages, ArrowLeft, Hotel, CheckCircle, MapPin, Search, X, CreditCard, Banknote, Info, User as UserIcon, Phone } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Calendar } from "@/components/ui/calendar";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -42,6 +42,7 @@ interface TourBookingSectionProps {
         suggestedPickup: string;
         yourName: string;
         yourEmail: string;
+        yourPhone: string;
         continueToPayment: string;
         goBack: string;
         confirmAndPay: string;
@@ -106,28 +107,32 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
     const [language, setLanguage] = useState<string>(() => getInitialState(`${bookingCacheKey}-language`, lang));
     const [paymentOption, setPaymentOption] = useState<'full' | 'deposit'>(() => getInitialState(`${bookingCacheKey}-paymentOption`, 'full'));
     const [selectedHotel, setSelectedHotel] = useState<HotelModel | null>(() => getInitialState(`${bookingCacheKey}-hotel`, null));
+    const [customerName, setCustomerName] = useState('');
+    const [customerEmail, setCustomerEmail] = useState('');
+    const [customerPhone, setCustomerPhone] = useState('');
     
     const [bookingId, setBookingId] = useState<string | null>(null);
     const [isSearchingHotel, setIsSearchingHotel] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
 
+    // Pre-fill user data if logged in
+    useEffect(() => {
+        if (user) {
+            setCustomerName(user.displayName || user.profile?.name || '');
+            setCustomerEmail(user.email || '');
+        }
+    }, [user]);
+
+
     // Effect to save state to localStorage
     useEffect(() => {
-        const stateToSave = {
-            adults,
-            children,
-            date,
-            language,
-            paymentOption,
-            selectedHotel
-        };
         try {
             localStorage.setItem(`${bookingCacheKey}-adults`, JSON.stringify(adults));
             localStorage.setItem(`${bookingCacheKey}-children`, JSON.stringify(children));
-            localStorage.setItem(`${bookingCacheKey}-date`, JSON.stringify(date));
+            if(date) localStorage.setItem(`${bookingCacheKey}-date`, JSON.stringify(date));
             localStorage.setItem(`${bookingCacheKey}-language`, JSON.stringify(language));
             localStorage.setItem(`${bookingCacheKey}-paymentOption`, JSON.stringify(paymentOption));
-            localStorage.setItem(`${bookingCacheKey}-hotel`, JSON.stringify(selectedHotel));
+            if (selectedHotel) localStorage.setItem(`${bookingCacheKey}-hotel`, JSON.stringify(selectedHotel));
         } catch (error) {
             console.warn("Could not save booking form state to localStorage", error);
         }
@@ -144,7 +149,7 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
         : null;
 
     const handleContinueToPayment = async () => {
-        if (!firestore || !date || !selectedHotel || !suggestedMeetingPoint) return;
+        if (!firestore || !date || !selectedHotel || !suggestedMeetingPoint || !customerName || !customerEmail) return;
         
         const newBookingId = crypto.randomUUID();
         setBookingId(newBookingId);
@@ -164,8 +169,11 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
             amountPaid: 0,
             amountDue: totalPrice,
             paymentType: paymentOption,
-            status: 'pending',
-            ticketStatus: 'valid',
+            status: 'pending' as 'pending',
+            ticketStatus: 'valid' as 'valid',
+            customerName,
+            customerEmail,
+            customerPhone,
         };
 
         try {
@@ -457,6 +465,19 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
                         </div>
                     )}
                 </div>
+
+                <div className="space-y-4">
+                    <Label htmlFor="customerName" className="text-base font-medium text-muted-foreground">{dictionary.yourName}</Label>
+                    <Input id="customerName" value={customerName} onChange={(e) => setCustomerName(e.target.value)} placeholder="Full Name" className="h-11 text-base" />
+                    
+                    <Label htmlFor="customerEmail" className="text-base font-medium text-muted-foreground">{dictionary.yourEmail}</Label>
+                    <Input id="customerEmail" type="email" value={customerEmail} onChange={(e) => setCustomerEmail(e.target.value)} placeholder="your@email.com" className="h-11 text-base" />
+                    
+                    <Label htmlFor="customerPhone" className="text-base font-medium text-muted-foreground">{dictionary.yourPhone || 'Your Phone'}</Label>
+                    <Input id="customerPhone" type="tel" value={customerPhone} onChange={(e) => setCustomerPhone(e.target.value)} placeholder="+34 123 456 789" className="h-11 text-base" />
+                </div>
+
+
                 {tour.allowDeposit && (
                     <div>
                         <label className="text-base font-medium text-muted-foreground">{dictionary.paymentOption}</label>
@@ -482,7 +503,7 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
                 )}
             </div>
             <div className="space-y-3">
-                 <Button size="lg" className="w-full font-bold text-lg py-7" onClick={handleContinueToPayment} disabled={!selectedHotel || !suggestedMeetingPoint}>
+                 <Button size="lg" className="w-full font-bold text-lg py-7" onClick={handleContinueToPayment} disabled={!selectedHotel || !suggestedMeetingPoint || !customerName || !customerEmail}>
                     {dictionary.continueToPayment}
                 </Button>
                  <Button variant="ghost" size="lg" className="w-full" onClick={handlePrevStep}>
@@ -518,8 +539,8 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
                 <StripeProvider
                     key={bookingId} // Force re-mount when bookingId changes
                     amount={amountToPay}
-                    name={user?.profile?.name || user?.displayName || 'Customer'}
-                    email={user?.email || 'anonymous'}
+                    name={customerName || 'Customer'}
+                    email={customerEmail || 'anonymous'}
                     metadata={paymentMetadata}
                 >
                     <CheckoutForm dictionary={dictionary} handlePrevStep={handlePrevStep} returnUrl={getReturnUrl()} />
