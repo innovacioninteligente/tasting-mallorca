@@ -10,6 +10,7 @@ import { MeetingPointList } from "./meeting-point-list";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetTrigger } from "@/components/ui/sheet";
 import { MeetingPointForm } from "./meeting-point-form";
 import { CsvImporter } from "./csv-importer/csv-importer";
+import { ReprocessCoordinatesButton } from "./reprocess-coordinates-button";
 
 interface MeetingPointManagementClientPageProps {
     initialMeetingPoints: MeetingPoint[];
@@ -41,6 +42,7 @@ export function MeetingPointManagementClientPage({ initialMeetingPoints, error }
                     </p>
                 </div>
                 <div className="flex items-center gap-2">
+                    <ReprocessCoordinatesButton />
                     <Sheet open={isImportSheetOpen} onOpenChange={setIsImportSheetOpen}>
                         <SheetTrigger asChild>
                             <Button variant="outline">
