@@ -5,7 +5,7 @@
 import { Suspense } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { CheckCircle, Home, Map, DollarSign, Info } from 'lucide-react';
+import { CheckCircle, Home, Map, DollarSign } from 'lucide-react';
 import Link from 'next/link';
 import { RouteMap } from '@/components/route-map';
 import { notFound } from 'next/navigation';
@@ -28,7 +28,6 @@ async function getBookingData(paymentIntentId: string) {
     try {
         const db = getFirestore();
         
-        // Find payment by stripePaymentIntentId
         const paymentsSnapshot = await db.collection('payments').where('stripePaymentIntentId', '==', paymentIntentId).limit(1).get();
         if (paymentsSnapshot.empty) {
             console.warn(`No payment found for intent ID: ${paymentIntentId}`);
@@ -36,7 +35,6 @@ async function getBookingData(paymentIntentId: string) {
         }
         const payment = paymentsSnapshot.docs[0].data();
 
-        // Get booking
         const bookingSnapshot = await db.collection('bookings').doc(payment.bookingId).get();
         if (!bookingSnapshot.exists) {
             console.warn(`No booking found for ID: ${payment.bookingId}`);
@@ -44,16 +42,20 @@ async function getBookingData(paymentIntentId: string) {
         }
         const booking = bookingSnapshot.data() as Booking;
 
-        // Get tour
         const tourSnapshot = await db.collection('tours').doc(booking.tourId).get();
         const tour = tourSnapshot.exists ? tourSnapshot.data() as Tour : null;
-
-        // Get hotel and meeting point
-        const hotelSnapshot = hotel.address ? await db.collection('hotels').doc(booking.hotelId).get(): null;
-        const hotel = hotelSnapshot?.exists ? hotelSnapshot.data() as Hotel : null;
         
-        const meetingPointSnapshot = await db.collection('meetingPoints').doc(booking.meetingPointId).get();
-        const meetingPoint = meetingPointSnapshot.exists ? meetingPointSnapshot.data() as MeetingPoint : null;
+        let hotel: Hotel | null = null;
+        if (booking.hotelId) {
+            const hotelSnapshot = await db.collection('hotels').doc(booking.hotelId).get();
+            hotel = hotelSnapshot.exists ? hotelSnapshot.data() as Hotel : null;
+        }
+        
+        let meetingPoint: MeetingPoint | null = null;
+        if (booking.meetingPointId) {
+            const meetingPointSnapshot = await db.collection('meetingPoints').doc(booking.meetingPointId).get();
+            meetingPoint = meetingPointSnapshot.exists ? meetingPointSnapshot.data() as MeetingPoint : null;
+        }
 
         return { booking, tour, hotel, meetingPoint };
 
@@ -83,7 +85,7 @@ export default async function BookingSuccessPage({ searchParams, params }: { sea
                     <CardContent>
                         <p>Could not retrieve booking details. Please check your email for confirmation or contact support.</p>
                         <Button asChild className="mt-4">
-                            <Link href="/">Go to Homepage</Link>
+                            <Link href={`/${params.lang}`}>Go to Homepage</Link>
                         </Button>
                     </CardContent>
                 </Card>
@@ -97,6 +99,9 @@ export default async function BookingSuccessPage({ searchParams, params }: { sea
     
     const tourTitle = tour?.title[params.lang] || tour?.title.en || 'Tour';
     const isDeposit = booking.paymentType === 'deposit';
+
+    const originCoords = hotel ? { lat: hotel.latitude, lng: hotel.longitude } : null;
+    const destinationCoords = meetingPoint ? { lat: meetingPoint.latitude, lng: meetingPoint.longitude } : null;
 
     return (
         <Suspense fallback={<div className="h-screen w-full flex items-center justify-center">Loading confirmation...</div>}>
@@ -160,7 +165,7 @@ export default async function BookingSuccessPage({ searchParams, params }: { sea
                                 )}
                             </div>
 
-                            {hotel?.address && meetingPoint?.address && (
+                            {originCoords && destinationCoords && (
                                 <div className="space-y-4">
                                     <h3 className="font-bold text-xl flex items-center gap-2">
                                         <Map className="w-6 h-6 text-primary"/>
@@ -168,15 +173,15 @@ export default async function BookingSuccessPage({ searchParams, params }: { sea
                                     </h3>
                                     <div className="h-96 rounded-lg overflow-hidden border border-border">
                                         <RouteMap
-                                            originAddress={hotel.address}
-                                            destinationAddress={meetingPoint.address}
+                                            origin={originCoords}
+                                            destination={destinationCoords}
                                         />
                                     </div>
                                 </div>
                             )}
 
                             <Button asChild size="lg" className="w-full font-bold text-lg mt-6">
-                            <Link href="/">
+                            <Link href={`/${params.lang}`}>
                                 <Home className="mr-2 h-5 w-5" />
                                 Ir a la Página Principal
                             </Link>

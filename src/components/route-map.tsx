@@ -1,3 +1,4 @@
+
 'use client';
 
 import {
@@ -14,11 +15,11 @@ import { cn } from '@/lib/utils';
 type TravelMode = 'DRIVING' | 'WALKING' | 'BICYCLING' | 'TRANSIT';
 
 function Directions({
-  originAddress,
-  destinationAddress,
+  origin,
+  destination,
 }: {
-  originAddress: string;
-  destinationAddress: string;
+  origin: google.maps.LatLngLiteral;
+  destination: google.maps.LatLngLiteral;
 }) {
   const map = useMap();
   const [directionsService, setDirectionsService] =
@@ -29,13 +30,7 @@ function Directions({
   const [routeIndex] = useState(0);
   const selectedRoute = routes[routeIndex];
   const leg = selectedRoute?.legs[0];
-
-  const [origin, setOrigin] = useState<google.maps.LatLngLiteral | null>(null);
-  const [destination, setDestination] = useState<google.maps.LatLngLiteral | null>(
-    null
-  );
   const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
   const [travelMode, setTravelMode] = useState<TravelMode>('DRIVING');
 
   useEffect(() => {
@@ -49,51 +44,6 @@ function Directions({
     );
   }, [map]);
 
-  useEffect(() => {
-    if (!map) {
-      setLoading(false);
-      return;
-    }
-    setLoading(true);
-    const geocoder = new window.google.maps.Geocoder();
-
-    const geocodeAddress = (
-      address: string
-    ): Promise<google.maps.LatLngLiteral> => {
-      return new Promise((resolve, reject) => {
-        if (!window.google || !window.google.maps) {
-          reject(new Error('Google Maps scripts are not loaded yet.'));
-          return;
-        }
-        geocoder.geocode({ address: address }, (results, status) => {
-          if (status === 'OK' && results?.[0]) {
-            resolve(results[0].geometry.location.toJSON());
-          } else {
-            reject(
-              new Error(`Geocoding failed for "${address}" with status: ${status}`)
-            );
-          }
-        });
-      });
-    };
-
-    Promise.all([
-      geocodeAddress(originAddress),
-      geocodeAddress(destinationAddress),
-    ])
-      .then(([originResult, destinationResult]) => {
-        setOrigin(originResult);
-        setDestination(destinationResult);
-        setError(null);
-      })
-      .catch((err) => {
-        console.error(err);
-        setError(err.message);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }, [map, originAddress, destinationAddress]);
 
   useEffect(() => {
     if (!directionsService || !directionsRenderer || !origin || !destination)
@@ -120,15 +70,6 @@ function Directions({
         setRoutes([]);
       });
   }, [directionsService, directionsRenderer, origin, destination, travelMode]);
-
-  if (loading) {
-    return <div className="flex items-center justify-center h-full">Cargando mapa...</div>;
-  }
-  
-  if (error && (!origin || !destination)) {
-    return <div className="flex items-center justify-center h-full bg-destructive text-destructive-foreground p-4 text-center">{error}</div>;
-  }
-
 
   return (
     <>
@@ -187,14 +128,14 @@ function Directions({
   );
 }
 
-export function RouteMap({ originAddress, destinationAddress }: { originAddress: string; destinationAddress: string; }) {
+export function RouteMap({ origin, destination }: { origin: google.maps.LatLngLiteral; destination: google.maps.LatLngLiteral; }) {
   const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
 
   if (!apiKey) {
     return <div className="flex items-center justify-center h-full bg-destructive text-destructive-foreground p-4">Error: Google Maps API Key is missing.</div>;
   }
   
-  if (!originAddress || !destinationAddress) {
+  if (!origin || !destination) {
       return <div className="flex items-center justify-center h-full">Proporciona un origen y destino.</div>;
   }
 
@@ -202,14 +143,14 @@ export function RouteMap({ originAddress, destinationAddress }: { originAddress:
     <div className="w-full h-full">
       <APIProvider apiKey={apiKey} libraries={['marker', 'routes', 'geocoding']}>
         <Map
-          defaultCenter={{ lat: 39.5696, lng: 2.6502 }}
-          defaultZoom={10}
+          defaultCenter={origin}
+          defaultZoom={12}
           gestureHandling={'greedy'}
           disableDefaultUI={true}
           mapId={'f91b1312758f731c'}
           className="relative w-full h-full"
         >
-          <Directions originAddress={originAddress} destinationAddress={destinationAddress} />
+          <Directions origin={origin} destination={destination} />
         </Map>
       </APIProvider>
     </div>
