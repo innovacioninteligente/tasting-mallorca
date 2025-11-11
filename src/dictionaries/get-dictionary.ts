@@ -153,5 +153,3 @@ export const getDictionary = async (locale: Locale): Promise<DictionaryType> => 
   dictionaryCache[locale] = dict;
   return dict;
 };
-
-    
