@@ -24,6 +24,8 @@ const formSchema = z.object({
       required_error: "La región es requerida"
   }),
   googleMapsUrl: z.string().url('Debe ser una URL de Google Maps válida'),
+  latitude: z.coerce.number().optional(),
+  longitude: z.coerce.number().optional(),
 });
 
 type MeetingPointFormValues = z.infer<typeof formSchema>;
@@ -46,6 +48,8 @@ export function MeetingPointForm({ setSheetOpen, initialData }: MeetingPointForm
             address: '',
             region: 'South',
             googleMapsUrl: '',
+            latitude: undefined,
+            longitude: undefined,
         }
     });
 
@@ -59,6 +63,8 @@ export function MeetingPointForm({ setSheetOpen, initialData }: MeetingPointForm
                 address: '',
                 region: 'South',
                 googleMapsUrl: '',
+                latitude: undefined,
+                longitude: undefined,
             });
         }
     }, [initialData, form]);
@@ -140,6 +146,35 @@ export function MeetingPointForm({ setSheetOpen, initialData }: MeetingPointForm
                         </FormItem>
                     )}
                 />
+
+                <div className="grid grid-cols-2 gap-4">
+                    <FormField
+                        control={form.control}
+                        name="latitude"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Latitud</FormLabel>
+                                <FormControl>
+                                    <Input type="number" {...field} value={field.value ?? ''} readOnly className="bg-muted/50" />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="longitude"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Longitud</FormLabel>
+                                <FormControl>
+                                    <Input type="number" {...field} value={field.value ?? ''} readOnly className="bg-muted/50" />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                </div>
 
                 <FormField
                     control={form.control}

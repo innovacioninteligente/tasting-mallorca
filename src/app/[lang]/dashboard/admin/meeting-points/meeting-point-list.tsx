@@ -4,7 +4,7 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { MeetingPoint } from "@/backend/meeting-points/domain/meeting-point.model";
 import { Button } from "@/components/ui/button";
-import { Edit, Trash2, ExternalLink } from "lucide-react";
+import { Edit, Trash2, ExternalLink, CheckCircle, AlertTriangle } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -19,6 +19,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { deleteMeetingPoint } from "@/app/server-actions/meeting-points/deleteMeetingPoint";
 import { useRouter } from "next/navigation";
+import { Badge } from "@/components/ui/badge";
 
 interface MeetingPointListProps {
     meetingPoints?: MeetingPoint[];
@@ -65,6 +66,7 @@ export function MeetingPointList({ meetingPoints, error, onEdit }: MeetingPointL
                 <TableRow>
                     <TableHead>Nombre</TableHead>
                     <TableHead>Región</TableHead>
+                    <TableHead>Estado de Coordenadas</TableHead>
                     <TableHead>Enlace a Maps</TableHead>
                     <TableHead>Acciones</TableHead>
                 </TableRow>
@@ -74,6 +76,19 @@ export function MeetingPointList({ meetingPoints, error, onEdit }: MeetingPointL
                     <TableRow key={point.id}>
                         <TableCell className="font-medium">{point.name}</TableCell>
                         <TableCell>{point.region}</TableCell>
+                        <TableCell>
+                            {point.latitude && point.longitude ? (
+                                <Badge variant="outline" className="text-green-600 border-green-300">
+                                    <CheckCircle className="mr-2 h-4 w-4" />
+                                    Obtenidas
+                                </Badge>
+                            ) : (
+                                <Badge variant="destructive" className="bg-amber-100 text-amber-800 border-amber-300 hover:bg-amber-100">
+                                     <AlertTriangle className="mr-2 h-4 w-4" />
+                                    Pendientes
+                                </Badge>
+                            )}
+                        </TableCell>
                          <TableCell>
                             <a href={point.googleMapsUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-primary hover:underline">
                                 Ver en Google Maps <ExternalLink className="h-4 w-4" />
