@@ -1,10 +1,9 @@
-
 'use client';
 
 import { AdminRouteGuard } from "@/components/auth/admin-route-guard";
 import { findBlogPostById } from "@/app/server-actions/blog/findBlogPosts";
 import { notFound, useRouter } from "next/navigation";
-import { BlogPost, CreateBlogPostInput } from "@/backend/blog/domain/blog.model";
+import { CreateBlogPostInput, BlogPost } from "@/backend/blog/domain/blog.model";
 import { useForm, FormProvider } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -16,29 +15,42 @@ import { useFormPersistence } from "@/hooks/use-form-persistence";
 import { UploadProgressDialog } from "@/components/upload-progress-dialog";
 import { cloneDeep, mergeWith } from "lodash";
 import { parseISO } from "date-fns";
-import { BlogFormHeader } from "../blog-form-header";
+import { BlogFormHeader } from "../../blog-form-header";
 import { BlogForm } from "../../blog-form";
 import { updateBlogPost } from "@/app/server-actions/blog/updateBlogPost";
-import { translateBlogPostAction, TranslateBlogPostInput } from "@/app/server-actions/blog/translateBlogPostAction";
-
-const multilingualStringSchema = z.object({
-    en: z.string().min(1, { message: "El texto en inglés es requerido." }),
-    de: z.string().optional(),
-    fr: z.string().optional(),
-    nl: z.string().optional(),
-});
+import { translateBlogPost, TranslateBlogPostInput, TranslateBlogPostOutput } from "@/ai/flows/translate-blog-post-flow";
 
 const formSchema = z.object({
   id: z.string().optional(),
-  title: multilingualStringSchema,
-  slug: multilingualStringSchema,
-  summary: multilingualStringSchema,
-  content: multilingualStringSchema,
-  author: z.string().min(1, "El autor es requerido."),
+  title: z.object({
+    en: z.string().min(1, "English title is required."),
+    de: z.string().optional(),
+    fr: z.string().optional(),
+    nl: z.string().optional(),
+  }),
+  slug: z.object({
+    en: z.string().min(1, "English slug is required."),
+    de: z.string().optional(),
+    fr: z.string().optional(),
+    nl: z.string().optional(),
+  }),
+  summary: z.object({
+    en: z.string().min(1, "English summary is required."),
+    de: z.string().optional(),
+    fr: z.string().optional(),
+    nl: z.string().optional(),
+  }),
+  content: z.object({
+    en: z.string().min(1, "English content is required."),
+    de: z.string().optional(),
+    fr: z.string().optional(),
+    nl: z.string().optional(),
+  }),
+  author: z.string().min(1, "Author is required."),
   isFeatured: z.boolean().default(false),
   published: z.boolean().default(false),
-  mainImage: z.any().refine(val => val, "La imagen principal es requerida."),
-  publishedAt: z.date({ required_error: "La fecha de publicación es requerida." }),
+  mainImage: z.any().refine(val => val, "Main image is required."),
+  publishedAt: z.date({ required_error: "Publication date is required." }),
 });
 
 type BlogFormValues = z.infer<typeof formSchema>;
@@ -192,12 +204,8 @@ export default function EditBlogPostPage({ params }: EditBlogPostPageProps) {
                 content: currentData.content.en,
             };
 
-            const result = await translateBlogPostAction(translationInput);
+            const translatedData = await translateBlogPost(translationInput);
 
-            if (result.error) throw new Error(result.error);
-            if (!result.data) throw new Error("No translation data returned.");
-
-            const translatedData = result.data;
             const updatedData = mergeWith(cloneDeep(currentData), translatedData);
             form.reset(updatedData);
 
@@ -226,7 +234,7 @@ export default function EditBlogPostPage({ params }: EditBlogPostPageProps) {
     
     return (
         <AdminRouteGuard>
-             <div className="flex flex-col h-full">
+            <div className="flex flex-col h-full">
                 <FormProvider {...form}>
                     {isSubmitting && <UploadProgressDialog progress={uploadProgress} message={uploadMessage} />}
                     <BlogFormHeader
