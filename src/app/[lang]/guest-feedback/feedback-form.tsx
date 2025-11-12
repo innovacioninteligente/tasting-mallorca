@@ -59,17 +59,13 @@ export function FeedbackForm({ dictionary }: { dictionary: Dictionary }) {
             phone: '',
             experience: '',
             tourDate: new Date(),
+            photo: undefined,
         },
     });
 
     const handleRatingSelect = (selectedRating: number) => {
         setRating(selectedRating);
-        if (selectedRating === 5) {
-            window.open(GOOGLE_REVIEW_URL, '_blank');
-            setIsSubmitted(true); // Show thank you message even after redirecting
-        } else {
-            setStep(2);
-        }
+        setStep(2);
     };
     
     const uploadFile = (file: File, feedbackId: string): Promise<string> => {
@@ -112,6 +108,9 @@ export function FeedbackForm({ dictionary }: { dictionary: Dictionary }) {
 
             if (result.error) throw new Error(result.error);
             
+            if (rating === 5) {
+                window.open(GOOGLE_REVIEW_URL, '_blank');
+            }
             setIsSubmitted(true);
 
         } catch (error: any) {
@@ -136,7 +135,7 @@ export function FeedbackForm({ dictionary }: { dictionary: Dictionary }) {
     }
 
     return (
-        <Card className="max-w-2xl mx-auto shadow-2xl border-primary/20">
+        <div className="max-w-2xl mx-auto shadow-2xl border-primary/20 rounded-xl">
             {isSubmitting && <UploadProgressDialog progress={uploadProgress} message={uploadMessage} />}
             <AnimatePresence mode="wait">
                 {step === 1 ? (
@@ -274,11 +273,6 @@ export function FeedbackForm({ dictionary }: { dictionary: Dictionary }) {
                     </motion.div>
                 )}
             </AnimatePresence>
-        </Card>
+        </div>
     );
 }
-
-// Dummy Card component to avoid ESLint error, should be replaced by actual import
-const Card = ({ className, children }: { className?: string, children: React.ReactNode }) => (
-    <div className={cn("bg-card text-card-foreground rounded-xl border", className)}>{children}</div>
-);

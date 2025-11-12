@@ -4,6 +4,7 @@
 import { createSafeAction } from '@/app/server-actions/lib/safe-action';
 import { GuestFeedbackSchema, type GuestFeedback, type GuestFeedbackFormValues } from '@/backend/feedback/domain/feedback.model';
 import { FirestoreFeedbackRepository } from '@/backend/feedback/infrastructure/firestore-feedback.repository';
+import { z } from 'zod';
 
 export const updateGuestFeedback = createSafeAction(
   {
@@ -22,7 +23,7 @@ export const updateGuestFeedback = createSafeAction(
       };
 
       if (tourDate) {
-          dataToUpdate.tourDate = tourDate.toISOString().split('T')[0];
+          dataToUpdate.tourDate = tourDate instanceof Date ? tourDate.toISOString().split('T')[0] : tourDate;
       }
 
       await repository.update(dataToUpdate);
