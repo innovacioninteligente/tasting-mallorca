@@ -38,7 +38,7 @@ export function DashboardHeader() {
   const pageTitle = getPageTitle(pathname);
 
   return (
-    <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-8 shrink-0">
+    <header className="sticky top-0 z-30 flex h-20 items-center gap-4 border-b bg-background px-4 md:px-8 shrink-0">
       <div className="md:hidden">
         <Button
           variant="ghost"
