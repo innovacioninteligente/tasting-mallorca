@@ -18,6 +18,7 @@ import {
   MapPin,
   QrCode,
   Briefcase,
+  Newspaper,
 } from 'lucide-react';
 import { useAuth, useUser } from '@/firebase';
 import { cn } from '@/lib/utils';
@@ -32,6 +33,7 @@ const navItems = [
 
 const adminNavItems = [
     { href: '/dashboard/admin/tours', label: 'Manage Tours', icon: Mountain, role: 'admin' },
+    { href: '/dashboard/admin/blog', label: 'Manage Blog', icon: Newspaper, role: 'admin' },
     { href: '/dashboard/admin/private-tours', label: 'Private Tours', icon: Briefcase, role: 'admin' },
     { href: '/dashboard/users', label: 'Manage Users', icon: Users, role: 'admin' },
     { href: '/dashboard/admin/hotels', label: 'Manage Hotels', icon: Hotel, role: 'admin' },
