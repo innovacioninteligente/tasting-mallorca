@@ -117,7 +117,7 @@ export default function NewBlogPostPage() {
                 ...data,
                 id: postId,
                 mainImage: mainImageUrl,
-                publishedAt: data.publishedAt.toISOString(),
+                publishedAt: data.publishedAt,
             };
             
             const result = await createBlogPost(postData as any);
@@ -198,7 +198,7 @@ export default function NewBlogPostPage() {
                         basePath={basePath}
                         onSubmit={form.handleSubmit(onSubmit, handleInvalidSubmit)}
                     />
-                    <main className="flex-grow overflow-y-auto px-4 pt-4 md:px-8 lg:px-10">
+                    <main className="flex-grow overflow-y-scroll px-4 pt-4 md:px-8 lg:px-10">
                        <BlogForm />
                     </main>
                 </FormProvider>
