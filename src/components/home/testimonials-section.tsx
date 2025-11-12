@@ -104,16 +104,16 @@ export function TestimonialsSection({ dictionary }: TestimonialsSectionProps) {
                     {/* Image collage */}
                     <div className="relative h-[500px] hidden md:block">
                         <div className="absolute w-[45%] h-[55%] top-0 left-10 overflow-hidden rounded-[4rem] transform rotate-[-15deg]">
-                            <Image src="https://picsum.photos/seed/testimonial1/400/600" alt="Hiker with backpack" fill className="object-cover" data-ai-hint="hiker travel" />
+                            <Image src="https://picsum.photos/seed/person-smiling-1/400/600" alt="Happy tourist" fill className="object-cover" data-ai-hint="happy person" />
                         </div>
                         <div className="absolute w-[35%] h-[40%] top-5 right-5 overflow-hidden rounded-[3rem] transform rotate-[10deg]">
-                            <Image src="https://picsum.photos/seed/testimonial2/400/400" alt="Woman on cliff" fill className="object-cover" data-ai-hint="woman cliff view" />
+                            <Image src="https://picsum.photos/seed/person-smiling-2/400/400" alt="Smiling customer" fill className="object-cover" data-ai-hint="smiling person" />
                         </div>
                         <div className="absolute w-[30%] h-[35%] bottom-10 left-0 overflow-hidden rounded-[3rem] transform rotate-[5deg]">
-                            <Image src="https://picsum.photos/seed/testimonial3/400/400" alt="Family at airport" fill className="object-cover" data-ai-hint="family travel airport" />
+                            <Image src="https://picsum.photos/seed/person-smiling-3/400/400" alt="Another smiling customer" fill className="object-cover" data-ai-hint="smiling person" />
                         </div>
                         <div className="absolute w-[40%] h-[45%] bottom-0 right-[-1rem] overflow-hidden rounded-[4rem] transform rotate-[-5deg]">
-                            <Image src="https://picsum.photos/seed/testimonial4/400/500" alt="Woman in yellow dress" fill className="object-cover" data-ai-hint="woman beach travel" />
+                            <Image src="https://picsum.photos/seed/person-smiling-4/400/500" alt="Joyful traveler" fill className="object-cover" data-ai-hint="joyful person" />
                         </div>
                     </div>
 
