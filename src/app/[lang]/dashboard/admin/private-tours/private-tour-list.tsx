@@ -93,7 +93,7 @@ export function PrivateTourList({ requests, error }: PrivateTourListProps) {
                             <TableCell>
                                 <Button variant="outline" size="sm" onClick={() => setSelectedRequest(request)}>
                                     <Eye className="mr-2 h-4 w-4" />
-                                    View
+                                    View Details
                                 </Button>
                             </TableCell>
                         </TableRow>
@@ -120,19 +120,19 @@ export function PrivateTourList({ requests, error }: PrivateTourListProps) {
                                     <DetailRow label="Hotel/Accommodation" value={selectedRequest.hotel} />
                                     <DetailRow label="Participants" value={selectedRequest.participants} />
                                     <DetailRow label="Preferred Date" value={selectedRequest.preferredDate ? format(new Date(selectedRequest.preferredDate), 'PPP') : 'Not specified'} />
-                                    <DetailRow label="Preferred Language" value={selectedRequest.preferredLanguage || 'Not specified'} />
+                                    <DetailRow label="Preferred Language" value={selectedRequest.preferredLanguage?.toUpperCase() || 'Not specified'} />
                                     <DetailRow 
                                         label="Visit Preferences"
                                         value={
                                             <div className="flex flex-wrap gap-2 pt-1">
-                                                {selectedRequest.visitPreferences?.map(p => <Badge key={p} variant="secondary">{p}</Badge>) || 'None'}
+                                                {selectedRequest.visitPreferences?.length ? selectedRequest.visitPreferences.map(p => <Badge key={p} variant="secondary">{p.replace(/-/g, ' ')}</Badge>) : 'None specified'}
                                             </div>
                                         }
                                     />
-                                    <DetailRow label="Additional Comments" value={selectedRequest.additionalComments || 'None'} />
+                                    <DetailRow label="Additional Comments" value={<p className="whitespace-pre-wrap">{selectedRequest.additionalComments || 'None'}</p>} />
                                 </dl>
                             </div>
-                            <SheetFooter className="p-6">
+                            <SheetFooter className="p-6 mt-4">
                                 <Button onClick={() => setSelectedRequest(null)}>Close</Button>
                             </SheetFooter>
                         </>

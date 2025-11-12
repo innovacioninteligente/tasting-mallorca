@@ -12,7 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Checkbox } from '@/components/ui/checkbox';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar } from '@/components/ui/calendar';
-import { CalendarIcon, Loader2, CheckCircle, MailCheck } from 'lucide-react';
+import { CalendarIcon, Loader2, MailCheck } from 'lucide-react';
 import { format } from 'date-fns';
 import { useToast } from '@/hooks/use-toast';
 import { submitPrivateTourRequest } from '@/app/server-actions/private-tours/submitPrivateTourRequest';
@@ -107,16 +107,16 @@ export function PrivateTourForm({ dictionary }: { dictionary: Dictionary }) {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <FormField control={form.control} name="name" render={({ field }) => (
               <FormItem>
-                <FormLabel>{dictionary.fullNameLabel}</FormLabel>
-                <FormControl><Input {...field} /></FormControl>
+                <FormLabel className="text-base">{dictionary.fullNameLabel}</FormLabel>
+                <FormControl><Input className="text-base" {...field} /></FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
           <FormField control={form.control} name="email" render={({ field }) => (
               <FormItem>
-                <FormLabel>{dictionary.emailLabel}</FormLabel>
-                <FormControl><Input type="email" {...field} /></FormControl>
+                <FormLabel className="text-base">{dictionary.emailLabel}</FormLabel>
+                <FormControl><Input className="text-base" type="email" {...field} /></FormControl>
                 <FormMessage />
               </FormItem>
             )}
@@ -126,16 +126,16 @@ export function PrivateTourForm({ dictionary }: { dictionary: Dictionary }) {
          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <FormField control={form.control} name="phone" render={({ field }) => (
               <FormItem>
-                <FormLabel>{dictionary.phoneLabel}</FormLabel>
-                <FormControl><Input type="tel" {...field} /></FormControl>
+                <FormLabel className="text-base">{dictionary.phoneLabel}</FormLabel>
+                <FormControl><Input className="text-base" type="tel" {...field} /></FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
           <FormField control={form.control} name="nationality" render={({ field }) => (
               <FormItem>
-                <FormLabel>{dictionary.nationalityLabel}</FormLabel>
-                <FormControl><Input {...field} /></FormControl>
+                <FormLabel className="text-base">{dictionary.nationalityLabel}</FormLabel>
+                <FormControl><Input className="text-base" {...field} /></FormControl>
                 <FormMessage />
               </FormItem>
             )}
@@ -144,8 +144,8 @@ export function PrivateTourForm({ dictionary }: { dictionary: Dictionary }) {
         
         <FormField control={form.control} name="hotel" render={({ field }) => (
             <FormItem>
-              <FormLabel>{dictionary.hotelLabel}</FormLabel>
-              <FormControl><Input {...field} /></FormControl>
+              <FormLabel className="text-base">{dictionary.hotelLabel}</FormLabel>
+              <FormControl><Input className="text-base" {...field} /></FormControl>
               <FormMessage />
             </FormItem>
           )}
@@ -154,11 +154,11 @@ export function PrivateTourForm({ dictionary }: { dictionary: Dictionary }) {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <FormField control={form.control} name="preferredDate" render={({ field }) => (
               <FormItem className="flex flex-col">
-                <FormLabel>{dictionary.preferredDateLabel}</FormLabel>
+                <FormLabel className="text-base">{dictionary.preferredDateLabel}</FormLabel>
                 <Popover>
                   <PopoverTrigger asChild>
                     <FormControl>
-                      <Button variant="outline" className={cn('w-full pl-3 text-left font-normal', !field.value && 'text-muted-foreground')}>
+                      <Button variant="outline" className={cn('w-full pl-3 text-left font-normal text-base', !field.value && 'text-muted-foreground')}>
                         {field.value ? format(field.value, 'PPP') : <span>{dictionary.pickDatePlaceholder}</span>}
                         <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                       </Button>
@@ -174,8 +174,8 @@ export function PrivateTourForm({ dictionary }: { dictionary: Dictionary }) {
           />
           <FormField control={form.control} name="participants" render={({ field }) => (
               <FormItem>
-                <FormLabel>{dictionary.participantsLabel}</FormLabel>
-                <FormControl><Input type="number" min="1" {...field} /></FormControl>
+                <FormLabel className="text-base">{dictionary.participantsLabel}</FormLabel>
+                <FormControl><Input className="text-base" type="number" min="1" {...field} /></FormControl>
                 <FormMessage />
               </FormItem>
             )}
@@ -184,9 +184,9 @@ export function PrivateTourForm({ dictionary }: { dictionary: Dictionary }) {
 
         <FormField control={form.control} name="preferredLanguage" render={({ field }) => (
             <FormItem>
-              <FormLabel>{dictionary.languageLabel}</FormLabel>
+              <FormLabel className="text-base">{dictionary.languageLabel}</FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl><SelectTrigger><SelectValue placeholder={dictionary.selectLanguagePlaceholder} /></SelectTrigger></FormControl>
+                <FormControl><SelectTrigger className="text-base"><SelectValue placeholder={dictionary.selectLanguagePlaceholder} /></SelectTrigger></FormControl>
                 <SelectContent>
                   <SelectItem value="en">{dictionary.languageEn}</SelectItem>
                   <SelectItem value="de">{dictionary.languageDe}</SelectItem>
@@ -205,7 +205,7 @@ export function PrivateTourForm({ dictionary }: { dictionary: Dictionary }) {
           render={() => (
             <FormItem>
               <div className="mb-4">
-                <FormLabel className="text-base">{dictionary.visitPreferencesLabel}</FormLabel>
+                <FormLabel className="text-lg">{dictionary.visitPreferencesLabel}</FormLabel>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {visitPreferencesOptions.map((item) => (
@@ -225,7 +225,7 @@ export function PrivateTourForm({ dictionary }: { dictionary: Dictionary }) {
                             }}
                           />
                         </FormControl>
-                        <FormLabel className="font-normal">{dictionary.visitPreferences[item]}</FormLabel>
+                        <FormLabel className="font-normal text-base">{dictionary.visitPreferences[item]}</FormLabel>
                       </FormItem>
                     )}
                   />
@@ -238,17 +238,17 @@ export function PrivateTourForm({ dictionary }: { dictionary: Dictionary }) {
         
         <FormField control={form.control} name="additionalComments" render={({ field }) => (
             <FormItem>
-              <FormLabel>{dictionary.commentsLabel}</FormLabel>
-              <FormControl><Textarea rows={4} {...field} /></FormControl>
+              <FormLabel className="text-base">{dictionary.commentsLabel}</FormLabel>
+              <FormControl><Textarea className="text-base" rows={4} {...field} /></FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
         
-        <Button type="submit" size="lg" className="w-full font-bold bg-accent text-accent-foreground hover:bg-accent/90" disabled={isSubmitting}>
+        <Button type="submit" size="lg" className="w-full font-bold bg-accent text-accent-foreground hover:bg-accent/90 text-lg" disabled={isSubmitting}>
           {isSubmitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : dictionary.submitButton}
         </Button>
-        <p className="text-center text-sm text-muted-foreground">{dictionary.submittingMessage}</p>
+        <p className="text-center text-base text-muted-foreground">{dictionary.submittingMessage}</p>
       </form>
     </Form>
   );

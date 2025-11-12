@@ -39,7 +39,7 @@ export default async function PrivateToursPage({ params: { lang } }: PageProps) 
                   <span className="text-accent">–{titleParts[1]}</span>
                 )}
               </h1>
-              <p className="mt-6 text-lg text-muted-foreground">
+              <p className="mt-6 text-xl text-muted-foreground">
                 {pageDescription}
               </p>
             </div>
