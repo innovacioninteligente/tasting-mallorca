@@ -3,18 +3,18 @@
 
 import { z } from 'zod';
 
-const MultilingualStringSchema = z.object({
-    de: z.string().optional(),
-    fr: z.string().optional(),
-    nl: z.string().optional(),
-});
-
 export type TranslateBlogPostInput = {
   title: string;
   slug: string;
   summary: string;
   content: string;
 };
+
+const MultilingualStringSchema = z.object({
+    de: z.string().optional(),
+    fr: z.string().optional(),
+    nl: z.string().optional(),
+});
 
 export type TranslateBlogPostOutput = {
   slug: z.infer<typeof MultilingualStringSchema>;

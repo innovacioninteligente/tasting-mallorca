@@ -3,16 +3,16 @@
 
 import { z } from 'zod';
 
+export type GenerateBlogPostInput = {
+  prompt: string;
+};
+
 const MultilingualStringSchema = z.object({
     en: z.string(),
     de: z.string(),
     fr: z.string(),
     nl: z.string(),
 });
-
-export type GenerateBlogPostInput = {
-  prompt: string;
-};
 
 export type GenerateBlogPostOutput = {
   slug: z.infer<typeof MultilingualStringSchema>;

@@ -1,3 +1,5 @@
+'use server';
+
 import { z } from 'zod';
 
 const ItineraryItemTranslationInputSchema = z.object({
@@ -5,7 +7,9 @@ const ItineraryItemTranslationInputSchema = z.object({
   activities: z.array(z.string()).optional(),
 });
 
-export const TranslateTourInputSchema = z.object({
+export type TranslateTourInput = z.infer<typeof TranslateTourInputSchema>;
+
+const TranslateTourInputSchema = z.object({
   title: z.string().describe('The title of the tour in English.'),
   slug: z.string().describe('The URL-friendly slug in English.'),
   description: z.string().describe('The short description of the tour in English.'),
@@ -31,7 +35,7 @@ export const TranslateTourInputSchema = z.object({
   }),
   itinerary: z.array(ItineraryItemTranslationInputSchema).describe('An array of itinerary items in English.'),
 });
-export type TranslateTourInput = z.infer<typeof TranslateTourInputSchema>;
+
 
 const MultilingualStringSchema = z.object({
     de: z.string().optional(),
@@ -48,7 +52,9 @@ const ItineraryItemTranslationOutputSchema = z.object({
     }).optional(),
 });
 
-export const TranslateTourOutputSchema = z.object({
+export type TranslateTourOutput = z.infer<typeof TranslateTourOutputSchema>;
+
+const TranslateTourOutputSchema = z.object({
   slug: MultilingualStringSchema.optional(),
   title: MultilingualStringSchema.optional(),
   description: MultilingualStringSchema.optional(),
@@ -74,7 +80,7 @@ export const TranslateTourOutputSchema = z.object({
   }).optional(),
   itinerary: z.array(ItineraryItemTranslationOutputSchema).optional(),
 });
-export type TranslateTourOutput = z.infer<typeof TranslateTourOutputSchema>;
+
 
 function buildPrompt(input: TranslateTourInput): string {
     const outputSchemaForPrompt = {
@@ -116,7 +122,7 @@ function buildPrompt(input: TranslateTourInput): string {
     2.  **Translate the 'slug' field.** It must be a URL-friendly version of the translated title (lowercase, hyphens for spaces, no special characters).
     3.  **Maintain the original meaning and key information.** The core details of the tour must remain accurate.
     4.  **Handle list-based fields correctly:** For fields in the 'details' section (like highlights, included, etc.), the input is a single string with items separated by newlines. Your output for these fields MUST be an object with keys "de", "fr", "nl", where each value is a single string that preserves the newline-separated list format.
-    5.  **Format your response STRICTLY as a JSON object.** Do not wrap it in markdown backticks (\`\`\`json) or any other text. The JSON object must conform to the schema provided at the end of this prompt.
+    5.  **Format your response STRICTLY as a single JSON object.** Do not wrap it in markdown backticks (\`\`\`json) or any other text. The JSON object must conform to the schema provided at the end of this prompt.
     6.  For itinerary activities, which are arrays of strings, translate each string tag individually and return them as arrays for each language.
     7.  If a source field is empty or missing, the corresponding translated fields should also be empty strings or empty arrays.
 
