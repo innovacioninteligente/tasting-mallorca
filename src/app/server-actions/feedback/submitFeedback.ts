@@ -7,6 +7,8 @@ import { FirestoreFeedbackRepository } from '@/backend/feedback/infrastructure/f
 const feedbackSchema = z.object({
   name: z.string().min(1, 'Name is required'),
   nationality: z.string().optional(),
+  email: z.string().email('Invalid email').optional(),
+  phone: z.string().optional(),
   tourDate: z.date(),
   rating: z.number().min(1).max(5),
   experience: z.string().min(1, 'Experience description is required'),

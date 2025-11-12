@@ -26,6 +26,8 @@ const GOOGLE_REVIEW_URL = 'https://g.page/r/CVTxIHcjWqA8EAE/review';
 const formSchema = z.object({
     name: z.string().min(1, 'Name is required'),
     nationality: z.string().optional(),
+    email: z.string().email('Invalid email').optional().or(z.literal('')),
+    phone: z.string().optional(),
     tourDate: z.date({ required_error: 'Tour date is required' }),
     experience: z.string().min(1, 'Please tell us about your experience'),
     photo: z.any().optional(),
@@ -46,6 +48,8 @@ export function FeedbackForm({ dictionary }: { dictionary: Dictionary }) {
         defaultValues: {
             name: '',
             nationality: '',
+            email: '',
+            phone: '',
             experience: '',
         },
     });
@@ -160,6 +164,22 @@ export function FeedbackForm({ dictionary }: { dictionary: Dictionary }) {
                                         <FormItem>
                                             <FormLabel className="text-base">{dictionary.nationalityLabel}</FormLabel>
                                             <FormControl><Input className="text-base h-12" {...field} /></FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )} />
+                               </div>
+                               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <FormField control={form.control} name="email" render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel className="text-base">Email (Optional)</FormLabel>
+                                            <FormControl><Input className="text-base h-12" type="email" {...field} /></FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )} />
+                                     <FormField control={form.control} name="phone" render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel className="text-base">Phone (Optional)</FormLabel>
+                                            <FormControl><Input className="text-base h-12" type="tel" {...field} /></FormControl>
                                             <FormMessage />
                                         </FormItem>
                                     )} />
