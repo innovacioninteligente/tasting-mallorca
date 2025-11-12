@@ -2,8 +2,7 @@
 
 import { createSafeAction } from '@/app/server-actions/lib/safe-action';
 import { z } from 'zod';
-import { getFirestore } from 'firebase-admin/firestore';
-import { adminApp } from '@/firebase/server/config';
+import { FirestoreFeedbackRepository } from '@/backend/feedback/infrastructure/firestore-feedback.repository';
 
 const feedbackSchema = z.object({
   name: z.string().min(1, 'Name is required'),
@@ -20,16 +19,18 @@ export const submitGuestFeedback = createSafeAction(
   {}, // Public action, no auth required
   async (data: FeedbackInput): Promise<{ data?: { success: true }; error?: string }> => {
     try {
-      adminApp; // Ensure Firebase Admin is initialized
-      const db = getFirestore();
+      const repository = new FirestoreFeedbackRepository();
       
       const feedbackData = {
+        id: crypto.randomUUID(),
         ...data,
         submittedAt: new Date(),
         tourDate: data.tourDate.toISOString().split('T')[0], // Store date as YYYY-MM-DD
+        published: false, // Default to not published
+        isFeatured: false, // Default to not featured
       };
 
-      await db.collection('guestFeedback').add(feedbackData);
+      await repository.save(feedbackData);
 
       return { data: { success: true } };
     } catch (error: any) {
