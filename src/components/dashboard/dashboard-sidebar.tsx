@@ -75,18 +75,18 @@ export function DashboardSidebar({ isMobileMenuOpen, setIsMobileMenuOpen }: Dash
             const href = `/${lang}${item.href}`;
             const Icon = item.icon;
             return (
-              <Button
-                key={item.href}
-                asChild
-                variant={pathname.startsWith(href) ? 'secondary' : 'ghost'}
-                className="w-full justify-start text-base"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                <Link href={href}>
-                  <Icon className="mr-3 h-5 w-5" />
-                  {item.label}
-                </Link>
-              </Button>
+                <Button
+                  key={item.href}
+                  asChild
+                  variant={pathname.startsWith(href) ? 'secondary' : 'ghost'}
+                  className="w-full justify-start text-base"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  <Link href={href}>
+                    <Icon className="mr-3 h-5 w-5" />
+                    {item.label}
+                  </Link>
+                </Button>
             );
           })}
 
@@ -163,7 +163,7 @@ export function DashboardSidebar({ isMobileMenuOpen, setIsMobileMenuOpen }: Dash
     <>
       {/* Desktop Sidebar */}
       <aside className="hidden w-72 flex-col border-r bg-card md:flex shrink-0">
-        <div className="flex h-16 items-center border-b px-6">
+        <div className="flex h-20 items-center border-b px-6">
           <Link href={`/${lang}/`} className="flex items-center gap-2 font-semibold">
             <Sprout className="h-7 w-7 text-primary" />
             <span className="font-headline text-xl">Tasting Mallorca</span>
@@ -175,16 +175,12 @@ export function DashboardSidebar({ isMobileMenuOpen, setIsMobileMenuOpen }: Dash
       {/* Mobile Sidebar */}
       <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
         <SheetContent side="left" className="flex w-72 flex-col bg-card p-0">
-          <SheetHeader className="flex h-16 flex-row items-center justify-between border-b px-6">
+          <SheetHeader className="flex h-20 flex-row items-center justify-between border-b px-6">
              <SheetTitle className='sr-only'>Main Menu</SheetTitle>
              <Link href={`/${lang}/`} className="flex items-center gap-2 font-semibold" onClick={() => setIsMobileMenuOpen(false)}>
                 <Sprout className="h-7 w-7 text-primary" />
                 <span className="font-headline text-xl">Tasting Mallorca</span>
             </Link>
-             <SheetClose>
-                <X className="h-6 w-6" />
-                <span className="sr-only">Close menu</span>
-             </SheetClose>
           </SheetHeader>
           <SidebarContent />
         </SheetContent>
