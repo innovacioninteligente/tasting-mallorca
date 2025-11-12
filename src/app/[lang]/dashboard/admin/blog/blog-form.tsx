@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useFormContext } from "react-hook-form";
@@ -26,8 +25,7 @@ export function BlogForm() {
 
   return (
     <Form {...form}>
-      <form className="space-y-8">
-        <div className="pt-2">
+        <div className="space-y-8 pt-2">
             <Tabs defaultValue="main" className="w-full">
             <TabsList className="w-full md:grid md:w-full md:grid-cols-2 flex justify-start overflow-x-auto">
                 <TabsTrigger value="main">Content & Images</TabsTrigger>
@@ -199,7 +197,6 @@ export function BlogForm() {
             </TabsContent>
             </Tabs>
         </div>
-      </form>
     </Form>
   );
 }
