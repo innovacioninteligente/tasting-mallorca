@@ -5,7 +5,7 @@ import { AdminRouteGuard } from "@/components/auth/admin-route-guard";
 import { findBlogPostById } from "@/app/server-actions/blog/findBlogPosts";
 import { notFound } from "next/navigation";
 import { BlogPost } from "@/backend/blog/domain/blog.model";
-import { BlogFormPage } from "../../../blog-form-page";
+import { BlogFormPage } from "../blog-form-page";
 
 interface EditBlogPostPageProps {
     params: {

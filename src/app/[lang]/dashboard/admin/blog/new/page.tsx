@@ -7,7 +7,7 @@ import { BlogFormPage } from "../blog-form-page";
 
 export default function NewBlogPostPage() {
     const pathname = usePathname();
-    const lang = pathname.split('/')[1];
+    const lang = pathname.split('/')[1] || 'en';
 
     return (
         <AdminRouteGuard>
