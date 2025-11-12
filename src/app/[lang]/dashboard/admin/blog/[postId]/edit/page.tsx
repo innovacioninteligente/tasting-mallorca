@@ -4,7 +4,7 @@
 import { AdminRouteGuard } from "@/components/auth/admin-route-guard";
 import { findBlogPostById } from "@/app/server-actions/blog/findBlogPosts";
 import { notFound, useRouter } from "next/navigation";
-import { BlogPost } from "@/backend/blog/domain/blog.model";
+import { BlogPost, CreateBlogPostInput } from "@/backend/blog/domain/blog.model";
 import { useForm, FormProvider } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -17,7 +17,7 @@ import { UploadProgressDialog } from "@/components/upload-progress-dialog";
 import { cloneDeep, mergeWith } from "lodash";
 import { parseISO } from "date-fns";
 import { BlogFormHeader } from "../blog-form-header";
-import { BlogForm } from "../blog-form";
+import { BlogForm } from "../../blog-form";
 import { updateBlogPost } from "@/app/server-actions/blog/updateBlogPost";
 import { translateBlogPostAction, TranslateBlogPostInput } from "@/app/server-actions/blog/translateBlogPostAction";
 
