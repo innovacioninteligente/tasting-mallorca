@@ -17,6 +17,7 @@ const dictionaries = {
     tourGuides: () => import('./en/tour-guides.json').then((module) => module.default),
     testimonials: () => import('./en/testimonials.json').then((module) => module.default),
     blog: () => import('./en/blog.json').then((module) => module.default),
+    privateTours: () => import('./en/private-tours.json').then((module) => module.default),
     tourDetail: {
       header: () => import('./en/tour-detail/header.json').then(m => m.default),
       overview: () => import('./en/tour-detail/overview.json').then(m => m.default),
@@ -42,6 +43,7 @@ const dictionaries = {
     tourGuides: () => import('./fr/tour-guides.json').then((module) => module.default),
     testimonials: () => import('./fr/testimonials.json').then((module) => module.default),
     blog: () => import('./fr/blog.json').then((module) => module.default),
+    privateTours: () => import('./fr/private-tours.json').then((module) => module.default),
     tourDetail: {
       header: () => import('./fr/tour-detail/header.json').then(m => m.default),
       overview: () => import('./fr/tour-detail/overview.json').then(m => m.default),
@@ -67,6 +69,7 @@ const dictionaries = {
     tourGuides: () => import('./de/tour-guides.json').then((module) => module.default),
     testimonials: () => import('./de/testimonials.json').then((module) => module.default),
     blog: () => import('./de/blog.json').then((module) => module.default),
+    privateTours: () => import('./de/private-tours.json').then((module) => module.default),
     tourDetail: {
       header: () => import('./de/tour-detail/header.json').then(m => m.default),
       overview: () => import('./de/tour-detail/overview.json').then(m => m.default),
@@ -92,6 +95,7 @@ const dictionaries = {
     tourGuides: () => import('./nl/tour-guides.json').then((module) => module.default),
     testimonials: () => import('./nl/testimonials.json').then((module) => module.default),
     blog: () => import('./nl/blog.json').then((module) => module.default),
+    privateTours: () => import('./nl/private-tours.json').then((module) => module.default),
     tourDetail: {
       header: () => import('./nl/tour-detail/header.json').then(m => m.default),
       overview: () => import('./nl/tour-detail/overview.json').then(m => m.default),
@@ -104,6 +108,32 @@ const dictionaries = {
         validationResult: () => import('./nl/dashboard/validation-result.json').then(m => m.default),
     }
   },
+  es: {
+    home: () => import('./es/home.json').then((module) => module.default),
+    header: () => import('./es/header.json').then((module) => module.default),
+    whatsIncluded: () => import('./es/whats-included.json').then((module) => module.default),
+    whyChooseUs: () => import('./es/why-choose-us.json').then((module) => module.default),
+    tours: () => import('./es/tours.json').then((module) => module.default),
+    featuredTours: () => import('./es/featured-tours.json').then((module) => module.default),
+    gallery: () => import('./es/gallery.json').then((module) => module.default),
+    happyCustomers: () => import('./es/happy-customers.json').then((module) => module.default),
+    destinations: () => import('./es/destinations.json').then((module) => module.default),
+    tourGuides: () => import('./es/tour-guides.json').then((module) => module.default),
+    testimonials: () => import('./es/testimonials.json').then((module) => module.default),
+    blog: () => import('./es/blog.json').then((module) => module.default),
+    privateTours: () => import('./es/private-tours.json').then((module) => module.default),
+    tourDetail: {
+      header: () => import('./es/tour-detail/header.json').then(m => m.default),
+      overview: () => import('./es/tour-detail/overview.json').then(m => m.default),
+      tourInfo: () => import('./es/tour-detail/tour-info.json').then(m => m.default),
+      tourDetails: () => import('./es/tour-detail/tour-details.json').then(m => m.default),
+      itinerary: () => import('./es/tour-detail/itinerary.json').then(m => m.default),
+      booking: () => import('./es/tour-detail/booking.json').then(m => m.default),
+    },
+    dashboard: {
+        validationResult: () => import('./es/dashboard/validation-result.json').then(m => m.default),
+    }
+  }
 };
 
 const loadDictionary = async (locale: Locale) => {
@@ -133,6 +163,7 @@ const loadDictionary = async (locale: Locale) => {
         tourGuides: await lang.tourGuides(),
         testimonials: await lang.testimonials(),
         blog: await lang.blog(),
+        privateTours: await lang.privateTours(),
         tourDetail,
         dashboard,
     };

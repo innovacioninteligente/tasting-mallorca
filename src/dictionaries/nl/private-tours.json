@@ -1,0 +1,39 @@
+
+{
+    "pageTitle": "Privérondleidingen – Creëer je Eigen Ervaring",
+    "pageDescription": "Op zoek naar een meer persoonlijke ervaring? Vertel ons wat je wilt ontdekken en wij ontwerpen een privétour speciaal voor jou - met een lokale gids, authentiek eten en exclusieve stops op heel Mallorca.",
+    "form": {
+        "fullNameLabel": "Volledige naam",
+        "emailLabel": "E-mail",
+        "phoneLabel": "Telefoonnummer (optioneel)",
+        "nationalityLabel": "Nationaliteit (optioneel)",
+        "hotelLabel": "Hotel of naam van de accommodatie",
+        "preferredDateLabel": "Voorkeursdatum voor de tour",
+        "pickDatePlaceholder": "Kies een datum",
+        "participantsLabel": "Aantal deelnemers",
+        "languageLabel": "Voorkeurstaal voor de tour",
+        "selectLanguagePlaceholder": "Selecteer een taal",
+        "languageEn": "Engels",
+        "languageDe": "Duits",
+        "languageFr": "Frans",
+        "languageNl": "Nederlands",
+        "visitPreferencesLabel": "Wat zou je willen bezoeken?",
+        "visitPreferences": {
+            "local-markets": "Lokale markten",
+            "hidden-villages": "Verborgen dorpen",
+            "olive-oil-estates": "Olijfolieboerderijen",
+            "wineries": "Wijnmakerijen of wijnproeverijen",
+            "mallorcan-food": "Traditionele Mallorcaanse eetervaringen",
+            "country-houses": "Authentieke landhuizen",
+            "artisan-markets": "Ambachtelijke markten",
+            "scenic-routes": "Schilderachtige routes & uitzichtpunten"
+        },
+        "commentsLabel": "Aanvullende opmerkingen of voorkeuren",
+        "submitButton": "Verzoek verzenden",
+        "submitButtonLoading": "Verzenden...",
+        "submittingMessage": "We nemen binnen 24 uur contact met je op met een voorstel op maat.",
+        "successToastTitle": "Verzoek verzonden!",
+        "successToastDescription": "We nemen binnen 24 uur contact met je op met een voorstel op maat.",
+        "errorToastTitle": "Fout bij het verzenden van het verzoek"
+    }
+}

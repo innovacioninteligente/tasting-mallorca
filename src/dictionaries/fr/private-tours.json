@@ -1,0 +1,39 @@
+
+{
+    "pageTitle": "Tours Privés – Créez Votre Propre Expérience",
+    "pageDescription": "Vous cherchez une expérience plus personnelle ? Dites-nous ce que vous aimeriez découvrir et nous concevrons une visite privée rien que pour vous – avec un guide local, une cuisine authentique et des arrêts exclusifs à travers Majorque.",
+    "form": {
+        "fullNameLabel": "Nom complet",
+        "emailLabel": "Email",
+        "phoneLabel": "Numéro de téléphone (optionnel)",
+        "nationalityLabel": "Nationalité (optionnel)",
+        "hotelLabel": "Hôtel ou nom de l'hébergement",
+        "preferredDateLabel": "Date préférée pour la visite",
+        "pickDatePlaceholder": "Choisissez une date",
+        "participantsLabel": "Nombre de participants",
+        "languageLabel": "Langue préférée pour la visite",
+        "selectLanguagePlaceholder": "Sélectionnez une langue",
+        "languageEn": "Anglais",
+        "languageDe": "Allemand",
+        "languageFr": "Français",
+        "languageNl": "Néerlandais",
+        "visitPreferencesLabel": "Que souhaiteriez-vous visiter ?",
+        "visitPreferences": {
+            "local-markets": "Marchés locaux",
+            "hidden-villages": "Villages cachés",
+            "olive-oil-estates": "Domaines d'huile d'olive",
+            "wineries": "Caves ou dégustations de vin",
+            "mallorcan-food": "Expériences culinaires traditionnelles majorquines",
+            "country-houses": "Maisons de campagne authentiques",
+            "artisan-markets": "Marchés artisanaux",
+            "scenic-routes": "Routes panoramiques et points de vue"
+        },
+        "commentsLabel": "Commentaires ou préférences supplémentaires",
+        "submitButton": "Envoyer la demande",
+        "submitButtonLoading": "Envoi en cours...",
+        "submittingMessage": "Nous vous répondrons dans les 24 heures avec une proposition sur mesure.",
+        "successToastTitle": "Demande envoyée !",
+        "successToastDescription": "Nous vous répondrons dans les 24 heures avec une proposition sur mesure.",
+        "errorToastTitle": "Erreur lors de l'envoi de la demande"
+    }
+}

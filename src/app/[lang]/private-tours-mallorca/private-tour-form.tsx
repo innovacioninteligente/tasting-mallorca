@@ -18,17 +18,14 @@ import { useToast } from '@/hooks/use-toast';
 import { submitPrivateTourRequest } from '@/app/server-actions/private-tours/submitPrivateTourRequest';
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
+import { DictionaryType } from '@/dictionaries/get-dictionary';
 
-const visitPreferences = [
-    { id: 'local-markets', label: 'Local markets' },
-    { id: 'hidden-villages', label: 'Hidden villages' },
-    { id: 'olive-oil-estates', label: 'Olive oil estates' },
-    { id: 'wineries', label: 'Wineries or wine tastings' },
-    { id: 'mallorcan-food', label: 'Traditional Mallorcan food experiences' },
-    { id: 'country-houses', label: 'Authentic country houses' },
-    { id: 'artisan-markets', label: 'Artisan or craft markets' },
-    { id: 'scenic-routes', label: 'Scenic routes & viewpoints' },
-];
+type Dictionary = DictionaryType['privateTours']['form'];
+
+const visitPreferencesOptions = [
+    'local-markets', 'hidden-villages', 'olive-oil-estates', 'wineries',
+    'mallorcan-food', 'country-houses', 'artisan-markets', 'scenic-routes'
+] as const;
 
 const formSchema = z.object({
   name: z.string().min(1, 'Name is required'),
@@ -45,7 +42,7 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
-export function PrivateTourForm() {
+export function PrivateTourForm({ dictionary }: { dictionary: Dictionary }) {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -72,14 +69,14 @@ export function PrivateTourForm() {
         throw new Error(result.error);
       }
       toast({
-        title: 'Request Sent!',
-        description: "We'll get back to you within 24 hours with a tailor-made proposal.",
+        title: dictionary.successToastTitle,
+        description: dictionary.successToastDescription,
       });
       form.reset();
     } catch (error: any) {
       toast({
         variant: 'destructive',
-        title: 'Error submitting request',
+        title: dictionary.errorToastTitle,
         description: error.message,
       });
     } finally {
@@ -93,7 +90,7 @@ export function PrivateTourForm() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <FormField control={form.control} name="name" render={({ field }) => (
               <FormItem>
-                <FormLabel>Full Name</FormLabel>
+                <FormLabel>{dictionary.fullNameLabel}</FormLabel>
                 <FormControl><Input {...field} /></FormControl>
                 <FormMessage />
               </FormItem>
@@ -101,7 +98,7 @@ export function PrivateTourForm() {
           />
           <FormField control={form.control} name="email" render={({ field }) => (
               <FormItem>
-                <FormLabel>Email</FormLabel>
+                <FormLabel>{dictionary.emailLabel}</FormLabel>
                 <FormControl><Input type="email" {...field} /></FormControl>
                 <FormMessage />
               </FormItem>
@@ -112,7 +109,7 @@ export function PrivateTourForm() {
          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <FormField control={form.control} name="phone" render={({ field }) => (
               <FormItem>
-                <FormLabel>Phone Number (Optional)</FormLabel>
+                <FormLabel>{dictionary.phoneLabel}</FormLabel>
                 <FormControl><Input type="tel" {...field} /></FormControl>
                 <FormMessage />
               </FormItem>
@@ -120,7 +117,7 @@ export function PrivateTourForm() {
           />
           <FormField control={form.control} name="nationality" render={({ field }) => (
               <FormItem>
-                <FormLabel>Nationality (Optional)</FormLabel>
+                <FormLabel>{dictionary.nationalityLabel}</FormLabel>
                 <FormControl><Input {...field} /></FormControl>
                 <FormMessage />
               </FormItem>
@@ -130,7 +127,7 @@ export function PrivateTourForm() {
         
         <FormField control={form.control} name="hotel" render={({ field }) => (
             <FormItem>
-              <FormLabel>Hotel or accommodation name</FormLabel>
+              <FormLabel>{dictionary.hotelLabel}</FormLabel>
               <FormControl><Input {...field} /></FormControl>
               <FormMessage />
             </FormItem>
@@ -140,12 +137,12 @@ export function PrivateTourForm() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <FormField control={form.control} name="preferredDate" render={({ field }) => (
               <FormItem className="flex flex-col">
-                <FormLabel>Preferred tour date</FormLabel>
+                <FormLabel>{dictionary.preferredDateLabel}</FormLabel>
                 <Popover>
                   <PopoverTrigger asChild>
                     <FormControl>
                       <Button variant="outline" className={cn('w-full pl-3 text-left font-normal', !field.value && 'text-muted-foreground')}>
-                        {field.value ? format(field.value, 'PPP') : <span>Pick a date</span>}
+                        {field.value ? format(field.value, 'PPP') : <span>{dictionary.pickDatePlaceholder}</span>}
                         <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                       </Button>
                     </FormControl>
@@ -160,7 +157,7 @@ export function PrivateTourForm() {
           />
           <FormField control={form.control} name="participants" render={({ field }) => (
               <FormItem>
-                <FormLabel>Number of participants</FormLabel>
+                <FormLabel>{dictionary.participantsLabel}</FormLabel>
                 <FormControl><Input type="number" min="1" {...field} /></FormControl>
                 <FormMessage />
               </FormItem>
@@ -170,14 +167,14 @@ export function PrivateTourForm() {
 
         <FormField control={form.control} name="preferredLanguage" render={({ field }) => (
             <FormItem>
-              <FormLabel>Preferred language for the tour</FormLabel>
+              <FormLabel>{dictionary.languageLabel}</FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl><SelectTrigger><SelectValue placeholder="Select a language" /></SelectTrigger></FormControl>
+                <FormControl><SelectTrigger><SelectValue placeholder={dictionary.selectLanguagePlaceholder} /></SelectTrigger></FormControl>
                 <SelectContent>
-                  <SelectItem value="en">English</SelectItem>
-                  <SelectItem value="de">German</SelectItem>
-                  <SelectItem value="fr">French</SelectItem>
-                  <SelectItem value="nl">Dutch</SelectItem>
+                  <SelectItem value="en">{dictionary.languageEn}</SelectItem>
+                  <SelectItem value="de">{dictionary.languageDe}</SelectItem>
+                  <SelectItem value="fr">{dictionary.languageFr}</SelectItem>
+                  <SelectItem value="nl">{dictionary.languageNl}</SelectItem>
                 </SelectContent>
               </Select>
               <FormMessage />
@@ -191,27 +188,27 @@ export function PrivateTourForm() {
           render={() => (
             <FormItem>
               <div className="mb-4">
-                <FormLabel className="text-base">What would you like to visit?</FormLabel>
+                <FormLabel className="text-base">{dictionary.visitPreferencesLabel}</FormLabel>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {visitPreferences.map((item) => (
+                {visitPreferencesOptions.map((item) => (
                   <FormField
-                    key={item.id}
+                    key={item}
                     control={form.control}
                     name="visitPreferences"
                     render={({ field }) => (
-                      <FormItem key={item.id} className="flex flex-row items-start space-x-3 space-y-0">
+                      <FormItem key={item} className="flex flex-row items-start space-x-3 space-y-0">
                         <FormControl>
                           <Checkbox
-                            checked={field.value?.includes(item.id)}
+                            checked={field.value?.includes(item)}
                             onCheckedChange={(checked) => {
                               return checked
-                                ? field.onChange([...(field.value || []), item.id])
-                                : field.onChange(field.value?.filter((value) => value !== item.id));
+                                ? field.onChange([...(field.value || []), item])
+                                : field.onChange(field.value?.filter((value) => value !== item));
                             }}
                           />
                         </FormControl>
-                        <FormLabel className="font-normal">{item.label}</FormLabel>
+                        <FormLabel className="font-normal">{dictionary.visitPreferences[item]}</FormLabel>
                       </FormItem>
                     )}
                   />
@@ -224,7 +221,7 @@ export function PrivateTourForm() {
         
         <FormField control={form.control} name="additionalComments" render={({ field }) => (
             <FormItem>
-              <FormLabel>Additional comments or preferences</FormLabel>
+              <FormLabel>{dictionary.commentsLabel}</FormLabel>
               <FormControl><Textarea rows={4} {...field} /></FormControl>
               <FormMessage />
             </FormItem>
@@ -232,9 +229,9 @@ export function PrivateTourForm() {
         />
         
         <Button type="submit" size="lg" className="w-full font-bold" disabled={isSubmitting}>
-          {isSubmitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : 'Send Request'}
+          {isSubmitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : dictionary.submitButton}
         </Button>
-        <p className="text-center text-sm text-muted-foreground">We’ll get back to you within 24 hours with a tailor-made proposal.</p>
+        <p className="text-center text-sm text-muted-foreground">{dictionary.submittingMessage}</p>
       </form>
     </Form>
   );

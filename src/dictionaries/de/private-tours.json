@@ -1,0 +1,39 @@
+
+{
+    "pageTitle": "Private Touren – Erstellen Sie Ihr eigenes Erlebnis",
+    "pageDescription": "Suchen Sie ein persönlicheres Erlebnis? Sagen Sie uns, was Sie entdecken möchten, und wir gestalten eine private Tour nur für Sie – mit einem lokalen Guide, authentischem Essen und exklusiven Stopps auf ganz Mallorca.",
+    "form": {
+        "fullNameLabel": "Vollständiger Name",
+        "emailLabel": "E-Mail",
+        "phoneLabel": "Telefonnummer (optional)",
+        "nationalityLabel": "Nationalität (optional)",
+        "hotelLabel": "Hotel oder Unterkunft",
+        "preferredDateLabel": "Bevorzugtes Tourdatum",
+        "pickDatePlaceholder": "Wählen Sie ein Datum",
+        "participantsLabel": "Anzahl der Teilnehmer",
+        "languageLabel": "Bevorzugte Sprache für die Tour",
+        "selectLanguagePlaceholder": "Wählen Sie eine Sprache",
+        "languageEn": "Englisch",
+        "languageDe": "Deutsch",
+        "languageFr": "Französisch",
+        "languageNl": "Niederländisch",
+        "visitPreferencesLabel": "Was möchten Sie besuchen?",
+        "visitPreferences": {
+            "local-markets": "Lokale Märkte",
+            "hidden-villages": "Versteckte Dörfer",
+            "olive-oil-estates": "Olivenöl-Anwesen",
+            "wineries": "Weingüter oder Weinproben",
+            "mallorcan-food": "Traditionelle mallorquinische Essenserlebnisse",
+            "country-houses": "Authentische Landhäuser",
+            "artisan-markets": "Handwerks- oder Kunsthandwerkermärkte",
+            "scenic-routes": "Malerische Routen & Aussichtspunkte"
+        },
+        "commentsLabel": "Zusätzliche Kommentare oder Vorlieben",
+        "submitButton": "Anfrage senden",
+        "submitButtonLoading": "Wird gesendet...",
+        "submittingMessage": "Wir melden uns innerhalb von 24 Stunden mit einem maßgeschneiderten Vorschlag bei Ihnen.",
+        "successToastTitle": "Anfrage gesendet!",
+        "successToastDescription": "Wir werden uns innerhalb von 24 Stunden mit einem maßgeschneiderten Vorschlag bei Ihnen melden.",
+        "errorToastTitle": "Fehler beim Senden der Anfrage"
+    }
+}

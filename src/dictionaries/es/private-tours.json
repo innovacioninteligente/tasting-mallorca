@@ -1,0 +1,39 @@
+
+{
+    "pageTitle": "Tours Privados – Crea Tu Propia Experiencia",
+    "pageDescription": "¿Buscas una experiencia más personal? Dinos qué te gustaría descubrir y diseñaremos un tour privado solo para ti, con un guía local, comida auténtica y paradas exclusivas por toda Mallorca.",
+    "form": {
+        "fullNameLabel": "Nombre completo",
+        "emailLabel": "Email",
+        "phoneLabel": "Número de teléfono (opcional)",
+        "nationalityLabel": "Nacionalidad (opcional)",
+        "hotelLabel": "Hotel o nombre del alojamiento",
+        "preferredDateLabel": "Fecha preferida para la excursión",
+        "pickDatePlaceholder": "Elige una fecha",
+        "participantsLabel": "Número de participantes",
+        "languageLabel": "Idioma preferido para el tour",
+        "selectLanguagePlaceholder": "Selecciona un idioma",
+        "languageEn": "Inglés",
+        "languageDe": "Alemán",
+        "languageFr": "Francés",
+        "languageNl": "Neerlandés",
+        "visitPreferencesLabel": "¿Qué te gustaría visitar?",
+        "visitPreferences": {
+            "local-markets": "Mercados locales",
+            "hidden-villages": "Pueblos escondidos",
+            "olive-oil-estates": "Fincas de aceite de oliva",
+            "wineries": "Bodegas o catas de vino",
+            "mallorcan-food": "Experiencias de comida tradicional mallorquina",
+            "country-houses": "Fincas rústicas auténticas",
+            "artisan-markets": "Mercadillos de artesanía",
+            "scenic-routes": "Rutas panorámicas y miradores"
+        },
+        "commentsLabel": "Comentarios o preferencias adicionales",
+        "submitButton": "Enviar Solicitud",
+        "submitButtonLoading": "Enviando...",
+        "submittingMessage": "Te responderemos en 24 horas con una propuesta a medida.",
+        "successToastTitle": "¡Solicitud Enviada!",
+        "successToastDescription": "Te responderemos en 24 horas con una propuesta a medida.",
+        "errorToastTitle": "Error al enviar la solicitud"
+    }
+}

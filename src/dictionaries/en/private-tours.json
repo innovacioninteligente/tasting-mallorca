@@ -1,0 +1,39 @@
+
+{
+    "pageTitle": "Private Tours – Create Your Own Experience",
+    "pageDescription": "Looking for a more personal experience? Tell us what you’d like to discover and we’ll design a private tour just for you — with a local guide, authentic food, and exclusive stops across Mallorca.",
+    "form": {
+        "fullNameLabel": "Full Name",
+        "emailLabel": "Email",
+        "phoneLabel": "Phone Number (Optional)",
+        "nationalityLabel": "Nationality (Optional)",
+        "hotelLabel": "Hotel or accommodation name",
+        "preferredDateLabel": "Preferred tour date",
+        "pickDatePlaceholder": "Pick a date",
+        "participantsLabel": "Number of participants",
+        "languageLabel": "Preferred language for the tour",
+        "selectLanguagePlaceholder": "Select a language",
+        "languageEn": "English",
+        "languageDe": "German",
+        "languageFr": "French",
+        "languageNl": "Dutch",
+        "visitPreferencesLabel": "What would you like to visit?",
+        "visitPreferences": {
+            "local-markets": "Local markets",
+            "hidden-villages": "Hidden villages",
+            "olive-oil-estates": "Olive oil estates",
+            "wineries": "Wineries or wine tastings",
+            "mallorcan-food": "Traditional Mallorcan food experiences",
+            "country-houses": "Authentic country houses",
+            "artisan-markets": "Artisan or craft markets",
+            "scenic-routes": "Scenic routes & viewpoints"
+        },
+        "commentsLabel": "Additional comments or preferences",
+        "submitButton": "Send Request",
+        "submitButtonLoading": "Sending...",
+        "submittingMessage": "We’ll get back to you within 24 hours with a tailor-made proposal.",
+        "successToastTitle": "Request Sent!",
+        "successToastDescription": "We'll get back to you within 24 hours with a tailor-made proposal.",
+        "errorToastTitle": "Error submitting request"
+    }
+}
