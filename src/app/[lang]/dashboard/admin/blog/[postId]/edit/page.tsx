@@ -26,10 +26,12 @@ export default async function EditBlogPostPage({ params }: EditBlogPostPageProps
 
     return (
         <AdminRouteGuard>
-            <EditBlogPostClientPage 
-                initialData={post} 
-                lang={params.lang}
-            />
+             <div className="flex flex-col h-full">
+                <EditBlogPostClientPage 
+                    initialData={post} 
+                    lang={params.lang}
+                />
+            </div>
         </AdminRouteGuard>
     );
 }

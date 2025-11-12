@@ -197,21 +197,19 @@ export function EditBlogPostClientPage({ initialData, lang }: EditBlogPostClient
     const basePath = `/${lang}/dashboard/admin/blog`;
 
     return (
-        <div className="flex flex-col h-full">
+        <FormProvider {...form}>
             {isSubmitting && <UploadProgressDialog progress={uploadProgress} message={uploadMessage} />}
-            <FormProvider {...form}>
-                <BlogFormHeader
-                    isSubmitting={isSubmitting}
-                    isTranslating={isTranslating}
-                    onTranslate={handleTranslate}
-                    isEditing={!!initialData}
-                    basePath={basePath}
-                    onSubmit={form.handleSubmit(onSubmit, handleInvalidSubmit)}
-                />
-                <main className="flex-grow overflow-y-auto px-4 pt-4 md:px-8 lg:px-10">
-                   <BlogForm />
-                </main>
-            </FormProvider>
-        </div>
+            <BlogFormHeader
+                isSubmitting={isSubmitting}
+                isTranslating={isTranslating}
+                onTranslate={handleTranslate}
+                isEditing={!!initialData}
+                basePath={basePath}
+                onSubmit={form.handleSubmit(onSubmit, handleInvalidSubmit)}
+            />
+            <main className="flex-grow overflow-y-auto px-4 pt-4 md:px-8 lg:px-10">
+                <BlogForm />
+            </main>
+        </FormProvider>
     );
 }
