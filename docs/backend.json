@@ -245,6 +245,39 @@
             "submittedAt": { "type": "string", "format": "date-time" }
         },
         "required": ["name", "email", "hotel", "participants", "submittedAt"]
+    },
+    "BlogPost": {
+      "title": "Blog Post",
+      "description": "Represents a single blog post or article.",
+      "type": "object",
+      "properties": {
+        "slug": {
+          "type": "object",
+          "description": "URL-friendly slugs for each language.",
+          "properties": { "en": { "type": "string" }, "de": { "type": "string" }, "fr": { "type": "string" }, "nl": { "type": "string" } }
+        },
+        "title": {
+          "type": "object",
+          "description": "The title of the blog post in multiple languages.",
+          "properties": { "en": { "type": "string" }, "de": { "type": "string" }, "fr": { "type": "string" }, "nl": { "type": "string" } }
+        },
+        "summary": {
+          "type": "object",
+          "description": "A short summary for blog post cards, in multiple languages.",
+          "properties": { "en": { "type": "string" }, "de": { "type": "string" }, "fr": { "type": "string" }, "nl": { "type": "string" } }
+        },
+        "content": {
+          "type": "object",
+          "description": "The full content of the blog post in Markdown, in multiple languages.",
+          "properties": { "en": { "type": "string" }, "de": { "type": "string" }, "fr": { "type": "string" }, "nl": { "type": "string" } }
+        },
+        "mainImage": { "type": "string", "format": "uri" },
+        "author": { "type": "string" },
+        "published": { "type": "boolean" },
+        "isFeatured": { "type": "boolean" },
+        "publishedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["slug", "title", "summary", "content", "mainImage", "author", "published", "publishedAt"]
     }
   },
   "auth": {
@@ -282,6 +315,10 @@
     "/privateTourRequests/{requestId}": {
         "schema": { "$ref": "#/entities/PrivateTourRequest" },
         "description": "Stores all customer requests for private tours."
+    },
+    "/blogPosts/{postId}": {
+      "schema": { "$ref": "#/entities/BlogPost" },
+      "description": "Stores all blog posts."
     }
   }
 }
