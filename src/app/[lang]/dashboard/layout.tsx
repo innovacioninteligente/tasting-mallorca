@@ -16,7 +16,7 @@ export default function DashboardLayout({
 }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
-  const isFormPage = pathname.includes('/tours/new') || pathname.includes('/edit');
+  const isFormPage = pathname.includes('/tours/new') || pathname.includes('/tours/') && pathname.includes('/edit') || pathname.includes('/blog/new') || pathname.includes('/blog/') && pathname.includes('/edit');
 
   return (
       <RouteGuard>
