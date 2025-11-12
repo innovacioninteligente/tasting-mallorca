@@ -14,6 +14,9 @@
         "photoLabel": "Télécharger une photo (facultatif)",
         "submitButton": "Envoyer les commentaires",
         "thankYouTitle": "Merci pour vos commentaires !",
-        "thankYouDescription": "Nous vous remercions d'avoir pris le temps de partager votre expérience. Cela nous aide à grandir et à nous améliorer."
+        "thankYouDescription": "Nous vous remercions d'avoir pris le temps de partager votre expérience. Cela nous aide à grandir et à nous améliorer.",
+        "errorToastTitle": "Erreur lors de l'envoi des commentaires",
+        "successToastTitle": "Commentaires envoyés !",
+        "successToastDescription": "Merci d'avoir partagé votre expérience."
     }
 }

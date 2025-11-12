@@ -111,33 +111,6 @@ const dictionaries = {
     dashboard: {
         validationResult: () => import('./nl/dashboard/validation-result.json').then(m => m.default),
     }
-  },
-  es: {
-    home: () => import('./es/home.json').then((module) => module.default),
-    header: () => import('./es/header.json').then((module) => module.default),
-    whatsIncluded: () => import('./es/whats-included.json').then((module) => module.default),
-    whyChooseUs: () => import('./es/why-choose-us.json').then((module) => module.default),
-    tours: () => import('./es/tours.json').then((module) => module.default),
-    featuredTours: () => import('./es/featured-tours.json').then((module) => module.default),
-    gallery: () => import('./es/gallery.json').then((module) => module.default),
-    happyCustomers: () => import('./es/happy-customers.json').then((module) => module.default),
-    destinations: () => import('./es/destinations.json').then((module) => module.default),
-    tourGuides: () => import('./es/tour-guides.json').then((module) => module.default),
-    testimonials: () => import('./es/testimonials.json').then((module) => module.default),
-    blog: () => import('./es/blog.json').then((module) => module.default),
-    privateTours: () => import('./es/private-tours.json').then((module) => module.default),
-    guestFeedback: () => import('./es/guest-feedback.json').then((module) => module.default),
-    tourDetail: {
-      header: () => import('./es/tour-detail/header.json').then(m => m.default),
-      overview: () => import('./es/tour-detail/overview.json').then(m => m.default),
-      tourInfo: () => import('./es/tour-detail/tour-info.json').then(m => m.default),
-      tourDetails: () => import('./es/tour-detail/tour-details.json').then(m => m.default),
-      itinerary: () => import('./es/tour-detail/itinerary.json').then(m => m.default),
-      booking: () => import('./es/tour-detail/booking.json').then(m => m.default),
-    },
-    dashboard: {
-        validationResult: () => import('./es/dashboard/validation-result.json').then(m => m.default),
-    }
   }
 };
 

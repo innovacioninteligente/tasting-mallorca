@@ -14,6 +14,9 @@
         "photoLabel": "Foto hochladen (optional)",
         "submitButton": "Feedback senden",
         "thankYouTitle": "Vielen Dank für Ihr Feedback!",
-        "thankYouDescription": "Wir schätzen es, dass Sie sich die Zeit genommen haben, Ihre Erfahrungen zu teilen. Es hilft uns zu wachsen und uns zu verbessern."
+        "thankYouDescription": "Wir schätzen es, dass Sie sich die Zeit genommen haben, Ihre Erfahrungen zu teilen. Es hilft uns zu wachsen und uns zu verbessern.",
+        "errorToastTitle": "Fehler beim Senden des Feedbacks",
+        "successToastTitle": "Feedback gesendet!",
+        "successToastDescription": "Vielen Dank, dass Sie Ihre Erfahrungen geteilt haben."
     }
 }

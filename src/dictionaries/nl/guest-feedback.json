@@ -14,6 +14,9 @@
         "photoLabel": "Upload een foto (optioneel)",
         "submitButton": "Feedback verzenden",
         "thankYouTitle": "Bedankt voor uw feedback!",
-        "thankYouDescription": "We waarderen het dat u de tijd heeft genomen om uw ervaring te delen. Het helpt ons om te groeien en te verbeteren."
+        "thankYouDescription": "We waarderen het dat u de tijd heeft genomen om uw ervaring te delen. Het helpt ons om te groeien en te verbeteren.",
+        "errorToastTitle": "Fout bij het verzenden van feedback",
+        "successToastTitle": "Feedback verzonden!",
+        "successToastDescription": "Bedankt voor het delen van uw ervaring."
     }
 }
