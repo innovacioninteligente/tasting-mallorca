@@ -9,6 +9,7 @@ import Link from 'next/link';
 import { BlogPostList } from "./blog-post-list";
 import { findAllBlogPosts } from "@/app/server-actions/blog/findBlogPosts";
 import { BlogPost } from "@/backend/blog/domain/blog.model";
+import { CreateWithAiButton } from "./create-with-ai-button";
 
 export default async function BlogManagementPage({ params }: { params: { lang: string }}) {
     const createPostLink = `/${params.lang}/dashboard/admin/blog/new`;
@@ -23,12 +24,15 @@ export default async function BlogManagementPage({ params }: { params: { lang: s
                         Crea, edita y gestiona todos los posts del blog.
                     </p>
                 </div>
-                <Button asChild>
-                    <Link href={createPostLink}>
-                        <PlusCircle className="mr-2 h-4 w-4" />
-                        Crear Nuevo Post
-                    </Link>
-                </Button>
+                <div className="flex items-center gap-2">
+                    <CreateWithAiButton lang={params.lang} />
+                    <Button asChild>
+                        <Link href={createPostLink}>
+                            <PlusCircle className="mr-2 h-4 w-4" />
+                            Crear Nuevo Post
+                        </Link>
+                    </Button>
+                </div>
             </div>
             <Card>
                 <CardHeader>

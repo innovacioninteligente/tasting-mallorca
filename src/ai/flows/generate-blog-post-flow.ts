@@ -1,53 +1,56 @@
+
 'use server';
 
 import { z } from 'zod';
 
-export const TranslateBlogPostInputSchema = z.object({
-  title: z.string().describe('The title of the blog post in English.'),
-  slug: z.string().describe('The URL-friendly slug in English.'),
-  summary: z.string().describe('The short summary of the post in English.'),
-  content: z.string().describe('The full content of the post in Markdown format, in English.'),
+export const GenerateBlogPostInputSchema = z.object({
+  prompt: z.string().describe('The user\'s idea or prompt for the blog post.'),
 });
-export type TranslateBlogPostInput = z.infer<typeof TranslateBlogPostInputSchema>;
+export type GenerateBlogPostInput = z.infer<typeof GenerateBlogPostInputSchema>;
 
 const MultilingualStringSchema = z.object({
-    de: z.string().optional(),
-    fr: z.string().optional(),
-    nl: z.string().optional(),
+    en: z.string(),
+    de: z.string(),
+    fr: z.string(),
+    nl: z.string(),
 });
 
-export const TranslateBlogPostOutputSchema = z.object({
+export const GenerateBlogPostOutputSchema = z.object({
   slug: MultilingualStringSchema,
   title: MultilingualStringSchema,
   summary: MultilingualStringSchema,
   content: MultilingualStringSchema,
 });
-export type TranslateBlogPostOutput = z.infer<typeof TranslateBlogPostOutputSchema>;
+export type GenerateBlogPostOutput = z.infer<typeof GenerateBlogPostOutputSchema>;
 
 
-function buildPrompt(input: TranslateBlogPostInput): string {
+function buildPrompt(input: GenerateBlogPostInput): string {
     const outputSchemaForPrompt = {
-        slug: { de: "string", fr: "string", nl: "string" },
-        title: { de: "string", fr: "string", nl: "string" },
-        summary: { de: "string", fr: "string", nl: "string" },
-        content: { de: "string", fr: "string", nl: "string" },
+        slug: { en: "string", de: "string", fr: "string", nl: "string" },
+        title: { en: "string", de: "string", fr: "string", nl: "string" },
+        summary: { en: "string", de: "string", fr: "string", nl: "string" },
+        content: { en: "string", de: "string", fr: "string", nl: "string" },
     };
 
-    return `You are an expert translator specializing in creating engaging and natural-sounding blog content for a European audience. Your task is to translate the provided blog post from English into German (de), French (fr), and Dutch (nl).
+    return `You are an expert travel blogger and SEO specialist for "Tasting Mallorca", a company offering authentic food and culture tours in Mallorca. Your task is to write a complete, engaging, and SEO-optimized blog post based on the user's prompt, and then translate it into German (de), French (fr), and Dutch (nl).
 
     **CRITICAL INSTRUCTIONS:**
-    1.  **Do not perform a literal, word-for-word translation.** Adapt the phrasing, tone, and cultural nuances to make the content appealing and natural for speakers of each target language.
-    2.  **Translate the 'slug' field.** It must be a URL-friendly version of the translated title (lowercase, hyphens for spaces, no special characters).
-    3.  **Preserve Markdown Formatting:** The 'content' field is in Markdown. You MUST preserve all Markdown syntax (like ## for headers, * for lists, etc.) in your translated output.
-    4.  **Format your response STRICTLY as a JSON object.** Do not wrap it in markdown backticks (\`\`\`json) or any other text.
+    1.  **Generate Original Content (English):** Based on the user's prompt, create the following in English:
+        *   **Title:** An engaging, SEO-friendly title.
+        *   **Summary:** A short, compelling summary (1-2 sentences) for blog post cards.
+        *   **Content:** A full blog post of at least 400 words in Markdown format. Use headers (##), lists (*), and bold text to structure the content. Be creative, informative, and maintain a warm, inviting tone.
+        *   **Slug:** A URL-friendly version of the English title (lowercase, hyphens for spaces, no special characters).
 
-    **Source Content (English):**
-    - Title: ${input.title}
-    - Slug: ${input.slug}
-    - Summary: ${input.summary}
-    - Content (Markdown):
+    2.  **Translate All Generated Content:** Translate the English title, slug, summary, and full Markdown content you created into German (de), French (fr), and Dutch (nl).
+        *   **Cultural Nuances:** Do not perform a literal, word-for-word translation. Adapt the phrasing and tone to be natural and appealing for each target language.
+        *   **Translate Slugs:** Ensure the slugs for each language are also URL-friendly versions of their respective translated titles.
+        *   **Preserve Markdown:** You MUST preserve all Markdown syntax in the translated 'content' fields.
+
+    3.  **Format your response STRICTLY as a single JSON object.** Do not wrap it in markdown backticks (\`\`\`json) or any other text. The JSON object must conform to the schema provided at the end of this prompt.
+
+    **User's Blog Post Idea:**
     ---
-    ${input.content}
+    ${input.prompt}
     ---
 
     **Required Output JSON Schema:**
@@ -72,7 +75,7 @@ async function getStreamingResponse(response: Response): Promise<string> {
 }
 
 
-export async function translateBlogPost(input: TranslateBlogPostInput): Promise<TranslateBlogPostOutput> {
+export async function generateBlogPost(input: GenerateBlogPostInput): Promise<GenerateBlogPostOutput> {
   const prompt = buildPrompt(input);
   
   const apiKey = process.env.VERTEX_AI_API_KEY;
@@ -139,7 +142,7 @@ export async function translateBlogPost(input: TranslateBlogPostInput): Promise<
     const jsonString = jsonMatch[0];
 
     const parsedJson = JSON.parse(jsonString);
-    return TranslateBlogPostOutputSchema.parse(parsedJson);
+    return GenerateBlogPostOutputSchema.parse(parsedJson);
 
   } catch (error: any) {
     console.error("[Vertex AI Error] Failed to generate content:", error);
