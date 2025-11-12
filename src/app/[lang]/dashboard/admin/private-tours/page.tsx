@@ -1,32 +1,24 @@
-
 'use server';
 
 import { AdminRouteGuard } from "@/components/auth/admin-route-guard";
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
-import { getFirestore } from 'firebase-admin/firestore';
-import { adminApp } from "@/firebase/server/config";
 import { PrivateTourList } from './private-tour-list';
+import { findAllPrivateTourRequests } from "@/backend/private-tours/application/findPrivateTourRequests";
+import { FirestorePrivateTourRequestRepository } from "@/backend/private-tours/infrastructure/firestore-private-tour-request.repository";
 
 async function getPrivateTourRequests() {
     try {
-        const db = getFirestore(adminApp);
-        const snapshot = await db.collection('privateTourRequests').orderBy('submittedAt', 'desc').get();
-        if (snapshot.empty) {
-            return { data: [] };
-        }
+        const repository = new FirestorePrivateTourRequestRepository();
+        const requests = await findAllPrivateTourRequests(repository);
         
-        const requests = snapshot.docs.map(doc => {
-            const data = doc.data();
-            return {
-                id: doc.id,
-                ...data,
-                // Convert timestamp to a serializable format (ISO string)
-                submittedAt: data.submittedAt.toDate().toISOString(),
-                preferredDate: data.preferredDate, // Already a string or null
-            };
-        });
+        // Serialize data for client component
+        const serializedRequests = requests.map(request => ({
+            ...request,
+            submittedAt: request.submittedAt.toISOString(),
+        }));
 
-        return { data: requests };
+        return { data: serializedRequests };
+
     } catch (error: any) {
         console.error("Error fetching private tour requests:", error);
         return { error: error.message || "Failed to fetch requests." };

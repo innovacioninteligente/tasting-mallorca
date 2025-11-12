@@ -1,11 +1,10 @@
-
 'use server';
 
 import { createSafeAction } from '@/app/server-actions/lib/safe-action';
 import { z } from 'zod';
 import { Resend } from 'resend';
-import { getFirestore } from 'firebase-admin/firestore';
-import { adminApp } from '@/firebase/server/config';
+import { FirestorePrivateTourRequestRepository } from '@/backend/private-tours/infrastructure/firestore-private-tour-request.repository';
+import { createPrivateTourRequest } from '@/backend/private-tours/application/createPrivateTourRequest';
 
 const formSchema = z.object({
   name: z.string().min(1, 'Name is required'),
@@ -28,16 +27,16 @@ export const submitPrivateTourRequest = createSafeAction(
   {}, // Public action
   async (data: FormValues): Promise<{ data?: { success: true }; error?: string }> => {
     try {
-      const firestore = getFirestore(adminApp);
-      const requestId = crypto.randomUUID();
+      const repository = new FirestorePrivateTourRequestRepository();
       
       const requestData = {
+        id: crypto.randomUUID(),
         ...data,
         submittedAt: new Date(),
         preferredDate: data.preferredDate ? data.preferredDate.toISOString().split('T')[0] : null,
       };
 
-      await firestore.collection('privateTourRequests').doc(requestId).set(requestData);
+      await createPrivateTourRequest(repository, requestData);
 
       // Send email notification
       await resend.emails.send({
