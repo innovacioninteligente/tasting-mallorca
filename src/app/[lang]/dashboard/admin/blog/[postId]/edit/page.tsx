@@ -5,7 +5,7 @@ import { AdminRouteGuard } from "@/components/auth/admin-route-guard";
 import { findBlogPostById } from "@/app/server-actions/blog/findBlogPosts";
 import { notFound } from "next/navigation";
 import { BlogPost } from "@/backend/blog/domain/blog.model";
-import { BlogFormPage } from "../blog-form-page";
+import { EditBlogPostClientPage } from "./edit-blog-post-client-page";
 
 interface EditBlogPostPageProps {
     params: {
@@ -26,7 +26,7 @@ export default async function EditBlogPostPage({ params }: EditBlogPostPageProps
 
     return (
         <AdminRouteGuard>
-            <BlogFormPage 
+            <EditBlogPostClientPage 
                 initialData={post} 
                 lang={params.lang}
             />

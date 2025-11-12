@@ -14,9 +14,8 @@ import { UploadProgressDialog } from "@/components/upload-progress-dialog";
 import { cloneDeep, mergeWith } from "lodash";
 import { BlogPost } from "@/backend/blog/domain/blog.model";
 import { parseISO } from "date-fns";
-import { BlogFormHeader } from "./blog-form-header";
-import { BlogForm } from "./blog-form";
-import { createBlogPost } from "@/app/server-actions/blog/createBlogPost";
+import { BlogFormHeader } from "../blog-form-header";
+import { BlogForm } from "../blog-form";
 import { updateBlogPost } from "@/app/server-actions/blog/updateBlogPost";
 import { translateBlogPostAction, TranslateBlogPostInput } from "@/app/server-actions/blog/translateBlogPostAction";
 
@@ -42,14 +41,14 @@ const formSchema = z.object({
 
 type BlogFormValues = z.infer<typeof formSchema>;
 
-interface BlogFormPageProps {
-    initialData?: BlogPost;
+interface EditBlogPostClientPageProps {
+    initialData: BlogPost;
     lang: string;
 }
 
 const defaultMultilingual = { en: '', de: '', fr: '', nl: '' };
 
-export function BlogFormPage({ initialData, lang }: BlogFormPageProps) {
+export function EditBlogPostClientPage({ initialData, lang }: EditBlogPostClientPageProps) {
     const { toast } = useToast();
     const router = useRouter();
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -57,7 +56,7 @@ export function BlogFormPage({ initialData, lang }: BlogFormPageProps) {
     const [uploadProgress, setUploadProgress] = useState(0);
     const [uploadMessage, setUploadMessage] = useState('Starting...');
 
-    const formPersistenceKey = initialData ? `blog-form-edit-${initialData.id}` : 'blog-form-new';
+    const formPersistenceKey = `blog-form-edit-${initialData.id}`;
     
     const defaultValues: BlogFormValues = {
         title: { ...defaultMultilingual },
@@ -71,10 +70,10 @@ export function BlogFormPage({ initialData, lang }: BlogFormPageProps) {
         publishedAt: new Date(),
     };
 
-    const parsedInitialData = initialData ? {
+    const parsedInitialData = {
         ...initialData,
         publishedAt: initialData.publishedAt ? parseISO(initialData.publishedAt as unknown as string) : new Date(),
-    } : {};
+    };
     
     const mergedData = mergeWith(cloneDeep(defaultValues), parsedInitialData, (objValue, srcValue) => {
         if (srcValue !== undefined && srcValue !== null) return srcValue;
@@ -116,8 +115,7 @@ export function BlogFormPage({ initialData, lang }: BlogFormPageProps) {
     const onSubmit = async (data: BlogFormValues) => {
         setIsSubmitting(true);
         try {
-            const isEditing = !!initialData;
-            const postId = initialData?.id || crypto.randomUUID();
+            const postId = initialData.id;
 
             let mainImageUrl = data.mainImage;
             if (data.mainImage instanceof File) {
@@ -135,22 +133,16 @@ export function BlogFormPage({ initialData, lang }: BlogFormPageProps) {
                 publishedAt: data.publishedAt.toISOString(),
             };
             
-            const result = isEditing 
-              ? await updateBlogPost(postData as any)
-              : await createBlogPost(postData as any);
+            const result = await updateBlogPost(postData as any);
     
             if (result.error) throw new Error(result.error);
 
             clearPersistedData();
             
             toast({
-                title: isEditing ? "Post Updated!" : "Post Created!",
+                title: "Post Updated!",
                 description: `The post "${data.title.en}" has been saved successfully.`,
             });
-            
-            if (!isEditing) {
-                router.replace(`/${lang}/dashboard/admin/blog/${postId}/edit`, { scroll: false });
-            }
     
         } catch (error: any) {
             console.error("Error saving post:", error);
