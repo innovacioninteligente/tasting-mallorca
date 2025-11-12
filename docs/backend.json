@@ -290,7 +290,9 @@
         "rating": { "type": "number" },
         "experience": { "type": "string" },
         "photoUrl": { "type": "string", "format": "uri" },
-        "submittedAt": { "type": "string", "format": "date-time" }
+        "submittedAt": { "type": "string", "format": "date-time" },
+        "published": { "type": "boolean" },
+        "isFeatured": { "type": "boolean" }
       },
       "required": ["name", "tourDate", "rating", "experience", "submittedAt"]
     }
