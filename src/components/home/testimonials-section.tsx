@@ -104,16 +104,16 @@ export function TestimonialsSection({ dictionary }: TestimonialsSectionProps) {
                     {/* Image collage */}
                     <div className="relative h-[500px] hidden md:block">
                         <div className="absolute w-[45%] h-[55%] top-0 left-10 overflow-hidden rounded-[4rem] transform rotate-[-15deg]">
-                            <Image src="https://picsum.photos/seed/person-smiling-1/400/600" alt="Happy tourist" fill className="object-cover" data-ai-hint="happy person" />
+                            <Image src="https://firebasestorage.googleapis.com/v0/b/tasting-mallorca.firebasestorage.app/o/web%2Fimages%2Fmedium-shot-smiley-people-hugging.jpg?alt=media&token=bb3ba8f4-6d36-4a99-adb2-174e805509b9" alt="Happy tourist" fill className="object-cover" data-ai-hint="happy people" />
                         </div>
                         <div className="absolute w-[35%] h-[40%] top-5 right-5 overflow-hidden rounded-[3rem] transform rotate-[10deg]">
-                            <Image src="https://picsum.photos/seed/person-smiling-2/400/400" alt="Smiling customer" fill className="object-cover" data-ai-hint="smiling person" />
+                            <Image src="https://firebasestorage.googleapis.com/v0/b/tasting-mallorca.firebasestorage.app/o/web%2Fimages%2F034.PNG?alt=media&token=1571c577-5efd-4437-b7ee-48837385ad3d" alt="Smiling customer" fill className="object-cover" data-ai-hint="smiling person" />
                         </div>
                         <div className="absolute w-[30%] h-[35%] bottom-10 left-0 overflow-hidden rounded-[3rem] transform rotate-[5deg]">
-                            <Image src="https://picsum.photos/seed/person-smiling-3/400/400" alt="Another smiling customer" fill className="object-cover" data-ai-hint="smiling person" />
+                            <Image src="https://firebasestorage.googleapis.com/v0/b/tasting-mallorca.firebasestorage.app/o/web%2Fimages%2Fhappy-senior-couple-taking-selfie-with-vintage-camera.jpg?alt=media&token=d29a831a-d0fe-4ddf-8ff8-b9adce5e8d09" alt="Another smiling customer" fill className="object-cover" data-ai-hint="senior couple" />
                         </div>
                         <div className="absolute w-[40%] h-[45%] bottom-0 right-[-1rem] overflow-hidden rounded-[4rem] transform rotate-[-5deg]">
-                            <Image src="https://picsum.photos/seed/person-smiling-4/400/500" alt="Joyful traveler" fill className="object-cover" data-ai-hint="joyful person" />
+                            <Image src="https://firebasestorage.googleapis.com/v0/b/tasting-mallorca.firebasestorage.app/o/web%2Fimages%2Fmedium-shot-woman-with-sunglasses-hat.jpg?alt=media&token=3dce95d5-47ff-4c48-ba13-3b355a2cc1b6" alt="Joyful traveler" fill className="object-cover" data-ai-hint="woman sunglasses" />
                         </div>
                     </div>
 
