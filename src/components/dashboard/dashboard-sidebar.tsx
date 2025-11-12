@@ -1,3 +1,4 @@
+
 'use client';
 
 import Link from 'next/link';
@@ -19,7 +20,7 @@ import {
 } from 'lucide-react';
 import { useAuth, useUser } from '@/firebase';
 import { cn } from '@/lib/utils';
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from '../ui/sheet';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetClose } from '../ui/sheet';
 import React from 'react';
 
 const navItems = [
@@ -54,7 +55,7 @@ export function DashboardSidebar({ isMobileMenuOpen, setIsMobileMenuOpen }: Dash
   const { user } = useUser();
   const router = useRouter();
   
-  const lang = pathname.split('/')[1] || 'en';
+  const lang = pathname.split('/[A-Za-z]{2}')[0] || 'en';
 
   const handleSignOut = async () => {
     if (auth) {
@@ -74,8 +75,9 @@ export function DashboardSidebar({ isMobileMenuOpen, setIsMobileMenuOpen }: Dash
             const href = `/${lang}${item.href}`;
             const Icon = item.icon;
             return (
-              <Link key={item.href} href={href}>
+              <Link key={item.href} href={href} legacyBehavior passHref>
                 <Button
+                  as="a"
                   variant={pathname.startsWith(href) ? 'secondary' : 'ghost'}
                   className="w-full justify-start text-base"
                   onClick={() => setIsMobileMenuOpen(false)}
@@ -91,8 +93,9 @@ export function DashboardSidebar({ isMobileMenuOpen, setIsMobileMenuOpen }: Dash
               const href = `/${lang}${item.href}`;
               const Icon = item.icon;
               return (
-                  <Link key={item.href} href={href}>
+                  <Link key={item.href} href={href} legacyBehavior passHref>
                   <Button
+                      as="a"
                       variant={pathname.startsWith(href) ? 'secondary' : 'ghost'}
                       className="w-full justify-start text-base"
                       onClick={() => setIsMobileMenuOpen(false)}
@@ -109,8 +112,9 @@ export function DashboardSidebar({ isMobileMenuOpen, setIsMobileMenuOpen }: Dash
               const Icon = item.icon;
               if (userRole && item.roles.includes(userRole)) {
                 return (
-                    <Link key={item.href} href={href}>
+                    <Link key={item.href} href={href} legacyBehavior passHref>
                     <Button
+                        as="a"
                         variant={pathname.startsWith(href) ? 'secondary' : 'ghost'}
                         className="w-full justify-start text-base"
                         onClick={() => setIsMobileMenuOpen(false)}
@@ -130,8 +134,9 @@ export function DashboardSidebar({ isMobileMenuOpen, setIsMobileMenuOpen }: Dash
              const href = `/${lang}${item.href}`;
              const Icon = item.icon;
              return (
-                 <Link key={item.href} href={href}>
+                 <Link key={item.href} href={href} legacyBehavior passHref>
                  <Button
+                    as="a"
                      variant={pathname.startsWith(href) ? 'secondary' : 'ghost'}
                      className="w-full justify-start text-base"
                      onClick={() => setIsMobileMenuOpen(false)}
@@ -172,6 +177,10 @@ export function DashboardSidebar({ isMobileMenuOpen, setIsMobileMenuOpen }: Dash
                 <Sprout className="h-7 w-7 text-primary" />
                 <span className="font-headline text-xl">Tasting Mallorca</span>
             </Link>
+             <SheetClose>
+                <X className="h-6 w-6" />
+                <span className="sr-only">Close menu</span>
+             </SheetClose>
           </SheetHeader>
           <SidebarContent />
         </SheetContent>

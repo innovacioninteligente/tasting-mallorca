@@ -6,6 +6,8 @@ import { RouteGuard } from "@/components/auth/route-guard";
 import { useState } from "react";
 import { DashboardLayoutProvider } from "./layout-context";
 import { usePathname } from "next/navigation";
+import { DashboardHeader } from "@/components/dashboard/dashboard-header";
+import { cn } from "@/lib/utils";
 
 export default function DashboardLayout({
   children,
@@ -21,11 +23,16 @@ export default function DashboardLayout({
         <DashboardLayoutProvider value={{ isMobileMenuOpen, setIsMobileMenuOpen }}>
           <div className="flex h-screen max-h-screen overflow-hidden bg-secondary/50">
             <DashboardSidebar isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen} />
-            <main className={
-              `flex-1 overflow-y-scroll ${isTourFormPage ? 'p-0' : 'px-4 pb-4 pt-8 md:px-8 md:pb-8 lg:px-10 lg:pb-10'}`
-            }>
-              {children}
-            </main>
+            
+            <div className="flex flex-1 flex-col overflow-hidden">
+                {!isTourFormPage && <DashboardHeader />}
+                <main className={cn(
+                    "flex-1 overflow-y-auto",
+                    !isTourFormPage && "p-4 md:p-8 lg:p-10"
+                )}>
+                  {children}
+                </main>
+            </div>
           </div>
         </DashboardLayoutProvider>
       </RouteGuard>
