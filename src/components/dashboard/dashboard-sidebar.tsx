@@ -37,7 +37,7 @@ const adminNavItems = [
 ];
 
 const guideNavItems = [
-    { href: '/dashboard/guide/validate-ticket', label: 'Validate Ticket', icon: QrCode, roles: ['guide', 'admin'] }
+    { href: '/dashboard/guide/validate-ticket', label: 'Validate Ticket', roles: ['guide', 'admin'] }
 ]
 
 const bottomNavItems = [
@@ -111,7 +111,7 @@ export function DashboardSidebar({ isMobileMenuOpen, setIsMobileMenuOpen }: Dash
           
           {guideNavItems.map((item) => {
               const href = `/${lang}${item.href}`;
-              const Icon = item.icon;
+              const Icon = QrCode;
               if (userRole && item.roles.includes(userRole)) {
                 return (
                     <Button
