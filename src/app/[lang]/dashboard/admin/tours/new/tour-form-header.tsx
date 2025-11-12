@@ -9,7 +9,7 @@ import Link from "next/link";
 import { useFormContext } from "react-hook-form";
 import { Tour } from "@/backend/tours/domain/tour.model";
 import { cn } from "@/lib/utils";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetTrigger } from "@/components/ui/sheet";
 import { useDashboardLayout } from "@/app/[lang]/dashboard/layout-context";
 
 interface TourFormHeaderProps {
