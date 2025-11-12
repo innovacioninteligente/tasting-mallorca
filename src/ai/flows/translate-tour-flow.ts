@@ -1,3 +1,4 @@
+
 'use server';
 
 import { z } from 'zod';
@@ -7,9 +8,7 @@ const ItineraryItemTranslationInputSchema = z.object({
   activities: z.array(z.string()).optional(),
 });
 
-export type TranslateTourInput = z.infer<typeof TranslateTourInputSchema>;
-
-const TranslateTourInputSchema = z.object({
+export const TranslateTourInputSchema = z.object({
   title: z.string().describe('The title of the tour in English.'),
   slug: z.string().describe('The URL-friendly slug in English.'),
   description: z.string().describe('The short description of the tour in English.'),
@@ -36,6 +35,7 @@ const TranslateTourInputSchema = z.object({
   itinerary: z.array(ItineraryItemTranslationInputSchema).describe('An array of itinerary items in English.'),
 });
 
+export type TranslateTourInput = z.infer<typeof TranslateTourInputSchema>;
 
 const MultilingualStringSchema = z.object({
     de: z.string().optional(),
@@ -52,9 +52,7 @@ const ItineraryItemTranslationOutputSchema = z.object({
     }).optional(),
 });
 
-export type TranslateTourOutput = z.infer<typeof TranslateTourOutputSchema>;
-
-const TranslateTourOutputSchema = z.object({
+export const TranslateTourOutputSchema = z.object({
   slug: MultilingualStringSchema.optional(),
   title: MultilingualStringSchema.optional(),
   description: MultilingualStringSchema.optional(),
@@ -80,6 +78,8 @@ const TranslateTourOutputSchema = z.object({
   }).optional(),
   itinerary: z.array(ItineraryItemTranslationOutputSchema).optional(),
 });
+
+export type TranslateTourOutput = z.infer<typeof TranslateTourOutputSchema>;
 
 
 function buildPrompt(input: TranslateTourInput): string {

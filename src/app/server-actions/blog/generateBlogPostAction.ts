@@ -9,7 +9,7 @@ import {
 import { createBlogPost } from './createBlogPost';
 import { z } from 'zod';
 
-export const GenerateBlogPostActionInputSchema = z.object({
+const GenerateBlogPostActionInputSchema = z.object({
   prompt: z.string().describe("The user's idea or prompt for the blog post."),
 });
 
