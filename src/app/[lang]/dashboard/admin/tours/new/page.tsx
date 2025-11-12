@@ -69,7 +69,7 @@ const itineraryItemSchema = z.object({
 });
 
 const formSchema = z.object({
-  id: z.string(),
+  id: z.string().optional(),
   title: multilingualStringSchema,
   slug: multilingualStringSchema,
   description: multilingualStringSchema,
@@ -107,8 +107,7 @@ export default function NewTourPage() {
 
     const formPersistenceKey = 'tour-form-new';
 
-    const defaultValues: TourFormValues = {
-        id: '',
+    const defaultValues: Omit<TourFormValues, 'id'> = {
         title: { ...defaultMultilingual },
         slug: { ...defaultMultilingual },
         description: { ...defaultMultilingual },
@@ -231,7 +230,7 @@ export default function NewTourPage() {
                 }))
             };
             
-            const result = await createTour(tourData);
+            const result = await createTour(tourData as any);
     
             if (result.error) throw new Error(result.error);
             
@@ -340,7 +339,7 @@ export default function NewTourPage() {
                         basePath={basePath}
                         onSubmit={form.handleSubmit(onSubmit, handleInvalidSubmit)} 
                     />
-                    <main className="flex-grow overflow-y-scroll px-4 pt-4 md:px-8 lg:px-10">
+                    <main className="flex-grow overflow-y-auto px-4 pt-4 md:px-8 lg:px-10">
                        <TourForm />
                     </main>
                 </FormProvider>
