@@ -16,7 +16,7 @@ export default function DashboardLayout({
 }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
-  const isTourFormPage = pathname.includes('/tours/new') || pathname.includes('/edit');
+  const isFormPage = pathname.includes('/tours/new') || pathname.includes('/edit');
 
   return (
       <RouteGuard>
@@ -28,7 +28,7 @@ export default function DashboardLayout({
                 <DashboardHeader />
                 <div className={cn(
                     "flex-1 overflow-hidden",
-                    !isTourFormPage && "p-4 md:p-8 lg:p-10"
+                    !isFormPage && "p-4 md:p-8 lg:p-10"
                 )}>
                   {children}
                 </div>
