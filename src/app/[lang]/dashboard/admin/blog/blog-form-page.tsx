@@ -16,9 +16,9 @@ import { BlogPost } from "@/backend/blog/domain/blog.model";
 import { parseISO } from "date-fns";
 import { BlogFormHeader } from "./blog-form-header";
 import { BlogForm } from "./blog-form";
-import { createBlogPost as createBlogPostAction } from "@/app/server-actions/blog/createBlogPost";
-import { updateBlogPost as updateBlogPostAction } from "@/app/server-actions/blog/updateBlogPost";
-import { translateBlogPost as translateBlogPostAction, TranslateBlogPostInput } from "@/app/server-actions/blog/translateBlogPostAction";
+import { createBlogPost } from "@/app/server-actions/blog/createBlogPost";
+import { updateBlogPost } from "@/app/server-actions/blog/updateBlogPost";
+import { translateBlogPostAction, TranslateBlogPostInput } from "@/app/server-actions/blog/translateBlogPostAction";
 
 const multilingualStringSchema = z.object({
     en: z.string().min(1, { message: "El texto en inglés es requerido." }),
@@ -136,8 +136,8 @@ export function BlogFormPage({ initialData, lang }: BlogFormPageProps) {
             };
             
             const result = isEditing 
-              ? await updateBlogPostAction(postData as any)
-              : await createBlogPostAction(postData as any);
+              ? await updateBlogPost(postData as any)
+              : await createBlogPost(postData as any);
     
             if (result.error) throw new Error(result.error);
 

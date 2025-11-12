@@ -3,7 +3,7 @@
 
 import { createSafeAction } from '@/app/server-actions/lib/safe-action';
 import { 
-    translateBlogPost,
+    translateBlogPost as translateBlogPostFlow,
 } from '@/ai/flows/translate-blog-post-flow';
 import { z } from 'zod';
 
@@ -28,7 +28,7 @@ export const TranslateBlogPostOutputSchema = z.object({
 });
 export type TranslateBlogPostOutput = z.infer<typeof TranslateBlogPostOutputSchema>;
 
-export const translateBlogPost = createSafeAction(
+export const translateBlogPostAction = createSafeAction(
   {
     allowedRoles: ['admin'],
     inputSchema: TranslateBlogPostInputSchema,
@@ -37,7 +37,7 @@ export const translateBlogPost = createSafeAction(
     input: TranslateBlogPostInput,
   ): Promise<{ data?: TranslateBlogPostOutput; error?: string }> => {
     try {
-      const translatedData = await translateBlogPost(input);
+      const translatedData = await translateBlogPostFlow(input);
       return { data: translatedData };
     } catch (error: any) {
       console.error('Error in translateBlogPostAction:', error.message);
