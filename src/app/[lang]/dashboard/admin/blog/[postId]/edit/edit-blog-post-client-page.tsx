@@ -7,7 +7,7 @@ import { CreateBlogPostInput, BlogPost } from "@/backend/blog/domain/blog.model"
 import { useForm, FormProvider } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { getStorage, ref as storageRef, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { initializeFirebase } from "@/firebase";
@@ -72,7 +72,7 @@ export function EditBlogPostClientPage({ initialData, lang }: EditBlogPostClient
 
     const formPersistenceKey = `blog-form-edit-${initialData.id}`;
     
-    const defaultValues: BlogFormValues = {
+    const defaultValues: BlogFormValues = useMemo(() => ({
         title: { ...defaultMultilingual },
         slug: { ...defaultMultilingual },
         summary: { ...defaultMultilingual },
@@ -82,7 +82,7 @@ export function EditBlogPostClientPage({ initialData, lang }: EditBlogPostClient
         published: false,
         mainImage: undefined,
         publishedAt: new Date(),
-    };
+    }), []);
 
     const form = useForm<BlogFormValues>({
         resolver: zodResolver(formSchema),
@@ -92,6 +92,8 @@ export function EditBlogPostClientPage({ initialData, lang }: EditBlogPostClient
     const { clearPersistedData } = useFormPersistence(formPersistenceKey, form, defaultValues);
 
     useEffect(() => {
+        if (!initialData) return;
+
         const parsedInitialData = {
             ...initialData,
             publishedAt: initialData.publishedAt ? parseISO(initialData.publishedAt as unknown as string) : new Date(),
