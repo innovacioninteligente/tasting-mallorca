@@ -285,6 +285,8 @@
       "type": "object",
       "properties": {
         "name": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "phone": { "type": "string" },
         "nationality": { "type": "string" },
         "tourDate": { "type": "string", "format": "date" },
         "rating": { "type": "number" },
