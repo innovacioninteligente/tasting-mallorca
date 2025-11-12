@@ -57,15 +57,44 @@ export function FeedbackForm({ dictionary }: { dictionary: Dictionary }) {
             nationality: '',
             email: '',
             phone: '',
-            experience: '',
             tourDate: new Date(),
+            experience: '',
             photo: undefined,
         },
     });
 
-    const handleRatingSelect = (selectedRating: number) => {
+    const handleRatingSelect = async (selectedRating: number) => {
         setRating(selectedRating);
-        setStep(2);
+        if (selectedRating === 5) {
+            setIsSubmitting(true);
+            setUploadMessage('Submitting feedback...');
+            try {
+                // Submit a minimal feedback automatically
+                const result = await submitGuestFeedback({
+                    name: '5-Star Guest',
+                    tourDate: new Date(),
+                    rating: 5,
+                    experience: 'Selected 5 stars.',
+                });
+
+                if (result.error) throw new Error(result.error);
+                
+                // Redirect to Google and show thank you page
+                window.open(GOOGLE_REVIEW_URL, '_blank');
+                setIsSubmitted(true);
+
+            } catch (error: any) {
+                 toast({
+                    variant: 'destructive',
+                    title: dictionary.errorToastTitle,
+                    description: error.message,
+                });
+            } finally {
+                setIsSubmitting(false);
+            }
+        } else {
+            setStep(2);
+        }
     };
     
     const uploadFile = (file: File, feedbackId: string): Promise<string> => {
@@ -108,9 +137,6 @@ export function FeedbackForm({ dictionary }: { dictionary: Dictionary }) {
 
             if (result.error) throw new Error(result.error);
             
-            if (rating === 5) {
-                window.open(GOOGLE_REVIEW_URL, '_blank');
-            }
             setIsSubmitted(true);
 
         } catch (error: any) {
