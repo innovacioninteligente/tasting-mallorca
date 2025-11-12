@@ -57,6 +57,7 @@ export function FeedbackForm({ dictionary }: { dictionary: Dictionary }) {
             email: '',
             phone: '',
             experience: '',
+            tourDate: new Date(),
         },
     });
 
