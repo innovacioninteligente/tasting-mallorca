@@ -1,22 +1,19 @@
 
+
 'use server';
 
 import { createSafeAction } from '@/app/server-actions/lib/safe-action';
 import { 
     generateBlogPost,
+    GenerateBlogPostInputSchema,
     type GenerateBlogPostInput,
 } from '@/ai/flows/generate-blog-post-flow';
 import { createBlogPost } from './createBlogPost';
-import { z } from 'zod';
-
-const GenerateBlogPostActionInputSchema = z.object({
-  prompt: z.string().describe("The user's idea or prompt for the blog post."),
-});
 
 export const generateBlogPostAction = createSafeAction(
   {
     allowedRoles: ['admin'],
-    inputSchema: GenerateBlogPostActionInputSchema,
+    inputSchema: GenerateBlogPostInputSchema,
   },
   async (
     input: GenerateBlogPostInput,

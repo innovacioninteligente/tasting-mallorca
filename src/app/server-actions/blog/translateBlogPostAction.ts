@@ -1,25 +1,19 @@
 
+
 'use server';
 
 import { createSafeAction } from '@/app/server-actions/lib/safe-action';
 import { 
     translateBlogPost,
+    TranslateBlogPostInputSchema,
     type TranslateBlogPostInput,
     type TranslateBlogPostOutput
 } from '@/ai/flows/translate-blog-post-flow';
-import { z } from 'zod';
-
-const TranslateBlogPostActionInputSchema = z.object({
-  title: z.string().describe('The title of the blog post in English.'),
-  slug: z.string().describe('The URL-friendly slug in English.'),
-  summary: z.string().describe('The short summary of the post in English.'),
-  content: z.string().describe('The full content of the post in Markdown format, in English.'),
-});
 
 export const translateBlogPostAction = createSafeAction(
   {
     allowedRoles: ['admin'],
-    inputSchema: TranslateBlogPostActionInputSchema,
+    inputSchema: TranslateBlogPostInputSchema,
   },
   async (
     input: TranslateBlogPostInput,
