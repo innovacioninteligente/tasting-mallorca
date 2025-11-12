@@ -216,7 +216,7 @@ export function BlogFormPage({ initialData, lang }: BlogFormPageProps) {
                     basePath={basePath}
                     onSubmit={form.handleSubmit(onSubmit, handleInvalidSubmit)}
                 />
-                <main className="flex-grow overflow-y-auto p-4 md:p-8 lg:p-10">
+                <main className="flex-grow overflow-y-auto px-4 pt-4 md:px-8 lg:px-10">
                    <BlogForm />
                 </main>
             </FormProvider>
