@@ -15,16 +15,19 @@ import { TestimonialsSection } from '@/components/home/testimonials-section';
 import { BlogSection } from '@/components/home/blog-section';
 import { type Locale } from '@/dictionaries/config';
 import { Tour } from '@/backend/tours/domain/tour.model';
+import { BlogPost } from '@/backend/blog/domain/blog.model';
 
 
 export default function HomeClientPage({
   dictionary,
   lang,
-  tours
+  tours,
+  posts
 }: {
   dictionary: Awaited<ReturnType<typeof getDictionary>>;
   lang: Locale;
   tours: Tour[];
+  posts: BlogPost[];
 }) {
   return (
     <div className="flex flex-col bg-background">
@@ -37,7 +40,7 @@ export default function HomeClientPage({
       <HappyCustomersSection dictionary={dictionary.happyCustomers} />
       <TopDestinationsSection dictionary={dictionary.destinations} />
       <TestimonialsSection dictionary={dictionary.testimonials} />
-      <BlogSection dictionary={dictionary.blog} />
+      <BlogSection dictionary={dictionary.blog} posts={posts} lang={lang} />
     </div>
   );
 }
