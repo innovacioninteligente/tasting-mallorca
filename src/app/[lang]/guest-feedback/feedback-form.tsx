@@ -18,6 +18,10 @@ import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 import { DictionaryType } from '@/dictionaries/get-dictionary';
 import { submitGuestFeedback } from '@/app/server-actions/feedback/submitFeedback';
+import { ImageUpload } from '@/app/[lang]/dashboard/admin/tours/new/image-upload';
+import { getStorage, ref as storageRef, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { initializeFirebase } from "@/firebase";
+import { UploadProgressDialog } from '@/components/upload-progress-dialog';
 
 type Dictionary = DictionaryType['guestFeedback']['form'];
 
@@ -42,6 +46,8 @@ export function FeedbackForm({ dictionary }: { dictionary: Dictionary }) {
     const [step, setStep] = useState(1);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSubmitted, setIsSubmitted] = useState(false);
+    const [uploadProgress, setUploadProgress] = useState(0);
+    const [uploadMessage, setUploadMessage] = useState('Starting...');
 
     const form = useForm<FormValues>({
         resolver: zodResolver(formSchema),
@@ -64,14 +70,42 @@ export function FeedbackForm({ dictionary }: { dictionary: Dictionary }) {
         }
     };
     
+    const uploadFile = (file: File, feedbackId: string): Promise<string> => {
+      return new Promise((resolve, reject) => {
+          const { app } = initializeFirebase();
+          const storage = getStorage(app);
+          const fileName = `feedback/${feedbackId}/${Date.now()}-${file.name}`;
+          const fileRef = storageRef(storage, fileName);
+          const uploadTask = uploadBytesResumable(fileRef, file);
+
+          uploadTask.on(
+              'state_changed',
+              (snapshot) => setUploadProgress((snapshot.bytesTransferred / snapshot.totalBytes) * 100),
+              (error) => { console.error("Upload failed:", error); reject(error); },
+              () => getDownloadURL(uploadTask.snapshot.ref).then(resolve)
+          );
+      });
+    };
+
     const onSubmit = async (data: FormValues) => {
         setIsSubmitting(true);
         try {
             if (!rating) return;
+            
+            let photoUrl;
+            if (data.photo instanceof File) {
+                const tempId = crypto.randomUUID();
+                setUploadMessage('Uploading photo...');
+                photoUrl = await uploadFile(data.photo, tempId);
+            }
+            
+            setUploadMessage('Submitting feedback...');
+            setUploadProgress(100);
 
             const result = await submitGuestFeedback({
                 ...data,
                 rating,
+                photoUrl,
             });
 
             if (result.error) throw new Error(result.error);
@@ -81,7 +115,7 @@ export function FeedbackForm({ dictionary }: { dictionary: Dictionary }) {
         } catch (error: any) {
              toast({
                 variant: 'destructive',
-                title: 'Error submitting feedback',
+                title: dictionary.errorToastTitle,
                 description: error.message,
             });
         } finally {
@@ -101,6 +135,7 @@ export function FeedbackForm({ dictionary }: { dictionary: Dictionary }) {
 
     return (
         <Card className="max-w-2xl mx-auto shadow-2xl border-primary/20">
+            {isSubmitting && <UploadProgressDialog progress={uploadProgress} message={uploadMessage} />}
             <AnimatePresence mode="wait">
                 {step === 1 ? (
                     <motion.div
@@ -210,7 +245,24 @@ export function FeedbackForm({ dictionary }: { dictionary: Dictionary }) {
                                         <FormMessage />
                                     </FormItem>
                                 )} />
-                                {/* Photo upload can be implemented here if needed */}
+                                 <FormField
+                                    control={form.control}
+                                    name="photo"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel className="text-base">{dictionary.photoLabel}</FormLabel>
+                                            <FormControl>
+                                                <ImageUpload
+                                                    value={field.value ? [field.value] : []}
+                                                    onChange={(file) => field.onChange(file)}
+                                                    onRemove={() => field.onChange(undefined)}
+                                                    multiple={false}
+                                                />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
                                 <Button type="submit" size="lg" className="w-full font-bold text-lg py-7" disabled={isSubmitting}>
                                      {isSubmitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Send className="mr-2 h-4 w-4"/>}
                                      {dictionary.submitButton}
