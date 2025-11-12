@@ -55,7 +55,7 @@ export function DashboardSidebar({ isMobileMenuOpen, setIsMobileMenuOpen }: Dash
   const { user } = useUser();
   const router = useRouter();
   
-  const lang = pathname.split('/[A-Za-z]{2}')[0] || 'en';
+  const lang = pathname.split('/')[1] || 'en';
 
   const handleSignOut = async () => {
     if (auth) {
@@ -75,17 +75,18 @@ export function DashboardSidebar({ isMobileMenuOpen, setIsMobileMenuOpen }: Dash
             const href = `/${lang}${item.href}`;
             const Icon = item.icon;
             return (
-              <Link key={item.href} href={href} legacyBehavior passHref>
-                <Button
-                  as="a"
-                  variant={pathname.startsWith(href) ? 'secondary' : 'ghost'}
-                  className="w-full justify-start text-base"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
+              <Button
+                key={item.href}
+                asChild
+                variant={pathname.startsWith(href) ? 'secondary' : 'ghost'}
+                className="w-full justify-start text-base"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                <Link href={href}>
                   <Icon className="mr-3 h-5 w-5" />
                   {item.label}
-                </Button>
-              </Link>
+                </Link>
+              </Button>
             );
           })}
 
@@ -93,17 +94,18 @@ export function DashboardSidebar({ isMobileMenuOpen, setIsMobileMenuOpen }: Dash
               const href = `/${lang}${item.href}`;
               const Icon = item.icon;
               return (
-                  <Link key={item.href} href={href} legacyBehavior passHref>
                   <Button
-                      as="a"
-                      variant={pathname.startsWith(href) ? 'secondary' : 'ghost'}
-                      className="w-full justify-start text-base"
-                      onClick={() => setIsMobileMenuOpen(false)}
+                    key={item.href}
+                    asChild
+                    variant={pathname.startsWith(href) ? 'secondary' : 'ghost'}
+                    className="w-full justify-start text-base"
+                    onClick={() => setIsMobileMenuOpen(false)}
                   >
+                    <Link href={href}>
                       <Icon className="mr-3 h-5 w-5" />
                       {item.label}
+                    </Link>
                   </Button>
-                  </Link>
               );
           })}
           
@@ -112,17 +114,18 @@ export function DashboardSidebar({ isMobileMenuOpen, setIsMobileMenuOpen }: Dash
               const Icon = item.icon;
               if (userRole && item.roles.includes(userRole)) {
                 return (
-                    <Link key={item.href} href={href} legacyBehavior passHref>
                     <Button
-                        as="a"
+                        key={item.href}
+                        asChild
                         variant={pathname.startsWith(href) ? 'secondary' : 'ghost'}
                         className="w-full justify-start text-base"
                         onClick={() => setIsMobileMenuOpen(false)}
                     >
-                        <Icon className="mr-3 h-5 w-5" />
-                        {item.label}
+                        <Link href={href}>
+                            <Icon className="mr-3 h-5 w-5" />
+                            {item.label}
+                        </Link>
                     </Button>
-                    </Link>
                 );
               }
               return null;
@@ -134,17 +137,18 @@ export function DashboardSidebar({ isMobileMenuOpen, setIsMobileMenuOpen }: Dash
              const href = `/${lang}${item.href}`;
              const Icon = item.icon;
              return (
-                 <Link key={item.href} href={href} legacyBehavior passHref>
                  <Button
-                    as="a"
+                    key={item.href}
+                    asChild
                      variant={pathname.startsWith(href) ? 'secondary' : 'ghost'}
                      className="w-full justify-start text-base"
                      onClick={() => setIsMobileMenuOpen(false)}
                  >
+                    <Link href={href}>
                      <Icon className="mr-3 h-5 w-5" />
                      {item.label}
+                    </Link>
                  </Button>
-                 </Link>
              );
         })}
         <Button variant="ghost" className="w-full justify-start text-base" onClick={handleSignOut}>
