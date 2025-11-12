@@ -1,5 +1,5 @@
 
-'use client';
+"use client"
 
 import { Button } from '@/components/ui/button';
 import {
@@ -21,6 +21,7 @@ type Language = {
 
 const languages: Language[] = [
   { code: 'en', name: 'English', flag: '🇬🇧' },
+  { code: 'es', name: 'Español', flag: '🇪🇸' },
   { code: 'fr', name: 'Français', flag: '🇫🇷' },
   { code: 'de', name: 'Deutsch', flag: '🇩🇪' },
   { code: 'nl', name: 'Nederlands', flag: '🇳🇱' },
@@ -43,9 +44,17 @@ export function LanguageSwitcher({ currentLocale }: { currentLocale: Locale }) {
   const handleLanguageChange = (newLang: Language) => {
     const newLocale = newLang.code;
     
-    // For simplicity and robustness, we will redirect to the home page of the new locale.
-    // The previous logic was based on static JSON files and is no longer valid with dynamic data.
-    const newPath = `/${newLocale}`;
+    // remove the current locale from the pathname
+    const newPathName = pathname.replace(`/${currentLocale}`, '');
+
+    // For dynamic tour pages, redirect to the main tours listing
+    if (newPathName.startsWith('/tours/')) {
+        router.push(`/${newLocale}/tours`);
+        return;
+    }
+    
+    // For all other pages, redirect to the same page in the new locale
+    const newPath = `/${newLocale}${newPathName || '/'}`;
     router.push(newPath);
   };
 
