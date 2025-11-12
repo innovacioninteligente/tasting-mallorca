@@ -49,11 +49,11 @@ export default async function PrivateToursPage({ params: { lang } }: PageProps) 
           </div>
           <div className="order-1 lg:order-2 h-[400px] lg:h-[600px] relative rounded-2xl overflow-hidden">
             <Image
-              src="https://picsum.photos/seed/private-tour/600/800"
-              alt="Scenic view of Mallorca"
+              src="https://firebasestorage.googleapis.com/v0/b/tasting-mallorca.firebasestorage.app/o/web%2Fimages%2F010_suavizado.jpg?alt=media&token=05180246-a644-495f-9f18-3ee66a6b2f76"
+              alt="Scenic view of Mallorca for private tours"
               fill
               className="object-cover"
-              data-ai-hint="mallorca landscape scenic"
+              data-ai-hint="mallorca landscape boat"
             />
              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
           </div>
