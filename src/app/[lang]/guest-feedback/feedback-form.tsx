@@ -129,8 +129,10 @@ export function FeedbackForm({ dictionary }: { dictionary: Dictionary }) {
             setUploadMessage('Submitting feedback...');
             setUploadProgress(100);
 
+            const { photo, ...formData } = data;
+
             const result = await submitGuestFeedback({
-                ...data,
+                ...formData,
                 rating,
                 photoUrl,
             });
@@ -302,3 +304,5 @@ export function FeedbackForm({ dictionary }: { dictionary: Dictionary }) {
         </div>
     );
 }
+
+    
