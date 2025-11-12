@@ -25,13 +25,13 @@ export default function DashboardLayout({
             <DashboardSidebar isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen} />
             
             <div className="flex flex-1 flex-col overflow-hidden">
-                {!isTourFormPage && <DashboardHeader />}
-                <main className={cn(
-                    "flex-1 overflow-y-auto",
+                <DashboardHeader />
+                <div className={cn(
+                    "flex-1 overflow-hidden",
                     !isTourFormPage && "p-4 md:p-8 lg:p-10"
                 )}>
                   {children}
-                </main>
+                </div>
             </div>
           </div>
         </DashboardLayoutProvider>

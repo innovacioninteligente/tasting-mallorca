@@ -69,7 +69,7 @@ export function TourFormHeader({
     );
 
     return (
-        <div className="flex h-20 items-center justify-between border-b bg-background px-4 md:px-8">
+        <header className="flex h-20 items-center justify-between border-b bg-background px-4 md:px-8 shrink-0">
             {/* Desktop View */}
             <div className="hidden md:flex items-center gap-4">
                 <Button asChild variant="outline" size="sm">
@@ -93,9 +93,9 @@ export function TourFormHeader({
                         <ArrowLeft />
                     </Link>
                 </Button>
-                <Button variant="ghost" size="icon" onClick={() => setIsMobileMenuOpen(true)}>
-                    <Menu />
-                </Button>
+                <h1 className="text-lg font-semibold">
+                    {initialData ? 'Edit Tour' : 'Create Tour'}
+                </h1>
                 <Sheet>
                     <SheetTrigger asChild>
                         <Button variant="ghost" size="icon">
@@ -111,6 +111,6 @@ export function TourFormHeader({
                     </SheetContent>
                 </Sheet>
             </div>
-        </div>
+        </header>
     );
 }

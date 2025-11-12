@@ -162,8 +162,8 @@ export function DashboardSidebar({ isMobileMenuOpen, setIsMobileMenuOpen }: Dash
   return (
     <>
       {/* Desktop Sidebar */}
-      <aside className="hidden w-72 flex-col border-r bg-card md:flex">
-        <div className="flex h-20 items-center border-b px-6">
+      <aside className="hidden w-72 flex-col border-r bg-card md:flex shrink-0">
+        <div className="flex h-16 items-center border-b px-6">
           <Link href={`/${lang}/`} className="flex items-center gap-2 font-semibold">
             <Sprout className="h-7 w-7 text-primary" />
             <span className="font-headline text-xl">Tasting Mallorca</span>
@@ -175,7 +175,7 @@ export function DashboardSidebar({ isMobileMenuOpen, setIsMobileMenuOpen }: Dash
       {/* Mobile Sidebar */}
       <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
         <SheetContent side="left" className="flex w-72 flex-col bg-card p-0">
-          <SheetHeader className="flex h-20 flex-row items-center justify-between border-b px-6">
+          <SheetHeader className="flex h-16 flex-row items-center justify-between border-b px-6">
              <SheetTitle className='sr-only'>Main Menu</SheetTitle>
              <Link href={`/${lang}/`} className="flex items-center gap-2 font-semibold" onClick={() => setIsMobileMenuOpen(false)}>
                 <Sprout className="h-7 w-7 text-primary" />
