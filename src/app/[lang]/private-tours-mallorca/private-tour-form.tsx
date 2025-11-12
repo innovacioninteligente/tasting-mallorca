@@ -228,7 +228,7 @@ export function PrivateTourForm({ dictionary }: { dictionary: Dictionary }) {
           )}
         />
         
-        <Button type="submit" size="lg" className="w-full font-bold" disabled={isSubmitting}>
+        <Button type="submit" size="lg" className="w-full font-bold bg-accent text-accent-foreground hover:bg-accent/90" disabled={isSubmitting}>
           {isSubmitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : dictionary.submitButton}
         </Button>
         <p className="text-center text-sm text-muted-foreground">{dictionary.submittingMessage}</p>

@@ -25,6 +25,7 @@ export async function generateMetadata({ params: { lang } }: PageProps): Promise
 export default async function PrivateToursPage({ params: { lang } }: PageProps) {
   const dictionary = await getDictionary(lang);
   const { pageTitle, pageDescription } = dictionary.privateTours;
+  const titleParts = pageTitle.split('–');
 
   return (
     <div className="bg-background text-foreground">
@@ -33,7 +34,10 @@ export default async function PrivateToursPage({ params: { lang } }: PageProps) 
           <div className="order-2 lg:order-1">
             <div className="max-w-xl">
               <h1 className="text-4xl md:text-5xl font-extrabold font-headline">
-                {pageTitle}
+                {titleParts[0]} 
+                {titleParts[1] && (
+                  <span className="text-accent">–{titleParts[1]}</span>
+                )}
               </h1>
               <p className="mt-6 text-lg text-muted-foreground">
                 {pageDescription}
