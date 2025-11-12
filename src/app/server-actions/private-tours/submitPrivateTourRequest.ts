@@ -2,7 +2,6 @@
 
 import { createSafeAction } from '@/app/server-actions/lib/safe-action';
 import { z } from 'zod';
-import { Resend } from 'resend';
 import { FirestorePrivateTourRequestRepository } from '@/backend/private-tours/infrastructure/firestore-private-tour-request.repository';
 import { createPrivateTourRequest } from '@/backend/private-tours/application/createPrivateTourRequest';
 
@@ -21,8 +20,6 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 export const submitPrivateTourRequest = createSafeAction(
   {}, // Public action
   async (data: FormValues): Promise<{ data?: { success: true }; error?: string }> => {
@@ -38,29 +35,8 @@ export const submitPrivateTourRequest = createSafeAction(
 
       await createPrivateTourRequest(repository, requestData);
 
-      // Send email notification
-      await resend.emails.send({
-        from: 'Tasting Mallorca <onboarding@resend.dev>',
-        to: ['excursion.surprise@hotmail.com'],
-        subject: `New Private Tour Request – ${data.name}`,
-        html: `
-          <h1>New Private Tour Request</h1>
-          <p><strong>Name:</strong> ${data.name}</p>
-          <p><strong>Email:</strong> ${data.email}</p>
-          <p><strong>Phone:</strong> ${data.phone || 'Not provided'}</p>
-          <p><strong>Nationality:</strong> ${data.nationality || 'Not provided'}</p>
-          <p><strong>Hotel:</strong> ${data.hotel}</p>
-          <p><strong>Preferred Date:</strong> ${data.preferredDate ? data.preferredDate.toLocaleDateString() : 'Not specified'}</p>
-          <p><strong>Participants:</strong> ${data.participants}</p>
-          <p><strong>Preferred Language:</strong> ${data.preferredLanguage || 'Not specified'}</p>
-          <p><strong>Visit Preferences:</strong></p>
-          <ul>
-            ${data.visitPreferences?.map(pref => `<li>${pref}</li>`).join('') || '<li>None specified</li>'}
-          </ul>
-          <p><strong>Additional Comments:</strong></p>
-          <p>${data.additionalComments || 'None'}</p>
-        `,
-      });
+      // Email functionality has been removed as requested.
+      // It will be handled by a Firebase Trigger later.
 
       return { data: { success: true } };
     } catch (error: any) {
