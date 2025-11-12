@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useForm, Controller } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Button } from '@/components/ui/button';
@@ -12,7 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Checkbox } from '@/components/ui/checkbox';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar } from '@/components/ui/calendar';
-import { CalendarIcon, Loader2 } from 'lucide-react';
+import { CalendarIcon, Loader2, CheckCircle, MailCheck } from 'lucide-react';
 import { format } from 'date-fns';
 import { useToast } from '@/hooks/use-toast';
 import { submitPrivateTourRequest } from '@/app/server-actions/private-tours/submitPrivateTourRequest';
@@ -42,23 +42,26 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
+const defaultFormValues = {
+  name: '',
+  email: '',
+  phone: '',
+  nationality: '',
+  hotel: '',
+  participants: 1,
+  preferredLanguage: 'en',
+  visitPreferences: [],
+  additionalComments: '',
+};
+
 export function PrivateTourForm({ dictionary }: { dictionary: Dictionary }) {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      name: '',
-      email: '',
-      phone: '',
-      nationality: '',
-      hotel: '',
-      participants: 1,
-      preferredLanguage: 'en',
-      visitPreferences: [],
-      additionalComments: '',
-    },
+    defaultValues: defaultFormValues,
   });
 
   const onSubmit = async (data: FormValues) => {
@@ -68,11 +71,7 @@ export function PrivateTourForm({ dictionary }: { dictionary: Dictionary }) {
       if (result.error) {
         throw new Error(result.error);
       }
-      toast({
-        title: dictionary.successToastTitle,
-        description: dictionary.successToastDescription,
-      });
-      form.reset();
+      setIsSubmitted(true);
     } catch (error: any) {
       toast({
         variant: 'destructive',
@@ -83,6 +82,24 @@ export function PrivateTourForm({ dictionary }: { dictionary: Dictionary }) {
       setIsSubmitting(false);
     }
   };
+
+  const handleSendAnother = () => {
+    form.reset(defaultFormValues);
+    setIsSubmitted(false);
+  }
+
+  if (isSubmitted) {
+    return (
+        <div className="text-center p-8 border-2 border-dashed rounded-2xl bg-secondary/50">
+            <MailCheck className="mx-auto h-16 w-16 text-primary mb-4" />
+            <h3 className="text-2xl font-bold">{dictionary.successToastTitle}</h3>
+            <p className="mt-2 text-muted-foreground">{dictionary.successToastDescription}</p>
+            <Button onClick={handleSendAnother} className="mt-6">
+                {dictionary.submitAnotherRequestButton || "Submit Another Request"}
+            </Button>
+        </div>
+    )
+  }
 
   return (
     <Form {...form}>

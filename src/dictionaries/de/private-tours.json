@@ -34,6 +34,7 @@
         "submittingMessage": "Wir melden uns innerhalb von 24 Stunden mit einem maßgeschneiderten Vorschlag bei Ihnen.",
         "successToastTitle": "Anfrage gesendet!",
         "successToastDescription": "Wir werden uns innerhalb von 24 Stunden mit einem maßgeschneiderten Vorschlag bei Ihnen melden.",
+        "submitAnotherRequestButton": "Weitere Anfrage senden",
         "errorToastTitle": "Fehler beim Senden der Anfrage"
     }
 }

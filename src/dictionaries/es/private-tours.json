@@ -34,6 +34,7 @@
         "submittingMessage": "Te responderemos en 24 horas con una propuesta a medida.",
         "successToastTitle": "¡Solicitud Enviada!",
         "successToastDescription": "Te responderemos en 24 horas con una propuesta a medida.",
+        "submitAnotherRequestButton": "Enviar Otra Solicitud",
         "errorToastTitle": "Error al enviar la solicitud"
     }
 }

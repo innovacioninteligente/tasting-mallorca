@@ -34,6 +34,7 @@
         "submittingMessage": "We’ll get back to you within 24 hours with a tailor-made proposal.",
         "successToastTitle": "Request Sent!",
         "successToastDescription": "We'll get back to you within 24 hours with a tailor-made proposal.",
+        "submitAnotherRequestButton": "Submit Another Request",
         "errorToastTitle": "Error submitting request"
     }
 }

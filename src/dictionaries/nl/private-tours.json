@@ -34,6 +34,7 @@
         "submittingMessage": "We nemen binnen 24 uur contact met je op met een voorstel op maat.",
         "successToastTitle": "Verzoek verzonden!",
         "successToastDescription": "We nemen binnen 24 uur contact met je op met een voorstel op maat.",
+        "submitAnotherRequestButton": "Nog een verzoek indienen",
         "errorToastTitle": "Fout bij het verzenden van het verzoek"
     }
 }
