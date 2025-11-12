@@ -16,16 +16,16 @@ export function HappyCustomersSection({ dictionary }: HappyCustomersProps) {
                 {/* Image collage */}
                 <div className="relative h-[500px]">
                 <div className="absolute w-[70%] h-[70%] top-0 left-0 overflow-hidden rounded-full">
-                    <Image src="https://picsum.photos/seed/happy-cust1/800/800" alt="Tropical boat view" fill className="object-cover" data-ai-hint="thailand boat beach" />
+                    <Image src="https://firebasestorage.googleapis.com/v0/b/tasting-mallorca.firebasestorage.app/o/web%2Fimages%2F002_EDITADA_para_web_v2.jpg?alt=media&token=7b1b205a-0a65-4cde-8fb5-05c0c7dbe3a7" alt="Woman smiling on a boat" fill className="object-cover" data-ai-hint="woman boat travel" />
                 </div>
                 <div className="absolute w-[40%] h-[40%] top-10 right-0 bg-gray-700 overflow-hidden rounded-full border-4 border-primary-dark">
-                    <Image src="https://picsum.photos/seed/happy-cust2/400/400" alt="Woman in hat" fill className="object-cover" data-ai-hint="woman hat travel"/>
+                    <Image src="https://firebasestorage.googleapis.com/v0/b/tasting-mallorca.firebasestorage.app/o/web%2Fimages%2F006_EDITADA.jpg?alt=media&token=7f865c1a-3c36-47ef-aa9c-b3bd0f9528fa" alt="Happy couple on a tour" fill className="object-cover" data-ai-hint="happy couple tour"/>
                 </div>
                 <div className="absolute w-[45%] h-[45%] bottom-0 right-1/4 bg-gray-700 overflow-hidden rounded-full border-4 border-primary-dark">
-                    <Image src="https://picsum.photos/seed/happy-cust3/400/400" alt="Moscow cathedral" fill className="object-cover" data-ai-hint="moscow cathedral" />
+                    <Image src="https://firebasestorage.googleapis.com/v0/b/tasting-mallorca.firebasestorage.app/o/web%2Fimages%2F008_EDITADA.jpg?alt=media&token=e0c87254-14bb-4484-93e5-ed33b9a9508d" alt="Woman enjoying a view in Mallorca" fill className="object-cover" data-ai-hint="woman mallorca view" />
                 </div>
                 <div className="absolute w-[35%] h-[35%] bottom-0 left-5 bg-gray-700 overflow-hidden rounded-full border-4 border-primary-dark">
-                    <Image src="https://picsum.photos/seed/happy-cust4/400/400" alt="Hiker looking at view" fill className="object-cover" data-ai-hint="hiker cliff view" />
+                    <Image src="https://firebasestorage.googleapis.com/v0/b/tasting-mallorca.firebasestorage.app/o/web%2Fimages%2F025.jpeg?alt=media&token=41985e36-4728-4c1b-ab2b-dc80520916dd" alt="Group of friends on a boat trip" fill className="object-cover" data-ai-hint="friends boat trip" />
                 </div>
                 </div>
 
