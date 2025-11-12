@@ -226,6 +226,25 @@
             "longitude": { "type": "number" }
         },
         "required": ["name", "region", "latitude", "longitude"]
+    },
+    "PrivateTourRequest": {
+        "title": "Private Tour Request",
+        "description": "Represents a customer's request for a private, tailor-made tour.",
+        "type": "object",
+        "properties": {
+            "name": { "type": "string" },
+            "email": { "type": "string", "format": "email" },
+            "phone": { "type": "string" },
+            "nationality": { "type": "string" },
+            "hotel": { "type": "string" },
+            "preferredDate": { "type": "string", "format": "date" },
+            "participants": { "type": "number" },
+            "preferredLanguage": { "type": "string" },
+            "visitPreferences": { "type": "array", "items": { "type": "string" } },
+            "additionalComments": { "type": "string" },
+            "submittedAt": { "type": "string", "format": "date-time" }
+        },
+        "required": ["name", "email", "hotel", "participants", "submittedAt"]
     }
   },
   "auth": {
@@ -259,6 +278,10 @@
     "/meetingPoints/{meetingPointId}": {
         "schema": { "$ref": "#/entities/MeetingPoint" },
         "description": "Stores all available tour meeting points."
+    },
+    "/privateTourRequests/{requestId}": {
+        "schema": { "$ref": "#/entities/PrivateTourRequest" },
+        "description": "Stores all customer requests for private tours."
     }
   }
 }

@@ -21,7 +21,8 @@ export function Header({ dictionary, lang }: HeaderProps) {
   const navLinks = [
     { href: `/${lang}/`, label: dictionary.home },
     { href: `/${lang}/about`, label: dictionary.about },
-    { href: `/${lang}/#featured-tours`, label: dictionary.tours },
+    { href: `/${lang}/tours`, label: dictionary.tours },
+    { href: `/${lang}/private-tours-mallorca`, label: "Private Tours" },
     { href: `/${lang}/blog`, label: "Blog" },
     { href: `/${lang}/contact`, label: dictionary.contact },
   ];
