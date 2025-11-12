@@ -19,7 +19,6 @@ import { BlogForm } from "./blog-form";
 import { createBlogPost } from "@/app/server-actions/blog/createBlogPost";
 import { updateBlogPost } from "@/app/server-actions/blog/updateBlogPost";
 import { translateBlogPostAction } from "@/app/server-actions/blog/translateBlogPostAction";
-import { TranslateBlogPostInput, TranslateBlogPostOutput } from "@/ai/flows/translate-blog-post-flow";
 
 const multilingualStringSchema = z.object({
     en: z.string().min(1, { message: "El texto en inglés es requerido." }),
@@ -170,7 +169,7 @@ export function BlogFormPage({ initialData, lang }: BlogFormPageProps) {
         try {
             const currentData = form.getValues();
             
-            const translationInput: TranslateBlogPostInput = {
+            const translationInput = {
                 title: currentData.title.en,
                 slug: currentData.slug.en,
                 summary: currentData.summary.en,
@@ -182,7 +181,7 @@ export function BlogFormPage({ initialData, lang }: BlogFormPageProps) {
             if (result.error) throw new Error(result.error);
             if (!result.data) throw new Error("No translation data returned.");
 
-            const translatedData = result.data as TranslateBlogPostOutput;
+            const translatedData = result.data;
             const updatedData = mergeWith(cloneDeep(currentData), translatedData);
             form.reset(updatedData);
 

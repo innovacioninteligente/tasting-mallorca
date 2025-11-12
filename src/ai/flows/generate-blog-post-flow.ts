@@ -3,11 +3,6 @@
 
 import { z } from 'zod';
 
-export const GenerateBlogPostInputSchema = z.object({
-  prompt: z.string().describe('The user\'s idea or prompt for the blog post.'),
-});
-export type GenerateBlogPostInput = z.infer<typeof GenerateBlogPostInputSchema>;
-
 const MultilingualStringSchema = z.object({
     en: z.string(),
     de: z.string(),
@@ -15,14 +10,16 @@ const MultilingualStringSchema = z.object({
     nl: z.string(),
 });
 
-export const GenerateBlogPostOutputSchema = z.object({
-  slug: MultilingualStringSchema,
-  title: MultilingualStringSchema,
-  summary: MultilingualStringSchema,
-  content: MultilingualStringSchema,
-});
-export type GenerateBlogPostOutput = z.infer<typeof GenerateBlogPostOutputSchema>;
+export type GenerateBlogPostInput = {
+  prompt: string;
+};
 
+export type GenerateBlogPostOutput = {
+  slug: z.infer<typeof MultilingualStringSchema>;
+  title: z.infer<typeof MultilingualStringSchema>;
+  summary: z.infer<typeof MultilingualStringSchema>;
+  content: z.infer<typeof MultilingualStringSchema>;
+};
 
 function buildPrompt(input: GenerateBlogPostInput): string {
     const outputSchemaForPrompt = {
@@ -142,6 +139,12 @@ export async function generateBlogPost(input: GenerateBlogPostInput): Promise<Ge
     const jsonString = jsonMatch[0];
 
     const parsedJson = JSON.parse(jsonString);
+    const GenerateBlogPostOutputSchema = z.object({
+        slug: MultilingualStringSchema,
+        title: MultilingualStringSchema,
+        summary: MultilingualStringSchema,
+        content: MultilingualStringSchema,
+    });
     return GenerateBlogPostOutputSchema.parse(parsedJson);
 
   } catch (error: any) {

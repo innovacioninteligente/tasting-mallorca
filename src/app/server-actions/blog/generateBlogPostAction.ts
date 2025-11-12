@@ -4,11 +4,15 @@
 import { createSafeAction } from '@/app/server-actions/lib/safe-action';
 import { 
     generateBlogPost,
-    GenerateBlogPostInput,
-    GenerateBlogPostOutput,
-    GenerateBlogPostInputSchema
+    type GenerateBlogPostInput,
+    type GenerateBlogPostOutput,
 } from '@/ai/flows/generate-blog-post-flow';
 import { createBlogPost } from './createBlogPost';
+import { z } from 'zod';
+
+const GenerateBlogPostInputSchema = z.object({
+  prompt: z.string().describe("The user's idea or prompt for the blog post."),
+});
 
 export const generateBlogPostAction = createSafeAction(
   {
