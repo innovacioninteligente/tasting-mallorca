@@ -1,3 +1,4 @@
+
 'use server';
 
 import { createSafeAction } from '@/app/server-actions/lib/safe-action';
@@ -36,8 +37,8 @@ export const submitGuestFeedback = createSafeAction(
 
       return { data: { success: true } };
     } catch (error: any) {
-      console.error('Error submitting guest feedback:', error);
-      return { error: 'An unexpected error occurred. Please try again later.' };
+      console.error('Detailed error submitting guest feedback:', error);
+      return { error: error.message || 'An unexpected error occurred. Please try again later.' };
     }
   }
 );
