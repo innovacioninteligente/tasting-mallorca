@@ -1,0 +1,19 @@
+
+{
+    "pageTitle": "Partagez Votre Expérience",
+    "pageDescription": "Vos commentaires sont très importants pour nous. Ils nous aident à nous améliorer et à continuer d'offrir des expériences authentiques à Majorque.",
+    "form": {
+        "ratingTitle": "Comment évalueriez-vous votre expérience ?",
+        "ratingDescription": "Sélectionnez 5 étoiles pour laisser un avis sur Google, ou 4 ou moins pour partager vos commentaires en privé avec notre équipe.",
+        "formTitle": "Dites-nous en plus",
+        "nameLabel": "Nom",
+        "nationalityLabel": "Nationalité (Facultatif)",
+        "tourDateLabel": "Date de la visite",
+        "pickDatePlaceholder": "Choisissez une date",
+        "experienceLabel": "Parlez-nous de votre expérience",
+        "photoLabel": "Télécharger une photo (facultatif)",
+        "submitButton": "Envoyer les commentaires",
+        "thankYouTitle": "Merci pour vos commentaires !",
+        "thankYouDescription": "Nous vous remercions d'avoir pris le temps de partager votre expérience. Cela nous aide à grandir et à nous améliorer."
+    }
+}

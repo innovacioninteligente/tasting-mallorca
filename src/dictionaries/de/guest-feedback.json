@@ -1,0 +1,19 @@
+
+{
+    "pageTitle": "Teilen Sie Ihre Erfahrung",
+    "pageDescription": "Ihr Feedback ist uns sehr wichtig. Es hilft uns, uns zu verbessern und weiterhin authentische Erlebnisse auf Mallorca anzubieten.",
+    "form": {
+        "ratingTitle": "Wie würden Sie Ihre Erfahrung bewerten?",
+        "ratingDescription": "Wählen Sie 5 Sterne, um eine Bewertung auf Google zu hinterlassen, oder 4 oder weniger, um Ihr Feedback privat mit unserem Team zu teilen.",
+        "formTitle": "Erzählen Sie uns mehr",
+        "nameLabel": "Name",
+        "nationalityLabel": "Nationalität (Optional)",
+        "tourDateLabel": "Tourdatum",
+        "pickDatePlaceholder": "Wählen Sie ein Datum",
+        "experienceLabel": "Erzählen Sie uns von Ihrer Erfahrung",
+        "photoLabel": "Foto hochladen (optional)",
+        "submitButton": "Feedback senden",
+        "thankYouTitle": "Vielen Dank für Ihr Feedback!",
+        "thankYouDescription": "Wir schätzen es, dass Sie sich die Zeit genommen haben, Ihre Erfahrungen zu teilen. Es hilft uns zu wachsen und uns zu verbessern."
+    }
+}

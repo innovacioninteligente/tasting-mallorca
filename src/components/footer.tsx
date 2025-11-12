@@ -21,10 +21,10 @@ export function Footer() {
           <ul className="space-y-2 text-base">
             <li><Link href="/tours" className="hover:text-primary transition-colors">Tours</Link></li>
             <li><Link href="/about" className="hover:text-primary transition-colors">About Us</Link></li>
+            <li><Link href="/guest-feedback" className="hover:text-primary transition-colors">Guest Feedback</Link></li>
             <li><Link href="/contact" className="hover:text-primary transition-colors">Contact</Link></li>
             <li><Link href="/road-map" className="hover:text-primary transition-colors">Road Map</Link></li>
             <li><Link href="/signin" className="hover:text-primary transition-colors">Sign In</Link></li>
-            <li><Link href="/signup" className="hover:text-primary transition-colors">Sign Up</Link></li>
           </ul>
         </div>
         <div>

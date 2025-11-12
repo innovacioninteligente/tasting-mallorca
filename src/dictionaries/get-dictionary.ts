@@ -18,6 +18,7 @@ const dictionaries = {
     testimonials: () => import('./en/testimonials.json').then((module) => module.default),
     blog: () => import('./en/blog.json').then((module) => module.default),
     privateTours: () => import('./en/private-tours.json').then((module) => module.default),
+    guestFeedback: () => import('./en/guest-feedback.json').then((module) => module.default),
     tourDetail: {
       header: () => import('./en/tour-detail/header.json').then(m => m.default),
       overview: () => import('./en/tour-detail/overview.json').then(m => m.default),
@@ -44,6 +45,7 @@ const dictionaries = {
     testimonials: () => import('./fr/testimonials.json').then((module) => module.default),
     blog: () => import('./fr/blog.json').then((module) => module.default),
     privateTours: () => import('./fr/private-tours.json').then((module) => module.default),
+    guestFeedback: () => import('./fr/guest-feedback.json').then((module) => module.default),
     tourDetail: {
       header: () => import('./fr/tour-detail/header.json').then(m => m.default),
       overview: () => import('./fr/tour-detail/overview.json').then(m => m.default),
@@ -70,6 +72,7 @@ const dictionaries = {
     testimonials: () => import('./de/testimonials.json').then((module) => module.default),
     blog: () => import('./de/blog.json').then((module) => module.default),
     privateTours: () => import('./de/private-tours.json').then((module) => module.default),
+    guestFeedback: () => import('./de/guest-feedback.json').then((module) => module.default),
     tourDetail: {
       header: () => import('./de/tour-detail/header.json').then(m => m.default),
       overview: () => import('./de/tour-detail/overview.json').then(m => m.default),
@@ -96,6 +99,7 @@ const dictionaries = {
     testimonials: () => import('./nl/testimonials.json').then((module) => module.default),
     blog: () => import('./nl/blog.json').then((module) => module.default),
     privateTours: () => import('./nl/private-tours.json').then((module) => module.default),
+    guestFeedback: () => import('./nl/guest-feedback.json').then((module) => module.default),
     tourDetail: {
       header: () => import('./nl/tour-detail/header.json').then(m => m.default),
       overview: () => import('./nl/tour-detail/overview.json').then(m => m.default),
@@ -122,6 +126,7 @@ const dictionaries = {
     testimonials: () => import('./es/testimonials.json').then((module) => module.default),
     blog: () => import('./es/blog.json').then((module) => module.default),
     privateTours: () => import('./es/private-tours.json').then((module) => module.default),
+    guestFeedback: () => import('./es/guest-feedback.json').then((module) => module.default),
     tourDetail: {
       header: () => import('./es/tour-detail/header.json').then(m => m.default),
       overview: () => import('./es/tour-detail/overview.json').then(m => m.default),
@@ -164,6 +169,7 @@ const loadDictionary = async (locale: Locale) => {
         testimonials: await lang.testimonials(),
         blog: await lang.blog(),
         privateTours: await lang.privateTours(),
+        guestFeedback: await lang.guestFeedback(),
         tourDetail,
         dashboard,
     };

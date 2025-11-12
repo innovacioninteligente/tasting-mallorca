@@ -1,0 +1,19 @@
+
+{
+    "pageTitle": "Comparte tu Experiencia",
+    "pageDescription": "Tu opinión es muy importante para nosotros. Nos ayuda a mejorar y a seguir ofreciendo experiencias auténticas en Mallorca.",
+    "form": {
+        "ratingTitle": "¿Cómo calificarías tu experiencia?",
+        "ratingDescription": "Selecciona 5 estrellas para dejar una reseña en Google, o 4 o menos para compartir tu opinión de forma privada con nuestro equipo.",
+        "formTitle": "Cuéntanos más",
+        "nameLabel": "Nombre",
+        "nationalityLabel": "Nacionalidad (Opcional)",
+        "tourDateLabel": "Fecha del Tour",
+        "pickDatePlaceholder": "Elige una fecha",
+        "experienceLabel": "Cuéntanos sobre tu experiencia",
+        "photoLabel": "Subir una foto (opcional)",
+        "submitButton": "Enviar Opinión",
+        "thankYouTitle": "¡Gracias por tu opinión!",
+        "thankYouDescription": "Agradecemos que te hayas tomado el tiempo de compartir tu experiencia. Nos ayuda a crecer y mejorar."
+    }
+}

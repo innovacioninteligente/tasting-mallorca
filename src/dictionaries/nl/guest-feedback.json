@@ -1,0 +1,19 @@
+
+{
+    "pageTitle": "Deel Uw Ervaring",
+    "pageDescription": "Uw feedback is erg belangrijk voor ons. Het helpt ons te verbeteren en authentieke ervaringen op Mallorca te blijven aanbieden.",
+    "form": {
+        "ratingTitle": "Hoe zou u uw ervaring beoordelen?",
+        "ratingDescription": "Selecteer 5 sterren om een recensie op Google achter te laten, of 4 of minder om uw feedback privé met ons team te delen.",
+        "formTitle": "Vertel ons meer",
+        "nameLabel": "Naam",
+        "nationalityLabel": "Nationaliteit (Optioneel)",
+        "tourDateLabel": "Tourdatum",
+        "pickDatePlaceholder": "Kies een datum",
+        "experienceLabel": "Vertel ons over uw ervaring",
+        "photoLabel": "Upload een foto (optioneel)",
+        "submitButton": "Feedback verzenden",
+        "thankYouTitle": "Bedankt voor uw feedback!",
+        "thankYouDescription": "We waarderen het dat u de tijd heeft genomen om uw ervaring te delen. Het helpt ons om te groeien en te verbeteren."
+    }
+}

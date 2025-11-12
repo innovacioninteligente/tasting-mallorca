@@ -278,6 +278,21 @@
         "publishedAt": { "type": "string", "format": "date-time" }
       },
       "required": ["slug", "title", "summary", "content", "mainImage", "author", "published", "publishedAt"]
+    },
+    "GuestFeedback": {
+      "title": "Guest Feedback",
+      "description": "Represents feedback submitted by a guest after a tour.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "nationality": { "type": "string" },
+        "tourDate": { "type": "string", "format": "date" },
+        "rating": { "type": "number" },
+        "experience": { "type": "string" },
+        "photoUrl": { "type": "string", "format": "uri" },
+        "submittedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "tourDate", "rating", "experience", "submittedAt"]
     }
   },
   "auth": {
@@ -319,6 +334,10 @@
     "/blogPosts/{postId}": {
       "schema": { "$ref": "#/entities/BlogPost" },
       "description": "Stores all blog posts."
+    },
+    "/guestFeedback/{feedbackId}": {
+      "schema": { "$ref": "#/entities/GuestFeedback" },
+      "description": "Stores feedback submitted by guests."
     }
   }
 }
