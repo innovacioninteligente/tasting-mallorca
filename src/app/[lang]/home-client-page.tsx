@@ -16,6 +16,7 @@ import { BlogSection } from '@/components/home/blog-section';
 import { type Locale } from '@/dictionaries/config';
 import { Tour } from '@/backend/tours/domain/tour.model';
 import { BlogPost } from '@/backend/blog/domain/blog.model';
+import { PrivateToursCtaSection } from '@/components/home/private-tours-cta-section';
 
 
 export default function HomeClientPage({
@@ -36,6 +37,7 @@ export default function HomeClientPage({
       <FeaturedToursSection dictionary={dictionary.featuredTours} lang={lang} tours={tours} />
       <WhatsIncludedSection dictionary={dictionary.whatsIncluded} />
       <WhyChooseUsSection dictionary={dictionary.whyChooseUs} />
+      <PrivateToursCtaSection dictionary={dictionary.privateToursCta} lang={lang} />
       <GallerySection dictionary={dictionary.gallery} />
       <HappyCustomersSection dictionary={dictionary.happyCustomers} />
       <TopDestinationsSection dictionary={dictionary.destinations} />
