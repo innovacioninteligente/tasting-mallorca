@@ -10,12 +10,12 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { useAuth, useFirestore } from '@/firebase';
+import { useAuth } from '@/firebase';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { doc, setDoc } from 'firebase/firestore';
 import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { useRouter, usePathname } from 'next/navigation';
+import { createUserAction } from '@/app/server-actions/users/createUserAction';
 
 const formSchema = z.object({
   name: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
@@ -29,7 +29,6 @@ export default function SignUpPage() {
   const router = useRouter();
   const pathname = usePathname();
   const auth = useAuth();
-  const firestore = useFirestore();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -41,26 +40,34 @@ export default function SignUpPage() {
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    if (!auth || !firestore) return;
+    if (!auth) return;
 
     const lang = pathname.split('/')[1];
 
     setIsLoading(true);
     try {
+      // 1. Create user in Firebase Auth
       const userCredential = await createUserWithEmailAndPassword(auth, values.email, values.password);
       const user = userCredential.user;
 
-      // Create user document in Firestore
-      await setDoc(doc(firestore, 'users', user.uid), {
-        name: values.name,
+      // 2. Call server action to create Firestore doc and set custom claims
+      const result = await createUserAction({
+        uid: user.uid,
         email: values.email,
-        role: 'customer',
+        name: values.name,
       });
+
+      if (result.error) {
+        throw new Error(result.error);
+      }
       
       toast({
         title: 'Account created!',
         description: "You've been successfully signed up.",
       });
+      
+      // Force a token refresh to get custom claims on the client
+      await user.getIdToken(true);
 
       router.push(`/${lang}/dashboard`);
 
