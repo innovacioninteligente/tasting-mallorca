@@ -1,3 +1,4 @@
+
 import Link from 'next/link';
 import { Sprout, Mail, Phone, MessageCircle } from 'lucide-react';
 import { DictionaryType } from '@/dictionaries/get-dictionary';

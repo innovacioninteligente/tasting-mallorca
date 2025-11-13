@@ -73,4 +73,3 @@ export function TourHeaderSection({ tour, dictionary }: TourHeaderSectionProps) 
         </header>
     );
 }
-
