@@ -1,3 +1,22 @@
 {
-    "slogan": "Authentieke tours, in uw eigen tempo. Ontdek het echte Mallorca met ons"
+    "slogan": "Authentieke tours, in uw eigen tempo. Ontdek het echte Mallorca met ons",
+    "quickLinks": {
+        "title": "Snelle links",
+        "tours": "Tours",
+        "about": "Over ons",
+        "guestFeedback": "Gastenfeedback",
+        "contact": "Contact",
+        "roadMap": "Routekaart"
+    },
+    "ourTours": "Onze reizen",
+    "latestArticles": "Laatste artikelen",
+    "contactUs": {
+        "title": "Contact"
+    },
+    "legal": {
+        "title": "Wettelijk",
+        "manageBooking": "Boeking beheren",
+        "privacy": "Privacybeleid",
+        "terms": "Servicevoorwaarden"
+    }
 }

@@ -8,6 +8,7 @@ import { Locale } from '@/dictionaries/config';
 import { FirebaseProvider } from '@/firebase/provider';
 import { MainLayout } from '@/components/main-layout';
 import { Metadata } from 'next';
+import { Footer } from '@/components/footer';
 
 
 const poppins = Poppins({
@@ -69,7 +70,11 @@ export default async function RootLayout({
       <body className="font-body antialiased bg-background text-foreground">
         <FirebaseProvider>
           <div className="flex flex-col min-h-screen">
-            <MainLayout dictionary={dictionary} lang={lang}>
+            <MainLayout 
+              dictionary={dictionary} 
+              lang={lang}
+              footer={<Footer dictionary={dictionary.footer} lang={lang} />}
+            >
               {children}
             </MainLayout>
           </div>

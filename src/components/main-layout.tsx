@@ -2,7 +2,6 @@
 
 import { usePathname } from 'next/navigation';
 import { Header } from '@/components/header';
-import { Footer } from '@/components/footer';
 import { type getDictionary } from '@/dictionaries/get-dictionary';
 import { type Locale } from '@/dictionaries/config';
 import { WhatsAppButton } from './whatsapp-button';
@@ -10,11 +9,13 @@ import { WhatsAppButton } from './whatsapp-button';
 export function MainLayout({ 
     children, 
     dictionary, 
-    lang 
+    lang,
+    footer
 }: { 
     children: React.ReactNode, 
     dictionary: Awaited<ReturnType<typeof getDictionary>>, 
-    lang: Locale 
+    lang: Locale,
+    footer: React.ReactNode
 }) {
   const pathname = usePathname();
   const isDashboard = pathname.includes('/dashboard');
@@ -25,7 +26,7 @@ export function MainLayout({
       <main className="flex-grow">
         {children}
       </main>
-      {!isDashboard && <Footer dictionary={dictionary.footer} />}
+      {!isDashboard && footer}
       {!isDashboard && <WhatsAppButton />}
     </>
   );

@@ -1,3 +1,22 @@
 {
-    "slogan": "Authentic Tours, at your own pace. Discover the real Mallorca with us"
+    "slogan": "Authentic Tours, at your own pace. Discover the real Mallorca with us",
+    "quickLinks": {
+        "title": "Quick Links",
+        "tours": "Tours",
+        "about": "About Us",
+        "guestFeedback": "Guest Feedback",
+        "contact": "Contact",
+        "roadMap": "Road Map"
+    },
+    "ourTours": "Our Tours",
+    "latestArticles": "Latest Articles",
+    "contactUs": {
+        "title": "Contact Us"
+    },
+    "legal": {
+        "title": "Legal",
+        "manageBooking": "Manage Booking",
+        "privacy": "Privacy Policy",
+        "terms": "Terms of Service"
+    }
 }

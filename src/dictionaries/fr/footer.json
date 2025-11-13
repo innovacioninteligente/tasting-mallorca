@@ -1,3 +1,22 @@
 {
-    "slogan": "Des visites authentiques, à votre rythme. Découvrez la vraie Majorque avec nous"
+    "slogan": "Des visites authentiques, à votre rythme. Découvrez la vraie Majorque avec nous",
+    "quickLinks": {
+        "title": "Liens rapides",
+        "tours": "Tours",
+        "about": "À propos de nous",
+        "guestFeedback": "Avis des clients",
+        "contact": "Contact",
+        "roadMap": "Feuille de route"
+    },
+    "ourTours": "Nos circuits",
+    "latestArticles": "Derniers articles",
+    "contactUs": {
+        "title": "Contactez-nous"
+    },
+    "legal": {
+        "title": "Légal",
+        "manageBooking": "Gérer la réservation",
+        "privacy": "Politique de confidentialité",
+        "terms": "Conditions d'utilisation"
+    }
 }
