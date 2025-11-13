@@ -64,5 +64,17 @@ export const themes: Theme[] = [
             '--secondary': '216 4% 85%',
             '--accent': '4 85% 46%',
         }
+    },
+    {
+        name: 'Terracotta',
+        values: {
+            '--background': '35 50% 97%',
+            '--foreground': '25 25% 15%',
+            '--card': '35 50% 99%',
+            '--primary': '20 75% 55%', // Terracotta
+            '--primary-foreground': '35 50% 97%',
+            '--secondary': '90 20% 92%', // Soft Olive
+            '--accent': '45 90% 60%', // Sunny Yellow
+        }
     }
 ];
