@@ -35,8 +35,6 @@ export async function cancelBookingUseCase(
   const payment = await findPaymentByBookingId(paymentRepository, bookingId);
 
   if (!payment || !payment.stripePaymentIntentId) {
-      // If there's no payment record, we can just cancel the booking without a refund.
-      // This might happen for bookings that were never paid.
       await bookingRepository.update(bookingId, { 
           status: 'cancelled',
           ticketStatus: 'expired'
@@ -45,12 +43,10 @@ export async function cancelBookingUseCase(
   }
   
   try {
-    // Create a refund in Stripe
-    await stripe.refunds.create({
+    const refund = await stripe.refunds.create({
       payment_intent: payment.stripePaymentIntentId,
     });
 
-    // If refund is successful, update our database
     await bookingRepository.update(bookingId, { 
         status: 'cancelled',
         ticketStatus: 'expired',
@@ -58,16 +54,29 @@ export async function cancelBookingUseCase(
         amountDue: 0,
     });
     
+    await paymentRepository.update(payment.id, {
+        status: 'refunded',
+        refundId: refund.id,
+        refundedAmount: refund.amount,
+        refundedAt: new Date(refund.created * 1000),
+    });
+    
     return { success: true };
 
   } catch (error: any) {
     console.error("Stripe refund failed:", error);
-    // Return a user-friendly error message
+    
     if (error.code === 'charge_already_refunded') {
-        // If already refunded in Stripe, just update our DB state.
         await bookingRepository.update(bookingId, { status: 'cancelled', ticketStatus: 'expired' });
+        await paymentRepository.update(payment.id, { status: 'refunded' });
         return { success: true };
     }
+    
+    await paymentRepository.update(payment.id, {
+        status: 'failed',
+        failureReason: error.message || 'Unknown refund error',
+    });
+
     return { success: false, error: error.message || "An error occurred while processing the refund." };
   }
 }

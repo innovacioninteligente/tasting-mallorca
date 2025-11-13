@@ -6,5 +6,5 @@ export async function updatePaymentStatus(
   id: string,
   status: PaymentStatus
 ): Promise<void> {
-  await paymentRepository.updateStatus(id, status);
+  await paymentRepository.update(id, { status });
 }

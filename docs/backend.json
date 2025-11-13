@@ -187,7 +187,11 @@
             "stripePaymentIntentId": { "type": "string" },
             "amount": { "type": "number" },
             "currency": { "type": "string" },
-            "status": { "type": "string", "enum": ["succeeded", "failed", "pending"] }
+            "status": { "type": "string", "enum": ["succeeded", "failed", "pending", "refunded"] },
+            "refundId": { "type": "string", "description": "The ID of the refund object in Stripe, if applicable." },
+            "refundedAmount": { "type": "number", "description": "The amount refunded, in cents." },
+            "refundedAt": { "type": "string", "format": "date-time", "description": "The timestamp when the refund was processed." },
+            "failureReason": { "type": "string", "description": "The reason for a refund failure, if applicable." }
         },
         "required": ["bookingId", "stripePaymentIntentId", "amount", "status"]
     },

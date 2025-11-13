@@ -19,7 +19,8 @@ export class FirestorePaymentRepository implements PaymentRepository {
       if (snapshot.empty) {
           return null;
       }
-      return snapshot.docs[0].data() as Payment;
+      const doc = snapshot.docs[0];
+      return { id: doc.id, ...doc.data() } as Payment;
   }
 
   async findByPaymentIntentId(paymentIntentId: string): Promise<Payment | null> {
@@ -27,14 +28,15 @@ export class FirestorePaymentRepository implements PaymentRepository {
     if (snapshot.empty) {
         return null;
     }
-    return snapshot.docs[0].data() as Payment;
+    const doc = snapshot.docs[0];
+    return { id: doc.id, ...doc.data() } as Payment;
   }
 
   async save(payment: Payment): Promise<void> {
     await this.collection.doc(payment.id).set(payment);
   }
 
-  async updateStatus(id: string, status: PaymentStatus): Promise<void> {
-    await this.collection.doc(id).update({ status });
+  async update(id: string, data: Partial<Payment>): Promise<void> {
+    await this.collection.doc(id).update(data);
   }
 }

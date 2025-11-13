@@ -1,4 +1,4 @@
-export type PaymentStatus = 'succeeded' | 'failed' | 'pending';
+export type PaymentStatus = 'succeeded' | 'failed' | 'pending' | 'refunded';
 
 export interface Payment {
   id: string;
@@ -7,4 +7,8 @@ export interface Payment {
   amount: number;
   currency: string;
   status: PaymentStatus;
+  refundId?: string;
+  refundedAmount?: number;
+  refundedAt?: Date;
+  failureReason?: string;
 }
