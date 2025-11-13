@@ -69,6 +69,7 @@ export function BookingList({ bookings, error, lang, onView }: BookingListProps)
       <TableHeader>
         <TableRow>
           <TableHead>Tour</TableHead>
+          <TableHead>Customer</TableHead>
           <TableHead>Date</TableHead>
           <TableHead>Participants</TableHead>
           <TableHead>Payment Status</TableHead>
@@ -77,36 +78,43 @@ export function BookingList({ bookings, error, lang, onView }: BookingListProps)
         </TableRow>
       </TableHeader>
       <TableBody>
-        {bookings.map((booking: Booking) => (
-          <TableRow key={booking.id}>
-            <TableCell className="font-medium">
-              {(booking as any).tour?.title?.[lang] || (booking as any).tour?.title?.en || 'N/A'}
-            </TableCell>
-            <TableCell>
-              {format(new Date(booking.date), 'PPP')}
-            </TableCell>
-             <TableCell>{booking.adults + booking.children + booking.infants}</TableCell>
-            <TableCell>
-              <Badge variant={getStatusVariant(booking.status)}>
-                {booking.status}
-              </Badge>
-            </TableCell>
-            <TableCell>
-                 <Badge variant={getTicketStatusVariant(booking.ticketStatus)} className="capitalize">
-                    {booking.ticketStatus === 'valid' && <CheckCircle className="mr-2 h-3 w-3" />}
-                    {booking.ticketStatus === 'redeemed' && <Ticket className="mr-2 h-3 w-3" />}
-                    {booking.ticketStatus === 'expired' && <AlertCircle className="mr-2 h-3 w-3" />}
-                    {booking.ticketStatus}
+        {bookings.map((booking: Booking) => {
+          const totalParticipants = (booking.adults || 0) + (booking.children || 0) + (booking.infants || 0);
+          return (
+            <TableRow key={booking.id}>
+                <TableCell className="font-medium">
+                {(booking as any).tour?.title?.[lang] || (booking as any).tour?.title?.en || 'N/A'}
+                </TableCell>
+                <TableCell>
+                    <div className="font-medium">{booking.customerName}</div>
+                    <div className="text-xs text-muted-foreground">{booking.customerEmail}</div>
+                </TableCell>
+                <TableCell>
+                {format(new Date(booking.date), 'PPP')}
+                </TableCell>
+                <TableCell>{totalParticipants}</TableCell>
+                <TableCell>
+                <Badge variant={getStatusVariant(booking.status)}>
+                    {booking.status}
                 </Badge>
-            </TableCell>
-            <TableCell>
-              <Button variant="outline" size="sm" onClick={() => onView(booking)}>
-                <Eye className="mr-2 h-4 w-4" />
-                View
-              </Button>
-            </TableCell>
-          </TableRow>
-        ))}
+                </TableCell>
+                <TableCell>
+                    <Badge variant={getTicketStatusVariant(booking.ticketStatus)} className="capitalize">
+                        {booking.ticketStatus === 'valid' && <CheckCircle className="mr-2 h-3 w-3" />}
+                        {booking.ticketStatus === 'redeemed' && <Ticket className="mr-2 h-3 w-3" />}
+                        {booking.ticketStatus === 'expired' && <AlertCircle className="mr-2 h-3 w-3" />}
+                        {booking.ticketStatus}
+                    </Badge>
+                </TableCell>
+                <TableCell>
+                <Button variant="outline" size="sm" onClick={() => onView(booking)}>
+                    <Eye className="mr-2 h-4 w-4" />
+                    View
+                </Button>
+                </TableCell>
+            </TableRow>
+          )
+        })}
       </TableBody>
     </Table>
   );

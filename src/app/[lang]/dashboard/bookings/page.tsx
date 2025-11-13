@@ -5,25 +5,28 @@ import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/com
 import { findBookings } from "@/app/server-actions/bookings/findBookings";
 import { BookingsClientPage } from "./bookings-client-page";
 import { Locale } from "@/dictionaries/config";
+import { AdminRouteGuard } from "@/components/auth/admin-route-guard";
 
 export default async function BookingsPage({ params }: { params: { lang: Locale }}) {
     const result = await findBookings({});
     
     return (
-        <Card>
-            <CardHeader>
-                <CardTitle>Bookings</CardTitle>
-                <CardDescription>
-                    View and manage all tour bookings.
-                </CardDescription>
-            </CardHeader>
-            <CardContent>
-                <BookingsClientPage
-                    initialBookings={result.data || []}
-                    error={result.error}
-                    lang={params.lang}
-                />
-            </CardContent>
-        </Card>
+        <AdminRouteGuard>
+            <Card>
+                <CardHeader>
+                    <CardTitle>Bookings</CardTitle>
+                    <CardDescription>
+                        View and manage all tour bookings.
+                    </CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <BookingsClientPage
+                        initialBookings={result.data || []}
+                        error={result.error}
+                        lang={params.lang}
+                    />
+                </CardContent>
+            </Card>
+        </AdminRouteGuard>
     );
 }
