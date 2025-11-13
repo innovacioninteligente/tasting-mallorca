@@ -4,21 +4,24 @@
 import { createSafeAction } from '@/app/server-actions/lib/safe-action';
 import { findBookingsByUserId, findAllBookings } from '@/backend/bookings/application/findBooking';
 import { FirestoreBookingRepository } from '@/backend/bookings/infrastructure/firestore-booking.repository';
-import { Booking } from '@/backend/bookings/domain/booking.model';
+import { Booking, BookingWithDetails } from '@/backend/bookings/domain/booking.model';
 import { FirestoreTourRepository } from '@/backend/tours/infrastructure/firestore-tour.repository';
 import { findTourById } from '@/backend/tours/application/findTours';
-import { Tour } from '@/backend/tours/domain/tour.model';
+import { FirestorePaymentRepository } from '@/backend/payments/infrastructure/firestore-payment.repository';
+import { findPaymentByBookingId } from '@/backend/payments/application/findPayment';
+
 
 export const findBookings = createSafeAction(
   {
     allowedRoles: ['admin', 'guide', 'customer'],
   },
-  async (_: {}, user): Promise<{ data?: Booking[]; error?: string }> => {
+  async (_: {}, user): Promise<{ data?: BookingWithDetails[]; error?: string }> => {
     if (!user) return { error: 'Authentication required' };
     
     try {
       const bookingRepository = new FirestoreBookingRepository();
       const tourRepository = new FirestoreTourRepository();
+      const paymentRepository = new FirestorePaymentRepository();
 
       let bookings: Booking[];
 
@@ -31,17 +34,18 @@ export const findBookings = createSafeAction(
       const detailedBookings = await Promise.all(
         bookings.map(async (booking) => {
           const tour = await findTourById(tourRepository, booking.tourId);
-          // Ensure date is a serializable string
-          const serializedBooking = {
+          const payment = await findPaymentByBookingId(paymentRepository, booking.id);
+          
+          const serializedBooking: BookingWithDetails = {
             ...booking,
             date: (booking.date as any).toDate ? (booking.date as any).toDate().toISOString() : booking.date,
-            tour, // Attach the full tour object
+            tour: tour ? JSON.parse(JSON.stringify(tour)) : undefined,
+            payment: payment ? JSON.parse(JSON.stringify(payment)) : undefined,
           };
           return serializedBooking;
         })
       );
       
-      // Serialize for client components
       return { data: JSON.parse(JSON.stringify(detailedBookings)) };
       
     } catch (error: any) {

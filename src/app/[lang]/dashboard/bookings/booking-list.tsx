@@ -14,14 +14,14 @@ import { Button } from '@/components/ui/button';
 import { Eye, CheckCircle, Ticket, AlertCircle } from 'lucide-react';
 import Link from 'next/link';
 import { format } from 'date-fns';
-import { Booking } from '@/backend/bookings/domain/booking.model';
+import { Booking, BookingWithDetails } from '@/backend/bookings/domain/booking.model';
 import { Locale } from '@/dictionaries/config';
 
 interface BookingListProps {
-  bookings?: any[]; // Allow 'any' for flexibility with serialized data
+  bookings?: BookingWithDetails[];
   error?: string;
   lang: Locale;
-  onView: (booking: any) => void;
+  onView: (booking: BookingWithDetails) => void;
 }
 
 export function BookingList({ bookings, error, lang, onView }: BookingListProps) {
@@ -71,19 +71,19 @@ export function BookingList({ bookings, error, lang, onView }: BookingListProps)
           <TableHead>Tour</TableHead>
           <TableHead>Customer</TableHead>
           <TableHead>Date</TableHead>
-          <TableHead>Participants</TableHead>
+          <TableHead>Amount Paid</TableHead>
+          <TableHead>Amount Due</TableHead>
           <TableHead>Payment Status</TableHead>
           <TableHead>Ticket Status</TableHead>
           <TableHead>Actions</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
-        {bookings.map((booking: Booking) => {
-          const totalParticipants = (booking.adults || 0) + (booking.children || 0) + (booking.infants || 0);
+        {bookings.map((booking) => {
           return (
             <TableRow key={booking.id}>
                 <TableCell className="font-medium">
-                {(booking as any).tour?.title?.[lang] || (booking as any).tour?.title?.en || 'N/A'}
+                {booking.tour?.title?.[lang] || booking.tour?.title?.en || 'N/A'}
                 </TableCell>
                 <TableCell>
                     <div className="font-medium">{booking.customerName}</div>
@@ -92,9 +92,10 @@ export function BookingList({ bookings, error, lang, onView }: BookingListProps)
                 <TableCell>
                 {format(new Date(booking.date), 'PPP')}
                 </TableCell>
-                <TableCell>{totalParticipants}</TableCell>
+                 <TableCell className="font-medium">€{booking.amountPaid.toFixed(2)}</TableCell>
+                 <TableCell className="font-medium text-accent">€{booking.amountDue.toFixed(2)}</TableCell>
                 <TableCell>
-                <Badge variant={getStatusVariant(booking.status)}>
+                <Badge variant={getStatusVariant(booking.status)} className="capitalize">
                     {booking.status}
                 </Badge>
                 </TableCell>
