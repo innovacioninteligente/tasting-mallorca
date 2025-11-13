@@ -10,13 +10,16 @@ const adminEmails = [
 
 export async function createUser(
   userRepository: UserRepository,
-  user: Omit<User, 'id' | 'role'> & { id: string }
+  user: Omit<User, 'id' | 'role'> & { id: string },
+  roleOverride?: UserRole
 ): Promise<void> {
 
-  // Determine the role based on the email
-  const role: UserRole = adminEmails.includes(user.email.toLowerCase())
-    ? 'admin'
-    : 'customer';
+  // Determine the role: use override if provided, otherwise check admin list, else default to customer.
+  const role: UserRole = roleOverride 
+    ? roleOverride
+    : adminEmails.includes(user.email.toLowerCase())
+      ? 'admin'
+      : 'customer';
 
   const newUser: User = {
     ...user,
