@@ -610,19 +610,19 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
                                 {dictionary.bookButton}
                             </Button>
                         </SheetTrigger>
-                        <SheetContent side="bottom" className="rounded-t-2xl max-h-[90vh] overflow-y-auto p-0 flex flex-col">
+                        <SheetContent side="bottom" className="rounded-t-2xl max-h-[90vh] p-0 flex flex-col">
                            {isSearchingHotel ? (
                                 <div className="h-full"> {renderStep()} </div>
                            ) : (
                              <>
-                                <SheetHeader className="p-6 pb-4 text-left flex-shrink-0">
+                                <SheetHeader className="p-6 pb-4 text-left border-b sticky top-0 bg-background z-10">
                                     <SheetTitle className="text-2xl font-bold">{
                                         step === 1 ? dictionary.title :
                                         step === 2 ? dictionary.bookingSummary : dictionary.finalSummary
                                     }</SheetTitle>
                                     <SheetDescription />
                                 </SheetHeader>
-                                <div className="p-6 pt-0 overflow-y-auto flex-grow">
+                                <div className="p-6 pt-4 overflow-y-auto flex-grow">
                                     <AnimatePresence mode="wait">
                                         {renderStep()}
                                     </AnimatePresence>
