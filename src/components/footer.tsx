@@ -30,7 +30,6 @@ export function Footer({ dictionary }: FooterProps) {
             <li><Link href="/guest-feedback" className="hover:text-primary transition-colors">Guest Feedback</Link></li>
             <li><Link href="/contact" className="hover:text-primary transition-colors">Contact</Link></li>
             <li><Link href="/road-map" className="hover:text-primary transition-colors">Road Map</Link></li>
-            <li><Link href="/signin" className="hover:text-primary transition-colors">Sign In</Link></li>
           </ul>
         </div>
         <div>
