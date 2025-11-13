@@ -57,6 +57,9 @@ const destinations = [
 ];
 
 export function TopDestinationsSection({ dictionary }: TopDestinationsProps) {
+    const mainDestinations = destinations.slice(0, 6);
+    const lastDestination = destinations[6];
+
     return (
         <section className="py-24 bg-background flex flex-col items-center">
             <div className="container text-center mb-12">
@@ -71,7 +74,7 @@ export function TopDestinationsSection({ dictionary }: TopDestinationsProps) {
             </div>
             <div className="w-full px-4 md:px-0 md:w-[90vw] mx-auto">
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 auto-rows-[350px] gap-4">
-                {destinations.map((dest) => (
+                {mainDestinations.map((dest) => (
                     <div key={dest.name} className={`relative rounded-2xl overflow-hidden group h-full ${dest.className}`}>
                         <Image
                             src={dest.image}
@@ -90,7 +93,7 @@ export function TopDestinationsSection({ dictionary }: TopDestinationsProps) {
                         </div>
                     </div>
                 ))}
-                <div className="p-8 rounded-xl bg-secondary flex flex-col items-center justify-center text-center">
+                <div className="p-8 rounded-xl bg-secondary flex flex-col items-center justify-center text-center md:col-span-2">
                     <h3 className="text-3xl font-extrabold text-foreground">{dictionary.ctaTitle}</h3>
                     <p className="mt-2 text-muted-foreground">{dictionary.ctaSubtitle}</p>
                     <Button asChild size="lg" className="mt-6 font-bold rounded-full group">
@@ -100,6 +103,23 @@ export function TopDestinationsSection({ dictionary }: TopDestinationsProps) {
                         </Link>
                     </Button>
                 </div>
+                 <div key={lastDestination.name} className={`relative rounded-2xl overflow-hidden group h-full ${lastDestination.className}`}>
+                        <Image
+                            src={lastDestination.image}
+                            alt={lastDestination.name}
+                            fill
+                            className="object-cover transition-transform duration-300 group-hover:scale-105"
+                            data-ai-hint={lastDestination.imageHint}
+                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                        <div className="absolute bottom-0 left-0 p-6 text-white">
+                            <h3 className="text-2xl font-bold">{lastDestination.name}</h3>
+                        </div>
+                        <div className="absolute top-4 right-4 h-12 w-12 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center transform transition-transform duration-300 group-hover:rotate-45 group-hover:bg-primary">
+                            <ArrowUpRight className="h-6 w-6 text-white" />
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
