@@ -1,3 +1,4 @@
+
 'use client';
 
 import {
@@ -84,7 +85,7 @@ export function BookingList({ bookings, error, lang, onView }: BookingListProps)
             <TableCell>
               {format(new Date(booking.date), 'PPP')}
             </TableCell>
-             <TableCell>{booking.adults + booking.children}</TableCell>
+             <TableCell>{booking.adults + booking.children + booking.infants}</TableCell>
             <TableCell>
               <Badge variant={getStatusVariant(booking.status)}>
                 {booking.status}

@@ -83,6 +83,7 @@ const formSchema = z.object({
   details: detailsSchema,
   pickupPoint: pickupPointSchema,
   price: z.coerce.number().min(0, "El precio debe ser un número positivo."),
+  childPrice: z.coerce.number().optional(),
   region: z.enum(["North", "East", "South", "West", "Central"]),
   durationHours: z.coerce.number().min(1, "La duración debe ser al menos 1 hora."),
   isFeatured: z.boolean().default(false),
@@ -132,6 +133,7 @@ export default function NewTourPage() {
             description: { ...defaultMultilingual },
         },
         price: 0,
+        childPrice: 0,
         region: "South" as "South",
         durationHours: 8,
         isFeatured: false,
@@ -339,7 +341,7 @@ export default function NewTourPage() {
                         basePath={basePath}
                         onSubmit={form.handleSubmit(onSubmit, handleInvalidSubmit)} 
                     />
-                    <main className="flex-grow overflow-y-auto px-4 pt-4 md:px-8 lg:px-10">
+                    <main className="flex-grow overflow-y-scroll px-4 pt-4 md:px-8 lg:px-10">
                        <TourForm />
                     </main>
                 </FormProvider>

@@ -21,8 +21,8 @@ export const updateTour = createSafeAction(
 
       const tourToUpdate: Partial<Tour> & { id: string } = { ...tourData };
       
-      // Ensure numbers are correctly typed if they exist
       if (tourData.price !== undefined) tourToUpdate.price = Number(tourData.price);
+      if (tourData.childPrice !== undefined) tourToUpdate.childPrice = Number(tourData.childPrice);
       if (tourData.durationHours !== undefined) tourToUpdate.durationHours = Number(tourData.durationHours);
       if (tourData.depositPrice !== undefined) tourToUpdate.depositPrice = Number(tourData.depositPrice);
       

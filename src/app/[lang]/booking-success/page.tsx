@@ -119,6 +119,8 @@ export default async function BookingSuccessPage({ searchParams, params }: { sea
     const originCoords = (hotel?.latitude && hotel?.longitude) ? { lat: hotel.latitude, lng: hotel.longitude } : null;
     const destinationCoords = (meetingPoint?.latitude && meetingPoint?.longitude) ? { lat: meetingPoint.latitude, lng: meetingPoint.longitude } : null;
 
+    const totalParticipants = booking.adults + booking.children + booking.infants;
+
     return (
         <Suspense fallback={<div className="h-screen w-full flex items-center justify-center">Loading confirmation...</div>}>
             <div className="bg-background text-foreground min-h-screen flex items-center justify-center py-12">
@@ -170,7 +172,7 @@ export default async function BookingSuccessPage({ searchParams, params }: { sea
                                 </div>
                                 <div className="flex justify-between">
                                     <span className="text-muted-foreground">Participantes:</span>
-                                    <span className="font-semibold">{booking.participants}</span>
+                                    <span className="font-semibold">{totalParticipants} ({booking.adults} Adults, {booking.children} Children, {booking.infants} Infants)</span>
                                 </div>
                                 <div className="flex justify-between">
                                     <span className="text-muted-foreground">Tu hotel:</span>

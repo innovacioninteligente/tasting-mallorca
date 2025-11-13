@@ -71,6 +71,7 @@ export const CreateTourInputSchema = z.object({
   details: detailsSchema,
   pickupPoint: pickupPointSchema,
   price: z.coerce.number().min(0, "El precio debe ser un número positivo."),
+  childPrice: z.coerce.number().optional(),
   region: z.enum(["North", "East", "South", "West", "Central"]),
   durationHours: z.coerce.number().min(1, "La duración debe ser al menos 1 hora."),
   isFeatured: z.boolean().default(false),
@@ -98,12 +99,10 @@ export const createTour = createSafeAction(
       
       const newTour: Tour = {
         ...tourData,
-        // Ensure numbers are correctly typed
         price: Number(tourData.price),
+        childPrice: tourData.childPrice ? Number(tourData.childPrice) : 0,
         durationHours: Number(tourData.durationHours),
         depositPrice: tourData.allowDeposit ? Number(tourData.depositPrice) : 0,
-
-        // Set empty arrays if they are not provided
         itinerary: tourData.itinerary || [],
         availabilityPeriods: tourData.availabilityPeriods || [],
         galleryImages: tourData.galleryImages || [],
