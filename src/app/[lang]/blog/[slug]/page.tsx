@@ -48,6 +48,7 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
   const post = postResult.data;
   const title = post.title[lang] || post.title.en;
   const description = post.summary[lang] || post.summary.en;
+  const imageUrl = post.mainImage;
 
   return {
     title: title,
@@ -57,7 +58,7 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
       description: description,
       images: [
         {
-          url: post.mainImage,
+          url: imageUrl,
           width: 1200,
           height: 630,
           alt: title,
@@ -72,7 +73,14 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
       card: 'summary_large_image',
       title: title,
       description: description,
-      images: [post.mainImage],
+      images: [
+        {
+          url: imageUrl,
+          width: 1200,
+          height: 630,
+          alt: title,
+        },
+      ],
     },
   };
 }

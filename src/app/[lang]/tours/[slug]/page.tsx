@@ -56,6 +56,7 @@ export async function generateMetadata({ params }: TourPageProps): Promise<Metad
   const tour = tourResult.data;
   const title = tour.title[lang] || tour.title.en;
   const description = tour.description[lang] || tour.description.en;
+  const imageUrl = tour.mainImage;
 
   const allSlugs = tour.slug;
   const languages: { [key: string]: string } = {};
@@ -73,7 +74,7 @@ export async function generateMetadata({ params }: TourPageProps): Promise<Metad
       description: description,
       images: [
         {
-          url: tour.mainImage,
+          url: imageUrl,
           width: 1200,
           height: 630,
           alt: title,
@@ -86,7 +87,14 @@ export async function generateMetadata({ params }: TourPageProps): Promise<Metad
       card: 'summary_large_image',
       title: title,
       description: description,
-      images: [tour.mainImage],
+      images: [
+        {
+            url: imageUrl,
+            width: 1200,
+            height: 630,
+            alt: title,
+        }
+      ],
     },
     alternates: {
         canonical: `/${lang}/tours/${slug}`,
