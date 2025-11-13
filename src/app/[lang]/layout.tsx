@@ -7,6 +7,7 @@ import { getDictionary } from '@/dictionaries/get-dictionary';
 import { Locale } from '@/dictionaries/config';
 import { FirebaseProvider } from '@/firebase/provider';
 import { MainLayout } from '@/components/main-layout';
+import { Metadata } from 'next';
 
 
 const poppins = Poppins({
@@ -19,6 +20,40 @@ interface RootLayoutProps {
   children: React.ReactNode;
   params: {
     lang: Locale;
+  };
+}
+
+export async function generateMetadata({ params: { lang } }: RootLayoutProps): Promise<Metadata> {
+  const dictionary = await getDictionary(lang);
+  const { title, subtitle } = dictionary.home;
+  const imageUrl = "https://firebasestorage.googleapis.com/v0/b/tasting-mallorca.firebasestorage.app/o/web%2Fimages%2F036.PNG?alt=media&token=00e634e2-716f-495d-807e-5c15dfe2ea09";
+
+  return {
+    title: {
+      default: 'Tasting Mallorca | Authentic Food & Culture Tours',
+      template: '%s | Tasting Mallorca',
+    },
+    description: subtitle,
+    openGraph: {
+      title: 'Tasting Mallorca | Authentic Food & Culture Tours',
+      description: subtitle,
+      images: [
+        {
+          url: imageUrl,
+          width: 1200,
+          height: 630,
+          alt: 'Tasting Mallorca Tours',
+        },
+      ],
+      locale: lang,
+      type: 'website',
+    },
+     twitter: {
+      card: 'summary_large_image',
+      title: 'Tasting Mallorca | Authentic Food & Culture Tours',
+      description: subtitle,
+      images: [imageUrl],
+    },
   };
 }
 
