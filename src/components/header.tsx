@@ -22,7 +22,6 @@ export function Header({ dictionary, lang }: HeaderProps) {
     { href: `/${lang}/`, label: dictionary.home },
     { href: `/${lang}/about`, label: dictionary.about },
     { href: `/${lang}/tours`, label: dictionary.tours },
-    { href: `/${lang}/private-tours-mallorca`, label: "Private Tours" },
     { href: `/${lang}/blog`, label: "Blog" },
     { href: `/${lang}/contact`, label: dictionary.contact },
   ];
