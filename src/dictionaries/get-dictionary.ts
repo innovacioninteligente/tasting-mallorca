@@ -7,6 +7,7 @@ const dictionaries = {
   en: {
     home: () => import('./en/home.json').then((module) => module.default),
     header: () => import('./en/header.json').then((module) => module.default),
+    footer: () => import('./en/footer.json').then((module) => module.default),
     whatsIncluded: () => import('./en/whats-included.json').then((module) => module.default),
     whyChooseUs: () => import('./en/why-choose-us.json').then((module) => module.default),
     tours: () => import('./en/tours.json').then((module) => module.default),
@@ -37,6 +38,7 @@ const dictionaries = {
   fr: {
     home: () => import('./fr/home.json').then((module) => module.default),
     header: () => import('./fr/header.json').then((module) => module.default),
+    footer: () => import('./fr/footer.json').then((module) => module.default),
     whatsIncluded: () => import('./fr/whats-included.json').then((module) => module.default),
     whyChooseUs: () => import('./fr/why-choose-us.json').then((module) => module.default),
     tours: () => import('./fr/tours.json').then((module) => module.default),
@@ -67,6 +69,7 @@ const dictionaries = {
   de: {
     home: () => import('./de/home.json').then((module) => module.default),
     header: () => import('./de/header.json').then((module) => module.default),
+    footer: () => import('./de/footer.json').then((module) => module.default),
     whatsIncluded: () => import('./de/whats-included.json').then((module) => module.default),
     whyChooseUs: () => import('./de/why-choose-us.json').then((module) => module.default),
     tours: () => import('./de/tours.json').then((module) => module.default),
@@ -97,6 +100,7 @@ const dictionaries = {
   nl: {
     home: () => import('./nl/home.json').then((module) => module.default),
     header: () => import('./nl/header.json').then((module) => module.default),
+    footer: () => import('./nl/footer.json').then((module) => module.default),
     whatsIncluded: () => import('./nl/whats-included.json').then((module) => module.default),
     whyChooseUs: () => import('./nl/why-choose-us.json').then((module) => module.default),
     tours: () => import('./nl/tours.json').then((module) => module.default),
@@ -143,6 +147,7 @@ const loadDictionary = async (locale: Locale) => {
     return {
         home: await lang.home(),
         header: await lang.header(),
+        footer: await lang.footer(),
         whatsIncluded: await lang.whatsIncluded(),
         whyChooseUs: await lang.whyChooseUs(),
         tours: await lang.tours(),

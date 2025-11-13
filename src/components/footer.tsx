@@ -1,7 +1,12 @@
 import Link from 'next/link';
 import { Sprout, Mail, Phone, MessageCircle } from 'lucide-react';
+import { DictionaryType } from '@/dictionaries/get-dictionary';
 
-export function Footer() {
+type FooterProps = {
+  dictionary: DictionaryType['footer'];
+}
+
+export function Footer({ dictionary }: FooterProps) {
   return (
     <footer className="bg-secondary text-secondary-foreground py-12">
       <div className="w-full md:w-[90vw] mx-auto px-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -13,7 +18,7 @@ export function Footer() {
             </span>
           </Link>
           <p className="text-base">
-            Authentic tours, without the rush. Discover the real Mallorca with us.
+            {dictionary.slogan}
           </p>
         </div>
         <div>

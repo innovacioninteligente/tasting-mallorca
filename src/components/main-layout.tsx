@@ -25,7 +25,7 @@ export function MainLayout({
       <main className="flex-grow">
         {children}
       </main>
-      {!isDashboard && <Footer />}
+      {!isDashboard && <Footer dictionary={dictionary.footer} />}
       {!isDashboard && <WhatsAppButton />}
     </>
   );
