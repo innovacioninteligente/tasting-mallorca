@@ -4,7 +4,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetTrigger, SheetClose } from "@/components/ui/sheet";
 import { Input } from "@/components/ui/input";
 import { Calendar as CalendarIcon, Users, DollarSign, Minus, Plus, Languages, ArrowLeft, Hotel, CheckCircle, MapPin, Search, X, CreditCard, Banknote, Info, User as UserIcon, Phone, Baby, PersonStanding } from "lucide-react";
 import { useState, useEffect } from "react";
@@ -616,10 +616,17 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
                            ) : (
                              <>
                                 <SheetHeader className="p-6 pb-4 text-left border-b sticky top-0 bg-background z-10">
-                                    <SheetTitle className="text-2xl font-bold">{
-                                        step === 1 ? dictionary.title :
-                                        step === 2 ? dictionary.bookingSummary : dictionary.finalSummary
-                                    }</SheetTitle>
+                                    <div className="flex justify-between items-center">
+                                        <SheetTitle className="text-2xl font-bold">{
+                                            step === 1 ? dictionary.title :
+                                            step === 2 ? dictionary.bookingSummary : dictionary.finalSummary
+                                        }</SheetTitle>
+                                        <SheetClose asChild>
+                                            <Button variant="ghost" size="icon" className="rounded-full">
+                                                <X className="h-5 w-5" />
+                                            </Button>
+                                        </SheetClose>
+                                    </div>
                                     <SheetDescription />
                                 </SheetHeader>
                                 <div className="p-6 pt-4 overflow-y-auto flex-grow">
