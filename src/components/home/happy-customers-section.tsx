@@ -11,7 +11,7 @@ type HappyCustomersProps = {
 export function HappyCustomersSection({ dictionary }: HappyCustomersProps) {
     return (
         <section className="bg-primary-dark text-primary-foreground py-24 relative overflow-hidden">
-            <div className="container w-full px-4 md:px-0 md:w-[90vw] mx-auto">
+            <div className="container w-full px-4 md:px-0 md:w-[80vw] mx-auto">
             <div className="relative grid md:grid-cols-2 gap-16 items-center">
                 {/* Image collage */}
                 <div className="relative h-[500px]">
