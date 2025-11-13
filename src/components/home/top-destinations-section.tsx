@@ -2,8 +2,10 @@
 'use client';
 
 import Image from 'next/image';
-import { ArrowUpRight, Sprout } from 'lucide-react';
+import Link from 'next/link';
+import { ArrowUpRight, Sprout, ArrowRight } from 'lucide-react';
 import { type getDictionary } from '@/dictionaries/get-dictionary';
+import { Button } from '../ui/button';
 
 type TopDestinationsProps = {
     dictionary: Awaited<ReturnType<typeof getDictionary>>['destinations'];
@@ -88,6 +90,16 @@ export function TopDestinationsSection({ dictionary }: TopDestinationsProps) {
                         </div>
                     </div>
                 ))}
+                <div className="p-8 rounded-xl bg-secondary flex flex-col items-center justify-center text-center">
+                    <h3 className="text-3xl font-extrabold text-foreground">{dictionary.ctaTitle}</h3>
+                    <p className="mt-2 text-muted-foreground">{dictionary.ctaSubtitle}</p>
+                    <Button asChild size="lg" className="mt-6 font-bold rounded-full group">
+                        <Link href="/tours">
+                            {dictionary.ctaButton}
+                            <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
+                        </Link>
+                    </Button>
+                </div>
                 </div>
             </div>
         </section>
