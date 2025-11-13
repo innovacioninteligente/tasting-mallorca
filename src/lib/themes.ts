@@ -52,5 +52,17 @@ export const themes: Theme[] = [
             '--secondary': '222 15% 40%',
             '--accent': '21 88% 75%',
         }
+    },
+    {
+        name: 'Crimson',
+        values: {
+            '--background': '11 55% 92%',
+            '--foreground': '60 1% 17%',
+            '--card': '11 50% 96%',
+            '--primary': '356 90% 32%',
+            '--primary-foreground': '11 55% 92%',
+            '--secondary': '216 4% 85%',
+            '--accent': '4 85% 46%',
+        }
     }
 ];
