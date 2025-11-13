@@ -398,7 +398,7 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
                     </Select>
                 </div>
             </div>
-             <Button size="lg" className="w-full font-bold text-lg py-7 bg-accent text-primary-foreground hover:bg-accent/90" onClick={() => setStep(step + 1)} disabled={!date}>
+             <Button size="lg" className="w-full font-bold text-lg py-7 bg-accent text-accent-foreground hover:bg-accent/90" onClick={() => setStep(step + 1)} disabled={!date}>
                  {dictionary.checkAvailability}
             </Button>
         </motion.div>
@@ -512,18 +512,21 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
                     <div>
                         <div className="flex items-center gap-2 mb-2">
                              <label className="text-base font-medium text-muted-foreground">{dictionary.paymentOption}</label>
+                             <TooltipProvider>
+                                 <Tooltip>
+                                    <TooltipTrigger asChild>
+                                        <Info className="h-4 w-4 text-muted-foreground cursor-help"/>
+                                    </TooltipTrigger>
+                                    <TooltipContent className="max-w-xs">
+                                        <p>{dictionary.payDepositTooltip}</p>
+                                    </TooltipContent>
+                                 </Tooltip>
+                             </TooltipProvider>
                         </div>
                         <RadioGroup defaultValue={paymentOption} value={paymentOption} className="mt-2 grid grid-cols-2 gap-4" onValueChange={(value: 'full' | 'deposit') => setPaymentOption(value)}>
-                           <TooltipProvider>
                                 <div>
                                     <RadioGroupItem value="full" id="r1" className="peer sr-only" />
-                                    <Label htmlFor="r1" className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary relative">
-                                        <div className="absolute top-2 right-2">
-                                            <Tooltip>
-                                                <TooltipTrigger asChild><Info className="h-4 w-4 text-muted-foreground"/></TooltipTrigger>
-                                                <TooltipContent><p>{dictionary.payFullTooltip}</p></TooltipContent>
-                                            </Tooltip>
-                                        </div>
+                                    <Label htmlFor="r1" className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-accent peer-data-[state=checked]:text-accent-foreground [&:has([data-state=checked])]:border-primary relative">
                                         <Banknote className="mb-3 h-6 w-6" />
                                         {dictionary.payFull}
                                         <span className="font-bold text-lg mt-1">€{totalPrice.toFixed(2)}</span>
@@ -531,26 +534,19 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
                                 </div>
                                 <div>
                                     <RadioGroupItem value="deposit" id="r2" className="peer sr-only" />
-                                    <Label htmlFor="r2" className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary relative">
-                                        <div className="absolute top-1.5 right-1.5 px-1.5 py-0.5 rounded-full bg-accent text-accent-foreground text-[10px] font-bold">{dictionary.mostPopular}</div>
-                                         <div className="absolute bottom-2 right-2">
-                                            <Tooltip>
-                                                <TooltipTrigger asChild><Info className="h-4 w-4 text-muted-foreground"/></TooltipTrigger>
-                                                <TooltipContent className="max-w-xs"><p>{dictionary.payDepositTooltip}</p></TooltipContent>
-                                            </Tooltip>
-                                        </div>
+                                    <Label htmlFor="r2" className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-accent peer-data-[state=checked]:text-accent-foreground [&:has([data-state=checked])]:border-primary relative">
+                                        <div className="absolute top-1 right-1.5 px-2 py-0.5 rounded-full bg-primary text-primary-foreground text-[10px] font-bold">{dictionary.mostPopular}</div>
                                         <CreditCard className="mb-3 h-6 w-6" />
                                         {dictionary.payDeposit}
                                         <span className="font-bold text-lg mt-1">€{depositPrice.toFixed(2)}</span>
                                     </Label>
                                 </div>
-                           </TooltipProvider>
                         </RadioGroup>
                     </div>
                 )}
             </div>
             <div className="space-y-3">
-                 <Button size="lg" className="w-full font-bold text-lg py-7 bg-accent text-primary-foreground hover:bg-accent/90" onClick={handleContinueToPayment} disabled={!selectedHotel || !suggestedMeetingPoint || !customerName || !customerEmail || !customerPhone}>
+                 <Button size="lg" className="w-full font-bold text-lg py-7 bg-accent text-accent-foreground hover:bg-accent/90" onClick={handleContinueToPayment} disabled={!selectedHotel || !suggestedMeetingPoint || !customerName || !customerEmail || !customerPhone}>
                     {dictionary.continueToPayment}
                 </Button>
                  <Button variant="ghost" size="lg" className="w-full" onClick={handlePrevStep}>
@@ -627,7 +623,7 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
                     </div>
                     <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
                         <SheetTrigger asChild>
-                            <Button size="lg" className="font-bold text-lg flex-grow bg-accent text-primary-foreground hover:bg-accent/90">
+                            <Button size="lg" className="font-bold text-lg flex-grow bg-accent text-accent-foreground hover:bg-accent/90">
                                 {dictionary.bookButton}
                             </Button>
                         </SheetTrigger>
@@ -664,3 +660,4 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
         </>
     );
 }
+
