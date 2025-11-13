@@ -64,5 +64,3 @@ export function PrivateToursCtaSection({ dictionary, lang }: PrivateToursCtaProp
         </section>
     );
 }
-
-
