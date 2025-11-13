@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/componen
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { format } from 'date-fns';
+import { format, differenceInHours } from 'date-fns';
 import { fr, de, nl, enUS, es } from 'date-fns/locale';
 import {
   AlertDialog,
@@ -18,7 +18,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
-import { Loader2, AlertTriangle, CheckCircle, XCircle } from 'lucide-react';
+import { Loader2, AlertTriangle, XCircle, Info } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { cancelBooking } from '@/app/server-actions/bookings/cancelBooking';
 import { useRouter } from 'next/navigation';
@@ -62,7 +62,8 @@ export function BookingDetailsClientPage({ booking: initialBooking, lang }: Book
         }
     };
     
-    const isCancellable = booking.status === 'confirmed';
+    const isPastCancellationDeadline = differenceInHours(new Date(booking.date), new Date()) < 24;
+    const isCancellable = booking.status === 'confirmed' && !isPastCancellationDeadline;
 
     return (
         <div className="bg-secondary min-h-screen py-12">
@@ -120,7 +121,15 @@ export function BookingDetailsClientPage({ booking: initialBooking, lang }: Book
                             </AlertDialogContent>
                         </AlertDialog>
                     ) : (
-                         <p className="text-sm text-muted-foreground">This booking cannot be cancelled.</p>
+                         <div className="flex items-center text-sm text-muted-foreground gap-2">
+                             <Info className="h-4 w-4"/>
+                             <p>
+                                {booking.status === 'cancelled' 
+                                    ? 'This booking has already been cancelled.'
+                                    : 'This booking cannot be cancelled as it is past the 24-hour deadline.'
+                                }
+                            </p>
+                         </div>
                     )}
                 </CardFooter>
             </Card>

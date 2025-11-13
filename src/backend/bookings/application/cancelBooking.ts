@@ -1,5 +1,6 @@
 import { BookingRepository } from '../domain/booking.repository';
 import { findBookingById } from './findBooking';
+import { differenceInHours } from 'date-fns';
 // Assume Stripe refund logic will be here in the future
 // import { refundPayment } from '@/app/actions/stripe';
 
@@ -17,7 +18,10 @@ export async function cancelBookingUseCase(
     return { success: false, error: 'Booking has already been cancelled.' };
   }
 
-  // TODO: Add logic to check if the booking is within the cancellable period (e.g., > 24 hours before tour date)
+  const bookingDate = (booking.date as any).toDate ? (booking.date as any).toDate() : new Date(booking.date);
+  if (differenceInHours(bookingDate, new Date()) < 24) {
+    return { success: false, error: 'The cancellation deadline of 24 hours has passed.' };
+  }
 
   // TODO: Integrate Stripe refund logic
   // const payment = await findPaymentByBookingId(booking.id);
