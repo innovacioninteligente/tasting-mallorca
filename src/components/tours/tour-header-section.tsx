@@ -3,7 +3,8 @@
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Heart, Share2, ChevronRight } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { Heart, Share2 } from "lucide-react";
 
 interface TourHeaderSectionProps {
     tour: {
@@ -20,33 +21,49 @@ interface TourHeaderSectionProps {
 }
 
 export function TourHeaderSection({ tour, dictionary }: TourHeaderSectionProps) {
+    const { toast } = useToast();
+
+    const handleShare = async () => {
+        const shareData = {
+            title: tour.title,
+            text: `Check out this tour: ${tour.title}`,
+            url: window.location.href,
+        };
+        try {
+            if (navigator.share) {
+                await navigator.share(shareData);
+            } else {
+                await navigator.clipboard.writeText(window.location.href);
+                toast({
+                    title: "Link Copied!",
+                    description: "The tour link has been copied to your clipboard.",
+                });
+            }
+        } catch (error) {
+            console.error("Error sharing:", error);
+             toast({
+                variant: "destructive",
+                title: "Error",
+                description: "Could not share the tour at this moment.",
+            });
+        }
+    };
+    
     return (
         <header className="bg-secondary/50 py-8">
             <div className="w-full md:w-[90vw] mx-auto px-4">
-                <div className="flex items-center text-sm text-muted-foreground mb-4">
-                    <span>{dictionary.explore}</span>
-                    <ChevronRight className="w-4 h-4 mx-1" />
-                    <span>{dictionary.seePlaces}</span>
-                </div>
-
                 <div className="flex flex-col md:flex-row md:items-center md:justify-between">
                     <div>
                         <h1 className="text-4xl md:text-5xl font-extrabold text-foreground" style={{ viewTransitionName: `tour-title-${tour.title}` }}>
                             {tour.title}
                         </h1>
-                        <div className="flex flex-col items-start gap-2 md:flex-row md:items-center md:gap-4 mt-4">
-                            <Badge variant="destructive" className="bg-accent text-accent-foreground hover:bg-accent/90">{dictionary.newActivity}</Badge>
-                            <span className="text-sm text-muted-foreground">
-                                {dictionary.provider}: <span className="font-semibold text-primary">Tasting Mallorca</span>
-                            </span>
-                        </div>
                     </div>
                     <div className="flex items-center gap-4 mt-6 md:mt-0">
                         <Button variant="ghost" className="flex items-center gap-2">
                             <Heart className="w-5 h-5" />
                             <span>{dictionary.addToFavorites}</span>
                         </Button>
-                        <Button variant="ghost" className="flex items-center gap-2">
+                        <Button variant="ghost" className="flex items-center gap-2" onClick={handleShare}>
                             <Share2 className="w-5 h-5" />
                             <span>{dictionary.share}</span>
                         </Button>
@@ -56,3 +73,4 @@ export function TourHeaderSection({ tour, dictionary }: TourHeaderSectionProps) 
         </header>
     );
 }
+

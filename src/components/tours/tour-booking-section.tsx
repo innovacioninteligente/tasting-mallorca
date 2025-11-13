@@ -261,7 +261,6 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
         >
             <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                    <DollarSign className="w-6 h-6 text-primary" />
                     <span className="text-lg font-semibold">{dictionary.priceLabel}</span>
                 </div>
                 <span className="text-3xl font-extrabold text-primary">€{tour.price}</span>
