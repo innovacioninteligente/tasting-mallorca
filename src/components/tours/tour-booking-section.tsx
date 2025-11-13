@@ -13,6 +13,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { format, isWithinInterval, parseISO } from "date-fns";
 import { fr, de, nl, enUS, es } from 'date-fns/locale';
 import { AnimatePresence, motion } from "framer-motion";
@@ -52,6 +53,9 @@ interface TourBookingSectionProps {
         paymentOption: string;
         payFull: string;
         payDeposit: string;
+        payFullTooltip: string;
+        payDepositTooltip: string;
+        mostPopular: string;
         availabilityInfo: string;
         operatesOn: string;
         from: string;
@@ -506,24 +510,41 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
 
                 {tour.allowDeposit && (
                     <div>
-                        <label className="text-base font-medium text-muted-foreground">{dictionary.paymentOption}</label>
+                        <div className="flex items-center gap-2 mb-2">
+                             <label className="text-base font-medium text-muted-foreground">{dictionary.paymentOption}</label>
+                        </div>
                         <RadioGroup defaultValue={paymentOption} value={paymentOption} className="mt-2 grid grid-cols-2 gap-4" onValueChange={(value: 'full' | 'deposit') => setPaymentOption(value)}>
-                            <div>
-                                <RadioGroupItem value="full" id="r1" className="peer sr-only" />
-                                <Label htmlFor="r1" className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary">
-                                    <Banknote className="mb-3 h-6 w-6" />
-                                    {dictionary.payFull}
-                                    <span className="font-bold text-lg mt-1">€{totalPrice.toFixed(2)}</span>
-                                </Label>
-                            </div>
-                            <div>
-                                <RadioGroupItem value="deposit" id="r2" className="peer sr-only" />
-                                <Label htmlFor="r2" className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary">
-                                    <CreditCard className="mb-3 h-6 w-6" />
-                                    {dictionary.payDeposit}
-                                    <span className="font-bold text-lg mt-1">€{depositPrice.toFixed(2)}</span>
-                                </Label>
-                            </div>
+                           <TooltipProvider>
+                                <div>
+                                    <RadioGroupItem value="full" id="r1" className="peer sr-only" />
+                                    <Label htmlFor="r1" className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary relative">
+                                        <div className="absolute top-2 right-2">
+                                            <Tooltip>
+                                                <TooltipTrigger asChild><Info className="h-4 w-4 text-muted-foreground"/></TooltipTrigger>
+                                                <TooltipContent><p>{dictionary.payFullTooltip}</p></TooltipContent>
+                                            </Tooltip>
+                                        </div>
+                                        <Banknote className="mb-3 h-6 w-6" />
+                                        {dictionary.payFull}
+                                        <span className="font-bold text-lg mt-1">€{totalPrice.toFixed(2)}</span>
+                                    </Label>
+                                </div>
+                                <div>
+                                    <RadioGroupItem value="deposit" id="r2" className="peer sr-only" />
+                                    <Label htmlFor="r2" className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary relative">
+                                        <div className="absolute top-1.5 right-1.5 px-1.5 py-0.5 rounded-full bg-accent text-accent-foreground text-[10px] font-bold">{dictionary.mostPopular}</div>
+                                         <div className="absolute bottom-2 right-2">
+                                            <Tooltip>
+                                                <TooltipTrigger asChild><Info className="h-4 w-4 text-muted-foreground"/></TooltipTrigger>
+                                                <TooltipContent className="max-w-xs"><p>{dictionary.payDepositTooltip}</p></TooltipContent>
+                                            </Tooltip>
+                                        </div>
+                                        <CreditCard className="mb-3 h-6 w-6" />
+                                        {dictionary.payDeposit}
+                                        <span className="font-bold text-lg mt-1">€{depositPrice.toFixed(2)}</span>
+                                    </Label>
+                                </div>
+                           </TooltipProvider>
                         </RadioGroup>
                     </div>
                 )}

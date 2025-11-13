@@ -25,10 +25,13 @@
     "paymentOption": "Zahlungsoption",
     "payFull": "Vollständig bezahlen",
     "payDeposit": "Anzahlung leisten",
+    "payFullTooltip": "Sichern Sie Ihre Buchung mit der vollständigen Zahlung.",
+    "payDepositTooltip": "Sichern Sie sich jetzt Ihren Platz mit einer Anzahlung. Einfach, flexibel und der Restbetrag wird am Tag der Tour an Ihren Guide bezahlt.",
+    "mostPopular": "Am beliebtesten",
     "availabilityInfo": "Verfügbarkeitsinformationen",
     "operatesOn": "Verfügbar am",
     "from": "von",
     "to": "bis",
     "and": "und",
-    "depositReminder": "Eine kleine Erinnerung: Der Restbetrag wird am Tag der Tour bezahlt – Barzahlung wird bevorzugt."
+    "depositReminder": "Eine kleine Erinnerung: Der Restbetrag wird am Tag der Tour bezahlt — Barzahlung wird bevorzugt."
 }
