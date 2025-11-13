@@ -38,7 +38,6 @@ export async function Footer({ dictionary, lang }: FooterProps) {
             <li><Link href={`/${lang}/about`} className="hover:text-primary transition-colors">{dictionary.quickLinks.about}</Link></li>
             <li><Link href={`/${lang}/guest-feedback`} className="hover:text-primary transition-colors">{dictionary.quickLinks.guestFeedback}</Link></li>
             <li><Link href={`/${lang}/contact`} className="hover:text-primary transition-colors">{dictionary.quickLinks.contact}</Link></li>
-            <li><Link href={`/${lang}/road-map`} className="hover:text-primary transition-colors">{dictionary.quickLinks.roadMap}</Link></li>
           </ul>
         </div>
         

@@ -52,33 +52,33 @@ const phases = [
     ],
   },
   {
-    name: 'Fase 3: Herramientas de Gestión y Optimización',
-    status: 'todo',
+    name: 'Fase 3: Herramientas de Gestión y Optimización (Completado)',
+    status: 'completed',
     milestones: [
       {
         name: 'Configuración del Backend en Firebase',
-        description: 'Activar Autenticación, Firestore en modo producción y Cloud Functions (Plan Blaze) para soportar la lógica de negocio.',
-        status: 'todo',
+        description: "Activar Autenticación, Firestore en modo producción y Cloud Functions (Plan Blaze) para soportar la lógica de negocio.",
+        status: 'completed',
       },
       {
         name: 'Definición de Entidades de Dominio (Arquitectura Hexagonal)',
         description: "Crear modelos de datos para 'User', 'Tour', 'Booking', 'Payment' e 'Invoice' que formarán el núcleo de nuestro backend.",
-        status: 'todo',
+        status: 'completed',
       },
       {
         name: 'Gestión de Roles con Custom Claims (Cloud Function)',
         description: "Implementar funciones 'onUserCreate' y 'assignAdminRole' para asignar roles ('customer', 'guide', 'admin') a los usuarios en Firebase Auth.",
-        status: 'todo',
+        status: 'completed',
       },
       {
         name: 'Procesamiento de Pagos Automatizado (Cloud Function)',
         description: "Crear un webhook ('processStripePayment') que escuche los pagos de Stripe y actualice el estado de las reservas y pagos en Firestore.",
-        status: 'todo',
+        status: 'completed',
       },
       {
         name: 'Panel de Administración Seguro (Admin Dashboard)',
         description: 'Interfaz para gestionar tours, precios, horarios, y contenidos en 6 idiomas de forma centralizada.',
-        status: 'todo',
+        status: 'completed',
       },
       {
         name: 'Herramienta de Optimización de Rutas (IA)',
@@ -88,74 +88,64 @@ const phases = [
     ],
   },
   {
-    name: 'Fase 4: Crecimiento y Experiencia de Usuario',
-    status: 'todo',
+    name: 'Fase 4: Crecimiento y Experiencia de Usuario (Completado)',
+    status: 'completed',
     milestones: [
       {
         name: 'Sistema de Cuentas de Usuario',
         description: 'Portal para que los clientes vean su historial de reservas, gestionen sus datos y accedan a sus tickets.',
-        status: 'todo',
+        status: 'completed',
       },
       {
         name: 'Sistema de Reseñas y Valoraciones',
         description: 'Permitir a los usuarios dejar valoraciones y comentarios después de un tour para generar confianza y feedback.',
-        status: 'todo',
+        status: 'completed',
       },
       {
         name: 'Blog y Contenido SEO',
         description: 'Desarrollo de un blog para publicar artículos sobre Mallorca y mejorar el posicionamiento en buscadores.',
-        status: 'todo',
+        status: 'completed',
       },
     ],
   },
-  {
-    name: 'Fase 5: Sistema de Moneda Dinámico',
-    status: 'todo',
-    milestones: [
-      {
-        name: 'Definir Estrategia de Precios y Monedas',
-        description: 'Establecer el Euro (EUR) como precio base y asignar monedas secundarias (ej. GBP) según el idioma del usuario.',
-        status: 'todo',
-      },
-      {
-        name: 'Integración con API de Tasas de Cambio',
-        description: 'Conectar con una API para obtener tasas de cambio actualizadas y cachearlas para optimizar el rendimiento.',
-        status: 'todo',
-      },
-      {
-        name: 'Lógica de Conversión y Visualización',
-        description: 'Crear un hook y un proveedor de contexto en React para mostrar los precios convertidos y formateados correctamente.',
-        status: 'todo',
-      },
-      {
-        name: 'Integración Segura con Pasarela de Pago',
-        description: 'Asegurar que, aunque los precios se muestren en varias monedas, el pago final se procese siempre en EUR.',
-        status: 'todo',
-      },
-    ],
-  },
-  {
-    name: 'Fase 6: Ticket Inteligente y Gestión de Tours',
-    status: 'todo',
+    {
+    name: 'Fase 5: Ticket Inteligente y Gestión de Tours (Completado)',
+    status: 'completed',
     milestones: [
       {
         name: 'Generación de Ticket Digital con QR',
         description: 'Creación de un ticket digital único por reserva con un QR para validación. Se enviará por email y estará accesible desde la cuenta del usuario.',
-        status: 'todo',
+        status: 'completed',
       },
       {
         name: 'Mapa con Ruta en Página de Confirmación',
         description: 'Integrar un mapa de Google Maps en la página del ticket que muestre la ruta desde el hotel del cliente hasta el punto de encuentro.',
-        status: 'todo',
+        status: 'completed',
       },
       {
         name: 'Web-App para Guías (Validación de Tickets)',
         description: 'App sencilla para que los guías escaneen los QR, validen los tickets y lleven un control de asistencia en tiempo real.',
-        status: 'todo',
+        status: 'completed',
       },
       {
         name: 'Automatización Post-Tour',
         description: 'Sistema que envía un email de agradecimiento y una solicitud de reseña al cliente una vez el tour ha finalizado.',
+        status: 'todo',
+      },
+    ],
+  },
+  {
+    name: 'Fase 6: Mejoras Futuras',
+    status: 'todo',
+    milestones: [
+       {
+        name: 'Sistema de Moneda Dinámico',
+        description: 'Permitir a los usuarios ver los precios en su moneda local, aunque el pago final se realice en EUR.',
+        status: 'todo',
+      },
+      {
+        name: 'Recomendaciones Personalizadas (IA)',
+        description: 'Sugerir tours a los usuarios basados en sus intereses y reservas anteriores.',
         status: 'todo',
       },
     ],
@@ -171,10 +161,10 @@ const statusIcons = {
 const phaseIcons = {
   'Fase 1: Fundación y Lanzamiento (Completado)': <Rocket className="h-8 w-8" />,
   'Fase 2: Funcionalidad Core de Reservas (Completado)': <Rocket className="h-8 w-8" />,
-  'Fase 3: Herramientas de Gestión y Optimización': <Milestone className="h-8 w-8" />,
-  'Fase 4: Crecimiento y Experiencia de Usuario': <Milestone className="h-8 w-8" />,
-  'Fase 5: Sistema de Moneda Dinámico': <Milestone className="h-8 w-8" />,
-  'Fase 6: Ticket Inteligente y Gestión de Tours': <QrCode className="h-8 w-8" />,
+  'Fase 3: Herramientas de Gestión y Optimización (Completado)': <Milestone className="h-8 w-8" />,
+  'Fase 4: Crecimiento y Experiencia de Usuario (Completado)': <Milestone className="h-8 w-8" />,
+  'Fase 5: Ticket Inteligente y Gestión de Tours (Completado)': <QrCode className="h-8 w-8" />,
+  'Fase 6: Mejoras Futuras': <Milestone className="h-8 w-8" />,
 }
 
 const statusText = {
