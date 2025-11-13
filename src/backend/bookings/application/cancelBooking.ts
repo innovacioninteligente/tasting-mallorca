@@ -1,8 +1,16 @@
+
+'use server';
+
 import { BookingRepository } from '../domain/booking.repository';
 import { findBookingById } from './findBooking';
 import { differenceInHours } from 'date-fns';
-// Assume Stripe refund logic will be here in the future
-// import { refundPayment } from '@/app/actions/stripe';
+import { FirestorePaymentRepository } from '@/backend/payments/infrastructure/firestore-payment.repository';
+import { findPaymentByBookingId } from '@/backend/payments/application/findPayment';
+import Stripe from 'stripe';
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+  apiVersion: '2024-06-20',
+});
 
 export async function cancelBookingUseCase(
   bookingRepository: BookingRepository,
@@ -23,16 +31,43 @@ export async function cancelBookingUseCase(
     return { success: false, error: 'The cancellation deadline of 24 hours has passed.' };
   }
 
-  // TODO: Integrate Stripe refund logic
-  // const payment = await findPaymentByBookingId(booking.id);
-  // if (payment) {
-  //   await refundPayment(payment.stripePaymentIntentId);
-  // }
+  const paymentRepository = new FirestorePaymentRepository();
+  const payment = await findPaymentByBookingId(paymentRepository, bookingId);
 
-  await bookingRepository.update(bookingId, { 
-      status: 'cancelled',
-      ticketStatus: 'expired'
-  });
+  if (!payment || !payment.stripePaymentIntentId) {
+      // If there's no payment record, we can just cancel the booking without a refund.
+      // This might happen for bookings that were never paid.
+      await bookingRepository.update(bookingId, { 
+          status: 'cancelled',
+          ticketStatus: 'expired'
+      });
+      return { success: true };
+  }
+  
+  try {
+    // Create a refund in Stripe
+    await stripe.refunds.create({
+      payment_intent: payment.stripePaymentIntentId,
+    });
 
-  return { success: true };
+    // If refund is successful, update our database
+    await bookingRepository.update(bookingId, { 
+        status: 'cancelled',
+        ticketStatus: 'expired',
+        amountPaid: 0,
+        amountDue: 0,
+    });
+    
+    return { success: true };
+
+  } catch (error: any) {
+    console.error("Stripe refund failed:", error);
+    // Return a user-friendly error message
+    if (error.code === 'charge_already_refunded') {
+        // If already refunded in Stripe, just update our DB state.
+        await bookingRepository.update(bookingId, { status: 'cancelled', ticketStatus: 'expired' });
+        return { success: true };
+    }
+    return { success: false, error: error.message || "An error occurred while processing the refund." };
+  }
 }

@@ -1,3 +1,4 @@
+
 import { Payment, PaymentStatus } from './payment.model';
 
 export interface PaymentRepository {
