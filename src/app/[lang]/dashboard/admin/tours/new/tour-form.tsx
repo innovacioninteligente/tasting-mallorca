@@ -89,6 +89,7 @@ const formSchema = z.object({
   details: detailsSchema.optional(),
   pickupPoint: pickupPointSchema,
   price: z.coerce.number().min(0, "El precio debe ser un número positivo."),
+  childPrice: z.coerce.number().optional(),
   region: z.enum(["North", "East", "South", "West", "Central"]),
   durationHours: z.coerce.number().min(1, "La duración debe ser al menos 1 hora."),
   isFeatured: z.boolean().default(false),
@@ -479,7 +480,7 @@ export function TourForm({ initialData }: TourFormProps) {
                     <Card>
                     <CardHeader><CardTitle>Availability & Pricing</CardTitle></CardHeader>
                     <CardContent className="space-y-6">
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <FormField
                             control={form.control}
                             name="price"
@@ -487,6 +488,17 @@ export function TourForm({ initialData }: TourFormProps) {
                                 <FormItem>
                                 <FormLabel>Base Price (€)</FormLabel>
                                 <FormControl><Input type="number" placeholder="e.g., 120" {...field} /></FormControl>
+                                <FormMessage />
+                                </FormItem>
+                            )}
+                            />
+                            <FormField
+                            control={form.control}
+                            name="childPrice"
+                            render={({ field }) => (
+                                <FormItem>
+                                <FormLabel>Child Price (€)</FormLabel>
+                                <FormControl><Input type="number" placeholder="e.g., 60" {...field} /></FormControl>
                                 <FormMessage />
                                 </FormItem>
                             )}
@@ -969,5 +981,7 @@ export function TourForm({ initialData }: TourFormProps) {
     </>
   );
 }
+
+    
 
     
