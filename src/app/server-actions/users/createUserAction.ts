@@ -16,14 +16,13 @@ const createUserSchema = z.object({
 
 type CreateUserInput = z.infer<typeof createUserSchema>;
 
-// This action is protected and can only be called by an admin or from a trusted server environment
+// This action is now public for user registration but secured for role assignment.
 export const createUserAction = createSafeAction(
   {
-    allowedRoles: ['admin'], // Only admins can create users this way now
+    // No allowedRoles, making it a public action.
   },
   async (
-    input: CreateUserInput,
-    adminUser
+    input: CreateUserInput
   ): Promise<{ data?: { success: true }; error?: string }> => {
     try {
       const userRepository = new FirestoreUserRepository();
@@ -34,7 +33,9 @@ export const createUserAction = createSafeAction(
         name: input.name,
       };
 
-      // Pass the role override to the use case
+      // Pass the role override to the use case.
+      // The createUser use case itself contains the logic to prevent non-admins from assigning roles.
+      // A new user will get 'customer' by default unless their email is in the admin list.
       await createUser(userRepository, userData, input.role);
 
       return { data: { success: true } };
