@@ -4,7 +4,7 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from '@/components/ui/sheet';
-import { Menu, Search, Sprout } from 'lucide-react';
+import { Menu, Sprout } from 'lucide-react';
 import { type Locale } from '@/dictionaries/config';
 import { type getDictionary } from '@/dictionaries/get-dictionary';
 import { LanguageSwitcher } from './language-switcher';
@@ -55,7 +55,6 @@ export function Header({ dictionary, lang }: HeaderProps) {
         
         <div className="hidden items-center gap-4 lg:flex">
            <ThemeSwitcher />
-           <Search className="h-5 w-5 text-foreground/80 cursor-pointer hover:text-primary" />
            <LanguageSwitcher currentLocale={lang} />
            <Button asChild size="lg" className="font-bold text-base rounded-full px-6 py-6 bg-accent hover:bg-accent/90 text-primary-foreground">
               <Link href={`/${lang}/tours`}>{dictionary.startBooking}</Link>

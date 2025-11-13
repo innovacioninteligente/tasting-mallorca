@@ -40,5 +40,17 @@ export const themes: Theme[] = [
             '--secondary': '195 40% 92%',
             '--accent': '166 47% 46%',
         }
+    },
+    {
+        name: 'Sunset',
+        values: {
+            '--background': '222 28% 15%',
+            '--foreground': '222 20% 95%',
+            '--card': '222 28% 18%',
+            '--primary': '222 28% 30%',
+            '--primary-foreground': '222 20% 95%',
+            '--secondary': '222 15% 40%',
+            '--accent': '21 88% 75%',
+        }
     }
 ];
