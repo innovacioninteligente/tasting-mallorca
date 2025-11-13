@@ -1,7 +1,7 @@
 
 {
-    "pageTitle": "Privérondleidingen – Creëer je Eigen Ervaring",
-    "pageDescription": "Op zoek naar een meer persoonlijke ervaring? Vertel ons wat je wilt ontdekken en wij ontwerpen een privétour speciaal voor jou - met een lokale gids, authentiek eten en exclusieve stops op heel Mallorca.",
+    "pageTitle": "Ontwerp uw eigen privé-ervaring op Mallorca",
+    "pageDescription": "Vertel ons wat u in gedachten heeft en wij creëren een volledig gepersonaliseerde route voor uw groep. Van rustige dorpjes en lokale markten tot verborgen uitzichtpunten en authentieke Mallorcaanse gerechten, we passen de hele dag aan uw voorkeuren aan.",
     "form": {
         "fullNameLabel": "Volledige naam",
         "emailLabel": "E-mail",
@@ -28,10 +28,10 @@
             "artisan-markets": "Ambachtelijke markten",
             "scenic-routes": "Schilderachtige routes & uitzichtpunten"
         },
-        "commentsLabel": "Aanvullende opmerkingen of voorkeuren",
+        "commentsLabel": "Deel nog een paar details met ons. Laat ons uw specifieke wensen weten.",
         "submitButton": "Verzoek verzenden",
         "submitButtonLoading": "Verzenden...",
-        "submittingMessage": "We nemen binnen 24 uur contact met je op met een voorstel op maat.",
+        "submittingMessage": "Vul het onderstaande formulier in en we beginnen met het ontwerpen van uw privétour.",
         "successToastTitle": "Verzoek verzonden!",
         "successToastDescription": "We nemen binnen 24 uur contact met je op met een voorstel op maat.",
         "submitAnotherRequestButton": "Nog een verzoek indienen",

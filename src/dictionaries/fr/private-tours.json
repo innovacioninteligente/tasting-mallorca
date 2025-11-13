@@ -1,7 +1,7 @@
 
 {
-    "pageTitle": "Tours Privés – Créez Votre Propre Expérience",
-    "pageDescription": "Vous cherchez une expérience plus personnelle ? Dites-nous ce que vous aimeriez découvrir et nous concevrons une visite privée rien que pour vous – avec un guide local, une cuisine authentique et des arrêts exclusifs à travers Majorque.",
+    "pageTitle": "Concevez votre propre expérience privée à Majorque",
+    "pageDescription": "Dites-nous ce que vous avez en tête et nous créerons un itinéraire entièrement personnalisé pour votre groupe. Des villages tranquilles et marchés locaux aux points de vue cachés et à la cuisine majorquine authentique, nous adaptons toute la journée à vos préférences.",
     "form": {
         "fullNameLabel": "Nom complet",
         "emailLabel": "Email",
@@ -28,10 +28,10 @@
             "artisan-markets": "Marchés artisanaux",
             "scenic-routes": "Routes panoramiques et points de vue"
         },
-        "commentsLabel": "Commentaires ou préférences supplémentaires",
+        "commentsLabel": "Partagez quelques détails supplémentaires avec nous. Faites-nous part de vos demandes spécifiques.",
         "submitButton": "Envoyer la demande",
         "submitButtonLoading": "Envoi en cours...",
-        "submittingMessage": "Nous vous répondrons dans les 24 heures avec une proposition sur mesure.",
+        "submittingMessage": "Remplissez le formulaire ci-dessous et nous commencerons à concevoir votre visite privée.",
         "successToastTitle": "Demande envoyée !",
         "successToastDescription": "Nous vous répondrons dans les 24 heures avec une proposition sur mesure.",
         "submitAnotherRequestButton": "Envoyer une autre demande",

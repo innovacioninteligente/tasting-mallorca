@@ -1,7 +1,7 @@
 
 {
-    "pageTitle": "Private Tours – Create Your Own Experience",
-    "pageDescription": "Looking for a more personal experience? Tell us what you’d like to discover and we’ll design a private tour just for you — with a local guide, authentic food, and exclusive stops across Mallorca.",
+    "pageTitle": "Design Your Own Private Experience in Mallorca",
+    "pageDescription": "Tell us what you have in mind and we’ll create a fully personalised itinerary for your group. From quiet villages and local markets to hidden viewpoints and authentic Mallorcan cuisine, we adapt the entire day to your preferences.",
     "form": {
         "fullNameLabel": "Full Name",
         "emailLabel": "Email",
@@ -28,10 +28,10 @@
             "artisan-markets": "Artisan or craft markets",
             "scenic-routes": "Scenic routes & viewpoints"
         },
-        "commentsLabel": "Additional comments or preferences",
+        "commentsLabel": "Share a few more details with us. Let us know any specific requests you have.",
         "submitButton": "Send Request",
         "submitButtonLoading": "Sending...",
-        "submittingMessage": "We’ll get back to you within 24 hours with a tailor-made proposal.",
+        "submittingMessage": "Fill in the form below and we’ll start designing your private tour.",
         "successToastTitle": "Request Sent!",
         "successToastDescription": "We'll get back to you within 24 hours with a tailor-made proposal.",
         "submitAnotherRequestButton": "Submit Another Request",

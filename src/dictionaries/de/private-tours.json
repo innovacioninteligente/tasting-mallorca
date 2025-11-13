@@ -1,13 +1,13 @@
 
 {
-    "pageTitle": "Private Touren – Erstellen Sie Ihr eigenes Erlebnis",
-    "pageDescription": "Suchen Sie ein persönlicheres Erlebnis? Sagen Sie uns, was Sie entdecken möchten, und wir gestalten eine private Tour nur für Sie – mit einem lokalen Guide, authentischem Essen und exklusiven Stopps auf ganz Mallorca.",
+    "pageTitle": "Gestalten Sie Ihr eigenes privates Erlebnis auf Mallorca",
+    "pageDescription": "Sagen Sie uns, was Sie sich vorstellen, und wir erstellen eine vollständig personalisierte Reiseroute für Ihre Gruppe. Von ruhigen Dörfern und lokalen Märkten bis hin zu versteckten Aussichtspunkten und authentischer mallorquinischer Küche passen wir den ganzen Tag an Ihre Vorlieben an.",
     "form": {
         "fullNameLabel": "Vollständiger Name",
         "emailLabel": "E-Mail",
         "phoneLabel": "Telefonnummer (optional)",
         "nationalityLabel": "Nationalität (optional)",
-        "hotelLabel": "Hotel oder Unterkunft",
+        "hotelLabel": "Hotel oder Name der Unterkunft",
         "preferredDateLabel": "Bevorzugtes Tourdatum",
         "pickDatePlaceholder": "Wählen Sie ein Datum",
         "participantsLabel": "Anzahl der Teilnehmer",
@@ -28,10 +28,10 @@
             "artisan-markets": "Handwerks- oder Kunsthandwerkermärkte",
             "scenic-routes": "Malerische Routen & Aussichtspunkte"
         },
-        "commentsLabel": "Zusätzliche Kommentare oder Vorlieben",
+        "commentsLabel": "Teilen Sie uns noch ein paar Details mit. Lassen Sie uns Ihre speziellen Wünsche wissen.",
         "submitButton": "Anfrage senden",
         "submitButtonLoading": "Wird gesendet...",
-        "submittingMessage": "Wir melden uns innerhalb von 24 Stunden mit einem maßgeschneiderten Vorschlag bei Ihnen.",
+        "submittingMessage": "Füllen Sie das untenstehende Formular aus und wir beginnen mit der Gestaltung Ihrer privaten Tour.",
         "successToastTitle": "Anfrage gesendet!",
         "successToastDescription": "Wir werden uns innerhalb von 24 Stunden mit einem maßgeschneiderten Vorschlag bei Ihnen melden.",
         "submitAnotherRequestButton": "Weitere Anfrage senden",
