@@ -9,7 +9,9 @@ export interface Booking {
   tourId: string;
   userId: string;
   date: Date;
-  participants: number;
+  adults: number;
+  children: number;
+  infants: number;
   totalPrice: number;
   amountPaid: number;
   amountDue: number;

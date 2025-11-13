@@ -147,7 +147,7 @@ export function ValidationResultClient({ dictionary, lang }: { dictionary: Dicti
                         </div>
                         <div className="flex items-center justify-between">
                             <span className="text-muted-foreground flex items-center gap-2"><Users className="h-4 w-4"/>{dictionary.participantsLabel}</span>
-                            <span className="font-medium">{bookingDetails.participants}</span>
+                            <span className="font-medium">{bookingDetails.adults + bookingDetails.children}</span>
                         </div>
                     </CardContent>
                 </Card>

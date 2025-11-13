@@ -84,7 +84,7 @@ export function BookingList({ bookings, error, lang, onView }: BookingListProps)
             <TableCell>
               {format(new Date(booking.date), 'PPP')}
             </TableCell>
-             <TableCell>{booking.participants}</TableCell>
+             <TableCell>{booking.adults + booking.children}</TableCell>
             <TableCell>
               <Badge variant={getStatusVariant(booking.status)}>
                 {booking.status}

@@ -83,7 +83,11 @@
         },
         "price": {
           "type": "number",
-          "description": "Base price per person in cents."
+          "description": "Base price per adult in cents."
+        },
+        "childPrice": {
+          "type": "number",
+          "description": "Price per child in cents."
         },
         "region": {
           "type": "string",
@@ -154,7 +158,9 @@
         "tourId": { "type": "string" },
         "userId": { "type": "string" },
         "date": { "type": "string", "format": "date-time" },
-        "participants": { "type": "number" },
+        "adults": { "type": "number", "description": "Number of adults (age >12)" },
+        "children": { "type": "number", "description": "Number of children (age 3-12)" },
+        "infants": { "type": "number", "description": "Number of infants (age 0-2)" },
         "totalPrice": { "type": "number" },
         "amountPaid": { "type": "number" },
         "amountDue": { "type": "number" },
@@ -170,7 +176,7 @@
         "customerEmail": { "type": "string", "format": "email", "description": "The email address of the customer." },
         "customerPhone": { "type": "string", "description": "The phone number of the customer." }
       },
-      "required": ["tourId", "userId", "date", "participants", "totalPrice", "status", "ticketStatus", "customerName", "customerEmail"]
+      "required": ["tourId", "userId", "date", "adults", "totalPrice", "status", "ticketStatus", "customerName", "customerEmail"]
     },
     "Payment": {
         "title": "Payment",

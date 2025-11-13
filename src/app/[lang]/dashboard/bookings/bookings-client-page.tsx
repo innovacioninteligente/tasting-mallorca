@@ -64,7 +64,9 @@ export function BookingsClientPage({ initialBookings, error, lang }: BookingsCli
                     <DetailRow label="Tour" value={selectedBooking.tour?.title?.[lang] || selectedBooking.tour?.title?.en} />
                     <DetailRow label="Date" value={format(new Date(selectedBooking.date), 'PPP')} />
                     <DetailRow label="Language" value={selectedBooking.language.toUpperCase()} />
-                    <DetailRow label="Participants" value={selectedBooking.participants} />
+                    <DetailRow label="Adults" value={selectedBooking.adults} />
+                    <DetailRow label="Children" value={selectedBooking.children} />
+                    <DetailRow label="Infants" value={selectedBooking.infants} />
                  </dl>
 
                 <div className="p-4 bg-secondary/50 rounded-lg">
@@ -93,7 +95,7 @@ export function BookingsClientPage({ initialBookings, error, lang }: BookingsCli
                  <dl className="divide-y divide-border">
                     <DetailRow label="Total Price" value={`€${selectedBooking.totalPrice.toFixed(2)}`} />
                     <DetailRow label="Amount Paid" value={`€${selectedBooking.amountPaid.toFixed(2)}`} />
-                    <DetailRow label="Amount Due" value={<span className="text-accent">€{selectedBooking.amountDue.toFixed(2)}</span>} />
+                    <DetailRow label="Amount Due" value={<span className="text-accent">€${selectedBooking.amountDue.toFixed(2)}</span>} />
                  </dl>
               </div>
             </>

@@ -28,6 +28,7 @@ export interface Tour {
   title: { [key: string]: string };
   description: { [key: string]: string };
   price: number;
+  childPrice: number;
   region: 'North' | 'East' | 'South' | 'West' | 'Central';
   mainImage: string;
   galleryImages: string[];
