@@ -5,8 +5,8 @@ import { useRef, useState } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { Volume2, VolumeX } from 'lucide-react';
 
-const desktopVideoUrl = "https://firebasestorage.googleapis.com/v0/b/tasting-mallorca.firebasestorage.app/o/web%2Fvideos%2FVideo%20Hero%2FAUTENTICA%20MALLORCA%20GENERAL%20v2.mp4?alt=media&token=5f61eb33-037a-43de-9e69-c0c80523f0cb";
-const mobileVideoUrl = "https://firebasestorage.googleapis.com/v0/b/tasting-mallorca.firebasestorage.app/o/web%2Fvideos%2FVideo%20Hero%2FAUTENTICA%20MALLORCA%20GENERAL%20v2%20vertical.mp4?alt=media&token=3ab9792a-c507-4ac3-9ddc-9864bd82a67f";
+const desktopVideoUrl = "https://firebasestorage.googleapis.com/v0/b/tasting-mallorca.firebasestorage.app/o/web%2Fvideos%2FAUTENTICA%20MALLORCA%20GENERAL%20V2%20guitar.mp4?alt=media&token=2e3e3905-b373-4f89-8949-5074ea9cf377";
+const mobileVideoUrl = "https://firebasestorage.googleapis.com/v0/b/tasting-mallorca.firebasestorage.app/o/web%2Fvideos%2FAUTENTICA%20MALLORCA%20GENERAL%20v2%20GUITAR%204%205.mp4?alt=media&token=6ecf2a48-692b-4c2f-8ca3-8e994b9d3bb2";
 
 export function ImmersiveCarouselSection() {
     const [isMuted, setIsMuted] = useState(true);
