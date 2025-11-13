@@ -8,6 +8,7 @@ import { Locale } from '@/dictionaries/config';
 import { FirebaseProvider } from '@/firebase/provider';
 import { MainLayout } from '@/components/main-layout';
 import { Metadata } from 'next';
+import { ThemeProvider } from '@/components/theme-provider';
 
 
 const poppins = Poppins({
@@ -65,16 +66,18 @@ export default async function RootLayout({
   const dictionary = await getDictionary(lang);
 
   return (
-    <html lang={lang} className={`${poppins.variable}`}>
+    <html lang={lang} className={`${poppins.variable}`} suppressHydrationWarning>
       <body className="font-body antialiased bg-background text-foreground">
-        <FirebaseProvider>
-          <div className="flex flex-col min-h-screen">
-            <MainLayout dictionary={dictionary} lang={lang}>
-              {children}
-            </MainLayout>
-          </div>
-          <Toaster />
-        </FirebaseProvider>
+        <ThemeProvider>
+            <FirebaseProvider>
+              <div className="flex flex-col min-h-screen">
+                <MainLayout dictionary={dictionary} lang={lang}>
+                  {children}
+                </MainLayout>
+              </div>
+              <Toaster />
+            </FirebaseProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

@@ -9,6 +9,7 @@ import { type Locale } from '@/dictionaries/config';
 import { type getDictionary } from '@/dictionaries/get-dictionary';
 import { LanguageSwitcher } from './language-switcher';
 import { useState } from 'react';
+import { ThemeSwitcher } from './theme-switcher';
 
 type HeaderProps = {
     dictionary: Awaited<ReturnType<typeof getDictionary>>['header'];
@@ -53,6 +54,7 @@ export function Header({ dictionary, lang }: HeaderProps) {
         </nav>
         
         <div className="hidden items-center gap-4 lg:flex">
+           <ThemeSwitcher />
            <Search className="h-5 w-5 text-foreground/80 cursor-pointer hover:text-primary" />
            <LanguageSwitcher currentLocale={lang} />
            <Button asChild size="lg" className="font-bold text-base rounded-full px-6 py-6 bg-accent hover:bg-accent/90 text-primary-foreground">
@@ -94,6 +96,9 @@ export function Header({ dictionary, lang }: HeaderProps) {
                 </nav>
                  <div className="mt-4">
                   <LanguageSwitcher currentLocale={lang} />
+                </div>
+                 <div className="mt-4">
+                  <ThemeSwitcher />
                 </div>
                 <div className="flex flex-col gap-4 mt-4">
                    <Button asChild size="lg" className="font-bold text-lg bg-accent hover:bg-accent/90 text-primary-foreground">
