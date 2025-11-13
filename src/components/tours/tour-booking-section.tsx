@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetTrigger } from "@/components/ui/sheet";
 import { Input } from "@/components/ui/input";
-import { Calendar as CalendarIcon, Users, DollarSign, Minus, Plus, Languages, ArrowLeft, Hotel, CheckCircle, MapPin, Search, X, CreditCard, Banknote, Info, User as UserIcon, Phone } from "lucide-react";
+import { Calendar as CalendarIcon, Users, DollarSign, Minus, Plus, Languages, ArrowLeft, Hotel, CheckCircle, MapPin, Search, X, CreditCard, Banknote, Info, User as UserIcon, Phone, Baby, PersonStanding } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Calendar } from "@/components/ui/calendar";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -34,6 +34,7 @@ interface TourBookingSectionProps {
         participants: string;
         adults: string;
         children: string;
+        infants: string;
         date: string;
         language: string;
         bookingSummary: string;
@@ -103,6 +104,7 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
 
     const [adults, setAdults] = useState<number>(() => getInitialState(`${bookingCacheKey}-adults`, 2));
     const [children, setChildren] = useState<number>(() => getInitialState(`${bookingCacheKey}-children`, 0));
+    const [infants, setInfants] = useState<number>(() => getInitialState(`${bookingCacheKey}-infants`, 0));
     const [date, setDate] = useState<Date | undefined>(() => getInitialState(`${bookingCacheKey}-date`, undefined));
     const [language, setLanguage] = useState<string>(() => getInitialState(`${bookingCacheKey}-language`, lang));
     const [paymentOption, setPaymentOption] = useState<'full' | 'deposit'>(() => getInitialState(`${bookingCacheKey}-paymentOption`, 'full'));
@@ -120,6 +122,7 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
         try {
             localStorage.setItem(`${bookingCacheKey}-adults`, JSON.stringify(adults));
             localStorage.setItem(`${bookingCacheKey}-children`, JSON.stringify(children));
+            localStorage.setItem(`${bookingCacheKey}-infants`, JSON.stringify(infants));
             if(date) localStorage.setItem(`${bookingCacheKey}-date`, JSON.stringify(date));
             localStorage.setItem(`${bookingCacheKey}-language`, JSON.stringify(language));
             localStorage.setItem(`${bookingCacheKey}-paymentOption`, JSON.stringify(paymentOption));
@@ -127,11 +130,11 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
         } catch (error) {
             console.warn("Could not save booking form state to localStorage", error);
         }
-    }, [adults, children, date, language, paymentOption, selectedHotel, bookingCacheKey]);
+    }, [adults, children, infants, date, language, paymentOption, selectedHotel, bookingCacheKey]);
 
-    const totalParticipants = adults + children;
-    const totalPrice = tour.price * totalParticipants;
-    const depositPrice = tour.depositPrice ? tour.depositPrice * totalParticipants : 0;
+    const totalParticipants = adults + children + infants;
+    const totalPrice = (tour.price * adults) + (tour.childPrice * children);
+    const depositPrice = tour.allowDeposit && tour.depositPrice ? tour.depositPrice * (adults + children) : 0;
     
     const amountToPay = paymentOption === 'deposit' ? depositPrice : totalPrice;
 
@@ -150,7 +153,9 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
             tourId: tour.id,
             userId: user?.uid || 'anonymous',
             date: date,
-            participants: totalParticipants,
+            adults,
+            children,
+            infants,
             language: language,
             hotelId: selectedHotel.id,
             hotelName: selectedHotel.name,
@@ -205,6 +210,7 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
         // On successful payment, clear the cache.
         localStorage.removeItem(`${bookingCacheKey}-adults`);
         localStorage.removeItem(`${bookingCacheKey}-children`);
+        localStorage.removeItem(`${bookingCacheKey}-infants`);
         localStorage.removeItem(`${bookingCacheKey}-date`);
         localStorage.removeItem(`${bookingCacheKey}-language`);
         localStorage.removeItem(`${bookingCacheKey}-paymentOption`);
@@ -276,10 +282,16 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
                                 <span>{totalParticipants} {dictionary.participants.toLowerCase()}</span>
                             </Button>
                         </PopoverTrigger>
-                        <PopoverContent className="w-60">
+                        <PopoverContent className="w-80">
                            <div className="space-y-4">
                                <div className="flex items-center justify-between">
-                                   <span className="font-medium">{dictionary.adults}</span>
+                                   <div className="flex items-center gap-2">
+                                       <PersonStanding className="h-5 w-5" />
+                                       <div>
+                                            <span className="font-medium">{dictionary.adults}</span>
+                                            <p className="text-xs text-muted-foreground">{'>13 yrs'}</p>
+                                       </div>
+                                   </div>
                                    <div className="flex items-center gap-2">
                                        <Button variant="outline" size="icon" className="h-7 w-7" onClick={() => setAdults(Math.max(1, adults - 1))}>
                                            <Minus className="h-4 w-4" />
@@ -291,13 +303,37 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
                                    </div>
                                </div>
                                 <div className="flex items-center justify-between">
-                                   <span className="font-medium">{dictionary.children}</span>
+                                    <div className="flex items-center gap-2">
+                                        <PersonStanding className="h-4 w-4" />
+                                        <div>
+                                            <span className="font-medium">{dictionary.children}</span>
+                                            <p className="text-xs text-muted-foreground">{'3-12 yrs'}</p>
+                                        </div>
+                                   </div>
                                    <div className="flex items-center gap-2">
                                        <Button variant="outline" size="icon" className="h-7 w-7" onClick={() => setChildren(Math.max(0, children - 1))}>
                                            <Minus className="h-4 w-4" />
                                        </Button>
                                        <span>{children}</span>
                                        <Button variant="outline" size="icon" className="h-7 w-7" onClick={() => setChildren(children + 1)}>
+                                           <Plus className="h-4 w-4" />
+                                       </Button>
+                                   </div>
+                               </div>
+                               <div className="flex items-center justify-between">
+                                    <div className="flex items-center gap-2">
+                                        <Baby className="h-5 w-5" />
+                                         <div>
+                                            <span className="font-medium">{dictionary.infants || 'Infants'}</span>
+                                            <p className="text-xs text-muted-foreground">{'0-2 yrs'}</p>
+                                        </div>
+                                   </div>
+                                   <div className="flex items-center gap-2">
+                                       <Button variant="outline" size="icon" className="h-7 w-7" onClick={() => setInfants(Math.max(0, infants - 1))}>
+                                           <Minus className="h-4 w-4" />
+                                       </Button>
+                                       <span>{infants}</span>
+                                       <Button variant="outline" size="icon" className="h-7 w-7" onClick={() => setInfants(infants + 1)}>
                                            <Plus className="h-4 w-4" />
                                        </Button>
                                    </div>
