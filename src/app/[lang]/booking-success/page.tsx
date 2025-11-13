@@ -5,7 +5,7 @@
 import { Suspense } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { CheckCircle, Home, Map, DollarSign, QrCode } from 'lucide-react';
+import { CheckCircle, Home, Map, DollarSign, QrCode, AlertTriangle } from 'lucide-react';
 import Link from 'next/link';
 import { RouteMap } from '@/components/route-map';
 import { notFound } from 'next/navigation';
@@ -18,10 +18,11 @@ import { format } from 'date-fns';
 import { es, fr, de, nl } from 'date-fns/locale';
 import QRCode from "react-qr-code";
 import { adminApp } from '@/firebase/server/config';
+import { getDictionary } from '@/dictionaries/get-dictionary';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 
 interface SearchParams {
     booking_id: string;
-    lang: string;
 }
 
 const locales: { [key: string]: Locale } = { es, fr, de, nl };
@@ -83,6 +84,7 @@ async function getFullBookingDetails(booking: Booking) {
 
 export default async function BookingSuccessPage({ searchParams, params }: { searchParams: SearchParams, params: { lang: string } }) {
     const { booking_id } = searchParams;
+    const dictionary = await getDictionary(params.lang as any);
 
     if (!booking_id) {
         return notFound();
@@ -198,10 +200,18 @@ export default async function BookingSuccessPage({ searchParams, params }: { sea
                                     <span className="font-semibold text-green-600">€{booking.amountPaid.toFixed(2)}</span>
                                 </div>
                                 {isDeposit && (
-                                     <div className="flex justify-between text-lg font-bold pt-3 border-t mt-3 text-accent">
-                                        <span>Pendiente de pago (el día del tour):</span>
-                                        <span>€{booking.amountDue.toFixed(2)}</span>
-                                    </div>
+                                     <>
+                                        <div className="flex justify-between text-lg font-bold pt-3 border-t mt-3 text-accent">
+                                            <span>Pendiente de pago (el día del tour):</span>
+                                            <span>€{booking.amountDue.toFixed(2)}</span>
+                                        </div>
+                                         <Alert variant="default" className="mt-2 text-sm bg-accent/10 border-accent/20 text-accent-foreground">
+                                            <AlertTriangle className="h-4 w-4" />
+                                            <AlertDescription>
+                                                {dictionary.tourDetail.booking.depositReminder}
+                                            </AlertDescription>
+                                        </Alert>
+                                    </>
                                 )}
                             </div>
 
