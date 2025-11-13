@@ -30,7 +30,7 @@ export function PrivateToursCtaSection({ dictionary, lang }: PrivateToursCtaProp
                     className="object-cover"
                     data-ai-hint="mallorca cove exclusive"
                 />
-                <div className="absolute inset-0 bg-white/20 backdrop-blur-sm"></div>
+                <div className="absolute inset-0 bg-white/50 backdrop-blur-sm"></div>
             </div>
             
             <div className="relative container mx-auto w-full md:w-[90vw] px-4 md:px-0 text-center">
@@ -64,5 +64,3 @@ export function PrivateToursCtaSection({ dictionary, lang }: PrivateToursCtaProp
         </section>
     );
 }
-
-

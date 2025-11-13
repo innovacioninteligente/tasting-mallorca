@@ -9,7 +9,6 @@ import { FirebaseProvider } from '@/firebase/provider';
 import { MainLayout } from '@/components/main-layout';
 import { Metadata } from 'next';
 
-
 const poppins = Poppins({
   subsets: ['latin'],
   weight: ['300', '400', '500', '600', '700', '800'],
