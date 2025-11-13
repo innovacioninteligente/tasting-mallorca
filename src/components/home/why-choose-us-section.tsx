@@ -18,7 +18,7 @@ type WhyChooseUsDictionary = Awaited<ReturnType<typeof getDictionary>>['whyChoos
 export function WhyChooseUsSection({ dictionary }: { dictionary: WhyChooseUsDictionary }) {
     return (
         <section className="py-24 bg-secondary overflow-hidden">
-            <div className="container mx-auto w-full md:w-[90vw] px-4 md:px-0">
+            <div className="container mx-auto w-full md:w-[80vw] px-4 md:px-0">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
                 {/* Left Side - Image */}
                 <div className="relative">

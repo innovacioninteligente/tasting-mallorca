@@ -66,7 +66,7 @@ export default async function AboutPage({ params: { lang } }: PageProps) {
         </div>
       </header>
 
-      <main className="w-full md:w-[90vw] mx-auto px-4 py-16">
+      <main className="w-full md:w-[80vw] mx-auto px-4 py-16">
         <section className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <div className="order-2 lg:order-1">
             <h2 className="text-primary font-cursive font-bold text-2xl">{t.philosophy.preTitle}</h2>

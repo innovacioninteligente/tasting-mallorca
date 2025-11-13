@@ -52,7 +52,7 @@ export default async function ContactPage({ params: { lang } }: PageProps) {
   
   return (
     <div className="bg-background text-foreground">
-      <div className="container mx-auto px-4 py-16 w-full md:w-[90vw]">
+      <div className="container mx-auto px-4 py-16 w-full md:w-[80vw]">
         <div className="text-center mb-16">
           <h1 className="text-5xl md:text-6xl font-bold font-headline">{t.page.title}</h1>
           <p className="mt-4 text-xl text-muted-foreground max-w-3xl mx-auto">

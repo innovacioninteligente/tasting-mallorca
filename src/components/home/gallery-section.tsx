@@ -59,7 +59,7 @@ export function GallerySection({ dictionary }: GallerySectionProps) {
                 {dictionary.description}
                 </p>
             </div>
-            <div className="w-full px-4 md:px-0 md:w-[90vw] mx-auto">
+            <div className="w-full px-4 md:px-0 md:w-[80vw] mx-auto">
                 <div className="grid grid-cols-2 md:grid-cols-4 auto-rows-[250px] gap-2 md:gap-4">
                     {galleryImages.map((img, index) => (
                         <div key={index} className={`relative rounded-xl overflow-hidden group cursor-pointer ${img.className}`} onClick={() => openLightbox(index)}>

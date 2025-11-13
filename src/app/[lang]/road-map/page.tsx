@@ -186,7 +186,7 @@ const statusText = {
 export default function RoadMapPage() {
   return (
     <div className="bg-background text-foreground">
-      <div className="container mx-auto px-4 py-16 w-full md:w-[90vw]">
+      <div className="container mx-auto px-4 py-16 w-full md:w-[80vw]">
         <div className="text-center mb-16">
           <Rocket className="mx-auto h-16 w-16 text-primary mb-4" />
           <h1 className="text-5xl md:text-6xl font-bold font-headline">Nuestra Hoja de Ruta</h1>

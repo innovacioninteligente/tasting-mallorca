@@ -10,7 +10,7 @@ type FooterProps = {
 export function Footer({ dictionary }: FooterProps) {
   return (
     <footer className="bg-secondary text-secondary-foreground py-12">
-      <div className="w-full md:w-[90vw] mx-auto px-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+      <div className="w-full md:w-[80vw] mx-auto px-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
         <div className="flex flex-col gap-4">
           <Link href="/" className="flex items-center gap-2" prefetch={false}>
             <Sprout className="h-8 w-8 text-primary" />
@@ -59,7 +59,7 @@ export function Footer({ dictionary }: FooterProps) {
           </ul>
         </div>
       </div>
-      <div className="w-full md:w-[90vw] mx-auto px-4 text-center mt-8 pt-8 border-t border-border">
+      <div className="w-full md:w-[80vw] mx-auto px-4 text-center mt-8 pt-8 border-t border-border">
         <p className="text-base">&copy; {new Date().getFullYear()} Tasting Mallorca. All rights reserved.</p>
       </div>
     </footer>

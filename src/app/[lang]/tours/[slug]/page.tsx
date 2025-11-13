@@ -172,7 +172,7 @@ export default async function TourPage({ params }: { params: { lang: Locale, slu
         <TourHeaderSection tour={tourHeaderProps} dictionary={dictionary.tourDetail.header} />
         <TourGallerySection images={allImages} />
 
-        <main className="w-full md:w-[90vw] mx-auto px-4 py-16 grid grid-cols-1 lg:grid-cols-3 gap-12">
+        <main className="w-full md:w-[80vw] mx-auto px-4 py-16 grid grid-cols-1 lg:grid-cols-3 gap-12">
             <div className="lg:col-span-2 space-y-12">
               <TourOverviewSection overview={tourOverviewProps.overview} dictionary={dictionary.tourDetail.overview} />
               <TourInfoSection dictionary={dictionary.tourDetail.tourInfo} />

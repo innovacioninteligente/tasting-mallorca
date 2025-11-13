@@ -29,7 +29,7 @@ export function FeaturedToursSection({ dictionary, lang, tours }: FeaturedToursP
                 {dictionary.description}
                 </p>
             </div>
-            <div className="w-full px-4 md:px-0 md:w-[90vw] mx-auto">
+            <div className="w-full px-4 md:px-0 md:w-[80vw] mx-auto">
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                     {featuredTours.map((tour) => (
                        <TourCard key={tour.id} tour={tour} lang={lang} />

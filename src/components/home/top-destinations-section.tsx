@@ -72,7 +72,7 @@ export function TopDestinationsSection({ dictionary }: TopDestinationsProps) {
                 {dictionary.description}
                 </p>
             </div>
-            <div className="w-full px-4 md:px-0 md:w-[90vw] mx-auto">
+            <div className="w-full px-4 md:px-0 md:w-[80vw] mx-auto">
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 auto-rows-[350px] gap-4">
                 {mainDestinations.map((dest) => (
                     <div key={dest.name} className={`relative rounded-2xl overflow-hidden group h-full ${dest.className}`}>

@@ -31,7 +31,7 @@ export function BlogSection({ dictionary, posts, lang }: BlogSectionProps) {
                 {dictionary.description}
                 </p>
             </div>
-            <div className="w-full px-4 md:px-0 md:w-[90vw] mx-auto">
+            <div className="w-full px-4 md:px-0 md:w-[80vw] mx-auto">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                     {posts.map((post) => (
                         <BlogCard key={post.id} post={post} lang={lang} />

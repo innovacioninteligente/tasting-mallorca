@@ -29,7 +29,7 @@ export function Header({ dictionary, lang }: HeaderProps) {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       {/* Main Header */}
-      <div className="w-full md:w-[90vw] mx-auto px-4 flex h-20 items-center justify-between">
+      <div className="w-full md:w-[80vw] mx-auto px-4 flex h-20 items-center justify-between">
         <Link href={`/${lang}/`} className="flex items-center gap-3 -ml-4" prefetch={false}>
           <div className="bg-primary text-primary-foreground h-20 w-20 flex items-center justify-center rounded-br-3xl">
             <Sprout className="h-10 w-10" />
