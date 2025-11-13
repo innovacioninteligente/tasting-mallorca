@@ -4,9 +4,9 @@
 import { useRef, useState } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { Volume2, VolumeX } from 'lucide-react';
-import { cn } from '@/lib/utils';
 
-const videoUrl = "https://firebasestorage.googleapis.com/v0/b/tasting-mallorca.firebasestorage.app/o/web%2Fvideos%2FAUTENTICA%20MALLORCA%20GENERAL%20%20V1.mp4?alt=media&token=90225773-8283-4884-a4d5-565abcafc790";
+const desktopVideoUrl = "https://firebasestorage.googleapis.com/v0/b/tasting-mallorca.firebasestorage.app/o/web%2Fvideos%2FVideo%20Hero%2FAUTENTICA%20MALLORCA%20GENERAL%20v2.mp4?alt=media&token=5f61eb33-037a-43de-9e69-c0c80523f0cb";
+const mobileVideoUrl = "https://firebasestorage.googleapis.com/v0/b/tasting-mallorca.firebasestorage.app/o/web%2Fvideos%2FVideo%20Hero%2FAUTENTICA%20MALLORCA%20GENERAL%20v2%20vertical.mp4?alt=media&token=3ab9792a-c507-4ac3-9ddc-9864bd82a67f";
 
 export function ImmersiveCarouselSection() {
     const [isMuted, setIsMuted] = useState(true);
@@ -23,7 +23,6 @@ export function ImmersiveCarouselSection() {
     const y = useTransform(scrollYProgress, [0, 1], ['-20%', '20%']);
 
     const handleVideoClick = (e: React.MouseEvent<HTMLElement>) => {
-        // Prevent the click from propagating to the video element and pausing it.
         e.preventDefault();
         e.stopPropagation();
 
@@ -42,14 +41,17 @@ export function ImmersiveCarouselSection() {
             <motion.div style={{ y }} className="w-full h-full relative">
                 <video
                     ref={videoRef}
-                    src={videoUrl}
                     autoPlay
                     muted={isMuted}
                     loop
                     playsInline
                     controls={showControls}
                     className="object-cover w-full h-full custom-video-controls"
-                />
+                >
+                    <source src={desktopVideoUrl} type="video/mp4" media="(min-width: 768px)" />
+                    <source src={mobileVideoUrl} type="video/mp4" media="(max-width: 767px)" />
+                    Your browser does not support the video tag.
+                </video>
                 <div className="absolute inset-0 bg-black/20 pointer-events-none"></div>
             </motion.div>
             
