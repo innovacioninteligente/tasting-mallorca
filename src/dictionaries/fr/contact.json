@@ -1,0 +1,32 @@
+
+{
+    "page": {
+        "title": "Contactez-nous",
+        "description": "Vous avez une question ou souhaitez réserver une visite personnalisée ? Nous sommes là pour vous aider."
+    },
+    "form": {
+        "title": "Envoyez-nous un message",
+        "nameLabel": "Nom",
+        "namePlaceholder": "Votre nom complet",
+        "emailLabel": "Email",
+        "emailPlaceholder": "votre@email.com",
+        "messageLabel": "Message",
+        "messagePlaceholder": "Écrivez votre demande ici...",
+        "submitButton": "Envoyer le message"
+    },
+    "otherMethods": {
+        "title": "Autres moyens de contact",
+        "email": {
+            "title": "Email",
+            "value": "info@tastingmallorca.com"
+        },
+        "phone": {
+            "title": "Téléphone",
+            "value": "+34 606 830 376"
+        },
+        "whatsapp": {
+            "title": "WhatsApp",
+            "value": "Commencer une conversation"
+        }
+    }
+}

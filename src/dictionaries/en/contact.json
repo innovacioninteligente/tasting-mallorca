@@ -1,0 +1,32 @@
+
+{
+    "page": {
+        "title": "Contact Us",
+        "description": "Have a question or want to book a custom tour? We're here to help."
+    },
+    "form": {
+        "title": "Send us a Message",
+        "nameLabel": "Name",
+        "namePlaceholder": "Your full name",
+        "emailLabel": "Email",
+        "emailPlaceholder": "your@email.com",
+        "messageLabel": "Message",
+        "messagePlaceholder": "Write your inquiry here...",
+        "submitButton": "Send Message"
+    },
+    "otherMethods": {
+        "title": "Other Ways to Contact",
+        "email": {
+            "title": "Email",
+            "value": "info@tastingmallorca.com"
+        },
+        "phone": {
+            "title": "Phone",
+            "value": "+34 606 830 376"
+        },
+        "whatsapp": {
+            "title": "WhatsApp",
+            "value": "Start a conversation"
+        }
+    }
+}

@@ -1,0 +1,29 @@
+
+{
+    "header": {
+        "title": "À propos de nous",
+        "subtitle": "Connecter les voyageurs à l'âme de Majorque"
+    },
+    "philosophy": {
+        "preTitle": "Notre Philosophie",
+        "title": "Plus qu'une visite, une connexion authentique",
+        "paragraph1": "Chez Tasting Mallorca, nous croyons que voyager est bien plus que visiter des lieux ; c'est ressentir, se connecter et vivre. Nous sommes nés d'une passion pour notre île, avec le désir de montrer la Majorque que nous aimons : celle des villages tranquilles, des paysages préservés et des traditions qui perdurent.",
+        "paragraph2": "Nous nous éloignons des itinéraires conventionnels pour vous offrir des expériences immersives en petits groupes. Nous voulons que vous savouriez un plat cuisiné lentement, que vous écoutiez les histoires de nos gens et que vous repartiez avec un souvenir inoubliable, pas seulement une photo."
+    },
+    "pillars": {
+        "title": "Nos Piliers",
+        "subtitle": "Ce sont les valeurs qui guident chacune de nos expériences.",
+        "authenticity": {
+            "title": "Authenticité",
+            "description": "Expériences 100% locales, de la nourriture aux conversations."
+        },
+        "sustainability": {
+            "title": "Durabilité",
+            "description": "Nous soutenons les producteurs et artisans locaux, en prenant soin de notre environnement."
+        },
+        "smallGroups": {
+            "title": "Petits Groupes",
+            "description": "Un traitement proche et personnel pour une expérience plus profonde et intime."
+        }
+    }
+}

@@ -1,0 +1,29 @@
+
+{
+    "header": {
+        "title": "About Us",
+        "subtitle": "Connecting travelers with the soul of Mallorca"
+    },
+    "philosophy": {
+        "preTitle": "Our Philosophy",
+        "title": "More than a Tour, an Authentic Connection",
+        "paragraph1": "At Tasting Mallorca, we believe that traveling is much more than visiting places; it's about feeling, connecting, and living. We were born from a passion for our island, with the desire to show the Mallorca we love: the one with quiet villages, pristine landscapes, and enduring traditions.",
+        "paragraph2": "We move away from conventional routes to offer you immersive experiences in small groups. We want you to savor a slowly cooked dish, listen to the stories of our people, and take home an unforgettable memory, not just a photo."
+    },
+    "pillars": {
+        "title": "Our Pillars",
+        "subtitle": "These are the values that guide each of our experiences.",
+        "authenticity": {
+            "title": "Authenticity",
+            "description": "100% local experiences, from the food to the conversations."
+        },
+        "sustainability": {
+            "title": "Sustainability",
+            "description": "We support local producers and artisans, taking care of our environment."
+        },
+        "smallGroups": {
+            "title": "Small Groups",
+            "description": "A close and personal treatment for a deeper and more intimate experience."
+        }
+    }
+}

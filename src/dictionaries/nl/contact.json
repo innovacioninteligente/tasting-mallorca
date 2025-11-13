@@ -1,0 +1,32 @@
+
+{
+    "page": {
+        "title": "Neem contact met ons op",
+        "description": "Heeft u een vraag of wilt u een aangepaste tour boeken? We zijn hier om te helpen."
+    },
+    "form": {
+        "title": "Stuur ons een bericht",
+        "nameLabel": "Naam",
+        "namePlaceholder": "Uw volledige naam",
+        "emailLabel": "E-mail",
+        "emailPlaceholder": "uw@email.com",
+        "messageLabel": "Bericht",
+        "messagePlaceholder": "Schrijf hier uw vraag...",
+        "submitButton": "Bericht verzenden"
+    },
+    "otherMethods": {
+        "title": "Andere manieren om contact op te nemen",
+        "email": {
+            "title": "E-mail",
+            "value": "info@tastingmallorca.com"
+        },
+        "phone": {
+            "title": "Telefoon",
+            "value": "+34 606 830 376"
+        },
+        "whatsapp": {
+            "title": "WhatsApp",
+            "value": "Een gesprek beginnen"
+        }
+    }
+}
