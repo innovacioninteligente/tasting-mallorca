@@ -27,7 +27,7 @@ export default function DashboardLayout({
             <div className="flex flex-1 flex-col overflow-hidden">
                 <DashboardHeader />
                 <div className={cn(
-                    "flex-1 overflow-hidden",
+                    "flex-1 overflow-y-auto",
                     !isFormPage && "p-4 md:p-8 lg:p-10"
                 )}>
                   {children}
