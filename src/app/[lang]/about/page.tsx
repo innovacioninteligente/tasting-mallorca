@@ -52,7 +52,7 @@ export default async function AboutPage({ params: { lang } }: PageProps) {
     <div className="bg-background text-foreground">
       <header className="relative h-[60vh] w-full">
         <Image
-          src="https://picsum.photos/seed/about-header/1600/900"
+          src="https://firebasestorage.googleapis.com/v0/b/tasting-mallorca.firebasestorage.app/o/web%2FFotos%20About%20Us%2FDJI_0386-Mejorado-NR.jpg?alt=media&token=12f896cc-77bc-4c24-b486-72b0d9233355"
           alt="Tasting Mallorca Team"
           fill
           className="object-cover"
@@ -80,7 +80,7 @@ export default async function AboutPage({ params: { lang } }: PageProps) {
           </div>
           <div className="order-1 lg:order-2 h-96 relative rounded-2xl overflow-hidden">
             <Image
-              src="https://picsum.photos/seed/about-philosophy/600/800"
+              src="https://firebasestorage.googleapis.com/v0/b/tasting-mallorca.firebasestorage.app/o/web%2FFotos%20About%20Us%2FDSC08039-Mejorado-NR-2.jpg?alt=media&token=c6c83d63-48e5-4ebc-b5b3-e02577d7bb9a"
               alt="Local guide showing a product"
               fill
               className="object-cover"
