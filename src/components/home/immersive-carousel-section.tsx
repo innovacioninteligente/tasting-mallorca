@@ -36,10 +36,10 @@ export function ImmersiveCarouselSection() {
     return (
         <section 
             ref={carouselContainerRef} 
-            className='w-full h-auto md:h-[80vh] overflow-hidden cursor-pointer relative flex justify-center' 
+            className='w-full h-[90vh] md:h-[80vh] overflow-hidden cursor-pointer relative flex justify-center' 
             onClick={handleVideoClick}
         >
-            <motion.div style={{ y }} className="w-full aspect-video relative">
+            <motion.div style={{ y }} className="w-full h-full relative">
                 <video
                     ref={videoRef}
                     src={videoUrl}
