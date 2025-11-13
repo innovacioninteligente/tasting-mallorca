@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from 'react';
@@ -109,7 +110,8 @@ export function BookingDetailsClientPage({ booking: initialBooking, lang }: Book
                                 <AlertDialogHeader>
                                     <AlertDialogTitle>Are you sure?</AlertDialogTitle>
                                     <AlertDialogDescription>
-                                        This action cannot be undone. This will permanently cancel your booking and process a refund according to the cancellation policy.
+                                        This action will permanently cancel your booking. According to our policy, a full refund will be issued via Stripe. 
+                                        Please note that while the refund is processed by us immediately, it may take 5-10 business days to appear on your bank statement.
                                     </AlertDialogDescription>
                                 </AlertDialogHeader>
                                 <AlertDialogFooter>
