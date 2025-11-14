@@ -51,7 +51,7 @@ export function TourHeaderSection({ tour, dictionary }: TourHeaderSectionProps) 
     
     return (
         <header className="bg-secondary/50 py-8">
-            <div className="w-full md:w-[90vw] mx-auto px-4">
+            <div className="w-full md:w-[80vw] mx-auto px-4">
                 <div className="flex flex-col md:flex-row md:items-center md:justify-between">
                     <div>
                         <h1 className="text-4xl md:text-5xl font-extrabold text-foreground" style={{ viewTransitionName: `tour-title-${tour.title}` }}>
@@ -59,10 +59,6 @@ export function TourHeaderSection({ tour, dictionary }: TourHeaderSectionProps) 
                         </h1>
                     </div>
                     <div className="flex items-center gap-4 mt-6 md:mt-0">
-                        <Button variant="ghost" className="flex items-center gap-2">
-                            <Heart className="w-5 h-5" />
-                            <span>{dictionary.addToFavorites}</span>
-                        </Button>
                         <Button variant="ghost" className="flex items-center gap-2" onClick={handleShare}>
                             <Share2 className="w-5 h-5" />
                             <span>{dictionary.share}</span>

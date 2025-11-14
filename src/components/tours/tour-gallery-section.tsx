@@ -45,7 +45,7 @@ export function TourGallerySection({ images }: TourGallerySectionProps) {
 
 
     return (
-        <div className="w-full md:w-[90vw] mx-auto px-4 mt-8">
+        <div className="w-full md:w-[80vw] mx-auto px-4 mt-8">
             {/* Mobile Carousel View */}
             <div className="md:hidden">
                 <Carousel
