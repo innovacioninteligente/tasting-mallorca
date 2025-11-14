@@ -28,38 +28,40 @@ interface SearchParams {
 const locales: { [key: string]: Locale } = { es, fr, de, nl };
 
 async function getBookingData(bookingId: string) {
+    const MAX_RETRIES = 3;
+    const RETRY_DELAY = 1500; // 1.5 seconds
+
     try {
         adminApp; // Ensure Firebase Admin is initialized
         const db = getFirestore();
         
-        const bookingSnapshot = await db.collection('bookings').doc(bookingId).get();
-        if (!bookingSnapshot.exists) {
-            console.warn(`No booking found for ID: ${bookingId}`);
-            return null;
+        for (let i = 0; i < MAX_RETRIES; i++) {
+            const bookingSnapshot = await db.collection('bookings').doc(bookingId).get();
+
+            if (bookingSnapshot.exists) {
+                const booking = bookingSnapshot.data() as Booking;
+                
+                // If confirmed, we are good to go.
+                if (booking.status === 'confirmed') {
+                    return getFullBookingDetails(booking);
+                }
+            }
+            // If it's not the last retry, wait before checking again.
+            if (i < MAX_RETRIES - 1) {
+                await new Promise(resolve => setTimeout(resolve, RETRY_DELAY));
+            }
         }
-        const booking = bookingSnapshot.data() as Booking;
-        
-        // Wait a moment for webhook to potentially update the status
-        if (booking.status === 'pending') {
-             await new Promise(resolve => setTimeout(resolve, 2000));
-             const updatedSnapshot = await db.collection('bookings').doc(bookingId).get();
-             if (updatedSnapshot.exists) {
-                 const updatedBooking = updatedSnapshot.data() as Booking;
-                 if (updatedBooking.status !== 'confirmed') {
-                    console.warn(`Booking ${bookingId} is still not confirmed after delay.`);
-                    return null;
-                 }
-                  return getFullBookingDetails(updatedBooking);
-             }
-        }
-        
-        return getFullBookingDetails(booking);
+
+        // If after all retries it's still not confirmed, or doesn't exist
+        console.warn(`Booking ${bookingId} was not found or not confirmed after ${MAX_RETRIES} retries.`);
+        return null;
 
     } catch (error) {
         console.error("Error fetching booking data:", error);
         return null;
     }
 }
+
 
 async function getFullBookingDetails(booking: Booking) {
     const db = getFirestore();
