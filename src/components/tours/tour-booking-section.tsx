@@ -72,7 +72,7 @@ interface TourBookingSectionProps {
     meetingPoints: MeetingPoint[];
 }
 
-const locales: { [key: string]: Locale } = { en: enUS, fr, de, nl, es };
+const locales: { [key: string]: typeof enUS } = { en: enUS, fr, de, nl, es };
 
 const dayNameToIndex: { [key: string]: number } = {
     Sunday: 0,
@@ -214,7 +214,7 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
       )
     : hotels;
 
-    const locale = locales[lang] || enUS;
+    const locale = locales[lang as keyof typeof locales] || enUS;
     const formattedDate = date ? format(date, "PPP", { locale }) : "Pick a date";
 
     const getReturnUrl = () => {
@@ -651,17 +651,17 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
                         animate={{ opacity: 1, scale: 1 }}
                         exit={{ opacity: 0, scale: 0.95 }}
                         transition={{ duration: 0.3, ease: "easeInOut" }}
-                        className="grid grid-cols-1 md:grid-cols-2 max-w-4xl w-full max-h-[90vh] bg-background rounded-lg shadow-2xl overflow-hidden"
+                        className="flex max-w-4xl w-full max-h-[90vh] bg-background rounded-lg shadow-2xl overflow-hidden"
                         onClick={(e) => e.stopPropagation()}
                     >
-                        <div className="hidden md:block bg-secondary p-8 rounded-l-lg">
+                        <div className="hidden md:block bg-secondary p-8 rounded-l-lg w-2/5">
                              <h3 className="text-2xl font-bold">{tour.title[lang] || tour.title.en}</h3>
                              <p className="text-muted-foreground mt-2">{tour.description[lang] || tour.description.en}</p>
                              <div className="relative h-64 mt-8 rounded-lg overflow-hidden">
                                  <Image src={tour.mainImage} alt={tour.title.en} fill className="object-cover" />
                              </div>
                         </div>
-                        <div className="flex flex-col">
+                        <div className="flex flex-col flex-1 min-w-0">
                             <div className="p-6 border-b shrink-0">
                                 <CardTitle className="text-2xl font-bold">{
                                     isSearchingHotel ? dictionary.searchHotel :
