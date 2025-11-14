@@ -48,17 +48,10 @@ const destinations = [
     imageHint: 'Valldemossa town',
     className: 'md:col-span-2'
   },
-  {
-    name: 'Cala S\'Almunia',
-    image: 'https://firebasestorage.googleapis.com/v0/b/tasting-mallorca.firebasestorage.app/o/web%2Ffotos%20top%20destinations%2Fview-cala-s-almunia-mallorca-spain.jpg?alt=media&token=7f2d1dd6-c82e-4bfc-bf4c-2782cd44077b',
-    imageHint: 'Cala S\'Almunia beach',
-    className: ''
-  },
 ];
 
 export function TopDestinationsSection({ dictionary }: TopDestinationsProps) {
     const mainDestinations = destinations.slice(0, 6);
-    const lastDestination = destinations[6];
 
     return (
         <section className="py-24 bg-background flex flex-col items-center">
@@ -93,7 +86,7 @@ export function TopDestinationsSection({ dictionary }: TopDestinationsProps) {
                         </div>
                     </div>
                 ))}
-                <div className="p-8 rounded-xl bg-secondary flex flex-col items-center justify-center text-center md:col-span-2">
+                <div className="p-8 rounded-xl bg-secondary flex flex-col items-center justify-center text-center sm:col-span-2 lg:col-span-3">
                     <h3 className="text-3xl font-extrabold text-foreground">{dictionary.ctaTitle}</h3>
                     <p className="mt-2 text-muted-foreground">{dictionary.ctaSubtitle}</p>
                     <Button asChild size="lg" className="mt-6 font-bold rounded-full group">
@@ -103,23 +96,6 @@ export function TopDestinationsSection({ dictionary }: TopDestinationsProps) {
                         </Link>
                     </Button>
                 </div>
-                 <div key={lastDestination.name} className={`relative rounded-2xl overflow-hidden group h-full ${lastDestination.className}`}>
-                        <Image
-                            src={lastDestination.image}
-                            alt={lastDestination.name}
-                            fill
-                            className="object-cover transition-transform duration-300 group-hover:scale-105"
-                            data-ai-hint={lastDestination.imageHint}
-                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                        <div className="absolute bottom-0 left-0 p-6 text-white">
-                            <h3 className="text-2xl font-bold">{lastDestination.name}</h3>
-                        </div>
-                        <div className="absolute top-4 right-4 h-12 w-12 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center transform transition-transform duration-300 group-hover:rotate-45 group-hover:bg-primary">
-                            <ArrowUpRight className="h-6 w-6 text-white" />
-                        </div>
-                    </div>
                 </div>
             </div>
         </section>
