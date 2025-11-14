@@ -72,7 +72,7 @@ interface TourBookingSectionProps {
     meetingPoints: MeetingPoint[];
 }
 
-const locales: { [key: string]: typeof enUS } = { en: enUS, fr, de, nl, es };
+const locales: { [key in Locale]?: any } = { en: enUS, fr, de, nl, es };
 
 const dayNameToIndex: { [key: string]: number } = {
     Sunday: 0,
@@ -200,7 +200,9 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
              if (step === 2) {
                  setIsBookingFlowActive(false);
              }
-            setStep(step - 1);
+             if (step > 1) {
+                setStep(step - 1);
+             }
         }
     };
     
@@ -211,7 +213,7 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
       )
     : hotels;
 
-    const locale = locales[lang as keyof typeof locales] || enUS;
+    const locale = locales[lang as Locale] || enUS;
     const formattedDate = date ? format(date, "PPP", { locale }) : "Pick a date";
 
     const getReturnUrl = () => {
@@ -635,10 +637,7 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
             </div>
             <AnimatePresence>
                 {isBookingFlowActive && (
-                <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
+                <div
                     className="hidden lg:flex fixed inset-0 bg-black/60 backdrop-blur-sm z-50 items-center justify-center p-4 md:p-8"
                     onClick={() => setIsBookingFlowActive(false)}
                 >
@@ -648,7 +647,7 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
                         animate={{ opacity: 1, scale: 1 }}
                         exit={{ opacity: 0, scale: 0.95 }}
                         transition={{ duration: 0.3, ease: "easeInOut" }}
-                        className="flex max-w-4xl w-full max-h-[90vh] bg-background rounded-lg shadow-2xl overflow-hidden"
+                        className="flex max-w-4xl w-full max-h-[90vh] bg-background rounded-lg shadow-2xl"
                         onClick={(e) => e.stopPropagation()}
                     >
                         <div className="hidden md:block bg-secondary p-8 rounded-l-lg w-2/5">
@@ -673,7 +672,7 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
                             </div>
                         </div>
                      </motion.div>
-                </motion.div>
+                </div>
                 )}
             </AnimatePresence>
 
@@ -724,3 +723,5 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
         </>
     );
 }
+
+    
