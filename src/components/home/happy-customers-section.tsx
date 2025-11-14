@@ -15,7 +15,7 @@ export function HappyCustomersSection({ dictionary }: HappyCustomersProps) {
         <section className="bg-primary-dark text-primary-foreground py-24 relative overflow-hidden">
             <div className="container w-full px-4 md:px-0 md:w-[80vw] mx-auto">
                  <div className="text-center mb-16">
-                    <p className="text-primary-foreground/80 font-cursive font-bold text-lg">{dictionary.subtitle}</p>
+                    <p className="text-accent font-cursive font-bold text-lg">{dictionary.subtitle}</p>
                     <h2 className="text-4xl md:text-5xl font-extrabold text-primary-foreground mt-2">{dictionary.title}</h2>
                 </div>
             <div className="relative grid md:grid-cols-2 gap-16 items-center">
@@ -37,7 +37,7 @@ export function HappyCustomersSection({ dictionary }: HappyCustomersProps) {
 
                 {/* Stats */}
                 <div className="border-2 border-dashed border-primary-foreground/50 rounded-3xl p-10">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-12">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-12">
                     <div className="text-left border-b border-primary-foreground/30 pb-6">
                     <p className="text-4xl md:text-5xl font-extrabold">{stats.stat1.value}</p>
                     <p className="text-primary-foreground/80 mt-2">{stats.stat1.label}</p>
@@ -56,15 +56,13 @@ export function HappyCustomersSection({ dictionary }: HappyCustomersProps) {
                     </div>
                 </div>
                 </div>
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-                <div className="w-32 h-32 bg-background rounded-full flex items-center justify-center border-4 border-dashed border-primary-foreground/50">
-                    <p className="text-4xl font-bold text-primary">4.8</p>
-                </div>
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 hidden md:block">
+                    <div className="w-32 h-32 bg-background rounded-full flex items-center justify-center border-4 border-dashed border-primary-foreground/50">
+                        <p className="text-4xl font-bold text-primary">4.8</p>
+                    </div>
                 </div>
             </div>
             </div>
       </section>
     );
 }
-
-    
