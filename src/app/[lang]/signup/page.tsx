@@ -89,15 +89,16 @@ export default function SignUpPage() {
       <Card className="w-full max-w-md mx-4 shadow-2xl border-primary/20">
         <CardHeader className="text-center">
            <div className="flex justify-center items-center gap-2 mb-2">
-            <div className="relative h-12 w-32">
+            <div className="relative h-10 w-10">
                 <Image
-                    src="https://firebasestorage.googleapis.com/v0/b/tasting-mallorca.firebasestorage.app/o/web%2Fimages%2Flogo-2.png?alt=media&token=2dec9bc9-44e1-409e-bbb1-58805697f1a3"
+                    src="https://firebasestorage.googleapis.com/v0/b/tasting-mallorca.firebasestorage.app/o/web%2Fimages%2Flogo-icon.png?alt=media&token=e0e7a83d-e5e8-46fb-9b88-12c823098f5f"
                     alt="Tasting Mallorca Logo"
                     fill
                     className="object-contain"
-                    sizes="128px"
+                    sizes="40px"
                 />
             </div>
+             <span className="text-2xl font-bold">Tasting Mallorca</span>
           </div>
           <CardTitle className="text-3xl font-extrabold text-primary">Crea tu Cuenta</CardTitle>
           <CardDescription className="text-lg pt-1">Únete para gestionar tus aventuras en Mallorca.</CardDescription>

@@ -31,16 +31,17 @@ export function Header({ dictionary, lang }: HeaderProps) {
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       {/* Main Header */}
       <div className="w-full md:w-[80vw] mx-auto px-4 flex h-20 items-center justify-between">
-        <Link href={`/${lang}/`} className="flex items-center gap-3" prefetch={false}>
-          <div className="relative h-16 w-40">
-            <Image
-                src="https://firebasestorage.googleapis.com/v0/b/tasting-mallorca.firebasestorage.app/o/web%2Fimages%2Flogo-2.png?alt=media&token=2dec9bc9-44e1-409e-bbb1-58805697f1a3"
-                alt="Tasting Mallorca Logo"
-                fill
-                className="object-contain"
-                sizes="160px"
+        <Link href={`/${lang}/`} className="flex items-center gap-2 font-semibold" prefetch={false}>
+            <div className="relative h-10 w-10">
+              <Image
+                  src="https://firebasestorage.googleapis.com/v0/b/tasting-mallorca.firebasestorage.app/o/web%2Fimages%2Flogo-icon.png?alt=media&token=e0e7a83d-e5e8-46fb-9b88-12c823098f5f"
+                  alt="Tasting Mallorca Logo"
+                  fill
+                  className="object-contain"
+                  sizes="40px"
               />
-          </div>
+            </div>
+            <span className="text-xl font-bold">Tasting Mallorca</span>
         </Link>
 
         <nav className="hidden items-center gap-6 text-base lg:flex">
@@ -76,16 +77,17 @@ export function Header({ dictionary, lang }: HeaderProps) {
                 <SheetTitle className="sr-only">Menu</SheetTitle>
               </SheetHeader>
               <div className="flex flex-col gap-6 p-6">
-                <Link href={`/${lang}/`} className="flex items-center gap-2" prefetch={false} onClick={() => setIsMobileMenuOpen(false)}>
-                   <div className="relative h-12 w-32">
+                <Link href={`/${lang}/`} className="flex items-center gap-2 font-semibold" prefetch={false} onClick={() => setIsMobileMenuOpen(false)}>
+                   <div className="relative h-10 w-10">
                         <Image
-                            src="https://firebasestorage.googleapis.com/v0/b/tasting-mallorca.firebasestorage.app/o/web%2Fimages%2Flogo-2.png?alt=media&token=2dec9bc9-44e1-409e-bbb1-58805697f1a3"
+                            src="https://firebasestorage.googleapis.com/v0/b/tasting-mallorca.firebasestorage.app/o/web%2Fimages%2Flogo-icon.png?alt=media&token=e0e7a83d-e5e8-46fb-9b88-12c823098f5f"
                             alt="Tasting Mallorca Logo"
                             fill
                             className="object-contain"
-                            sizes="128px"
+                            sizes="40px"
                         />
                     </div>
+                    <span className="text-xl font-bold">Tasting Mallorca</span>
                 </Link>
                 <nav className="flex flex-col gap-4 text-lg">
                   {navLinks.map((link) => (

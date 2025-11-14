@@ -26,16 +26,17 @@ export async function Footer({ dictionary, lang }: FooterProps) {
         {/* Top Row */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             <div className="flex flex-col gap-4 lg:col-span-2">
-                <Link href={`/${lang}/`} className="flex items-center gap-2" prefetch={false}>
-                    <div className="relative h-16 w-40">
+                <Link href={`/${lang}/`} className="flex items-center gap-2 font-semibold" prefetch={false}>
+                    <div className="relative h-10 w-10">
                       <Image
-                        src="https://firebasestorage.googleapis.com/v0/b/tasting-mallorca.firebasestorage.app/o/web%2Fimages%2Flogo-2.png?alt=media&token=2dec9bc9-44e1-409e-bbb1-58805697f1a3"
+                        src="https://firebasestorage.googleapis.com/v0/b/tasting-mallorca.firebasestorage.app/o/web%2Fimages%2Flogo-icon.png?alt=media&token=e0e7a83d-e5e8-46fb-9b88-12c823098f5f"
                         alt="Tasting Mallorca Logo"
                         fill
                         className="object-contain"
-                        sizes="160px"
+                        sizes="40px"
                       />
                     </div>
+                    <span className="text-xl font-bold">Tasting Mallorca</span>
                 </Link>
                 <p className="text-base">
                     {dictionary.slogan}

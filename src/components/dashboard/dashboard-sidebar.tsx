@@ -171,15 +171,16 @@ export function DashboardSidebar({ isMobileMenuOpen, setIsMobileMenuOpen }: Dash
       <aside className="hidden w-72 flex-col border-r bg-card md:flex shrink-0">
         <div className="flex h-20 items-center border-b px-6">
           <Link href={`/${lang}/`} className="flex items-center gap-2 font-semibold">
-            <div className="relative h-12 w-32">
+            <div className="relative h-10 w-10">
               <Image
-                  src="https://firebasestorage.googleapis.com/v0/b/tasting-mallorca.firebasestorage.app/o/web%2Fimages%2Flogo-2.png?alt=media&token=2dec9bc9-44e1-409e-bbb1-58805697f1a3"
+                  src="https://firebasestorage.googleapis.com/v0/b/tasting-mallorca.firebasestorage.app/o/web%2Fimages%2Flogo-icon.png?alt=media&token=e0e7a83d-e5e8-46fb-9b88-12c823098f5f"
                   alt="Tasting Mallorca Logo"
                   fill
                   className="object-contain"
-                  sizes="128px"
+                  sizes="40px"
               />
             </div>
+             <span className="text-xl font-bold">Tasting Mallorca</span>
           </Link>
         </div>
         <SidebarContent />
@@ -191,15 +192,16 @@ export function DashboardSidebar({ isMobileMenuOpen, setIsMobileMenuOpen }: Dash
           <SheetHeader className="flex h-20 flex-row items-center justify-between border-b px-6">
              <SheetTitle className='sr-only'>Main Menu</SheetTitle>
              <Link href={`/${lang}/`} className="flex items-center gap-2 font-semibold" onClick={() => setIsMobileMenuOpen(false)}>
-                <div className="relative h-12 w-32">
+                <div className="relative h-10 w-10">
                   <Image
-                      src="https://firebasestorage.googleapis.com/v0/b/tasting-mallorca.firebasestorage.app/o/web%2Fimages%2Flogo-2.png?alt=media&token=2dec9bc9-44e1-409e-bbb1-58805697f1a3"
+                      src="https://firebasestorage.googleapis.com/v0/b/tasting-mallorca.firebasestorage.app/o/web%2Fimages%2Flogo-icon.png?alt=media&token=e0e7a83d-e5e8-46fb-9b88-12c823098f5f"
                       alt="Tasting Mallorca Logo"
                       fill
                       className="object-contain"
-                      sizes="128px"
+                      sizes="40px"
                   />
                 </div>
+                <span className="text-xl font-bold">Tasting Mallorca</span>
             </Link>
           </SheetHeader>
           <SidebarContent />
