@@ -668,7 +668,7 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
                                     step === 3 ? dictionary.finalSummary : dictionary.title
                                 }</CardTitle>
                             </div>
-                            <div className="flex-grow overflow-y-auto p-6 min-h-0">
+                            <div className="flex-grow overflow-y-auto p-6">
                                 <AnimatePresence mode="wait">
                                     {renderBookingFlow()}
                                 </AnimatePresence>
