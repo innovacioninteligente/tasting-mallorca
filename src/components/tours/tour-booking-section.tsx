@@ -641,7 +641,7 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    className="hidden lg:flex fixed inset-0 bg-black/60 backdrop-blur-sm z-50 items-center justify-center p-8"
+                    className="hidden lg:flex fixed inset-0 bg-black/60 backdrop-blur-sm z-50 items-center justify-center p-4 md:p-8"
                     onClick={() => setIsBookingFlowActive(false)}
                 >
                     <motion.div
@@ -668,7 +668,7 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
                                     step === 3 ? dictionary.finalSummary : dictionary.title
                                 }</CardTitle>
                             </div>
-                            <div className="flex-grow overflow-y-auto p-6">
+                            <div className="flex-grow overflow-y-auto p-6 min-h-0">
                                 <AnimatePresence mode="wait">
                                     {renderBookingFlow()}
                                 </AnimatePresence>
