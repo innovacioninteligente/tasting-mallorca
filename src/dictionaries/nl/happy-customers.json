@@ -1,7 +1,25 @@
 
 {
-    "stat1": "Onze tevreden klanten over de hele wereld",
-    "stat2": "Dit jaar voltooide tours",
-    "stat3": "Verzamelde positieve recensies",
-    "stat4": "Ondersteunde lokale partners"
+    "title": "Onze Ervaringen in Cijfers",
+    "subtitle": "Een kijkje in onze reis en de herinneringen die we samen hebben gecreëerd.",
+    "stats": {
+        "stat1": {
+            "value": "4.8/5",
+            "label": "Gemiddelde gastenbeoordeling (Google & directe feedback)"
+        },
+        "stat2": {
+            "value": "18.000+",
+            "label": "Reizigers die met ons van het authentieke Mallorca hebben genoten"
+        },
+        "stat3": {
+            "value": "Sinds 2000",
+            "label": "Creëren van ervaringen in kleine groepen en privé op het landelijke Mallorca"
+        },
+        "stat4": {
+            "value": "Lokale partners",
+            "label": "Ondersteuning van door families gerunde restaurants, markten en ambachtslieden over het hele eiland"
+        }
+    }
 }
+
+    

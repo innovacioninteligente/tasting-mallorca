@@ -1,7 +1,25 @@
 
 {
-    "stat1": "Nos clients heureux à travers le monde",
-    "stat2": "Tours terminés cette année",
-    "stat3": "Avis positifs recueillis",
-    "stat4": "Partenaires locaux soutenus"
+    "title": "Nos Expériences en Chiffres",
+    "subtitle": "Un aperçu de notre parcours et des souvenirs que nous avons créés ensemble.",
+    "stats": {
+        "stat1": {
+            "value": "4.8/5",
+            "label": "Note moyenne des clients (Google & retours directs)"
+        },
+        "stat2": {
+            "value": "18,000+",
+            "label": "Voyageurs ayant découvert la Majorque authentique avec nous"
+        },
+        "stat3": {
+            "value": "Depuis 2000",
+            "label": "Création d'expériences en petits groupes et privées dans la Majorque rurale"
+        },
+        "stat4": {
+            "value": "Partenaires locaux",
+            "label": "Soutien aux restaurants familiaux, marchés et artisans de l'île"
+        }
+    }
 }
+
+    

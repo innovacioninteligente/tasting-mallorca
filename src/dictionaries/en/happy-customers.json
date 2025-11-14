@@ -1,7 +1,25 @@
 
 {
-    "stat1": "Our happy Customers around the world",
-    "stat2": "Tours completed this year",
-    "stat3": "Positive reviews collected",
-    "stat4": "Local partners supported"
+    "title": "Our Experiences in Numbers",
+    "subtitle": "A look at our journey and the memories we've created together.",
+    "stats": {
+        "stat1": {
+            "value": "4.8/5",
+            "label": "Average guest rating (Google & direct feedback)"
+        },
+        "stat2": {
+            "value": "18,000+",
+            "label": "Travellers who have enjoyed authentic Mallorca with us"
+        },
+        "stat3": {
+            "value": "Since 2000",
+            "label": "Crafting small-group and private experiences in rural Mallorca"
+        },
+        "stat4": {
+            "value": "Local partners",
+            "label": "Supporting family-run restaurants, markets and artisans across the island"
+        }
+    }
 }
+
+    

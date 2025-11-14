@@ -1,7 +1,25 @@
 
 {
-    "stat1": "Unsere glücklichen Kunden auf der ganzen Welt",
-    "stat2": "In diesem Jahr abgeschlossene Touren",
-    "stat3": "Gesammelte positive Bewertungen",
-    "stat4": "Unterstützte lokale Partner"
+    "title": "Unsere Erlebnisse in Zahlen",
+    "subtitle": "Ein Blick auf unsere Reise und die Erinnerungen, die wir gemeinsam geschaffen haben.",
+    "stats": {
+        "stat1": {
+            "value": "4,8/5",
+            "label": "Durchschnittliche Gästebewertung (Google & direktes Feedback)"
+        },
+        "stat2": {
+            "value": "18.000+",
+            "label": "Reisende, die das authentische Mallorca mit uns genossen haben"
+        },
+        "stat3": {
+            "value": "Seit 2000",
+            "label": "Gestaltung von Kleingruppen- und Privaterlebnissen im ländlichen Mallorca"
+        },
+        "stat4": {
+            "value": "Lokale Partner",
+            "label": "Unterstützung von familiengeführten Restaurants, Märkten und Handwerkern auf der ganzen Insel"
+        }
+    }
 }
+
+    
