@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetTrigger, SheetClose } from "@/components/ui/sheet";
 import { Input } from "@/components/ui/input";
 import { Calendar as CalendarIcon, Users, DollarSign, Minus, Plus, Languages, ArrowLeft, Hotel, CheckCircle, MapPin, Search, X, CreditCard, Banknote, Info, User as UserIcon, Phone, Baby, PersonStanding, ImageIcon } from "lucide-react";
-import Image from "next/image";
+import NextImage from "next/image";
 import { useState, useEffect } from "react";
 import { Calendar } from "@/components/ui/calendar";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -197,9 +197,6 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
         if (isSearchingHotel) {
             setIsSearchingHotel(false);
         } else {
-             if (step === 3) {
-                setBookingId(null);
-            }
              if (step === 2) {
                  setIsBookingFlowActive(false);
              }
@@ -658,18 +655,18 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
                              <h3 className="text-2xl font-bold">{tour.title[lang] || tour.title.en}</h3>
                              <p className="text-muted-foreground mt-2">{tour.description[lang] || tour.description.en}</p>
                              <div className="relative h-64 mt-8 rounded-lg overflow-hidden">
-                                 <Image src={tour.mainImage} alt={tour.title.en} fill className="object-cover" />
+                                 <NextImage src={tour.mainImage} alt={tour.title.en} fill className="object-cover" />
                              </div>
                         </div>
                         <div className="flex flex-col flex-1 min-w-0">
-                            <div className="p-6 border-b shrink-0">
+                           <div className="p-6 border-b shrink-0">
                                 <CardTitle className="text-2xl font-bold">{
                                     isSearchingHotel ? dictionary.searchHotel :
                                     step === 2 ? dictionary.bookingSummary :
                                     step === 3 ? dictionary.finalSummary : dictionary.title
                                 }</CardTitle>
                             </div>
-                            <div className="flex-1 p-6 min-h-0 overflow-y-auto">
+                             <div className="flex-1 p-6 min-h-0 overflow-y-auto">
                                 <AnimatePresence mode="wait">
                                     {renderBookingFlow()}
                                 </AnimatePresence>
