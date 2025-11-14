@@ -2,7 +2,7 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { Menu, Sprout } from 'lucide-react';
+import { Menu } from 'lucide-react';
 import { useDashboardLayout } from '@/app/[lang]/dashboard/layout-context';
 import { usePathname } from 'next/navigation';
 import { useUser } from '@/firebase';
@@ -16,6 +16,7 @@ import {
   DropdownMenuTrigger,
 } from '../ui/dropdown-menu';
 import Link from 'next/link';
+import Image from 'next/image';
 
 function getPageTitle(pathname: string): string {
     const segments = pathname.split('/').filter(Boolean);
@@ -54,8 +55,15 @@ export function DashboardHeader() {
         <h1 className="text-xl font-semibold hidden md:block">{pageTitle}</h1>
         <div className="md:hidden">
              <Link href={`/${lang}/`} className="flex items-center gap-2 font-semibold">
-                <Sprout className="h-6 w-6 text-primary" />
-                <span className="font-headline text-lg">Tasting Mallorca</span>
+                <div className="relative h-10 w-28">
+                  <Image
+                      src="https://firebasestorage.googleapis.com/v0/b/tasting-mallorca.firebasestorage.app/o/web%2Fimages%2Flogo-2.png?alt=media&token=2dec9bc9-44e1-409e-bbb1-58805697f1a3"
+                      alt="Tasting Mallorca Logo"
+                      fill
+                      className="object-contain"
+                      sizes="112px"
+                  />
+                </div>
             </Link>
         </div>
         

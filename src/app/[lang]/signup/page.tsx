@@ -4,7 +4,7 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Sprout, Loader2 } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -16,6 +16,7 @@ import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { useRouter, usePathname } from 'next/navigation';
 import { createUserAction } from '@/app/server-actions/users/createUserAction';
+import Image from 'next/image';
 
 const formSchema = z.object({
   name: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
@@ -88,10 +89,15 @@ export default function SignUpPage() {
       <Card className="w-full max-w-md mx-4 shadow-2xl border-primary/20">
         <CardHeader className="text-center">
            <div className="flex justify-center items-center gap-2 mb-2">
-            <Sprout className="h-8 w-8 text-primary" />
-            <span className="font-headline text-2xl font-bold">
-              Tasting Mallorca
-            </span>
+            <div className="relative h-12 w-32">
+                <Image
+                    src="https://firebasestorage.googleapis.com/v0/b/tasting-mallorca.firebasestorage.app/o/web%2Fimages%2Flogo-2.png?alt=media&token=2dec9bc9-44e1-409e-bbb1-58805697f1a3"
+                    alt="Tasting Mallorca Logo"
+                    fill
+                    className="object-contain"
+                    sizes="128px"
+                />
+            </div>
           </div>
           <CardTitle className="text-3xl font-extrabold text-primary">Crea tu Cuenta</CardTitle>
           <CardDescription className="text-lg pt-1">Únete para gestionar tus aventuras en Mallorca.</CardDescription>

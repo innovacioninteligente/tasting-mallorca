@@ -1,9 +1,11 @@
+
 import Link from 'next/link';
-import { Sprout, Mail, Phone, MessageCircle } from 'lucide-react';
+import { Mail, Phone, MessageCircle } from 'lucide-react';
 import { DictionaryType } from '@/dictionaries/get-dictionary';
 import { findAllTours } from '@/app/server-actions/tours/findTours';
 import { findAllBlogPosts } from '@/app/server-actions/blog/findBlogPosts';
 import { Locale } from '@/dictionaries/config';
+import Image from 'next/image';
 
 type FooterProps = {
   dictionary: DictionaryType['footer'];
@@ -25,10 +27,15 @@ export async function Footer({ dictionary, lang }: FooterProps) {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             <div className="flex flex-col gap-4 lg:col-span-2">
                 <Link href={`/${lang}/`} className="flex items-center gap-2" prefetch={false}>
-                    <Sprout className="h-8 w-8 text-primary" />
-                    <span className="font-headline text-2xl font-bold">
-                    Tasting Mallorca
-                    </span>
+                    <div className="relative h-16 w-40">
+                      <Image
+                        src="https://firebasestorage.googleapis.com/v0/b/tasting-mallorca.firebasestorage.app/o/web%2Fimages%2Flogo-2.png?alt=media&token=2dec9bc9-44e1-409e-bbb1-58805697f1a3"
+                        alt="Tasting Mallorca Logo"
+                        fill
+                        className="object-contain"
+                        sizes="160px"
+                      />
+                    </div>
                 </Link>
                 <p className="text-base">
                     {dictionary.slogan}

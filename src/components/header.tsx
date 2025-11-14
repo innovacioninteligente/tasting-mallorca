@@ -4,11 +4,12 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from '@/components/ui/sheet';
-import { Menu, Sprout } from 'lucide-react';
+import { Menu } from 'lucide-react';
 import { type Locale } from '@/dictionaries/config';
 import { type getDictionary } from '@/dictionaries/get-dictionary';
 import { LanguageSwitcher } from './language-switcher';
 import { useState } from 'react';
+import Image from 'next/image';
 
 type HeaderProps = {
     dictionary: Awaited<ReturnType<typeof getDictionary>>['header'];
@@ -30,13 +31,16 @@ export function Header({ dictionary, lang }: HeaderProps) {
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       {/* Main Header */}
       <div className="w-full md:w-[80vw] mx-auto px-4 flex h-20 items-center justify-between">
-        <Link href={`/${lang}/`} className="flex items-center gap-3 -ml-4" prefetch={false}>
-          <div className="bg-primary text-primary-foreground h-20 w-20 flex items-center justify-center rounded-br-3xl">
-            <Sprout className="h-10 w-10" />
+        <Link href={`/${lang}/`} className="flex items-center gap-3" prefetch={false}>
+          <div className="relative h-16 w-40">
+            <Image
+                src="https://firebasestorage.googleapis.com/v0/b/tasting-mallorca.firebasestorage.app/o/web%2Fimages%2Flogo-2.png?alt=media&token=2dec9bc9-44e1-409e-bbb1-58805697f1a3"
+                alt="Tasting Mallorca Logo"
+                fill
+                className="object-contain"
+                sizes="160px"
+              />
           </div>
-          <span className="font-headline text-2xl md:text-3xl font-bold -ml-2">
-            Tasting Mallorca
-          </span>
         </Link>
 
         <nav className="hidden items-center gap-6 text-base lg:flex">
@@ -73,10 +77,15 @@ export function Header({ dictionary, lang }: HeaderProps) {
               </SheetHeader>
               <div className="flex flex-col gap-6 p-6">
                 <Link href={`/${lang}/`} className="flex items-center gap-2" prefetch={false} onClick={() => setIsMobileMenuOpen(false)}>
-                   <Sprout className="h-8 w-8 text-primary" />
-                  <span className="font-headline text-2xl font-bold">
-                    Tasting Mallorca
-                  </span>
+                   <div className="relative h-12 w-32">
+                        <Image
+                            src="https://firebasestorage.googleapis.com/v0/b/tasting-mallorca.firebasestorage.app/o/web%2Fimages%2Flogo-2.png?alt=media&token=2dec9bc9-44e1-409e-bbb1-58805697f1a3"
+                            alt="Tasting Mallorca Logo"
+                            fill
+                            className="object-contain"
+                            sizes="128px"
+                        />
+                    </div>
                 </Link>
                 <nav className="flex flex-col gap-4 text-lg">
                   {navLinks.map((link) => (

@@ -1,12 +1,10 @@
 
-
 'use client';
 
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import {
-  Sprout,
   LayoutDashboard,
   Ticket,
   User,
@@ -26,6 +24,7 @@ import { useAuth, useUser } from '@/firebase';
 import { cn } from '@/lib/utils';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetClose } from '../ui/sheet';
 import React from 'react';
+import Image from 'next/image';
 
 const navItems = [
   { href: '/dashboard/overview', label: 'Overview', icon: LayoutDashboard },
@@ -172,8 +171,15 @@ export function DashboardSidebar({ isMobileMenuOpen, setIsMobileMenuOpen }: Dash
       <aside className="hidden w-72 flex-col border-r bg-card md:flex shrink-0">
         <div className="flex h-20 items-center border-b px-6">
           <Link href={`/${lang}/`} className="flex items-center gap-2 font-semibold">
-            <Sprout className="h-7 w-7 text-primary" />
-            <span className="font-headline text-xl">Tasting Mallorca</span>
+            <div className="relative h-12 w-32">
+              <Image
+                  src="https://firebasestorage.googleapis.com/v0/b/tasting-mallorca.firebasestorage.app/o/web%2Fimages%2Flogo-2.png?alt=media&token=2dec9bc9-44e1-409e-bbb1-58805697f1a3"
+                  alt="Tasting Mallorca Logo"
+                  fill
+                  className="object-contain"
+                  sizes="128px"
+              />
+            </div>
           </Link>
         </div>
         <SidebarContent />
@@ -185,8 +191,15 @@ export function DashboardSidebar({ isMobileMenuOpen, setIsMobileMenuOpen }: Dash
           <SheetHeader className="flex h-20 flex-row items-center justify-between border-b px-6">
              <SheetTitle className='sr-only'>Main Menu</SheetTitle>
              <Link href={`/${lang}/`} className="flex items-center gap-2 font-semibold" onClick={() => setIsMobileMenuOpen(false)}>
-                <Sprout className="h-7 w-7 text-primary" />
-                <span className="font-headline text-xl">Tasting Mallorca</span>
+                <div className="relative h-12 w-32">
+                  <Image
+                      src="https://firebasestorage.googleapis.com/v0/b/tasting-mallorca.firebasestorage.app/o/web%2Fimages%2Flogo-2.png?alt=media&token=2dec9bc9-44e1-409e-bbb1-58805697f1a3"
+                      alt="Tasting Mallorca Logo"
+                      fill
+                      className="object-contain"
+                      sizes="128px"
+                  />
+                </div>
             </Link>
           </SheetHeader>
           <SidebarContent />
