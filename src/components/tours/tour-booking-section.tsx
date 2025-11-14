@@ -650,7 +650,7 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
                         animate={{ opacity: 1, scale: 1 }}
                         exit={{ opacity: 0, scale: 0.95 }}
                         transition={{ duration: 0.3, ease: "easeInOut" }}
-                        className="grid grid-cols-1 md:grid-cols-2 max-w-4xl w-full h-[700px] max-h-[90vh] bg-background rounded-lg shadow-2xl overflow-hidden"
+                        className="grid grid-cols-1 md:grid-cols-2 max-w-4xl w-full max-h-[90vh] bg-background rounded-lg shadow-2xl overflow-hidden"
                         onClick={(e) => e.stopPropagation()}
                     >
                         <div className="hidden md:block bg-secondary p-8">
