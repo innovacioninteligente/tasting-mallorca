@@ -5,7 +5,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetTrigger, SheetClose } from "@/components/ui/sheet";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Calendar as CalendarIcon, Users, DollarSign, Minus, Plus, Languages, ArrowLeft, Hotel, CheckCircle, MapPin, Search, X, CreditCard, Banknote, Info, User as UserIcon, Phone, Baby, PersonStanding, Image as ImageIcon } from "lucide-react";
 import Image from "next/image";
@@ -615,7 +614,7 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
         <>
             {/* --- Desktop Booking Card --- */}
             <div className="sticky top-28 shadow-lg hidden lg:block">
-                 <AnimatePresence mode="wait">
+                 <AnimatePresence>
                     { !isBookingFlowActive && (
                         <motion.div
                              key="initial-card"
@@ -629,26 +628,31 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
                                     <CardTitle className="text-2xl font-bold">{dictionary.title}</CardTitle>
                                 </CardHeader>
                                 <CardContent>
-                                    {renderBookingFlow()}
+                                    {Step1}
                                 </CardContent>
                             </Card>
                         </motion.div>
                      )}
                  </AnimatePresence>
             </div>
-             <Dialog open={isBookingFlowActive} onOpenChange={setIsBookingFlowActive}>
-                <DialogContent 
-                    className="p-0 border-0 shadow-2xl bg-transparent max-w-4xl"
-                    hideCloseButton={true}
+            <AnimatePresence>
+                {isBookingFlowActive && (
+                <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="hidden lg:block fixed inset-0 bg-black/60 backdrop-blur-sm z-50"
+                    onClick={() => setIsBookingFlowActive(false)}
                 >
-                     <motion.div
+                    <motion.div
                         key="expanded-card"
-                        initial={{ x: "100%" }}
-                        animate={{ x: 0 }}
-                        exit={{ x: "100%" }}
-                        transition={{ duration: 0.4, ease: "easeInOut" }}
-                        className="grid grid-cols-1 md:grid-cols-2"
-                     >
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.95 }}
+                        transition={{ duration: 0.3, ease: "easeInOut" }}
+                        className="fixed inset-0 m-auto grid grid-cols-1 md:grid-cols-2 max-w-4xl h-[700px] max-h-[90vh]"
+                        onClick={(e) => e.stopPropagation()}
+                    >
                         <div className="hidden md:block bg-secondary p-8 rounded-l-lg">
                              <h3 className="text-2xl font-bold">{tour.title[lang] || tour.title.en}</h3>
                              <p className="text-muted-foreground mt-2">{tour.description[lang] || tour.description.en}</p>
@@ -656,7 +660,7 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
                                  <Image src={tour.mainImage} alt={tour.title.en} fill className="object-cover" />
                              </div>
                         </div>
-                        <Card className="rounded-l-none">
+                        <Card className="rounded-none md:rounded-r-lg rounded-l-lg md:rounded-l-none flex flex-col">
                             <CardHeader>
                                 <CardTitle className="text-2xl font-bold">{
                                     isSearchingHotel ? dictionary.searchHotel :
@@ -664,15 +668,16 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
                                     step === 3 ? dictionary.finalSummary : dictionary.title
                                 }</CardTitle>
                             </CardHeader>
-                             <CardContent>
+                             <CardContent className="flex-grow overflow-y-auto">
                                 <AnimatePresence mode="wait">
                                     {renderBookingFlow()}
                                 </AnimatePresence>
                             </CardContent>
                         </Card>
                      </motion.div>
-                </DialogContent>
-             </Dialog>
+                </motion.div>
+                )}
+            </AnimatePresence>
 
 
             {/* --- Mobile Booking Sheet --- */}
