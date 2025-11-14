@@ -27,6 +27,7 @@ import { Tour } from "@/backend/tours/domain/tour.model";
 import { doc, setDoc } from "firebase/firestore";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { cn } from "@/lib/utils";
+import { type Locale } from '@/dictionaries/config';
 
 
 interface TourBookingSectionProps {
@@ -650,7 +651,7 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
                         animate={{ opacity: 1, scale: 1 }}
                         exit={{ opacity: 0, scale: 0.95 }}
                         transition={{ duration: 0.3, ease: "easeInOut" }}
-                        className="grid grid-cols-1 md:grid-cols-2 max-w-4xl w-full max-h-[90vh] bg-background rounded-lg shadow-2xl overflow-hidden"
+                        className="grid grid-cols-1 md:grid-cols-2 max-w-4xl w-full max-h-[90vh] bg-background rounded-lg shadow-2xl"
                         onClick={(e) => e.stopPropagation()}
                     >
                         <div className="hidden md:block bg-secondary p-8 rounded-l-lg">
@@ -668,7 +669,7 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
                                     step === 3 ? dictionary.finalSummary : dictionary.title
                                 }</CardTitle>
                             </div>
-                            <div className="flex-1 overflow-y-auto p-6 min-h-0">
+                            <div className="flex-1 p-6 min-h-0 overflow-y-auto">
                                 <AnimatePresence mode="wait">
                                     {renderBookingFlow()}
                                 </AnimatePresence>
