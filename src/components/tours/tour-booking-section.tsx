@@ -5,6 +5,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetTrigger, SheetClose } from "@/components/ui/sheet";
+import { Dialog, DialogContent, DialogOverlay } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Calendar as CalendarIcon, Users, DollarSign, Minus, Plus, Languages, ArrowLeft, Hotel, CheckCircle, MapPin, Search, X, CreditCard, Banknote, Info, User as UserIcon, Phone, Baby, PersonStanding } from "lucide-react";
 import { useState, useEffect } from "react";
@@ -25,6 +26,8 @@ import { useUser, useFirestore } from "@/firebase";
 import { Tour } from "@/backend/tours/domain/tour.model";
 import { doc, setDoc } from "firebase/firestore";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { cn } from "@/lib/utils";
+
 
 interface TourBookingSectionProps {
     dictionary: {
@@ -87,7 +90,6 @@ const getInitialState = <T,>(key: string, defaultValue: T): T => {
         if (!item) return defaultValue;
         
         const parsed = JSON.parse(item);
-        // Handle date strings
         if (key.toLowerCase().includes('date') && typeof parsed === 'string') {
             return new Date(parsed) as T;
         }
@@ -102,6 +104,7 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
     const { user } = useUser();
     const firestore = useFirestore();
     const [isSheetOpen, setIsSheetOpen] = useState(false);
+    const [isBookingFlowActive, setIsBookingFlowActive] = useState(false);
     const [step, setStep] = useState(1);
     
     const bookingCacheKey = `booking-form-${tour.id}`;
@@ -121,7 +124,6 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
     const [isSearchingHotel, setIsSearchingHotel] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
 
-    // Effect to save state to localStorage
     useEffect(() => {
         try {
             localStorage.setItem(`${bookingCacheKey}-adults`, JSON.stringify(adults));
@@ -181,18 +183,25 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
             setStep(step + 1);
         } catch (error) {
             console.error("Error creating pending booking:", error);
-            // Handle error (e.g., show a toast message)
         }
     };
+    
+    const handleStartBooking = () => {
+        if (!date) return;
+        setIsBookingFlowActive(true);
+        setStep(2);
+    }
 
     const handlePrevStep = () => {
         if (isSearchingHotel) {
             setIsSearchingHotel(false);
         } else {
              if (step === 3) {
-                // When going back from payment, reset bookingId to ensure Stripe element re-mounts
                 setBookingId(null);
             }
+             if (step === 2) {
+                 setIsBookingFlowActive(false);
+             }
             setStep(step - 1);
         }
     };
@@ -211,7 +220,6 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
         if (typeof window === 'undefined' || !bookingId) return '';
         const baseUrl = `${window.location.origin}/${lang}/booking-success?booking_id=${bookingId}`;
         
-        // On successful payment, clear the cache.
         localStorage.removeItem(`${bookingCacheKey}-adults`);
         localStorage.removeItem(`${bookingCacheKey}-children`);
         localStorage.removeItem(`${bookingCacheKey}-infants`);
@@ -233,7 +241,7 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
     
     const isDateDisabled = (day: Date): boolean => {
         if (!tour.availabilityPeriods || tour.availabilityPeriods.length === 0) {
-            return false; // No restrictions if not defined
+            return false;
         }
     
         const dayOfWeek = day.getDay();
@@ -245,11 +253,11 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
             if (isWithinInterval(day, { start, end })) {
                 const activeWeekDays = period.activeDays.map(d => dayNameToIndex[d]);
                 if (activeWeekDays.includes(dayOfWeek)) {
-                    return false; // Date is valid
+                    return false;
                 }
             }
         }
-        return true; // Date is not in any valid period/day
+        return true;
     };
     
      const availabilitySummary = tour.availabilityPeriods?.map((period, index) => {
@@ -398,7 +406,7 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
                     </Select>
                 </div>
             </div>
-             <Button size="lg" className="w-full font-bold text-lg py-7 bg-accent text-accent-foreground hover:bg-accent/90" onClick={() => setStep(step + 1)} disabled={!date}>
+             <Button size="lg" className="w-full font-bold text-lg py-7 bg-accent text-accent-foreground hover:bg-accent/90" onClick={handleStartBooking} disabled={!date}>
                  {dictionary.checkAvailability}
             </Button>
         </motion.div>
@@ -580,7 +588,7 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
 
             {bookingId && (
                 <StripeProvider
-                    key={bookingId} // Force re-mount when bookingId changes
+                    key={bookingId}
                     amount={amountToPay}
                     name={customerName || 'Customer'}
                     email={customerEmail || 'anonymous'}
@@ -592,7 +600,7 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
         </motion.div>
     );
 
-    const renderStep = () => {
+    const renderBookingFlow = () => {
         if (isSearchingHotel) return HotelSearchView;
         switch (step) {
             case 1: return Step1;
@@ -604,17 +612,69 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
 
     return (
         <>
-            <Card className="sticky top-28 shadow-lg hidden lg:block">
-                <CardHeader>
-                    <CardTitle className="text-2xl font-bold">{dictionary.title}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <AnimatePresence mode="wait">
-                        {renderStep()}
-                    </AnimatePresence>
-                </CardContent>
-            </Card>
+            {/* --- Desktop Booking Card --- */}
+            <div className="sticky top-28 shadow-lg hidden lg:block">
+                 <AnimatePresence mode="wait">
+                    { !isBookingFlowActive && (
+                        <motion.div
+                             key="initial-card"
+                             initial={{ opacity: 0, scale: 0.98 }}
+                             animate={{ opacity: 1, scale: 1 }}
+                             exit={{ opacity: 0, scale: 0.98 }}
+                             transition={{ duration: 0.2 }}
+                        >
+                            <Card>
+                                <CardHeader>
+                                    <CardTitle className="text-2xl font-bold">{dictionary.title}</CardTitle>
+                                </CardHeader>
+                                <CardContent>
+                                    {renderBookingFlow()}
+                                </CardContent>
+                            </Card>
+                        </motion.div>
+                     )}
+                 </AnimatePresence>
+            </div>
+             <Dialog open={isBookingFlowActive} onOpenChange={setIsBookingFlowActive}>
+                <DialogContent 
+                    className="p-0 border-0 shadow-2xl bg-transparent max-w-4xl"
+                    hideCloseButton={true}
+                >
+                     <motion.div
+                        key="expanded-card"
+                        initial={{ x: "100%" }}
+                        animate={{ x: 0 }}
+                        exit={{ x: "100%" }}
+                        transition={{ duration: 0.4, ease: "easeInOut" }}
+                        className="grid grid-cols-1 md:grid-cols-2"
+                     >
+                        <div className="hidden md:block bg-secondary p-8 rounded-l-lg">
+                             <h3 className="text-2xl font-bold">{tour.title[lang] || tour.title.en}</h3>
+                             <p className="text-muted-foreground mt-2">{tour.description[lang] || tour.description.en}</p>
+                             <div className="relative h-64 mt-8 rounded-lg overflow-hidden">
+                                 <Image src={tour.mainImage} alt={tour.title.en} fill className="object-cover" />
+                             </div>
+                        </div>
+                        <Card className="rounded-l-none">
+                            <CardHeader>
+                                <CardTitle className="text-2xl font-bold">{
+                                    isSearchingHotel ? dictionary.searchHotel :
+                                    step === 2 ? dictionary.bookingSummary :
+                                    step === 3 ? dictionary.finalSummary : dictionary.title
+                                }</CardTitle>
+                            </CardHeader>
+                             <CardContent>
+                                <AnimatePresence mode="wait">
+                                    {renderBookingFlow()}
+                                </AnimatePresence>
+                            </CardContent>
+                        </Card>
+                     </motion.div>
+                </DialogContent>
+             </Dialog>
 
+
+            {/* --- Mobile Booking Sheet --- */}
             <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-background border-t border-border p-4 shadow-[0_-4px_10px_rgba(0,0,0,0.05)] z-50">
                 <div className="flex items-center justify-between gap-4">
                      <div>
@@ -629,7 +689,7 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
                         </SheetTrigger>
                         <SheetContent side="bottom" className="rounded-t-2xl max-h-[90vh] p-0 flex flex-col">
                            {isSearchingHotel ? (
-                                <div className="h-full"> {renderStep()} </div>
+                                <div className="h-full"> {renderBookingFlow()} </div>
                            ) : (
                              <>
                                 <SheetHeader className="p-6 pb-4 text-left border-b sticky top-0 bg-background z-10">
@@ -648,7 +708,7 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
                                 </SheetHeader>
                                 <div className="p-6 pt-4 overflow-y-auto flex-grow">
                                     <AnimatePresence mode="wait">
-                                        {renderStep()}
+                                        {renderBookingFlow()}
                                     </AnimatePresence>
                                 </div>
                              </>
@@ -660,4 +720,3 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
         </>
     );
 }
-
