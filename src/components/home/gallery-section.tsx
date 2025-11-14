@@ -9,7 +9,6 @@ import {
   DialogContent,
   DialogTitle,
   DialogDescription,
-  DialogClose,
 } from "@/components/ui/dialog";
 import {
   Carousel,
@@ -116,10 +115,6 @@ export function GallerySection({ dictionary }: GallerySectionProps) {
                         <CarouselPrevious className="absolute left-4 top-1/2 -translate-y-1/2 text-foreground bg-background/50 hover:bg-background/70 border-border h-12 w-12" />
                         <CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2 text-foreground bg-background/50 hover:bg-background/70 border-border h-12 w-12" />
                     </Carousel>
-                    <DialogClose className="absolute right-4 top-4 rounded-full p-2 bg-background/50 text-foreground opacity-80 hover:opacity-100 transition-opacity focus:outline-none focus:ring-2 focus:ring-ring">
-                        <X className="h-8 w-8" />
-                        <span className="sr-only">Close</span>
-                    </DialogClose>
                 </DialogContent>
             </Dialog>
       </section>
