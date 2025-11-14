@@ -200,6 +200,9 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
              if (step === 2) {
                  setIsBookingFlowActive(false);
              }
+             if (step === 3 && paymentOption === 'deposit') {
+                setBookingId(null);
+             }
              if (step > 1) {
                 setStep(step - 1);
              }
@@ -421,13 +424,6 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
             transition={{ duration: 0.2 }}
             className="flex flex-col h-full"
         >
-            <div className="flex items-center justify-between p-4 border-b">
-                <Button variant="ghost" size="icon" onClick={() => setIsSearchingHotel(false)}>
-                    <ArrowLeft className="h-5 w-5" />
-                </Button>
-                <h3 className="text-lg font-bold">{dictionary.searchHotel}</h3>
-                <div className="w-9 h-9"></div> 
-            </div>
             <div className="p-2">
                 <div className="relative">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -438,7 +434,7 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
                         onChange={(e) => setSearchQuery(e.target.value)}
                     />
                 </div>
-                <div className="max-h-[300px] overflow-y-auto overflow-x-hidden p-1 mt-2">
+                <div className="max-h-[calc(90vh-12rem)] overflow-y-auto overflow-x-hidden p-1 mt-2">
                     {filteredHotels.length > 0 ? (
                         filteredHotels.map((hotel) => (
                             <button
@@ -647,7 +643,7 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
                         animate={{ opacity: 1, scale: 1 }}
                         exit={{ opacity: 0, scale: 0.95 }}
                         transition={{ duration: 0.3, ease: "easeInOut" }}
-                        className="flex max-w-4xl w-full max-h-[90vh] bg-background rounded-lg shadow-2xl"
+                        className="flex max-w-4xl w-full max-h-[90vh] bg-background rounded-lg shadow-2xl overflow-hidden"
                         onClick={(e) => e.stopPropagation()}
                     >
                         <div className="hidden md:block bg-secondary p-8 rounded-l-lg w-2/5">
@@ -692,7 +688,12 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
                         </SheetTrigger>
                         <SheetContent side="bottom" className="rounded-t-2xl max-h-[90vh] p-0 flex flex-col">
                            {isSearchingHotel ? (
-                                <div className="h-full"> {renderBookingFlow()} </div>
+                                <div className="h-full flex flex-col">
+                                    <SheetHeader className="p-4 border-b text-left sticky top-0 bg-background z-10">
+                                        <SheetTitle>{dictionary.searchHotel}</SheetTitle>
+                                    </SheetHeader>
+                                    {renderBookingFlow()}
+                                </div>
                            ) : (
                              <>
                                 <SheetHeader className="p-6 pb-4 text-left border-b sticky top-0 bg-background z-10">
@@ -723,5 +724,3 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
         </>
     );
 }
-
-    
