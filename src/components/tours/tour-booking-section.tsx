@@ -72,7 +72,7 @@ interface TourBookingSectionProps {
     meetingPoints: MeetingPoint[];
 }
 
-const locales: { [key in Locale]?: any } = { en: enUS, fr, de, nl, es };
+const locales: { [key: string]: typeof es } = { en: enUS, fr, de, nl, es };
 
 const dayNameToIndex: { [key: string]: number } = {
     Sunday: 0,
@@ -199,9 +199,6 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
         } else {
              if (step === 2) {
                  setIsBookingFlowActive(false);
-             }
-             if (step === 3 && paymentOption === 'deposit') {
-                setBookingId(null);
              }
              if (step > 1) {
                 setStep(step - 1);
@@ -643,7 +640,7 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
                         animate={{ opacity: 1, scale: 1 }}
                         exit={{ opacity: 0, scale: 0.95 }}
                         transition={{ duration: 0.3, ease: "easeInOut" }}
-                        className="flex max-w-4xl w-full max-h-[90vh] bg-background rounded-lg shadow-2xl overflow-hidden"
+                        className="flex max-w-4xl w-full max-h-[90vh] bg-background rounded-lg shadow-2xl"
                         onClick={(e) => e.stopPropagation()}
                     >
                         <div className="hidden md:block bg-secondary p-8 rounded-l-lg w-2/5">
@@ -687,36 +684,21 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
                             </Button>
                         </SheetTrigger>
                         <SheetContent side="bottom" className="rounded-t-2xl max-h-[90vh] p-0 flex flex-col">
-                           {isSearchingHotel ? (
-                                <div className="h-full flex flex-col">
-                                    <SheetHeader className="p-4 border-b text-left sticky top-0 bg-background z-10">
-                                        <SheetTitle>{dictionary.searchHotel}</SheetTitle>
-                                    </SheetHeader>
-                                    {renderBookingFlow()}
-                                </div>
-                           ) : (
-                             <>
-                                <SheetHeader className="p-6 pb-4 text-left border-b sticky top-0 bg-background z-10">
-                                    <div className="flex justify-between items-center">
-                                        <SheetTitle className="text-2xl font-bold">{
-                                            step === 1 ? dictionary.title :
-                                            step === 2 ? dictionary.bookingSummary : dictionary.finalSummary
-                                        }</SheetTitle>
-                                        <SheetClose asChild>
-                                            <Button variant="ghost" size="icon" className="rounded-full">
-                                                <X className="h-5 w-5" />
-                                            </Button>
-                                        </SheetClose>
-                                    </div>
-                                    <SheetDescription />
-                                </SheetHeader>
-                                <div className="p-6 pt-4 overflow-y-auto flex-grow">
-                                    <AnimatePresence mode="wait">
+                            <SheetHeader className="p-4 border-b text-left sticky top-0 bg-background z-10">
+                                <SheetTitle>{
+                                    isSearchingHotel ? dictionary.searchHotel :
+                                    step === 1 ? dictionary.title :
+                                    step === 2 ? dictionary.bookingSummary : dictionary.finalSummary
+                                }</SheetTitle>
+                            </SheetHeader>
+                           
+                           <div className="overflow-y-auto flex-grow">
+                                <div className="p-4">
+                                     <AnimatePresence mode="wait">
                                         {renderBookingFlow()}
                                     </AnimatePresence>
                                 </div>
-                             </>
-                           )}
+                           </div>
                         </SheetContent>
                     </Sheet>
                 </div>
