@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetTrigger, SheetClose } from "@/components/ui/sheet";
 import { Input } from "@/components/ui/input";
-import { Calendar as CalendarIcon, Users, DollarSign, Minus, Plus, Languages, ArrowLeft, Hotel, CheckCircle, MapPin, Search, X, CreditCard, Banknote, Info, User as UserIcon, Phone, Baby, PersonStanding, Image as ImageIcon } from "lucide-react";
+import { Calendar as CalendarIcon, Users, DollarSign, Minus, Plus, Languages, ArrowLeft, Hotel, CheckCircle, MapPin, Search, X, CreditCard, Banknote, Info, User as UserIcon, Phone, Baby, PersonStanding, ImageIcon } from "lucide-react";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { Calendar } from "@/components/ui/calendar";
@@ -641,7 +641,7 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    className="hidden lg:block fixed inset-0 bg-black/60 backdrop-blur-sm z-50"
+                    className="hidden lg:block fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-8"
                     onClick={() => setIsBookingFlowActive(false)}
                 >
                     <motion.div
@@ -650,17 +650,17 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
                         animate={{ opacity: 1, scale: 1 }}
                         exit={{ opacity: 0, scale: 0.95 }}
                         transition={{ duration: 0.3, ease: "easeInOut" }}
-                        className="fixed inset-0 m-auto grid grid-cols-1 md:grid-cols-2 max-w-4xl h-[700px] max-h-[90vh]"
+                        className="grid grid-cols-1 md:grid-cols-2 max-w-4xl w-full h-[700px] max-h-[90vh] bg-background rounded-lg shadow-2xl overflow-hidden"
                         onClick={(e) => e.stopPropagation()}
                     >
-                        <div className="hidden md:block bg-secondary p-8 rounded-l-lg">
+                        <div className="hidden md:block bg-secondary p-8">
                              <h3 className="text-2xl font-bold">{tour.title[lang] || tour.title.en}</h3>
                              <p className="text-muted-foreground mt-2">{tour.description[lang] || tour.description.en}</p>
                              <div className="relative h-64 mt-8 rounded-lg overflow-hidden">
                                  <Image src={tour.mainImage} alt={tour.title.en} fill className="object-cover" />
                              </div>
                         </div>
-                        <Card className="rounded-none md:rounded-r-lg rounded-l-lg md:rounded-l-none flex flex-col">
+                        <div className="flex flex-col">
                             <CardHeader>
                                 <CardTitle className="text-2xl font-bold">{
                                     isSearchingHotel ? dictionary.searchHotel :
@@ -668,12 +668,12 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
                                     step === 3 ? dictionary.finalSummary : dictionary.title
                                 }</CardTitle>
                             </CardHeader>
-                             <CardContent className="flex-grow overflow-y-auto">
+                             <div className="flex-grow overflow-y-auto px-6 pb-6">
                                 <AnimatePresence mode="wait">
                                     {renderBookingFlow()}
                                 </AnimatePresence>
-                            </CardContent>
-                        </Card>
+                            </div>
+                        </div>
                      </motion.div>
                 </motion.div>
                 )}
