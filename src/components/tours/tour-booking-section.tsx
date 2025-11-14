@@ -641,7 +641,7 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    className="hidden lg:flex fixed inset-0 bg-black/60 backdrop-blur-sm z-50 p-8 items-center justify-center"
+                    className="hidden lg:flex fixed inset-0 bg-black/60 backdrop-blur-sm z-50 items-center justify-center p-8"
                     onClick={() => setIsBookingFlowActive(false)}
                 >
                     <motion.div
@@ -661,7 +661,7 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
                              </div>
                         </div>
                         <div className="flex flex-col">
-                            <div className="p-6 border-b">
+                            <div className="p-6 border-b shrink-0">
                                 <CardTitle className="text-2xl font-bold">{
                                     isSearchingHotel ? dictionary.searchHotel :
                                     step === 2 ? dictionary.bookingSummary :
