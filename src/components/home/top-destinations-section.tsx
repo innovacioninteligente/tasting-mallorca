@@ -3,9 +3,24 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowUpRight, Sprout, ArrowRight } from 'lucide-react';
+import { ArrowUpRight, Sprout, ArrowRight, X } from 'lucide-react';
 import { type getDictionary } from '@/dictionaries/get-dictionary';
 import { Button } from '../ui/button';
+import { useState } from 'react';
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogDescription,
+  DialogClose,
+} from "@/components/ui/dialog";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 
 type TopDestinationsProps = {
     dictionary: Awaited<ReturnType<typeof getDictionary>>['destinations'];
@@ -52,6 +67,13 @@ const destinations = [
 
 export function TopDestinationsSection({ dictionary }: TopDestinationsProps) {
     const mainDestinations = destinations.slice(0, 6);
+    const [isLightboxOpen, setIsLightboxOpen] = useState(false);
+    const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+
+    const openLightbox = (index: number) => {
+        setSelectedImageIndex(index);
+        setIsLightboxOpen(true);
+    };
 
     return (
         <section className="py-24 bg-background flex flex-col items-center">
@@ -67,8 +89,12 @@ export function TopDestinationsSection({ dictionary }: TopDestinationsProps) {
             </div>
             <div className="w-full px-4 md:px-0 md:w-[80vw] mx-auto">
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 auto-rows-[350px] gap-4">
-                {mainDestinations.map((dest) => (
-                    <div key={dest.name} className={`relative rounded-2xl overflow-hidden group h-full ${dest.className}`}>
+                {mainDestinations.map((dest, index) => (
+                    <div 
+                        key={dest.name} 
+                        className={`relative rounded-2xl overflow-hidden group h-full cursor-pointer ${dest.className}`}
+                        onClick={() => openLightbox(index)}
+                    >
                         <Image
                             src={dest.image}
                             alt={dest.name}
@@ -98,6 +124,43 @@ export function TopDestinationsSection({ dictionary }: TopDestinationsProps) {
                 </div>
                 </div>
             </div>
+
+            <Dialog open={isLightboxOpen} onOpenChange={setIsLightboxOpen}>
+                <DialogContent className="max-w-none w-screen h-screen p-0 bg-background/80 backdrop-blur-sm border-0 flex items-center justify-center">
+                    <DialogTitle className="sr-only">Destinations Lightbox</DialogTitle>
+                    <DialogDescription className="sr-only">A carousel of destination images.</DialogDescription>
+                    <Carousel
+                        opts={{
+                            loop: true,
+                            startIndex: selectedImageIndex,
+                        }}
+                        className="w-full h-full max-w-7xl"
+                    >
+                        <CarouselContent className="h-full">
+                            {mainDestinations.map((dest, index) => (
+                                <CarouselItem key={index} className="flex flex-col items-center justify-center p-4">
+                                    <div className="relative w-full h-[85vh]">
+                                        <Image
+                                            src={dest.image}
+                                            alt={dest.name}
+                                            fill
+                                            className="object-contain"
+                                            sizes="100vw"
+                                        />
+                                    </div>
+                                    <h3 className="text-2xl font-bold text-foreground mt-4">{dest.name}</h3>
+                                </CarouselItem>
+                            ))}
+                        </CarouselContent>
+                        <CarouselPrevious className="absolute left-4 top-1/2 -translate-y-1/2 text-foreground bg-background/50 hover:bg-background/70 border-border h-12 w-12" />
+                        <CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2 text-foreground bg-background/50 hover:bg-background/70 border-border h-12 w-12" />
+                    </Carousel>
+                    <DialogClose className="absolute right-4 top-4 rounded-full p-2 bg-background/50 text-foreground opacity-80 hover:opacity-100 transition-opacity focus:outline-none focus:ring-2 focus:ring-ring">
+                        <X className="h-8 w-8" />
+                        <span className="sr-only">Close</span>
+                    </DialogClose>
+                </DialogContent>
+            </Dialog>
         </section>
     );
 }
