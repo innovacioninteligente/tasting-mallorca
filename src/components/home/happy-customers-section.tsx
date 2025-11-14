@@ -15,10 +15,8 @@ export function HappyCustomersSection({ dictionary }: HappyCustomersProps) {
         <section className="bg-primary-dark text-primary-foreground py-24 relative overflow-hidden">
             <div className="container w-full px-4 md:px-0 md:w-[80vw] mx-auto">
                  <div className="text-center mb-16">
-                    <h2 className="text-4xl md:text-5xl font-extrabold text-primary-foreground">{dictionary.title}</h2>
-                    <p className="mt-4 text-lg text-primary-foreground/80 max-w-xl mx-auto">
-                        {dictionary.subtitle}
-                    </p>
+                    <p className="text-primary-foreground/80 font-cursive font-bold text-lg">{dictionary.subtitle}</p>
+                    <h2 className="text-4xl md:text-5xl font-extrabold text-primary-foreground mt-2">{dictionary.title}</h2>
                 </div>
             <div className="relative grid md:grid-cols-2 gap-16 items-center">
                 {/* Image collage */}
@@ -39,21 +37,21 @@ export function HappyCustomersSection({ dictionary }: HappyCustomersProps) {
 
                 {/* Stats */}
                 <div className="border-2 border-dashed border-primary-foreground/50 rounded-3xl p-10">
-                <div className="grid grid-cols-2 gap-x-8 gap-y-12">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-12">
                     <div className="text-left border-b border-primary-foreground/30 pb-6">
-                    <p className="text-5xl font-extrabold">{stats.stat1.value}</p>
+                    <p className="text-4xl md:text-5xl font-extrabold">{stats.stat1.value}</p>
                     <p className="text-primary-foreground/80 mt-2">{stats.stat1.label}</p>
                     </div>
                     <div className="text-left border-b border-primary-foreground/30 pb-6">
-                    <p className="text-5xl font-extrabold">{stats.stat2.value}</p>
+                    <p className="text-4xl md:text-5xl font-extrabold">{stats.stat2.value}</p>
                     <p className="text-primary-foreground/80 mt-2">{stats.stat2.label}</p>
                     </div>
                     <div className="text-left pt-6">
-                    <p className="text-5xl font-extrabold">{stats.stat3.value}</p>
+                    <p className="text-4xl md:text-5xl font-extrabold">{stats.stat3.value}</p>
                     <p className="text-primary-foreground/80 mt-2">{stats.stat3.label}</p>
                     </div>
                     <div className="text-left pt-6">
-                    <p className="text-5xl font-extrabold">{stats.stat4.value}</p>
+                    <p className="text-4xl md:text-5xl font-extrabold">{stats.stat4.value}</p>
                     <p className="text-primary-foreground/80 mt-2">{stats.stat4.label}</p>
                     </div>
                 </div>
