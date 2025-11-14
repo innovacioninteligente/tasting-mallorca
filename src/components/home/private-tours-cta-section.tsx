@@ -24,7 +24,7 @@ export function PrivateToursCtaSection({ dictionary, lang }: PrivateToursCtaProp
         <section className="relative py-24 bg-background">
             <div className="absolute inset-0">
                 <Image
-                    src="https://firebasestorage.googleapis.com/v0/b/tasting-mallorca.firebasestorage.app/o/web%2Ffotos%20top%20destinations%2Fview-cala-s-almunia-mallorca-spain.jpg?alt=media&token=7f2d1dd6-c82e-4bfc-bf4c-2782cd44077b"
+                    src="https://firebasestorage.googleapis.com/v0/b/tasting-mallorca.firebasestorage.app/o/web%2FFoto%20fondo%20Private%20Tour%2FDSC09705-Mejorado-NR.jpg?alt=media&token=11e66546-a510-4421-9a5c-9e68d3db28f4"
                     alt="Exclusive view of a Mallorcan cove"
                     fill
                     className="object-cover"
