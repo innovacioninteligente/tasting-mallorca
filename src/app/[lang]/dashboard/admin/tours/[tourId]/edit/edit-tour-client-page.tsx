@@ -6,7 +6,7 @@ import { useForm, FormProvider, FieldErrors } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { TourFormHeader } from "@/app/./[lang]/dashboard/admin/tours/new/tour-form-header";
 import { useState } from "react";
-import { Tour, CreateTourInputSchema, CreateTourInput } from "@/backend/tours/domain/tour.model";
+import { Tour, UpdateTourInputSchema, CreateTourInput } from "@/backend/tours/domain/tour.model";
 import { parseISO } from 'date-fns';
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
@@ -140,7 +140,7 @@ export function EditTourClientPage({ initialData, lang }: EditTourClientPageProp
     });
 
     const form = useForm<TourFormValues>({
-        resolver: zodResolver(CreateTourInputSchema),
+        resolver: zodResolver(UpdateTourInputSchema),
         defaultValues: mergedData,
     });
 
@@ -223,11 +223,6 @@ export function EditTourClientPage({ initialData, lang }: EditTourClientPageProp
                 ...data,
                 mainImage: mainImageUrl,
                 galleryImages: galleryImageUrls,
-                availabilityPeriods: data.availabilityPeriods?.map(p => ({
-                    ...p,
-                    startDate: p.startDate.toISOString().split('T')[0],
-                    endDate: p.endDate.toISOString().split('T')[0]
-                }))
             };
             
             const result = await updateTour({ ...tourData, id: tourId });
@@ -348,8 +343,7 @@ export function EditTourClientPage({ initialData, lang }: EditTourClientPageProp
                 description: "The image has been permanently deleted.",
             });
             // Update the form state to reflect the deletion
-            const currentMainImage = form.getValues('mainImage');
-            if (currentMainImage === imageToDelete) {
+            if (form.getValues('mainImage') === imageToDelete) {
                 form.setValue('mainImage', undefined);
             } else {
                 const currentGallery = form.getValues('galleryImages') || [];

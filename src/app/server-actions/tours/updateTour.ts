@@ -17,7 +17,14 @@ export const updateTour = createSafeAction(
     try {
       const tourRepository = new FirestoreTourRepository();
 
-      const tourToUpdate: Partial<Tour> & { id: string } = { ...tourData };
+      const tourToUpdate: Partial<Tour> & { id: string } = { 
+        ...tourData,
+        availabilityPeriods: tourData.availabilityPeriods?.map((p: any) => ({
+            ...p,
+            startDate: p.startDate ? new Date(p.startDate).toISOString().split('T')[0] : undefined,
+            endDate: p.endDate ? new Date(p.endDate).toISOString().split('T')[0] : undefined,
+        }))
+      };
       
       if (tourData.price !== undefined) tourToUpdate.price = Number(tourData.price);
       if (tourData.childPrice !== undefined) tourToUpdate.childPrice = Number(tourData.childPrice);
