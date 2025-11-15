@@ -5,7 +5,7 @@ import { TourForm, getFieldTab } from "@/app/[lang]/dashboard/admin/tours/new/to
 import { useForm, FormProvider, FieldErrors } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { TourFormHeader } from "@/app/./[lang]/dashboard/admin/tours/new/tour-form-header";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Tour, UpdateTourInputSchema, CreateTourInput } from "@/backend/tours/domain/tour.model";
 import { parseISO } from 'date-fns';
 import { useToast } from "@/hooks/use-toast";
@@ -291,14 +291,30 @@ export function EditTourClientPage({ initialData, lang }: EditTourClientPageProp
 
             const translatedData = result.data as TranslateTourOutput;
             
-            const customizer = (objValue: any, srcValue: any) => {
-                if (Array.isArray(objValue)) {
-                    return srcValue;
-                }
-            };
-            const updatedData = mergeWith(cloneDeep(currentData), translatedData, customizer);
+             // Instead of form.reset, use setValue to mark fields as dirty
+            Object.keys(translatedData).forEach(key => {
+                const formKey = key as keyof typeof translatedData;
+                const value = translatedData[formKey];
 
-            form.reset(updatedData);
+                if (formKey === 'itinerary' && Array.isArray(value)) {
+                    value.forEach((item, index) => {
+                        const currentItineraryItem = currentData.itinerary?.[index];
+                        if (currentItineraryItem) {
+                            form.setValue(`itinerary.${index}.title`, { ...currentItineraryItem.title, ...item.title }, { shouldDirty: true });
+                            form.setValue(`itinerary.${index}.activities`, { ...currentItineraryItem.activities, ...item.activities }, { shouldDirty: true });
+                        }
+                    });
+                } else if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
+                    Object.keys(value).forEach(subKey => {
+                        const typedSubKey = subKey as keyof typeof value;
+                        const subValue = value[typedSubKey];
+                        if (subValue) {
+                           form.setValue(`${formKey}.${typedSubKey}` as any, subValue, { shouldDirty: true });
+                        }
+                    });
+                }
+            });
+
 
             toast({
                 title: "Content Translated!",
@@ -344,10 +360,10 @@ export function EditTourClientPage({ initialData, lang }: EditTourClientPageProp
             });
             // Update the form state to reflect the deletion
             if (form.getValues('mainImage') === imageToDelete) {
-                form.setValue('mainImage', undefined);
+                form.setValue('mainImage', undefined, { shouldDirty: true });
             } else {
                 const currentGallery = form.getValues('galleryImages') || [];
-                form.setValue('galleryImages', currentGallery.filter(url => url !== imageToDelete));
+                form.setValue('galleryImages', currentGallery.filter(url => url !== imageToDelete), { shouldDirty: true });
             }
         }
         setImageToDelete(null);

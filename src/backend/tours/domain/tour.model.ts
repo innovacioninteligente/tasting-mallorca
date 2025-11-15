@@ -1,4 +1,5 @@
 
+
 import { z } from 'zod';
 
 export type ItineraryItem = {
@@ -158,24 +159,8 @@ export const CreateTourInputSchema = baseTourSchema
       path: ["depositPrice"],
   });
 
-export const UpdateTourInputSchema = baseTourSchema.partial().extend({ 
+export const UpdateTourInputSchema = CreateTourInputSchema.partial().extend({ 
     id: z.string(),
-    price: z.preprocess(
-        (val) => (val === "" ? undefined : val),
-        z.coerce.number({ invalid_type_error: "Price must be a number" }).optional()
-    ),
-    childPrice: z.preprocess(
-        (val) => (val === "" ? undefined : val),
-        z.coerce.number({ invalid_type_error: "Child price must be a number" }).optional()
-    ),
-    depositPrice: z.preprocess(
-        (val) => (val === "" ? undefined : val),
-        z.coerce.number({ invalid_type_error: "Deposit price must be a number" }).optional()
-    ),
-    durationHours: z.preprocess(
-        (val) => (val === "" ? undefined : val),
-        z.coerce.number({ invalid_type_error: "Duration must be a number" }).optional()
-    ),
 });
 
 export type CreateTourInput = z.infer<typeof CreateTourInputSchema>;

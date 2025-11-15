@@ -56,11 +56,11 @@ export function TourFormHeader({
                 )}
             />
             <Button 
-                onClick={onSubmit} 
                 size="lg" 
                 disabled={isSubmitting}
                 className={cn("w-full md:w-auto md:h-11 md:px-8", isDirty && "bg-accent text-accent-foreground hover:bg-accent/90")}
                 type="submit"
+                form="tour-form"
             >
                 {isSubmitting ? <Loader2 className="animate-spin" /> : 'Save Tour'}
                 {isDirty && !isSubmitting && <Circle className="ml-2 h-3 w-3 fill-current" />}

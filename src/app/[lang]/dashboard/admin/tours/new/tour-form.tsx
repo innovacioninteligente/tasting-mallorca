@@ -237,7 +237,7 @@ export function TourForm({ initialData, onServerImageDelete, activeTab, onTabCha
   return (
     <>
       <Form {...form}>
-        <form className="space-y-8">
+        <form id="tour-form" className="space-y-8">
             <div className="pt-2">
                 <Tabs value={activeTab} onValueChange={onTabChange} className="w-full">
                 <TabsList className="w-full md:grid md:w-full md:grid-cols-5 flex justify-start overflow-x-auto">
