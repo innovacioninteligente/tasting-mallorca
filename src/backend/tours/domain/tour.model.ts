@@ -152,6 +152,6 @@ export const CreateTourInputSchema = baseTourSchema.refine(data => {
     path: ["depositPrice"],
 });
 
+export const UpdateTourInputSchema = baseTourSchema.partial().extend({ id: z.string() });
 
 export type CreateTourInput = z.infer<typeof CreateTourInputSchema>;
-export const UpdateTourInputSchema = baseTourSchema.partial().extend({ id: z.string() });

@@ -332,9 +332,9 @@ export function EditTourClientPage({ initialData, lang }: EditTourClientPageProp
 
         setIsDeletingImage(true);
         const result = await deleteTourImage({ tourId: initialData.id, imageUrl: imageToDelete });
+        
         setIsDeletingImage(false);
         setIsDeleteAlertOpen(false);
-        setImageToDelete(null);
 
         if (result.error) {
             toast({
@@ -347,9 +347,16 @@ export function EditTourClientPage({ initialData, lang }: EditTourClientPageProp
                 title: "Image Deleted",
                 description: "The image has been permanently deleted.",
             });
-            // This will trigger a re-fetch of the tour data on the server page component
-            router.refresh();
+            // Update the form state to reflect the deletion
+            const currentMainImage = form.getValues('mainImage');
+            if (currentMainImage === imageToDelete) {
+                form.setValue('mainImage', undefined);
+            } else {
+                const currentGallery = form.getValues('galleryImages') || [];
+                form.setValue('galleryImages', currentGallery.filter(url => url !== imageToDelete));
+            }
         }
+        setImageToDelete(null);
     };
     
     const basePath = `/${lang}/dashboard/admin/tours`;
