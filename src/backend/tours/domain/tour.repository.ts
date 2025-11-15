@@ -6,4 +6,5 @@ export interface TourRepository {
   findAll(): Promise<Tour[]>;
   save(tour: Tour): Promise<void>;
   update(tour: Partial<Tour> & { id: string }): Promise<void>;
+  delete(id: string): Promise<void>;
 }

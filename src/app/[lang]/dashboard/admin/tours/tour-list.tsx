@@ -5,10 +5,23 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Tour } from "@/backend/tours/domain/tour.model";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Edit, Eye } from "lucide-react";
+import { Edit, Eye, Trash2 } from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { useToast } from "@/hooks/use-toast";
+import { deleteTour } from "@/app/server-actions/tours/deleteTour";
 
 interface TourListProps {
     tours?: Tour[];
@@ -17,6 +30,8 @@ interface TourListProps {
 
 export function TourList({ tours, error }: TourListProps) {
     const pathname = usePathname();
+    const router = useRouter();
+    const { toast } = useToast();
     
     if (error) {
         return <p className="text-destructive text-center py-12">Error: {error}</p>;
@@ -31,6 +46,23 @@ export function TourList({ tours, error }: TourListProps) {
                 </p>
             </div>
         );
+    }
+    
+    const handleDelete = async (tourId: string) => {
+        const result = await deleteTour(tourId);
+        if (result.error) {
+            toast({
+                variant: 'destructive',
+                title: 'Error deleting tour',
+                description: result.error,
+            });
+        } else {
+            toast({
+                title: 'Tour Deleted',
+                description: 'The tour has been successfully deleted.',
+            });
+            router.refresh();
+        }
     }
 
     return (
@@ -79,6 +111,28 @@ export function TourList({ tours, error }: TourListProps) {
                                         Ver
                                     </Link>
                                 </Button>
+                                <AlertDialog>
+                                    <AlertDialogTrigger asChild>
+                                        <Button variant="destructive" size="sm">
+                                            <Trash2 className="mr-2 h-4 w-4" />
+                                            Eliminar
+                                        </Button>
+                                    </AlertDialogTrigger>
+                                    <AlertDialogContent>
+                                        <AlertDialogHeader>
+                                        <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                                        <AlertDialogDescription>
+                                            This action cannot be undone. This will permanently delete the tour and all associated images from the servers.
+                                        </AlertDialogDescription>
+                                        </AlertDialogHeader>
+                                        <AlertDialogFooter>
+                                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                        <AlertDialogAction onClick={() => handleDelete(tour.id)}>
+                                            Continue
+                                        </AlertDialogAction>
+                                        </AlertDialogFooter>
+                                    </AlertDialogContent>
+                                </AlertDialog>
                             </div>
                         </TableCell>
                     </TableRow>

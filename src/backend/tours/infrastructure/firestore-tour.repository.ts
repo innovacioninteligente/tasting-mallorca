@@ -1,10 +1,24 @@
 import { getFirestore } from 'firebase-admin/firestore';
+import { getStorage } from 'firebase-admin/storage';
 import { Tour } from '../domain/tour.model';
 import { TourRepository } from '../domain/tour.repository';
 
 export class FirestoreTourRepository implements TourRepository {
   private db = getFirestore();
+  private storage = getStorage();
   private collection = this.db.collection('tours');
+
+  private getFilePathFromUrl(url: string): string | null {
+    try {
+      const urlObject = new URL(url);
+      const pathSegments = urlObject.pathname.split('/');
+      const objectPath = pathSegments.slice(pathSegments.indexOf('o') + 1).join('/');
+      return decodeURIComponent(objectPath);
+    } catch (error) {
+      console.error(`Invalid URL provided, cannot extract file path: ${url}`, error);
+      return null;
+    }
+  }
 
   async findById(id: string): Promise<Tour | null> {
     const doc = await this.collection.doc(id).get();
@@ -34,5 +48,28 @@ export class FirestoreTourRepository implements TourRepository {
   async update(tour: Partial<Tour> & { id: string }): Promise<void> {
     const { id, ...tourData } = tour;
     await this.collection.doc(id).update(tourData);
+  }
+
+  async delete(id: string): Promise<void> {
+    const tour = await this.findById(id);
+    if (!tour) {
+        throw new Error(`Tour with id ${id} not found.`);
+    }
+
+    const imageDeletionPromises: Promise<any>[] = [];
+    const imageUrls = [tour.mainImage, ...tour.galleryImages];
+    
+    for (const url of imageUrls) {
+        if (url) {
+            const filePath = this.getFilePathFromUrl(url);
+            if (filePath) {
+                const file = this.storage.bucket(process.env.FIREBASE_STORAGE_BUCKET).file(filePath);
+                imageDeletionPromises.push(file.delete().catch(err => console.error(`Failed to delete image ${filePath}:`, err)));
+            }
+        }
+    }
+    
+    await Promise.all(imageDeletionPromises);
+    await this.collection.doc(id).delete();
   }
 }
