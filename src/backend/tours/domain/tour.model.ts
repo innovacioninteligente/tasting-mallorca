@@ -121,8 +121,8 @@ const baseTourSchema = z.object({
   }),
   details: detailsSchema,
   pickupPoint: pickupPointSchema,
-  price: z.coerce.number().min(0, "Price must be a positive number."),
-  childPrice: z.coerce.number().optional(),
+  price: z.coerce.number({invalid_type_error: "Price must be a number"}).min(0, "Price must be a positive number."),
+  childPrice: z.coerce.number({invalid_type_error: "Price must be a number"}).optional(),
   region: z.enum(["North", "East", "South", "West", "Central"]),
   durationHours: z.coerce.number().min(1, "Duration must be at least 1 hour."),
   isFeatured: z.boolean().default(false),
@@ -130,7 +130,7 @@ const baseTourSchema = z.object({
   mainImage: z.any(),
   galleryImages: z.any().optional(),
   allowDeposit: z.boolean().default(false),
-  depositPrice: z.coerce.number().optional(),
+  depositPrice: z.coerce.number({invalid_type_error: "Price must be a number"}).optional(),
   availabilityPeriods: z.array(availabilityPeriodSchema).min(1, "At least one availability period is required.").optional(),
   itinerary: z.array(itineraryItemSchema).optional(),
 });
@@ -159,7 +159,7 @@ export const CreateTourInputSchema = baseTourSchema
       path: ["depositPrice"],
   });
 
-export const UpdateTourInputSchema = CreateTourInputSchema.partial().extend({ 
+export const UpdateTourInputSchema = baseTourSchema.partial().extend({ 
     id: z.string(),
 });
 
