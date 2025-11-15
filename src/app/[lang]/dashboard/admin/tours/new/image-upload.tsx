@@ -13,6 +13,7 @@ interface ImageUploadProps {
   onRemove: (file: any) => void;
   value: (File | string)[];
   multiple?: boolean;
+  onServerImageDelete?: (imageUrl: string) => void; // New prop
 }
 
 export function ImageUpload({
@@ -20,6 +21,7 @@ export function ImageUpload({
   onRemove,
   value,
   multiple = false,
+  onServerImageDelete
 }: ImageUploadProps) {
   
   const onDrop = useCallback((acceptedFiles: File[]) => {
@@ -32,7 +34,13 @@ export function ImageUpload({
 
   const handleRemove = (file: File | string, e: React.MouseEvent) => {
     e.stopPropagation();
-    onRemove(file);
+    if (typeof file === 'string' && onServerImageDelete) {
+        // This is an existing image URL from the server
+        onServerImageDelete(file);
+    } else {
+        // This is a local file object
+        onRemove(file);
+    }
   };
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -46,7 +54,7 @@ export function ImageUpload({
   });
 
   const getPreviewUrl = (file: File | string) => {
-    if (!file) return ''; // <-- Correction: Handle null/undefined case
+    if (!file) return '';
     if (typeof file === 'string') {
       return file;
     }
@@ -77,7 +85,7 @@ export function ImageUpload({
       {value && value.length > 0 && (
         <div className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
           {value.map((file, i) => {
-            if (!file) return null; // <-- Correction: Don't render if file is null
+            if (!file) return null;
             const previewUrl = getPreviewUrl(file);
             return (
               <div key={i} className="relative aspect-square overflow-hidden rounded-md">
@@ -111,3 +119,5 @@ export function ImageUpload({
     </div>
   );
 }
+
+    

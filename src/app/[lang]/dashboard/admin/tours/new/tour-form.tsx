@@ -21,109 +21,16 @@ import { DateRange } from "react-day-picker";
 import { addDays, format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { Tour } from "@/backend/tours/domain/tour.model";
+import { Tour, CreateTourInputSchema } from "@/backend/tours/domain/tour.model";
 import { Badge } from "@/components/ui/badge";
 
-const multilingualStringSchema = z.object({
-    en: z.string().min(1, { message: "El texto en inglés es requerido." }),
-    de: z.string().optional(),
-    fr: z.string().optional(),
-    nl: z.string().optional(),
-});
 
-const multilingualOptionalStringSchema = z.object({
-    en: z.string().optional(),
-    de: z.string().optional(),
-    fr: z.string().optional(),
-    nl: z.string().optional(),
-});
-
-const availabilityPeriodSchema = z.object({
-    startDate: z.date({ required_error: "Start date is required." }),
-    endDate: z.date({ required_error: "End date is required." }),
-    activeDays: z.array(z.string()).min(1, "At least one active day is required."),
-});
-
-const pickupPointSchema = z.object({
-    title: multilingualStringSchema,
-    description: multilingualStringSchema,
-});
-
-const detailsSchema = z.object({
-    highlights: multilingualOptionalStringSchema,
-    fullDescription: multilingualOptionalStringSchema,
-    included: multilingualOptionalStringSchema,
-    notIncluded: multilingualOptionalStringSchema,
-    notSuitableFor: multilingualOptionalStringSchema,
-    whatToBring: multilingualOptionalStringSchema,
-    beforeYouGo: multilingualOptionalStringSchema,
-});
-
-
-const itineraryItemSchema = z.object({
-    id: z.string(),
-    type: z.enum(["stop", "travel"]),
-    icon: z.string(),
-    duration: z.string().min(1, "La duración es requerida."),
-    title: multilingualStringSchema,
-    activities: z.object({
-        en: z.array(z.string()).optional(),
-        de: z.array(z.string()).optional(),
-        fr: z.array(z.string()).optional(),
-        nl: z.array(z.string()).optional(),
-    }),
-});
-
-const formSchema = z.object({
-  id: z.string(),
-  title: multilingualStringSchema,
-  slug: multilingualStringSchema,
-  description: multilingualStringSchema,
-  overview: multilingualStringSchema,
-  generalInfo: z.object({
-    cancellationPolicy: multilingualStringSchema,
-    bookingPolicy: multilingualStringSchema,
-    guideInfo: multilingualStringSchema,
-    pickupInfo: multilingualStringSchema,
-  }),
-  details: detailsSchema.optional(),
-  pickupPoint: pickupPointSchema,
-  price: z.coerce.number().min(0, "El precio debe ser un número positivo."),
-  childPrice: z.coerce.number().optional(),
-  region: z.enum(["North", "East", "South", "West", "Central"]),
-  durationHours: z.coerce.number().min(1, "La duración debe ser al menos 1 hora."),
-  isFeatured: z.boolean().default(false),
-  published: z.boolean().default(false),
-  mainImage: z.any().refine(val => val, "La imagen principal es requerida."),
-  galleryImages: z.any().optional(),
-  allowDeposit: z.boolean().default(false),
-  depositPrice: z.coerce.number().optional(),
-  availabilityPeriods: z.array(availabilityPeriodSchema).optional(),
-  itinerary: z.array(itineraryItemSchema).optional(),
-}).refine(data => {
-    if (data.allowDeposit) {
-        return data.depositPrice !== undefined && data.depositPrice > 0;
-    }
-    return true;
-}, {
-    message: "El precio del depósito es requerido si se permiten depósitos.",
-    path: ["depositPrice"],
-}).refine(data => {
-    if (data.allowDeposit && data.depositPrice) {
-        return data.depositPrice < data.price;
-    }
-    return true;
-}, {
-    message: "El depósito no puede ser mayor o igual al precio total.",
-    path: ["depositPrice"],
-});
-
-type TourFormValues = z.infer<typeof formSchema>;
+type TourFormValues = z.infer<typeof CreateTourInputSchema>;
 
 const weekDays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 const weekDayInitials = ["L", "M", "X", "J", "V", "S", "D"];
 
-function AvailabilityPeriodCreator({ onAddPeriod }: { onAddPeriod: (period: z.infer<typeof availabilityPeriodSchema>) => void }) {
+function AvailabilityPeriodCreator({ onAddPeriod }: { onAddPeriod: (period: z.infer<typeof CreateTourInputSchema.shape.availabilityPeriods.element>) => void }) {
     const [dateRange, setDateRange] = useState<DateRange | undefined>({ from: new Date(), to: addDays(new Date(), 20) });
     const [activeDays, setActiveDays] = useState<string[]>([]);
     const [showCreator, setShowCreator] = useState(false);
@@ -280,9 +187,10 @@ const iconMap = {
 
 interface TourFormProps {
   initialData?: Tour;
+  onServerImageDelete?: (imageUrl: string) => void;
 }
 
-export function TourForm({ initialData }: TourFormProps) {
+export function TourForm({ initialData, onServerImageDelete }: TourFormProps) {
   const [editingItineraryId, setEditingItineraryId] = useState<string | null>(null);
   const form = useFormContext<TourFormValues>();
 
@@ -444,6 +352,7 @@ export function TourForm({ initialData }: TourFormProps) {
                                                 onChange={(file) => field.onChange(file)}
                                                 onRemove={() => field.onChange(undefined)}
                                                 multiple={false}
+                                                onServerImageDelete={onServerImageDelete}
                                             />
                                         </FormControl>
                                         <FormMessage />
@@ -466,6 +375,7 @@ export function TourForm({ initialData }: TourFormProps) {
                                                     field.onChange(newValue);
                                                 }}
                                                 multiple={true}
+                                                onServerImageDelete={onServerImageDelete}
                                             />
                                         </FormControl>
                                         <FormMessage />
@@ -981,7 +891,5 @@ export function TourForm({ initialData }: TourFormProps) {
     </>
   );
 }
-
-    
 
     

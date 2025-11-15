@@ -1,5 +1,5 @@
 
-import { getFirestore } from 'firebase-admin/firestore';
+import { getFirestore, FieldValue } from 'firebase-admin/firestore';
 import { getStorage } from 'firebase-admin/storage';
 import { Tour } from '../domain/tour.model';
 import { TourRepository } from '../domain/tour.repository';
@@ -49,7 +49,14 @@ export class FirestoreTourRepository implements TourRepository {
 
   async update(tour: Partial<Tour> & { id: string }): Promise<void> {
     const { id, ...tourData } = tour;
-    await this.collection.doc(id).update(tourData);
+     if (tourData.galleryImages && Array.isArray(tourData.galleryImages)) {
+        await this.collection.doc(id).update({
+            ...tourData,
+            galleryImages: FieldValue.arrayUnion(...tourData.galleryImages as any)
+        });
+    } else {
+        await this.collection.doc(id).update(tourData);
+    }
   }
 
   async delete(id: string): Promise<void> {
@@ -81,3 +88,5 @@ export class FirestoreTourRepository implements TourRepository {
     await this.collection.doc(id).delete();
   }
 }
+
+    

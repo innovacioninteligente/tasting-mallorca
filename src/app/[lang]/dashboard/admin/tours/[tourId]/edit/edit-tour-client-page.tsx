@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { TourForm } from "@/app/[lang]/dashboard/admin/tours/new/tour-form";
@@ -20,6 +19,18 @@ import { UploadProgressDialog } from "@/components/upload-progress-dialog";
 import { cloneDeep, mergeWith } from "lodash";
 import { TranslateTourInput, TranslateTourOutput } from "@/ai/flows/translate-tour-flow";
 import { translateTourAction } from "@/app/server-actions/tours/translateTourAction";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { deleteTourImage } from "@/app/server-actions/tours/deleteTourImage";
+import { Loader2 } from "lucide-react";
 
 
 type TourFormValues = z.infer<typeof CreateTourInputSchema>;
@@ -38,6 +49,10 @@ export function EditTourClientPage({ initialData, lang }: EditTourClientPageProp
     const [isTranslating, setIsTranslating] = useState(false);
     const [uploadProgress, setUploadProgress] = useState(0);
     const [uploadMessage, setUploadMessage] = useState('Starting...');
+
+    const [isDeleteAlertOpen, setIsDeleteAlertOpen] = useState(false);
+    const [imageToDelete, setImageToDelete] = useState<string | null>(null);
+    const [isDeletingImage, setIsDeletingImage] = useState(false);
 
     const formPersistenceKey = `tour-form-edit-${initialData.id}`;
     
@@ -279,6 +294,35 @@ export function EditTourClientPage({ initialData, lang }: EditTourClientPageProp
         }
     }
     
+    const handleServerImageDelete = (imageUrl: string) => {
+        setImageToDelete(imageUrl);
+        setIsDeleteAlertOpen(true);
+    };
+
+    const confirmDeleteImage = async () => {
+        if (!imageToDelete) return;
+
+        setIsDeletingImage(true);
+        const result = await deleteTourImage({ tourId: initialData.id, imageUrl: imageToDelete });
+        setIsDeletingImage(false);
+        setIsDeleteAlertOpen(false);
+        setImageToDelete(null);
+
+        if (result.error) {
+            toast({
+                variant: "destructive",
+                title: "Error deleting image",
+                description: result.error,
+            });
+        } else {
+            toast({
+                title: "Image Deleted",
+                description: "The image has been permanently deleted.",
+            });
+            router.refresh();
+        }
+    };
+    
     const basePath = `/${lang}/dashboard/admin/tours`;
 
     return (
@@ -296,9 +340,30 @@ export function EditTourClientPage({ initialData, lang }: EditTourClientPageProp
                 <main className="flex-grow overflow-y-scroll px-4 pt-4 md:px-8 lg:px-10">
                    <TourForm
                      initialData={initialData}
+                     onServerImageDelete={handleServerImageDelete}
                     />
                 </main>
             </FormProvider>
+
+            <AlertDialog open={isDeleteAlertOpen} onOpenChange={setIsDeleteAlertOpen}>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            This action cannot be undone. This will permanently delete the image from the storage.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction onClick={confirmDeleteImage} disabled={isDeletingImage} className="bg-destructive hover:bg-destructive/90">
+                            {isDeletingImage && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                            Yes, delete image
+                        </AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
         </div>
     );
 }
+
+    
