@@ -232,7 +232,7 @@ export default function NewTourPage() {
                 }))
             };
             
-            const result = await createTour(tourData as any);
+            const result = await createTour(tourData);
     
             if (result.error) throw new Error(result.error);
             
