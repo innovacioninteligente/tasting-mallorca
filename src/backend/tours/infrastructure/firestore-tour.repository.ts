@@ -58,6 +58,12 @@ export class FirestoreTourRepository implements TourRepository {
         throw new Error(`Tour with id ${id} not found.`);
     }
 
+    const bucketName = process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET;
+    if (!bucketName) {
+      throw new Error('Firebase Storage bucket name is not configured in environment variables.');
+    }
+    const bucket = this.storage.bucket(bucketName);
+
     const imageDeletionPromises: Promise<any>[] = [];
     const imageUrls = [tour.mainImage, ...tour.galleryImages];
     
@@ -65,7 +71,7 @@ export class FirestoreTourRepository implements TourRepository {
         if (url) {
             const filePath = this.getFilePathFromUrl(url);
             if (filePath) {
-                const file = this.storage.bucket().file(filePath);
+                const file = bucket.file(filePath);
                 imageDeletionPromises.push(file.delete().catch(err => console.error(`Failed to delete image ${filePath}:`, err)));
             }
         }

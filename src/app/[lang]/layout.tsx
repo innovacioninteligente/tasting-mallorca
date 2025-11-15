@@ -5,7 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Poppins } from 'next/font/google';
 import { getDictionary } from '@/dictionaries/get-dictionary';
 import { Locale } from '@/dictionaries/config';
-import { FirebaseProvider } from '@/firebase/provider';
+import { FirebaseClientProvider } from '@/firebase/client-provider';
 import { MainLayout } from '@/components/main-layout';
 import { Metadata } from 'next';
 import { Footer } from '@/components/footer';
@@ -72,7 +72,7 @@ export default async function RootLayout({
   return (
     <html lang={lang} className={`${poppins.variable}`} suppressHydrationWarning>
       <body className="font-body antialiased bg-background text-foreground">
-        <FirebaseProvider>
+        <FirebaseClientProvider>
           <div className="flex flex-col min-h-screen">
             <MainLayout 
               dictionary={dictionary} 
@@ -83,7 +83,7 @@ export default async function RootLayout({
             </MainLayout>
           </div>
           <Toaster />
-        </FirebaseProvider>
+        </FirebaseClientProvider>
       </body>
     </html>
   );
