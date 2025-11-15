@@ -3,7 +3,7 @@
 
 import { UploadCloud, X } from 'lucide-react';
 import Image from 'next/image';
-import { useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -13,7 +13,7 @@ interface ImageUploadProps {
   onRemove: (file: any) => void;
   value: (File | string)[];
   multiple?: boolean;
-  onServerImageDelete?: (imageUrl: string) => void; // New prop
+  onServerImageDelete?: (imageUrl: string) => void; 
 }
 
 export function ImageUpload({
@@ -24,13 +24,30 @@ export function ImageUpload({
   onServerImageDelete
 }: ImageUploadProps) {
   
+  const [internalValue, setInternalValue] = useState(value);
+
+  useEffect(() => {
+    // This effect synchronizes the internal state with the prop from the parent form.
+    // If the prop `value` becomes undefined, null, or an empty array, it resets the internal state.
+    if (!value || (Array.isArray(value) && value.length === 0)) {
+      setInternalValue([]);
+    } else if (Array.isArray(value)) {
+      setInternalValue(value);
+    } else {
+      setInternalValue([value]);
+    }
+  }, [value]);
+
+
   const onDrop = useCallback((acceptedFiles: File[]) => {
+    const newFiles = multiple ? [...internalValue, ...acceptedFiles] : acceptedFiles;
+    setInternalValue(newFiles);
     if (multiple) {
-        onChange([...value, ...acceptedFiles]);
+        onChange(newFiles);
     } else {
         onChange(acceptedFiles[0]);
     }
-  }, [onChange, multiple, value]);
+  }, [onChange, multiple, internalValue]);
 
   const handleRemove = (file: File | string, e: React.MouseEvent) => {
     e.stopPropagation();
@@ -39,6 +56,8 @@ export function ImageUpload({
         onServerImageDelete(file);
     } else {
         // This is a local file object
+        const newValue = internalValue.filter(item => item !== file);
+        setInternalValue(newValue);
         onRemove(file);
     }
   };
@@ -61,13 +80,17 @@ export function ImageUpload({
     return URL.createObjectURL(file);
   }
 
+  const filesToDisplay = Array.isArray(internalValue) ? internalValue : (internalValue ? [internalValue] : []);
+
+
   return (
     <div>
       <div
         {...getRootProps()}
         className={cn(
           'relative flex cursor-pointer flex-col items-center justify-center gap-2 rounded-md border-2 border-dashed border-muted-foreground/30 bg-secondary/50 p-8 text-center text-muted-foreground transition-colors hover:border-primary/50 hover:bg-secondary',
-          isDragActive && 'border-primary bg-primary/10'
+          isDragActive && 'border-primary bg-primary/10',
+          (filesToDisplay.length > 0 && !multiple) && 'hidden' // Hide dropzone if not multiple and has a file
         )}
       >
         <input {...getInputProps()} />
@@ -82,9 +105,12 @@ export function ImageUpload({
         </p>
       </div>
 
-      {value && value.length > 0 && (
-        <div className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-          {value.map((file, i) => {
+      {filesToDisplay && filesToDisplay.length > 0 && (
+        <div className={cn(
+            "mt-4 grid gap-4",
+            multiple ? "grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5" : "max-w-xs"
+        )}>
+          {filesToDisplay.map((file, i) => {
             if (!file) return null;
             const previewUrl = getPreviewUrl(file);
             return (
@@ -119,5 +145,3 @@ export function ImageUpload({
     </div>
   );
 }
-
-    
