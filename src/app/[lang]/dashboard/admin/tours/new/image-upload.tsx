@@ -46,6 +46,7 @@ export function ImageUpload({
   });
 
   const getPreviewUrl = (file: File | string) => {
+    if (!file) return ''; // <-- Correction: Handle null/undefined case
     if (typeof file === 'string') {
       return file;
     }
@@ -76,6 +77,7 @@ export function ImageUpload({
       {value && value.length > 0 && (
         <div className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
           {value.map((file, i) => {
+            if (!file) return null; // <-- Correction: Don't render if file is null
             const previewUrl = getPreviewUrl(file);
             return (
               <div key={i} className="relative aspect-square overflow-hidden rounded-md">
