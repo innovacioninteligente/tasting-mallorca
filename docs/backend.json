@@ -233,7 +233,8 @@
             "region": { "type": "string", "enum": ["North", "East", "South", "West", "Central"] },
             "googleMapsUrl": { "type": "string", "format": "uri" },
             "latitude": { "type": "number" },
-            "longitude": { "type": "number" }
+            "longitude": { "type": "number" },
+            "time": { "type": "string", "description": "The pickup time at this meeting point." }
         },
         "required": ["name", "region", "latitude", "longitude"]
     },

@@ -21,6 +21,7 @@ const meetingPointSchemaForValidation = z.object({
   region: z.enum(["North", "East", "South", "West", "Central"]),
   address: z.string().optional(),
   googleMapsUrl: z.string().url(),
+  time: z.string().optional(),
 });
 
 const regionTranslationMap: { [key: string]: MeetingPointRegion } = {
@@ -97,6 +98,7 @@ export const importMeetingPointsFromCsv = createSafeAction(
             address: validatedData.address ?? '',
             region: validatedData.region,
             googleMapsUrl: validatedData.googleMapsUrl,
+            time: validatedData.time,
             latitude,
             longitude,
         };

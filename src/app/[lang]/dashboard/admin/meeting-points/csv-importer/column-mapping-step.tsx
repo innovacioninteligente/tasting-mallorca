@@ -24,6 +24,7 @@ const meetingPointFields = [
     { value: 'address', label: 'Dirección' },
     { value: 'region', label: 'Región' },
     { value: 'googleMapsUrl', label: 'URL de Google Maps' },
+    { value: 'time', label: 'Hora' },
 ];
 
 export function ColumnMappingStep({ file, headers, data, onBack, setSheetOpen }: ColumnMappingStepProps) {

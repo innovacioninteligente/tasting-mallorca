@@ -15,6 +15,7 @@ const meetingPointSchema = z.object({
   address: z.string().min(1, 'Address is required').optional(),
   region: z.enum(["North", "East", "South", "West", "Central"]).optional(),
   googleMapsUrl: z.string().url('Must be a valid URL').optional(),
+  time: z.string().optional(),
 });
 
 type UpdateMeetingPointInput = Partial<Omit<MeetingPoint, 'id' | 'latitude' | 'longitude'>> & { id: string };
@@ -48,5 +49,3 @@ export const updateMeetingPoint = createSafeAction(
     }
   }
 );
-
-    

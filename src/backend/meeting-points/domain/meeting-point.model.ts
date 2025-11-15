@@ -9,6 +9,5 @@ export interface MeetingPoint {
   googleMapsUrl: string;
   latitude: number;
   longitude: number;
+  time?: string;
 }
-
-    

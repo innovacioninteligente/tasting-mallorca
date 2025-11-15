@@ -66,6 +66,7 @@ export function MeetingPointList({ meetingPoints, error, onEdit }: MeetingPointL
                 <TableRow>
                     <TableHead>Nombre</TableHead>
                     <TableHead>Región</TableHead>
+                    <TableHead>Hora</TableHead>
                     <TableHead>Estado de Coordenadas</TableHead>
                     <TableHead>Enlace a Maps</TableHead>
                     <TableHead>Acciones</TableHead>
@@ -76,6 +77,7 @@ export function MeetingPointList({ meetingPoints, error, onEdit }: MeetingPointL
                     <TableRow key={point.id}>
                         <TableCell className="font-medium">{point.name}</TableCell>
                         <TableCell>{point.region}</TableCell>
+                        <TableCell>{point.time || '-'}</TableCell>
                         <TableCell>
                             {point.latitude && point.longitude ? (
                                 <Badge variant="outline" className="text-green-600 border-green-300">

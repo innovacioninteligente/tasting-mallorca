@@ -13,6 +13,7 @@ const meetingPointSchema = z.object({
   address: z.string().min(1, 'Address is required'),
   region: z.enum(["North", "East", "South", "West", "Central"]),
   googleMapsUrl: z.string().url('Must be a valid URL'),
+  time: z.string().optional(),
 });
 
 type CreateMeetingPointInput = Omit<MeetingPoint, 'id' | 'latitude' | 'longitude'>;
@@ -44,5 +45,3 @@ export const createMeetingPoint = createSafeAction(
     }
   }
 );
-
-    

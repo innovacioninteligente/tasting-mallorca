@@ -24,6 +24,7 @@ const formSchema = z.object({
       required_error: "La región es requerida"
   }),
   googleMapsUrl: z.string().url('Debe ser una URL de Google Maps válida'),
+  time: z.string().optional(),
   latitude: z.coerce.number().optional(),
   longitude: z.coerce.number().optional(),
 });
@@ -48,6 +49,7 @@ export function MeetingPointForm({ setSheetOpen, initialData }: MeetingPointForm
             address: '',
             region: 'South',
             googleMapsUrl: '',
+            time: '',
             latitude: undefined,
             longitude: undefined,
         }
@@ -63,6 +65,7 @@ export function MeetingPointForm({ setSheetOpen, initialData }: MeetingPointForm
                 address: '',
                 region: 'South',
                 googleMapsUrl: '',
+                time: '',
                 latitude: undefined,
                 longitude: undefined,
             });
@@ -176,28 +179,44 @@ export function MeetingPointForm({ setSheetOpen, initialData }: MeetingPointForm
                     />
                 </div>
 
-                <FormField
-                    control={form.control}
-                    name="region"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Región</FormLabel>
-                            <Select onValueChange={field.onChange} value={field.value}>
+                <div className="grid grid-cols-2 gap-4">
+                    <FormField
+                        control={form.control}
+                        name="region"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Región</FormLabel>
+                                <Select onValueChange={field.onChange} value={field.value}>
+                                    <FormControl>
+                                        <SelectTrigger><SelectValue placeholder="Selecciona una región" /></SelectTrigger>
+                                    </FormControl>
+                                    <SelectContent>
+                                        <SelectItem value="North">Norte</SelectItem>
+                                        <SelectItem value="East">Este</SelectItem>
+                                        <SelectItem value="South">Sur</SelectItem>
+                                        <SelectItem value="West">Oeste</SelectItem>
+                                        <SelectItem value="Central">Centro</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="time"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Hora</FormLabel>
                                 <FormControl>
-                                    <SelectTrigger><SelectValue placeholder="Selecciona una región" /></SelectTrigger>
+                                    <Input placeholder="e.g., 08:30" {...field} />
                                 </FormControl>
-                                <SelectContent>
-                                    <SelectItem value="North">Norte</SelectItem>
-                                    <SelectItem value="East">Este</SelectItem>
-                                    <SelectItem value="South">Sur</SelectItem>
-                                    <SelectItem value="West">Oeste</SelectItem>
-                                    <SelectItem value="Central">Centro</SelectItem>
-                                </SelectContent>
-                            </Select>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                </div>
+
 
                 <div className="pt-4 flex justify-end">
                     <Button type="submit" disabled={isSubmitting}>
