@@ -126,7 +126,7 @@ const baseTourSchema = z.object({
   durationHours: z.coerce.number().min(1, "Duration must be at least 1 hour."),
   isFeatured: z.boolean().default(false),
   published: z.boolean().default(false),
-  mainImage: z.any().refine(val => val, "Main image is required."),
+  mainImage: z.any(),
   galleryImages: z.any().optional(),
   allowDeposit: z.boolean().default(false),
   depositPrice: z.coerce.number().optional(),
@@ -134,23 +134,29 @@ const baseTourSchema = z.object({
   itinerary: z.array(itineraryItemSchema).optional(),
 });
 
-export const CreateTourInputSchema = baseTourSchema.refine(data => {
+export const CreateTourInputSchema = baseTourSchema
+  .refine(data => data.mainImage, {
+    message: "Main image is required.",
+    path: ["mainImage"],
+  })
+  .refine(data => {
     if (data.allowDeposit) {
         return data.depositPrice !== undefined && data.depositPrice > 0;
     }
     return true;
-}, {
-    message: "Deposit price is required if deposits are allowed.",
-    path: ["depositPrice"],
-}).refine(data => {
-    if (data.allowDeposit && data.depositPrice) {
-        return data.depositPrice < data.price;
-    }
-    return true;
-}, {
-    message: "Deposit cannot be greater than or equal to the total price.",
-    path: ["depositPrice"],
-});
+  }, {
+      message: "Deposit price is required if deposits are allowed.",
+      path: ["depositPrice"],
+  })
+  .refine(data => {
+      if (data.allowDeposit && data.depositPrice) {
+          return data.depositPrice < data.price;
+      }
+      return true;
+  }, {
+      message: "Deposit cannot be greater than or equal to the total price.",
+      path: ["depositPrice"],
+  });
 
 export const UpdateTourInputSchema = baseTourSchema.partial().extend({ id: z.string() });
 
