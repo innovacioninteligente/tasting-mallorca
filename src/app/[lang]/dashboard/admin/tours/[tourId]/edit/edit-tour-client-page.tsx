@@ -1,13 +1,12 @@
 
 'use client';
 
-import { TourForm } from "@/app/[lang]/dashboard/admin/tours/new/tour-form";
+import { TourForm, getFieldTab } from "@/app/[lang]/dashboard/admin/tours/new/tour-form";
 import { useForm, FormProvider, FieldErrors } from "react-hook-form";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { TourFormHeader } from "@/app/./[lang]/dashboard/admin/tours/new/tour-form-header";
 import { useState } from "react";
-import { Tour, CreateTourInputSchema } from "@/backend/tours/domain/tour.model";
+import { Tour, CreateTourInputSchema, CreateTourInput } from "@/backend/tours/domain/tour.model";
 import { parseISO } from 'date-fns';
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
@@ -33,7 +32,7 @@ import { deleteTourImage } from "@/app/server-actions/tours/deleteTourImage";
 import { Loader2 } from "lucide-react";
 
 
-type TourFormValues = z.infer<typeof CreateTourInputSchema>;
+type TourFormValues = CreateTourInput;
 
 interface EditTourClientPageProps {
     initialData: Tour;
@@ -42,21 +41,22 @@ interface EditTourClientPageProps {
 
 const defaultMultilingual = { en: '', de: '', fr: '', nl: '' };
 
-// Helper to find the first error message from the nested errors object
-function getFirstErrorMessage(errors: FieldErrors): string {
+function getFirstErrorMessage(errors: FieldErrors): { message: string, path: string } | null {
     for (const key in errors) {
         if (Object.prototype.hasOwnProperty.call(errors, key)) {
-            const error = errors[key];
+            const error = errors[key as keyof FieldErrors] as any;
             if (error?.message) {
-                return error.message as string;
+                return { message: error.message, path: key };
             }
-            if (typeof error === 'object') {
-                const nestedMessage = getFirstErrorMessage(error as FieldErrors);
-                if (nestedMessage) return nestedMessage;
+            if (typeof error === 'object' && !Array.isArray(error)) {
+                const nested = getFirstErrorMessage(error);
+                if (nested) {
+                    return { message: nested.message, path: `${key}.${nested.path}` };
+                }
             }
         }
     }
-    return "Please check all fields for errors.";
+    return null;
 }
 
 export function EditTourClientPage({ initialData, lang }: EditTourClientPageProps) {
@@ -66,6 +66,8 @@ export function EditTourClientPage({ initialData, lang }: EditTourClientPageProp
     const [isTranslating, setIsTranslating] = useState(false);
     const [uploadProgress, setUploadProgress] = useState(0);
     const [uploadMessage, setUploadMessage] = useState('Starting...');
+    const [activeTab, setActiveTab] = useState('main');
+    const [errorTab, setErrorTab] = useState<string | null>(null);
 
     const [isDeleteAlertOpen, setIsDeleteAlertOpen] = useState(false);
     const [imageToDelete, setImageToDelete] = useState<string | null>(null);
@@ -92,7 +94,7 @@ export function EditTourClientPage({ initialData, lang }: EditTourClientPageProp
         })) || []
     };
     
-    const defaultValues = {
+    const defaultValues: TourFormValues = {
         id: initialData.id || '',
         title: { ...defaultMultilingual },
         slug: { ...defaultMultilingual },
@@ -169,13 +171,21 @@ export function EditTourClientPage({ initialData, lang }: EditTourClientPageProp
       });
     };
 
-    const handleInvalidSubmit = (errors: FieldErrors) => {
-        const firstErrorMessage = getFirstErrorMessage(errors);
-        toast({
-            variant: "destructive",
-            title: "Validation Error",
-            description: firstErrorMessage,
-        });
+    const handleInvalidSubmit = (errors: FieldErrors<TourFormValues>) => {
+        const errorDetails = getFirstErrorMessage(errors);
+        if (errorDetails) {
+            toast({
+                variant: "destructive",
+                title: "Validation Error",
+                description: `Field '${errorDetails.path}' is invalid: ${errorDetails.message}`,
+            });
+            const tabWithError = getFieldTab(errorDetails.path);
+            if (tabWithError) {
+                setActiveTab(tabWithError);
+                setErrorTab(tabWithError);
+                setTimeout(() => setErrorTab(null), 500); 
+            }
+        }
     }
 
     const onSubmit = async (data: TourFormValues) => {
@@ -360,6 +370,9 @@ export function EditTourClientPage({ initialData, lang }: EditTourClientPageProp
                    <TourForm
                      initialData={initialData}
                      onServerImageDelete={handleServerImageDelete}
+                     activeTab={activeTab}
+                     onTabChange={setActiveTab}
+                     errorTab={errorTab}
                     />
                 </main>
             </FormProvider>

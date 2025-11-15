@@ -1,5 +1,4 @@
 
-
 import { z } from 'zod';
 
 export interface BlogPost {
@@ -17,7 +16,7 @@ export interface BlogPost {
 
 
 const multilingualStringSchema = z.object({
-    en: z.string().min(1, { message: "El texto en inglés es requerido." }),
+    en: z.string().min(1, { message: "English text is required." }),
     de: z.string().optional(),
     fr: z.string().optional(),
     nl: z.string().optional(),
@@ -29,11 +28,12 @@ export const CreateBlogPostInputSchema = z.object({
   slug: multilingualStringSchema,
   summary: multilingualStringSchema,
   content: multilingualStringSchema,
-  author: z.string().min(1, "El autor es requerido."),
+  author: z.string().min(1, "Author is required."),
   isFeatured: z.boolean().default(false),
   published: z.boolean().default(false),
-  mainImage: z.any().refine(val => val, "La imagen principal es requerida."),
-  publishedAt: z.date({ required_error: "La fecha de publicación es requerida." }),
+  mainImage: z.any().refine(val => val, "Main image is required."),
+  publishedAt: z.date({ required_error: "Publication date is required." }),
 });
 
 export type CreateBlogPostInput = z.infer<typeof CreateBlogPostInputSchema>;
+export const UpdateBlogPostInputSchema = CreateBlogPostInputSchema.partial().extend({ id: z.string() });

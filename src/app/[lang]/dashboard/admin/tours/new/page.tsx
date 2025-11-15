@@ -2,9 +2,8 @@
 'use client';
 
 import { AdminRouteGuard } from "@/components/auth/admin-route-guard";
-import { TourForm } from "./tour-form";
+import { TourForm, getFieldTab } from "./tour-form";
 import { useForm, FormProvider, FieldErrors } from "react-hook-form";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { TourFormHeader } from "./tour-form-header";
 import { useState } from "react";
@@ -20,25 +19,26 @@ import { translateTourAction } from "@/app/server-actions/tours/translateTourAct
 import { TranslateTourInput, TranslateTourOutput } from "@/ai/flows/translate-tour-flow";
 import { CreateTourInput, CreateTourInputSchema } from "@/backend/tours/domain/tour.model";
 
-type TourFormValues = z.infer<typeof CreateTourInputSchema>;
+type TourFormValues = CreateTourInput;
 
 const defaultMultilingual = { en: '', de: '', fr: '', nl: '' };
 
-// Helper to find the first error message from the nested errors object
-function getFirstErrorMessage(errors: FieldErrors): string {
+function getFirstErrorMessage(errors: FieldErrors): { message: string, path: string } | null {
     for (const key in errors) {
         if (Object.prototype.hasOwnProperty.call(errors, key)) {
-            const error = errors[key];
+            const error = errors[key as keyof FieldErrors] as any;
             if (error?.message) {
-                return error.message as string;
+                return { message: error.message, path: key };
             }
-            if (typeof error === 'object') {
-                const nestedMessage = getFirstErrorMessage(error as FieldErrors);
-                if (nestedMessage) return nestedMessage;
+            if (typeof error === 'object' && !Array.isArray(error)) {
+                const nested = getFirstErrorMessage(error);
+                if (nested) {
+                    return { message: nested.message, path: `${key}.${nested.path}` };
+                }
             }
         }
     }
-    return "Please check all fields for errors.";
+    return null;
 }
 
 
@@ -50,7 +50,7 @@ export default function NewTourPage() {
 
     const formPersistenceKey = 'tour-form-new';
 
-    const defaultValues: Omit<TourFormValues, 'id'> = {
+    const defaultValues: TourFormValues = {
         title: { ...defaultMultilingual },
         slug: { ...defaultMultilingual },
         description: { ...defaultMultilingual },
@@ -99,6 +99,9 @@ export default function NewTourPage() {
     const [isTranslating, setIsTranslating] = useState(false);
     const [uploadProgress, setUploadProgress] = useState(0);
     const [uploadMessage, setUploadMessage] = useState('Starting...');
+    const [activeTab, setActiveTab] = useState('main');
+    const [errorTab, setErrorTab] = useState<string | null>(null);
+
     const basePath = `/${lang}/dashboard/admin/tours`;
 
     const uploadFile = (file: File, tourId: string): Promise<string> => {
@@ -126,14 +129,22 @@ export default function NewTourPage() {
         });
     };
 
-    const handleInvalidSubmit = (errors: FieldErrors) => {
-        const firstErrorMessage = getFirstErrorMessage(errors);
-        toast({
-            variant: "destructive",
-            title: "Validation Error",
-            description: firstErrorMessage,
-        });
-    }
+    const handleInvalidSubmit = (errors: FieldErrors<TourFormValues>) => {
+        const errorDetails = getFirstErrorMessage(errors);
+        if (errorDetails) {
+            toast({
+                variant: "destructive",
+                title: "Validation Error",
+                description: `Field '${errorDetails.path}' is invalid: ${errorDetails.message}`,
+            });
+            const tabWithError = getFieldTab(errorDetails.path);
+            if (tabWithError) {
+                setActiveTab(tabWithError);
+                setErrorTab(tabWithError);
+                setTimeout(() => setErrorTab(null), 500); 
+            }
+        }
+    };
 
     const onSubmit = async (data: TourFormValues) => {
         setIsSubmitting(true);
@@ -285,7 +296,11 @@ export default function NewTourPage() {
                         onSubmit={form.handleSubmit(onSubmit, handleInvalidSubmit)} 
                     />
                     <main className="flex-grow overflow-y-scroll px-4 pt-4 md:px-8 lg:px-10">
-                       <TourForm />
+                       <TourForm
+                         activeTab={activeTab}
+                         onTabChange={setActiveTab}
+                         errorTab={errorTab}
+                       />
                     </main>
                 </FormProvider>
             </div>

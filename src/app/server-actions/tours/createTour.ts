@@ -1,14 +1,14 @@
 
 'use server';
 
-import { createSafeAction } from '@/app/server-actions/lib/safe-action';
+import { createSafeAction } from '@/app-server-actions/lib/safe-action';
 import { createTour as createTourUseCase } from '@/backend/tours/application/createTour';
 import { FirestoreTourRepository } from '@/backend/tours/infrastructure/firestore-tour.repository';
-import { Tour, type CreateTourInput } from '@/backend/tours/domain/tour.model';
+import { Tour, CreateTourInput } from '@/backend/tours/domain/tour.model';
 import { z } from 'zod';
 
 const multilingualStringSchema = z.object({
-    en: z.string().min(1, { message: "El texto en inglés es requerido." }),
+    en: z.string().min(1, { message: "English text is required." }),
     de: z.string().optional(),
     fr: z.string().optional(),
     nl: z.string().optional(),
@@ -40,7 +40,7 @@ const itineraryItemSchema = z.object({
     id: z.string(),
     type: z.enum(["stop", "travel"]),
     icon: z.string(),
-    duration: z.string().min(1, "La duración es requerida."),
+    duration: z.string().min(1, "Duration is required."),
     title: multilingualStringSchema,
     activities: z.object({
         en: z.array(z.string()).optional(),
@@ -64,13 +64,13 @@ const actionInputSchema = z.object({
   }),
   details: detailsSchema,
   pickupPoint: pickupPointSchema,
-  price: z.coerce.number().min(0, "El precio debe ser un número positivo."),
+  price: z.coerce.number().min(0, "Price must be a positive number."),
   childPrice: z.coerce.number().optional(),
   region: z.enum(["North", "East", "South", "West", "Central"]),
-  durationHours: z.coerce.number().min(1, "La duración debe ser al menos 1 hora."),
+  durationHours: z.coerce.number().min(1, "Duration must be at least 1 hour."),
   isFeatured: z.boolean().default(false),
   published: z.boolean().default(false),
-  mainImage: z.any().refine(val => val, "La imagen principal es requerida."),
+  mainImage: z.any().refine(val => val, "Main image is required."),
   galleryImages: z.any().optional(),
   allowDeposit: z.boolean().default(false),
   depositPrice: z.coerce.number().optional(),
@@ -86,7 +86,7 @@ const actionInputSchema = z.object({
     }
     return true;
 }, {
-    message: "El precio del depósito es requerido si se permiten depósitos.",
+    message: "Deposit price is required if deposits are allowed.",
     path: ["depositPrice"],
 }).refine(data => {
     if (data.allowDeposit && data.depositPrice) {
@@ -94,7 +94,7 @@ const actionInputSchema = z.object({
     }
     return true;
 }, {
-    message: "El depósito no puede ser mayor o igual al precio total.",
+    message: "Deposit cannot be greater than or equal to the total price.",
     path: ["depositPrice"],
 });
 

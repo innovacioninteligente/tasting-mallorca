@@ -4,12 +4,11 @@
 import { createSafeAction } from '@/app/server-actions/lib/safe-action';
 import { createBlogPost as createBlogPostUseCase } from '@/backend/blog/application/createBlogPost';
 import { FirestoreBlogRepository } from '@/backend/blog/infrastructure/firestore-blog.repository';
-import { BlogPost, CreateBlogPostInputSchema, type CreateBlogPostInput } from '@/backend/blog/domain/blog.model';
+import { BlogPost, CreateBlogPostInput } from '@/backend/blog/domain/blog.model';
 
 export const createBlogPost = createSafeAction(
   {
     allowedRoles: ['admin'],
-    inputSchema: CreateBlogPostInputSchema,
   },
   async (
     postData: CreateBlogPostInput

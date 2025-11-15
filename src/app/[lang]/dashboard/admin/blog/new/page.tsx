@@ -3,7 +3,6 @@
 
 import { AdminRouteGuard } from "@/components/auth/admin-route-guard";
 import { useForm, FormProvider, FieldErrors } from "react-hook-form";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
@@ -14,49 +13,31 @@ import { useFormPersistence } from "@/hooks/use-form-persistence";
 import { UploadProgressDialog } from "@/components/upload-progress-dialog";
 import { cloneDeep, mergeWith } from "lodash";
 import { BlogFormHeader } from "../blog-form-header";
-import { BlogForm } from "../blog-form";
+import { BlogForm, getFieldTab } from "../blog-form";
 import { createBlogPost } from "@/app/server-actions/blog/createBlogPost";
 import { translateBlogPostAction, TranslateBlogPostInput } from "@/app/server-actions/blog/translateBlogPostAction";
+import { CreateBlogPostInput, CreateBlogPostInputSchema } from "@/backend/blog/domain/blog.model";
 
-const multilingualStringSchema = z.object({
-    en: z.string().min(1, { message: "El texto en inglés es requerido." }),
-    de: z.string().optional(),
-    fr: z.string().optional(),
-    nl: z.string().optional(),
-});
-
-const formSchema = z.object({
-  id: z.string().optional(),
-  title: multilingualStringSchema,
-  slug: multilingualStringSchema,
-  summary: multilingualStringSchema,
-  content: multilingualStringSchema,
-  author: z.string().min(1, "El autor es requerido."),
-  isFeatured: z.boolean().default(false),
-  published: z.boolean().default(false),
-  mainImage: z.any().refine(val => val, "La imagen principal es requerida."),
-  publishedAt: z.date({ required_error: "La fecha de publicación es requerida." }),
-});
-
-type BlogFormValues = z.infer<typeof formSchema>;
+type BlogFormValues = CreateBlogPostInput;
 
 const defaultMultilingual = { en: '', de: '', fr: '', nl: '' };
 
-// Helper to find the first error message from the nested errors object
-function getFirstErrorMessage(errors: FieldErrors): string {
+function getFirstErrorMessage(errors: FieldErrors): { message: string, path: string } | null {
     for (const key in errors) {
         if (Object.prototype.hasOwnProperty.call(errors, key)) {
-            const error = errors[key];
+            const error = errors[key as keyof FieldErrors] as any;
             if (error?.message) {
-                return error.message as string;
+                return { message: error.message, path: key };
             }
-            if (typeof error === 'object') {
-                const nestedMessage = getFirstErrorMessage(error as FieldErrors);
-                if (nestedMessage) return nestedMessage;
+            if (typeof error === 'object' && !Array.isArray(error)) {
+                const nested = getFirstErrorMessage(error);
+                if (nested) {
+                    return { message: nested.message, path: `${key}.${nested.path}` };
+                }
             }
         }
     }
-    return "Please check all fields for errors.";
+    return null;
 }
 
 export default function NewBlogPostPage() {
@@ -69,6 +50,8 @@ export default function NewBlogPostPage() {
     const [isTranslating, setIsTranslating] = useState(false);
     const [uploadProgress, setUploadProgress] = useState(0);
     const [uploadMessage, setUploadMessage] = useState('Starting...');
+    const [activeTab, setActiveTab] = useState('main');
+    const [errorTab, setErrorTab] = useState<string | null>(null);
 
     const formPersistenceKey = 'blog-form-new';
     
@@ -85,7 +68,7 @@ export default function NewBlogPostPage() {
     };
 
     const form = useForm<BlogFormValues>({
-        resolver: zodResolver(formSchema),
+        resolver: zodResolver(CreateBlogPostInputSchema),
         defaultValues: defaultValues,
     });
 
@@ -108,14 +91,22 @@ export default function NewBlogPostPage() {
       });
     };
 
-    const handleInvalidSubmit = (errors: FieldErrors) => {
-        const firstErrorMessage = getFirstErrorMessage(errors);
-        toast({
-            variant: "destructive",
-            title: "Validation Error",
-            description: firstErrorMessage,
-        });
-    }
+    const handleInvalidSubmit = (errors: FieldErrors<BlogFormValues>) => {
+        const errorDetails = getFirstErrorMessage(errors);
+        if (errorDetails) {
+            toast({
+                variant: "destructive",
+                title: "Validation Error",
+                description: `Field '${errorDetails.path}' is invalid: ${errorDetails.message}`,
+            });
+            const tabWithError = getFieldTab(errorDetails.path);
+            if (tabWithError) {
+                setActiveTab(tabWithError);
+                setErrorTab(tabWithError);
+                setTimeout(() => setErrorTab(null), 500); 
+            }
+        }
+    };
 
     const onSubmit = async (data: BlogFormValues) => {
         setIsSubmitting(true);
@@ -217,7 +208,11 @@ export default function NewBlogPostPage() {
                         onSubmit={form.handleSubmit(onSubmit, handleInvalidSubmit)}
                     />
                     <main className="flex-grow overflow-y-scroll px-4 pt-4 md:px-8 lg:px-10">
-                       <BlogForm />
+                       <BlogForm
+                         activeTab={activeTab}
+                         onTabChange={setActiveTab}
+                         errorTab={errorTab}
+                       />
                     </main>
                 </FormProvider>
             </div>

@@ -1,5 +1,4 @@
 
-
 import { z } from 'zod';
 
 export type ItineraryItem = {
@@ -58,9 +57,8 @@ export interface Tour {
   published: boolean;
 }
 
-// Zod schema for input validation in server actions
 const multilingualStringSchema = z.object({
-    en: z.string().min(1, { message: "El texto en inglés es requerido." }),
+    en: z.string().min(1, { message: "English text is required." }),
     de: z.string().optional(),
     fr: z.string().optional(),
     nl: z.string().optional(),
@@ -98,7 +96,7 @@ const itineraryItemSchema = z.object({
     id: z.string(),
     type: z.enum(["stop", "travel"]),
     icon: z.string(),
-    duration: z.string().min(1, "La duración es requerida."),
+    duration: z.string().min(1, "Duration is required."),
     title: multilingualStringSchema,
     activities: z.object({
         en: z.array(z.string()).optional(),
@@ -108,8 +106,6 @@ const itineraryItemSchema = z.object({
     }),
 });
 
-// This type is used by the form, which can handle Files and Dates.
-// The server actions will have their own schemas for serialized data.
 export const CreateTourInputSchema = z.object({
   id: z.string().optional(),
   title: multilingualStringSchema,
@@ -124,17 +120,17 @@ export const CreateTourInputSchema = z.object({
   }),
   details: detailsSchema,
   pickupPoint: pickupPointSchema,
-  price: z.coerce.number().min(0, "El precio debe ser un número positivo."),
+  price: z.coerce.number().min(0, "Price must be a positive number."),
   childPrice: z.coerce.number().optional(),
   region: z.enum(["North", "East", "South", "West", "Central"]),
-  durationHours: z.coerce.number().min(1, "La duración debe ser al menos 1 hora."),
+  durationHours: z.coerce.number().min(1, "Duration must be at least 1 hour."),
   isFeatured: z.boolean().default(false),
   published: z.boolean().default(false),
-  mainImage: z.any().refine(val => val, "La imagen principal es requerida."),
+  mainImage: z.any().refine(val => val, "Main image is required."),
   galleryImages: z.any().optional(),
   allowDeposit: z.boolean().default(false),
   depositPrice: z.coerce.number().optional(),
-  availabilityPeriods: z.array(availabilityPeriodSchema).optional(),
+  availabilityPeriods: z.array(availabilityPeriodSchema).min(1, "At least one availability period is required.").optional(),
   itinerary: z.array(itineraryItemSchema).optional(),
 }).refine(data => {
     if (data.allowDeposit) {
@@ -142,7 +138,7 @@ export const CreateTourInputSchema = z.object({
     }
     return true;
 }, {
-    message: "El precio del depósito es requerido si se permiten depósitos.",
+    message: "Deposit price is required if deposits are allowed.",
     path: ["depositPrice"],
 }).refine(data => {
     if (data.allowDeposit && data.depositPrice) {
@@ -150,8 +146,9 @@ export const CreateTourInputSchema = z.object({
     }
     return true;
 }, {
-    message: "El depósito no puede ser mayor o igual al precio total.",
+    message: "Deposit cannot be greater than or equal to the total price.",
     path: ["depositPrice"],
 });
 
 export type CreateTourInput = z.infer<typeof CreateTourInputSchema>;
+export const UpdateTourInputSchema = CreateTourInputSchema.partial().extend({ id: z.string() });
