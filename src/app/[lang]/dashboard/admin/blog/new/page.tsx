@@ -2,7 +2,7 @@
 'use client';
 
 import { AdminRouteGuard } from "@/components/auth/admin-route-guard";
-import { useForm, FormProvider } from "react-hook-form";
+import { useForm, FormProvider, FieldErrors } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
@@ -41,6 +41,23 @@ const formSchema = z.object({
 type BlogFormValues = z.infer<typeof formSchema>;
 
 const defaultMultilingual = { en: '', de: '', fr: '', nl: '' };
+
+// Helper to find the first error message from the nested errors object
+function getFirstErrorMessage(errors: FieldErrors): string {
+    for (const key in errors) {
+        if (Object.prototype.hasOwnProperty.call(errors, key)) {
+            const error = errors[key];
+            if (error?.message) {
+                return error.message as string;
+            }
+            if (typeof error === 'object') {
+                const nestedMessage = getFirstErrorMessage(error as FieldErrors);
+                if (nestedMessage) return nestedMessage;
+            }
+        }
+    }
+    return "Please check all fields for errors.";
+}
 
 export default function NewBlogPostPage() {
     const pathname = usePathname();
@@ -91,11 +108,12 @@ export default function NewBlogPostPage() {
       });
     };
 
-    const handleInvalidSubmit = () => {
+    const handleInvalidSubmit = (errors: FieldErrors) => {
+        const firstErrorMessage = getFirstErrorMessage(errors);
         toast({
             variant: "destructive",
             title: "Validation Error",
-            description: "Please review all tabs for required fields and correct any errors.",
+            description: firstErrorMessage,
         });
     }
 
