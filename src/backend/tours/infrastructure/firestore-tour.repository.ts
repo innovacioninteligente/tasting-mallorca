@@ -1,3 +1,4 @@
+
 import { getFirestore } from 'firebase-admin/firestore';
 import { getStorage } from 'firebase-admin/storage';
 import { Tour } from '../domain/tour.model';
@@ -63,7 +64,7 @@ export class FirestoreTourRepository implements TourRepository {
         if (url) {
             const filePath = this.getFilePathFromUrl(url);
             if (filePath) {
-                const file = this.storage.bucket(process.env.FIREBASE_STORAGE_BUCKET).file(filePath);
+                const file = this.storage.bucket().file(filePath);
                 imageDeletionPromises.push(file.delete().catch(err => console.error(`Failed to delete image ${filePath}:`, err)));
             }
         }

@@ -5,6 +5,11 @@ const createFirebaseAdminApp = () => {
   if (getApps().length > 0) {
     return getApp();
   }
+  
+  const storageBucket = process.env.FIREBASE_STORAGE_BUCKET;
+  if (!storageBucket) {
+      throw new Error('FIREBASE_STORAGE_BUCKET environment variable is not set.');
+  }
 
   // Vercel/Production environment: Use Base64 encoded service account
   if (process.env.FIREBASE_SERVICE_ACCOUNT_BASE64) {
@@ -13,7 +18,8 @@ const createFirebaseAdminApp = () => {
       const serviceAccountJson = JSON.parse(decodedServiceAccount);
       
       return initializeApp({
-        credential: cert(serviceAccountJson)
+        credential: cert(serviceAccountJson),
+        storageBucket: storageBucket,
       });
     } catch (error: any) {
         console.error('Error parsing Base64 Firebase credentials:', error);
@@ -40,7 +46,8 @@ const createFirebaseAdminApp = () => {
 
   try {
     return initializeApp({
-      credential: cert(serviceAccount)
+      credential: cert(serviceAccount),
+      storageBucket: storageBucket,
     });
   } catch (error: any) {
     console.error('Firebase Admin SDK initialization failed:', error);
