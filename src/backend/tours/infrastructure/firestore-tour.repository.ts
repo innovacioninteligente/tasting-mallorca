@@ -13,6 +13,7 @@ export class FirestoreTourRepository implements TourRepository {
     try {
       const urlObject = new URL(url);
       const pathSegments = urlObject.pathname.split('/');
+      // The actual path inside the bucket starts after the '/o/' segment
       const objectPath = pathSegments.slice(pathSegments.indexOf('o') + 1).join('/');
       return decodeURIComponent(objectPath);
     } catch (error) {
