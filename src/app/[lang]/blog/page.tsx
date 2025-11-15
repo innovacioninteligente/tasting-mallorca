@@ -47,6 +47,7 @@ export async function generateMetadata({ params: { lang } }: PageProps): Promise
 
 
 export default async function BlogPage({ params }: { params: { lang: Locale }}) {
+  const dictionary = await getDictionary(params.lang);
   const result = await findAllBlogPosts({});
   const posts = (result.data || []).filter(post => post.published) as BlogPost[];
 
@@ -55,9 +56,9 @@ export default async function BlogPage({ params }: { params: { lang: Locale }}) 
         <div className="container mx-auto px-4 py-16">
             <div className="text-center mb-12">
                 <Newspaper className="mx-auto h-16 w-16 text-primary mb-4" />
-                <h1 className="text-5xl md:text-6xl font-bold font-headline">Nuestro Blog</h1>
+                <h1 className="text-5xl md:text-6xl font-bold font-headline">{dictionary.blog.title}</h1>
                 <p className="mt-4 text-xl text-muted-foreground max-w-3xl mx-auto">
-                    Explora nuestros artículos, historias y consejos sobre Mallorca. Todo lo que necesitas saber para tu próximo viaje.
+                    {dictionary.blog.description}
                 </p>
             </div>
 
