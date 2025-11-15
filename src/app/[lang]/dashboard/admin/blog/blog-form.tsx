@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useFormContext } from "react-hook-form";
@@ -15,7 +16,20 @@ import { cn } from "@/lib/utils";
 import { Calendar } from "@/components/ui/calendar";
 import { ImageUpload } from "@/app/[lang]/dashboard/admin/tours/new/image-upload";
 
-export function BlogForm() {
+export function getFieldTab(fieldName: string): string {
+    if (fieldName.startsWith('title.de') || fieldName.startsWith('content.fr')) {
+        return 'translations';
+    }
+    return 'main';
+}
+
+interface BlogFormProps {
+    activeTab: string;
+    onTabChange: (tab: string) => void;
+    errorTab: string | null;
+}
+
+export function BlogForm({ activeTab, onTabChange, errorTab }: BlogFormProps) {
   const form = useFormContext();
   const langTabs = [
     { code: 'de', name: 'Deutsch' },
@@ -26,10 +40,10 @@ export function BlogForm() {
   return (
     <Form {...form}>
         <div className="space-y-8 pt-2">
-            <Tabs defaultValue="main" className="w-full">
+            <Tabs value={activeTab} onValueChange={onTabChange} className="w-full">
             <TabsList className="w-full md:grid md:w-full md:grid-cols-2 flex justify-start overflow-x-auto">
-                <TabsTrigger value="main">Content & Images</TabsTrigger>
-                <TabsTrigger value="translations">Translations</TabsTrigger>
+                <TabsTrigger value="main" className={cn(errorTab === 'main' && 'border-destructive border animate-pulse')}>Content & Images</TabsTrigger>
+                <TabsTrigger value="translations" className={cn(errorTab === 'translations' && 'border-destructive border animate-pulse')}>Translations</TabsTrigger>
             </TabsList>
 
             <TabsContent value="main" className="mt-6">
@@ -200,3 +214,5 @@ export function BlogForm() {
     </Form>
   );
 }
+
+    

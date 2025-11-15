@@ -25,6 +25,23 @@ import { Tour, CreateTourInputSchema } from "@/backend/tours/domain/tour.model";
 import { Badge } from "@/components/ui/badge";
 
 
+export function getFieldTab(fieldName: string): string {
+    if (fieldName.startsWith('details')) {
+        return 'details';
+    }
+    if (fieldName.startsWith('itinerary') || fieldName.startsWith('pickupPoint')) {
+        return 'itinerary';
+    }
+    if (fieldName.startsWith('title.de') || fieldName.startsWith('content.fr')) {
+        return 'translations';
+    }
+    if (fieldName.startsWith('price') || fieldName.startsWith('availabilityPeriods')) {
+        return 'availability';
+    }
+    return 'main';
+}
+
+
 type TourFormValues = z.infer<typeof CreateTourInputSchema>;
 
 const weekDays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
@@ -188,9 +205,12 @@ const iconMap = {
 interface TourFormProps {
   initialData?: Tour;
   onServerImageDelete?: (imageUrl: string) => void;
+  activeTab: string;
+  onTabChange: (tab: string) => void;
+  errorTab: string | null;
 }
 
-export function TourForm({ initialData, onServerImageDelete }: TourFormProps) {
+export function TourForm({ initialData, onServerImageDelete, activeTab, onTabChange, errorTab }: TourFormProps) {
   const [editingItineraryId, setEditingItineraryId] = useState<string | null>(null);
   const form = useFormContext<TourFormValues>();
 
@@ -219,13 +239,13 @@ export function TourForm({ initialData, onServerImageDelete }: TourFormProps) {
       <Form {...form}>
         <form className="space-y-8">
             <div className="pt-2">
-                <Tabs defaultValue="main" className="w-full">
+                <Tabs value={activeTab} onValueChange={onTabChange} className="w-full">
                 <TabsList className="w-full md:grid md:w-full md:grid-cols-5 flex justify-start overflow-x-auto">
-                    <TabsTrigger value="main">Content & Images</TabsTrigger>
-                    <TabsTrigger value="availability">Availability & Pricing</TabsTrigger>
-                    <TabsTrigger value="details">Details</TabsTrigger>
-                    <TabsTrigger value="itinerary">Itinerary</TabsTrigger>
-                    <TabsTrigger value="translations">Translations</TabsTrigger>
+                    <TabsTrigger value="main" className={cn(errorTab === 'main' && 'border-destructive border animate-pulse')}>Content & Images</TabsTrigger>
+                    <TabsTrigger value="availability" className={cn(errorTab === 'availability' && 'border-destructive border animate-pulse')}>Availability & Pricing</TabsTrigger>
+                    <TabsTrigger value="details" className={cn(errorTab === 'details' && 'border-destructive border animate-pulse')}>Details</TabsTrigger>
+                    <TabsTrigger value="itinerary" className={cn(errorTab === 'itinerary' && 'border-destructive border animate-pulse')}>Itinerary</TabsTrigger>
+                    <TabsTrigger value="translations" className={cn(errorTab === 'translations' && 'border-destructive border animate-pulse')}>Translations</TabsTrigger>
                 </TabsList>
 
                 <TabsContent value="main" className="mt-6">
