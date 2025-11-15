@@ -1,3 +1,4 @@
+
 import { z } from 'zod';
 
 export type ItineraryItem = {
@@ -72,8 +73,8 @@ const multilingualOptionalStringSchema = z.object({
 }).optional();
 
 const availabilityPeriodSchema = z.object({
-    startDate: z.string(),
-    endDate: z.string(),
+    startDate: z.date({ required_error: "Start date is required." }),
+    endDate: z.date({ required_error: "End date is required." }),
     activeDays: z.array(z.string()).min(1, "At least one active day is required."),
 });
 
@@ -107,7 +108,7 @@ const itineraryItemSchema = z.object({
 });
 
 export const CreateTourInputSchema = z.object({
-  id: z.string(),
+  id: z.string().optional(),
   title: multilingualStringSchema,
   slug: multilingualStringSchema,
   description: multilingualStringSchema,
@@ -126,12 +127,28 @@ export const CreateTourInputSchema = z.object({
   durationHours: z.coerce.number().min(1, "La duración debe ser al menos 1 hora."),
   isFeatured: z.boolean().default(false),
   published: z.boolean().default(false),
-  mainImage: z.string(),
-  galleryImages: z.array(z.string()).optional(),
+  mainImage: z.any().refine(val => val, "La imagen principal es requerida."),
+  galleryImages: z.any().optional(),
   allowDeposit: z.boolean().default(false),
   depositPrice: z.coerce.number().optional(),
   availabilityPeriods: z.array(availabilityPeriodSchema).optional(),
   itinerary: z.array(itineraryItemSchema).optional(),
+}).refine(data => {
+    if (data.allowDeposit) {
+        return data.depositPrice !== undefined && data.depositPrice > 0;
+    }
+    return true;
+}, {
+    message: "El precio del depósito es requerido si se permiten depósitos.",
+    path: ["depositPrice"],
+}).refine(data => {
+    if (data.allowDeposit && data.depositPrice) {
+        return data.depositPrice < data.price;
+    }
+    return true;
+}, {
+    message: "El depósito no puede ser mayor o igual al precio total.",
+    path: ["depositPrice"],
 });
 
 export type CreateTourInput = z.infer<typeof CreateTourInputSchema>;

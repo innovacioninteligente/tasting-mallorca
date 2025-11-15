@@ -9,10 +9,16 @@ import { Tour, CreateTourInputSchema, type CreateTourInput } from '@/backend/tou
 export const createTour = createSafeAction(
   {
     allowedRoles: ['admin'],
-    inputSchema: CreateTourInputSchema,
+    inputSchema: CreateTourInputSchema.omit({ availabilityPeriods: true }).extend({
+        availabilityPeriods: z.array(z.object({
+            startDate: z.string(),
+            endDate: z.string(),
+            activeDays: z.array(z.string()),
+        })).optional(),
+    }),
   },
   async (
-    tourData: CreateTourInput
+    tourData: any
   ): Promise<{ data?: { tourId: string }; error?: string }> => {
     try {
       const tourRepository = new FirestoreTourRepository();

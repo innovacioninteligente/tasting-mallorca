@@ -4,7 +4,7 @@
 import { createSafeAction } from '@/app/server-actions/lib/safe-action';
 import { updateTour as updateTourUseCase } from '@/backend/tours/application/updateTour';
 import { FirestoreTourRepository } from '@/backend/tours/infrastructure/firestore-tour.repository';
-import { Tour } from '@/backend/tours/domain/tour.model';
+import { Tour, CreateTourInputSchema } from '@/backend/tours/domain/tour.model';
 
 // We require 'id' for updates. Other fields are partial.
 type UpdateTourInput = Partial<Omit<Tour, 'id'>> & { id: string };
@@ -12,9 +12,16 @@ type UpdateTourInput = Partial<Omit<Tour, 'id'>> & { id: string };
 export const updateTour = createSafeAction(
   {
     allowedRoles: ['admin'],
+     inputSchema: CreateTourInputSchema.partial().extend({ id: z.string() }).omit({ availabilityPeriods: true }).extend({
+        availabilityPeriods: z.array(z.object({
+            startDate: z.string(),
+            endDate: z.string(),
+            activeDays: z.array(z.string()),
+        })).optional(),
+     }),
   },
   async (
-    tourData: UpdateTourInput
+    tourData: any
   ): Promise<{ data?: { success: true }; error?: string }> => {
     try {
       const tourRepository = new FirestoreTourRepository();
