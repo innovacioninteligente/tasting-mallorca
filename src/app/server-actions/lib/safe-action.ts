@@ -41,7 +41,13 @@ export function createSafeAction<TInput, TOutput>(
     if (authOptions.inputSchema) {
         const validationResult = authOptions.inputSchema.safeParse(input);
         if (!validationResult.success) {
-            return { error: 'Invalid input: ' + validationResult.error.format()._errors.join(', ') };
+            const { formErrors, fieldErrors } = validationResult.error.flatten();
+            const firstFieldErrorKey = Object.keys(fieldErrors)[0];
+            const firstError = firstFieldErrorKey 
+                ? `El campo '${firstFieldErrorKey}' - ${fieldErrors[firstFieldErrorKey]?.[0]}`
+                : formErrors[0];
+
+            return { error: 'Invalid input: ' + firstError };
         }
     }
 
