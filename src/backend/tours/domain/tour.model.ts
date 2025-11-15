@@ -106,7 +106,7 @@ const itineraryItemSchema = z.object({
     }),
 });
 
-export const CreateTourInputSchema = z.object({
+const baseTourSchema = z.object({
   id: z.string().optional(),
   title: multilingualStringSchema,
   slug: multilingualStringSchema,
@@ -132,7 +132,9 @@ export const CreateTourInputSchema = z.object({
   depositPrice: z.coerce.number().optional(),
   availabilityPeriods: z.array(availabilityPeriodSchema).min(1, "At least one availability period is required.").optional(),
   itinerary: z.array(itineraryItemSchema).optional(),
-}).refine(data => {
+});
+
+export const CreateTourInputSchema = baseTourSchema.refine(data => {
     if (data.allowDeposit) {
         return data.depositPrice !== undefined && data.depositPrice > 0;
     }
@@ -150,5 +152,6 @@ export const CreateTourInputSchema = z.object({
     path: ["depositPrice"],
 });
 
+
 export type CreateTourInput = z.infer<typeof CreateTourInputSchema>;
-export const UpdateTourInputSchema = CreateTourInputSchema.partial().extend({ id: z.string() });
+export const UpdateTourInputSchema = baseTourSchema.partial().extend({ id: z.string() });

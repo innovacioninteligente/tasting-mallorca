@@ -50,7 +50,13 @@ const itineraryItemSchema = z.object({
     }),
 });
 
-const actionInputSchema = z.object({
+const availabilityPeriodSchema = z.object({
+    startDate: z.string(),
+    endDate: z.string(),
+    activeDays: z.array(z.string()),
+});
+
+const baseActionInputSchema = z.object({
   id: z.string().optional(),
   title: multilingualStringSchema,
   slug: multilingualStringSchema,
@@ -74,13 +80,11 @@ const actionInputSchema = z.object({
   galleryImages: z.any().optional(),
   allowDeposit: z.boolean().default(false),
   depositPrice: z.coerce.number().optional(),
-  availabilityPeriods: z.array(z.object({
-    startDate: z.string(),
-    endDate: z.string(),
-    activeDays: z.array(z.string()),
-  })).optional(),
+  availabilityPeriods: z.array(availabilityPeriodSchema).optional(),
   itinerary: z.array(itineraryItemSchema).optional(),
-}).refine(data => {
+});
+
+const actionInputSchema = baseActionInputSchema.refine(data => {
     if (data.allowDeposit) {
         return data.depositPrice !== undefined && data.depositPrice > 0;
     }
@@ -97,6 +101,7 @@ const actionInputSchema = z.object({
     message: "Deposit cannot be greater than or equal to the total price.",
     path: ["depositPrice"],
 });
+
 
 export const createTour = createSafeAction(
   {
