@@ -236,7 +236,7 @@
             "longitude": { "type": "number" },
             "time": { "type": "string", "description": "The pickup time at this meeting point." }
         },
-        "required": ["name", "region", "latitude", "longitude"]
+        "required": ["name", "region"]
     },
     "PrivateTourRequest": {
         "title": "Private Tour Request",

@@ -90,7 +90,16 @@ export const importMeetingPointsFromCsv = createSafeAction(
         }
 
         const validatedData = validation.data;
-        const { latitude, longitude } = await getCoordsFromUrl(validatedData.googleMapsUrl);
+        let latitude, longitude;
+        
+        try {
+            const coords = await getCoordsFromUrl(validatedData.googleMapsUrl);
+            latitude = coords.latitude;
+            longitude = coords.longitude;
+        } catch (error: any) {
+            console.warn(`Could not process URL for '${validatedData.name}'. Saving without coordinates. Error: ${error.message}`);
+            // Latitude and longitude will remain undefined
+        }
         
         const newMeetingPoint: MeetingPoint = {
             id: crypto.randomUUID(),

@@ -36,9 +36,15 @@ export const updateMeetingPoint = createSafeAction(
       if (pointData.googleMapsUrl) {
           const currentPoint = await findMeetingPointById(meetingPointRepository, pointData.id);
           if (currentPoint?.googleMapsUrl !== pointData.googleMapsUrl) {
-                const { latitude, longitude } = await getCoordsFromUrl(pointData.googleMapsUrl);
-                dataToUpdate.latitude = latitude;
-                dataToUpdate.longitude = longitude;
+                try {
+                    const { latitude, longitude } = await getCoordsFromUrl(pointData.googleMapsUrl);
+                    dataToUpdate.latitude = latitude;
+                    dataToUpdate.longitude = longitude;
+                } catch (error) {
+                    console.warn(`Could not get coordinates for ${pointData.googleMapsUrl}. Saving without them.`);
+                    dataToUpdate.latitude = undefined;
+                    dataToUpdate.longitude = undefined;
+                }
           }
       }
 

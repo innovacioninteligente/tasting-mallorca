@@ -7,7 +7,7 @@ export interface MeetingPoint {
   address: string;
   region: MeetingPointRegion;
   googleMapsUrl: string;
-  latitude: number;
-  longitude: number;
+  latitude?: number;
+  longitude?: number;
   time?: string;
 }
