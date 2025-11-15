@@ -18,85 +18,9 @@ import { UploadProgressDialog } from "@/components/upload-progress-dialog";
 import { cloneDeep, mergeWith } from "lodash";
 import { translateTourAction } from "@/app/server-actions/tours/translateTourAction";
 import { TranslateTourInput, TranslateTourOutput } from "@/ai/flows/translate-tour-flow";
+import { CreateTourInput, CreateTourInputSchema } from "@/backend/tours/domain/tour.model";
 
-const multilingualStringSchema = z.object({
-    en: z.string().min(1, { message: "El texto en inglés es requerido." }),
-    de: z.string().optional(),
-    fr: z.string().optional(),
-    nl: z.string().optional(),
-});
-
-const multilingualOptionalStringSchema = z.object({
-    en: z.string().optional(),
-    de: z.string().optional(),
-    fr: z.string().optional(),
-    nl: z.string().optional(),
-}).optional();
-
-const availabilityPeriodSchema = z.object({
-    startDate: z.date({ required_error: "Start date is required." }),
-    endDate: z.date({ required_error: "End date is required." }),
-    activeDays: z.array(z.string()).min(1, "At least one active day is required."),
-});
-
-const pickupPointSchema = z.object({
-    title: multilingualStringSchema,
-    description: multilingualStringSchema,
-});
-
-const detailsSchema = z.object({
-    highlights: multilingualOptionalStringSchema,
-    fullDescription: multilingualOptionalStringSchema,
-    included: multilingualOptionalStringSchema,
-    notIncluded: multilingualOptionalStringSchema,
-    notSuitableFor: multilingualOptionalStringSchema,
-    whatToBring: multilingualOptionalStringSchema,
-    beforeYouGo: multilingualOptionalStringSchema,
-}).optional();
-
-const itineraryItemSchema = z.object({
-    id: z.string(),
-    type: z.enum(["stop", "travel"]),
-    icon: z.string(),
-    duration: z.string().min(1, "La duración es requerida."),
-    title: multilingualStringSchema,
-    activities: z.object({
-        en: z.array(z.string()).optional(),
-        de: z.array(z.string()).optional(),
-        fr: z.array(z.string()).optional(),
-        nl: z.array(z.string()).optional(),
-    }),
-});
-
-const formSchema = z.object({
-  id: z.string().optional(),
-  title: multilingualStringSchema,
-  slug: multilingualStringSchema,
-  description: multilingualStringSchema,
-  overview: multilingualStringSchema,
-  generalInfo: z.object({
-    cancellationPolicy: multilingualStringSchema,
-    bookingPolicy: multilingualStringSchema,
-    guideInfo: multilingualStringSchema,
-    pickupInfo: multilingualStringSchema,
-  }),
-  details: detailsSchema,
-  pickupPoint: pickupPointSchema,
-  price: z.coerce.number().min(0, "El precio debe ser un número positivo."),
-  childPrice: z.coerce.number().optional(),
-  region: z.enum(["North", "East", "South", "West", "Central"]),
-  durationHours: z.coerce.number().min(1, "La duración debe ser al menos 1 hora."),
-  isFeatured: z.boolean().default(false),
-  published: z.boolean().default(false),
-  mainImage: z.any().refine(val => val, "La imagen principal es requerida."),
-  galleryImages: z.any().optional(),
-  allowDeposit: z.boolean().default(false),
-  depositPrice: z.coerce.number().optional(),
-  availabilityPeriods: z.array(availabilityPeriodSchema).optional(),
-  itinerary: z.array(itineraryItemSchema).optional(),
-});
-
-type TourFormValues = z.infer<typeof formSchema>;
+type TourFormValues = z.infer<typeof CreateTourInputSchema>;
 
 const defaultMultilingual = { en: '', de: '', fr: '', nl: '' };
 
@@ -147,7 +71,7 @@ export default function NewTourPage() {
     };
 
     const form = useForm<TourFormValues>({
-        resolver: zodResolver(formSchema),
+        resolver: zodResolver(CreateTourInputSchema),
         defaultValues,
     });
     
@@ -196,7 +120,7 @@ export default function NewTourPage() {
         setIsSubmitting(true);
     
         try {
-            const tourId = crypto.randomUUID();
+            const tourId = data.id || crypto.randomUUID();
     
             let mainImageUrl = data.mainImage;
             if (data.mainImage instanceof File) {
