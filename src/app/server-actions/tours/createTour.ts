@@ -1,7 +1,7 @@
 
 'use server';
 
-import { createSafeAction } from '@/app-server-actions/lib/safe-action';
+import { createSafeAction } from '@/app/server-actions/lib/safe-action';
 import { createTour as createTourUseCase } from '@/backend/tours/application/createTour';
 import { FirestoreTourRepository } from '@/backend/tours/infrastructure/firestore-tour.repository';
 import { Tour, CreateTourInput } from '@/backend/tours/domain/tour.model';
