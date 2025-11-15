@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { AdminRouteGuard } from "@/components/auth/admin-route-guard";
@@ -242,8 +243,8 @@ export default function NewTourPage() {
                     description: currentData.pickupPoint.description.en,
                 },
                 itinerary: currentData.itinerary?.map(item => ({
-                    title: item.title.en,
-                    activities: item.activities.en || [],
+                    title: { en: item.title.en },
+                    activities: { en: item.activities.en || [] },
                 })) || []
             };
 
@@ -285,27 +286,30 @@ export default function NewTourPage() {
 
     return (
         <AdminRouteGuard>
-            <div className="flex flex-col h-full">
-                {isSubmitting && <UploadProgressDialog progress={uploadProgress} message={uploadMessage} />}
-                <FormProvider {...form}>
+             <FormProvider {...form}>
+                <div className="flex flex-col h-full">
+                    {isSubmitting && <UploadProgressDialog progress={uploadProgress} message={uploadMessage} />}
                     <TourFormHeader
                         isSubmitting={isSubmitting}
                         isTranslating={isTranslating}
                         onTranslate={handleTranslate}
                         basePath={basePath}
-                        onSubmit={form.handleSubmit(onSubmit, handleInvalidSubmit)} 
                     />
                     <main className="flex-grow overflow-y-scroll px-4 pt-4 md:px-8 lg:px-10">
-                       <TourForm
-                         activeTab={activeTab}
-                         onTabChange={setActiveTab}
-                         errorTab={errorTab}
-                       />
+                        <form
+                            id="tour-form"
+                            onSubmit={form.handleSubmit(onSubmit, handleInvalidSubmit)}
+                            className="space-y-8"
+                        >
+                            <TourForm
+                                activeTab={activeTab}
+                                onTabChange={setActiveTab}
+                                errorTab={errorTab}
+                            />
+                        </form>
                     </main>
-                </FormProvider>
-            </div>
+                </div>
+            </FormProvider>
         </AdminRouteGuard>
     );
 }
-
-    

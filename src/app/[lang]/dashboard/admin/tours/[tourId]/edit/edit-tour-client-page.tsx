@@ -279,8 +279,8 @@ export function EditTourClientPage({ initialData, lang }: EditTourClientPageProp
                     description: currentData.pickupPoint.description.en,
                 },
                 itinerary: currentData.itinerary?.map(item => ({
-                    title: item.title.en,
-                    activities: item.activities.en || [],
+                    title: { en: item.title.en },
+                    activities: { en: item.activities.en || [] },
                 })) || []
             };
 
@@ -363,7 +363,7 @@ export function EditTourClientPage({ initialData, lang }: EditTourClientPageProp
                 form.setValue('mainImage', undefined, { shouldDirty: true });
             } else {
                 const currentGallery = form.getValues('galleryImages') || [];
-                form.setValue('galleryImages', currentGallery.filter(url => url !== imageToDelete), { shouldDirty: true });
+                form.setValue('galleryImages', currentGallery.filter((url: any) => url !== imageToDelete), { shouldDirty: true });
             }
         }
         setImageToDelete(null);
@@ -372,27 +372,32 @@ export function EditTourClientPage({ initialData, lang }: EditTourClientPageProp
     const basePath = `/${lang}/dashboard/admin/tours`;
 
     return (
-        <div className="flex flex-col h-full">
-            {isSubmitting && <UploadProgressDialog progress={uploadProgress} message={uploadMessage} />}
-            <FormProvider {...form}>
+        <FormProvider {...form}>
+            <div className="flex flex-col h-full">
+                {isSubmitting && <UploadProgressDialog progress={uploadProgress} message={uploadMessage} />}
                 <TourFormHeader
                     isSubmitting={isSubmitting}
                     isTranslating={isTranslating}
                     onTranslate={handleTranslate}
                     initialData={initialData}
                     basePath={basePath}
-                    onSubmit={form.handleSubmit(onSubmit, handleInvalidSubmit)}
                 />
                 <main className="flex-grow overflow-y-scroll px-4 pt-4 md:px-8 lg:px-10">
-                   <TourForm
-                     initialData={initialData}
-                     onServerImageDelete={handleServerImageDelete}
-                     activeTab={activeTab}
-                     onTabChange={setActiveTab}
-                     errorTab={errorTab}
-                    />
+                   <form
+                        id="tour-form"
+                        onSubmit={form.handleSubmit(onSubmit, handleInvalidSubmit)}
+                        className="space-y-8"
+                    >
+                       <TourForm
+                         initialData={initialData}
+                         onServerImageDelete={handleServerImageDelete}
+                         activeTab={activeTab}
+                         onTabChange={setActiveTab}
+                         errorTab={errorTab}
+                        />
+                    </form>
                 </main>
-            </FormProvider>
+            </div>
 
             <AlertDialog open={isDeleteAlertOpen} onOpenChange={setIsDeleteAlertOpen}>
                 <AlertDialogContent>
@@ -411,6 +416,6 @@ export function EditTourClientPage({ initialData, lang }: EditTourClientPageProp
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>
-        </div>
+        </FormProvider>
     );
 }

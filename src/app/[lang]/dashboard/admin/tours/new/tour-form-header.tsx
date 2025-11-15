@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { Button } from "@/components/ui/button";
@@ -18,7 +19,6 @@ interface TourFormHeaderProps {
     onTranslate: () => void;
     initialData?: Tour;
     basePath: string;
-    onSubmit: () => void;
 }
 
 export function TourFormHeader({
@@ -27,7 +27,6 @@ export function TourFormHeader({
     onTranslate,
     initialData,
     basePath,
-    onSubmit,
 }: TourFormHeaderProps) {
     const { control, formState: { isDirty } } = useFormContext();
     const { setIsMobileMenuOpen } = useDashboardLayout();
