@@ -108,9 +108,12 @@ export const importMeetingPointsFromCsv = createSafeAction(
             region: validatedData.region,
             googleMapsUrl: validatedData.googleMapsUrl,
             time: validatedData.time,
-            latitude,
-            longitude,
         };
+
+        if (latitude !== undefined && longitude !== undefined) {
+          newMeetingPoint.latitude = latitude;
+          newMeetingPoint.longitude = longitude;
+        }
         
         await createMeetingPointUseCase(meetingPointRepository, newMeetingPoint);
         importedCount++;
