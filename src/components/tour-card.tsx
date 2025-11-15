@@ -14,9 +14,9 @@ interface TourCardProps {
 }
 
 export function TourCard({ tour, lang }: TourCardProps) {
-    const slug = tour.slug[lang] || tour.slug.en;
-    const title = tour.title[lang] || tour.title.en;
-    const description = tour.description[lang] || tour.description.en;
+    const slug = tour.slug[lang as keyof typeof tour.slug] || tour.slug.en;
+    const title = tour.title[lang as keyof typeof tour.title] || tour.title.en;
+    const description = tour.description[lang as keyof typeof tour.description] || tour.description.en;
 
     return (
         <Link
