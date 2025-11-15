@@ -135,19 +135,19 @@ export default async function TourPage({ params }: { params: { lang: Locale, slu
   
   const tourDetailsProps = {
       highlightsTitle: dictionary.tourDetail.tourDetails.highlightsTitle,
-      highlights: (tour.details?.highlights?.[lang] || tour.details?.highlights?.en || '').split('\n').filter(Boolean),
+      highlights: (tour.details?.highlights?.[lang as keyof typeof tour.details.highlights] || tour.details?.highlights?.en || '').split('\n').filter(Boolean),
       detailTitle: dictionary.tourDetail.tourDetails.detailTitle,
-      detailContent: (tour.details?.fullDescription?.[lang] || tour.details?.fullDescription?.en || '').split('\n').filter(Boolean),
+      detailContent: (tour.details?.fullDescription?.[lang as keyof typeof tour.details.fullDescription] || tour.details?.fullDescription?.en || '').split('\n').filter(Boolean),
       includesTitle: dictionary.tourDetail.tourDetails.includesTitle,
-      included: (tour.details?.included?.[lang] || tour.details?.included?.en || '').split('\n').filter(Boolean),
-      notIncluded: (tour.details?.notIncluded?.[lang] || tour.details?.notIncluded?.en || '').split('\n').filter(Boolean),
+      included: (tour.details?.included?.[lang as keyof typeof tour.details.included] || tour.details?.included?.en || '').split('\n').filter(Boolean),
+      notIncluded: (tour.details?.notIncluded?.[lang as keyof typeof tour.details.notIncluded] || tour.details?.notIncluded?.en || '').split('\n').filter(Boolean),
       importantInfoTitle: dictionary.tourDetail.tourDetails.importantInfoTitle,
       notSuitableTitle: dictionary.tourDetail.tourDetails.notSuitableTitle,
-      notSuitableItems: (tour.details?.notSuitableFor?.[lang] || tour.details?.notSuitableFor?.en || '').split('\n').filter(Boolean),
+      notSuitableItems: (tour.details?.notSuitableFor?.[lang as keyof typeof tour.details.notSuitableFor] || tour.details?.notSuitableFor?.en || '').split('\n').filter(Boolean),
       whatToBringTitle: dictionary.tourDetail.tourDetails.whatToBringTitle,
-      whatToBringItems: (tour.details?.whatToBring?.[lang] || tour.details?.whatToBring?.en || '').split('\n').filter(Boolean),
+      whatToBringItems: (tour.details?.whatToBring?.[lang as keyof typeof tour.details.whatToBring] || tour.details?.whatToBring?.en || '').split('\n').filter(Boolean),
       beforeYouGoTitle: dictionary.tourDetail.tourDetails.beforeYouGoTitle,
-      beforeYouGoItems: (tour.details?.beforeYouGo?.[lang] || tour.details?.beforeYouGo?.en || '').split('\n').filter(Boolean),
+      beforeYouGoItems: (tour.details?.beforeYouGo?.[lang as keyof typeof tour.details.beforeYouGo] || tour.details?.beforeYouGo?.en || '').split('\n').filter(Boolean),
   };
   
   const tourItineraryProps = {
