@@ -1,4 +1,5 @@
 
+
 import { z } from 'zod';
 
 export type ItineraryItem = {
@@ -107,6 +108,8 @@ const itineraryItemSchema = z.object({
     }),
 });
 
+// This type is used by the form, which can handle Files and Dates.
+// The server actions will have their own schemas for serialized data.
 export const CreateTourInputSchema = z.object({
   id: z.string().optional(),
   title: multilingualStringSchema,
