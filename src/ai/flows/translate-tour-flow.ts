@@ -78,7 +78,7 @@ export const TranslateTourOutputSchema = z.object({
   itinerary: z.array(ItineraryItemTranslationOutputSchema).optional(),
 });
 
-export type TranslateTourOutput = z-infer<typeof TranslateTourOutputSchema>;
+export type TranslateTourOutput = z.infer<typeof TranslateTourOutputSchema>;
 
 
 function buildPrompt(input: TranslateTourInput): string {
