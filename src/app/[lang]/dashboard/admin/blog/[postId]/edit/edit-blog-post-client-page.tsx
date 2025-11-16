@@ -213,7 +213,20 @@ export function EditBlogPostClientPage({ initialData, lang }: EditBlogPostClient
 
             const translatedData = result.data;
             const updatedData = mergeWith(cloneDeep(currentData), translatedData);
-            form.reset(updatedData);
+            
+            // Instead of form.reset, use setValue to avoid resetting the 'dirty' state
+            Object.keys(translatedData).forEach(key => {
+                const formKey = key as keyof typeof translatedData;
+                const value = translatedData[formKey];
+                if (typeof value === 'object' && value !== null) {
+                    Object.keys(value).forEach(subKey => {
+                        const langKey = subKey as keyof typeof value;
+                        form.setValue(`${formKey}.${langKey}` as any, value[langKey] || '', { shouldDirty: true });
+                    });
+                }
+            });
+
+            await form.trigger();
 
             toast({
                 title: "Content Translated!",
@@ -244,10 +257,15 @@ export function EditBlogPostClientPage({ initialData, lang }: EditBlogPostClient
                     onTranslate={handleTranslate}
                     isEditing={!!initialData}
                     basePath={basePath}
-                    onSubmit={form.handleSubmit(onSubmit, handleInvalidSubmit)}
                 />
                 <main className="flex-grow overflow-y-scroll px-4 pt-4 md:px-8 lg:px-10">
-                    <BlogForm />
+                    <form
+                        id="blog-form"
+                        onSubmit={form.handleSubmit(onSubmit, handleInvalidSubmit)}
+                        className="space-y-8"
+                    >
+                        <BlogForm />
+                    </form>
                 </main>
             </FormProvider>
         </div>

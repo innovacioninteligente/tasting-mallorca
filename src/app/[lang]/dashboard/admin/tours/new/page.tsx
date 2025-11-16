@@ -256,12 +256,6 @@ export default function NewTourPage() {
             if (!result.data) throw new Error("No translation data returned.");
             
             const translatedData = result.data as TranslateTourOutput;
-            
-            const customizer = (objValue: any, srcValue: any) => {
-                if (Array.isArray(objValue)) {
-                    return srcValue;
-                }
-            };
 
             Object.keys(translatedData).forEach(key => {
                 const formKey = key as keyof typeof translatedData;
@@ -288,6 +282,8 @@ export default function NewTourPage() {
                     });
                 }
             });
+
+            await form.trigger();
 
             toast({
                 title: "Content Translated!",

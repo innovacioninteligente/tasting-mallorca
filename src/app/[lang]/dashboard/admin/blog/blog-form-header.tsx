@@ -16,7 +16,6 @@ interface BlogFormHeaderProps {
     onTranslate: () => void;
     isEditing: boolean;
     basePath: string;
-    onSubmit: () => void;
 }
 
 export function BlogFormHeader({
@@ -25,7 +24,6 @@ export function BlogFormHeader({
     onTranslate,
     isEditing,
     basePath,
-    onSubmit,
 }: BlogFormHeaderProps) {
     const { control, formState: { isDirty } } = useFormContext();
 
@@ -53,11 +51,11 @@ export function BlogFormHeader({
                 )}
             />
             <Button 
-                onClick={onSubmit} 
                 size="lg" 
                 disabled={isSubmitting}
                 className={cn("w-full md:w-auto md:h-11 md:px-8", isDirty && "bg-accent text-accent-foreground hover:bg-accent/90")}
                 type="submit"
+                form="blog-form"
             >
                 {isSubmitting ? <Loader2 className="animate-spin" /> : 'Save Post'}
                 {isDirty && !isSubmitting && <Circle className="ml-2 h-3 w-3 fill-current" />}
@@ -78,7 +76,7 @@ export function BlogFormHeader({
                     {isEditing ? 'Edit Post' : 'Create New Post'}
                 </h1>
             </div>
-            <div className="hidden md:flex">
+            <div className="hidden md:flex ml-auto">
                 <ActionPanel />
             </div>
 

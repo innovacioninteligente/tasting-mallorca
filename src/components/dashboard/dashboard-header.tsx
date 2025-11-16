@@ -24,7 +24,12 @@ function getPageTitle(pathname: string): string {
 
     if (!lastSegment || segments.length < 3) return 'Dashboard';
     if (lastSegment === 'dashboard' && segments[2] !== 'dashboard') return 'Dashboard';
-    if (lastSegment === 'edit') return 'Edit Tour';
+    
+    // Custom titles for form pages
+    if (pathname.includes('/tours/new')) return 'Create New Tour';
+    if (pathname.includes('/blog/new')) return 'Create New Post';
+    if (pathname.includes('/tours/') && pathname.includes('/edit')) return 'Edit Tour';
+    if (pathname.includes('/blog/') && pathname.includes('/edit')) return 'Edit Post';
 
     // Capitalize first letter and replace dashes with spaces
     return lastSegment.charAt(0).toUpperCase() + lastSegment.slice(1).replace(/-/g, ' ');
@@ -37,6 +42,7 @@ export function DashboardHeader() {
   const pathname = usePathname();
   const lang = pathname.split('/')[1] || 'en';
   const pageTitle = getPageTitle(pathname);
+  const isFormPage = pathname.includes('/new') || pathname.includes('/edit');
 
   return (
     <header className="sticky top-0 z-30 flex h-20 items-center gap-4 border-b bg-background px-4 md:px-8 shrink-0">
@@ -52,7 +58,7 @@ export function DashboardHeader() {
       </div>
 
       <div className="flex w-full items-center justify-between">
-        <h1 className="text-xl font-semibold hidden md:block">{pageTitle}</h1>
+        <h1 className="text-xl font-semibold hidden md:block">{!isFormPage && pageTitle}</h1>
         <div className="md:hidden">
              <Link href={`/${lang}/`} className="flex items-center gap-2 font-semibold">
                 <div className="relative h-8 w-8">

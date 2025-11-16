@@ -318,7 +318,8 @@ export function EditTourClientPage({ initialData, lang }: EditTourClientPageProp
                     });
                 }
             });
-
+            
+            await form.trigger();
 
             toast({
                 title: "Content Translated!",
