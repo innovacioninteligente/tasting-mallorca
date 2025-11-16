@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useTheme } from '@/components/theme-provider';
@@ -25,6 +26,11 @@ const themes = [
     name: 'desert',
     label: 'Desert Sands',
     colors: ['hsl(24 93% 58%)', 'hsl(37 92% 56%)', 'hsl(38 60% 95%)'],
+  },
+  {
+    name: 'forest',
+    label: 'Forest Green',
+    colors: ['hsl(161 74% 14%)', 'hsl(147 18% 51%)', 'hsl(43 100% 50%)'],
   },
 ];
 

@@ -6,6 +6,10 @@
 @tailwind utilities;
 
 @layer base {
+  body {
+    @apply theme-tasting-mallorca;
+  }
+  
   .theme-tasting-mallorca {
     --background: 11 55% 92%;
     --foreground: 60 1% 17%;
@@ -97,28 +101,31 @@
     --input: 38 30% 88%;
     --ring: 24 93% 68%;
   }
-}
 
-
-@layer base {
-  body {
-    @apply theme-tasting-mallorca;
+  .theme-forest {
+    --background: 147 22% 96%;
+    --foreground: 161 74% 10%;
+    --card: 147 22% 99%;
+    --card-foreground: 161 74% 10%;
+    --popover: 147 22% 99%;
+    --popover-foreground: 161 74% 10%;
+    --primary: 161 74% 14%;
+    --primary-foreground: 147 22% 96%;
+    --primary-dark: 161 74% 9%;
+    --secondary: 147 18% 51%;
+    --secondary-foreground: 147 22% 98%;
+    --muted: 147 18% 90%;
+    --muted-foreground: 161 41% 36%;
+    --accent: 43 100% 50%;
+    --accent-foreground: 161 74% 10%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 147 18% 85%;
+    --input: 147 18% 90%;
+    --ring: 147 18% 61%;
   }
-}
 
-@layer base {
-  :root {
-    --chart-1: 12 76% 61%;
-    --chart-2: 173 58% 39%;
-    --chart-3: 197 37% 24%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
-    --radius: 0.5rem;
-    --header-dark-background: 240 8% 15%;
-    --header-dark-foreground: 0 0% 95%;
-  }
-
-  .dark {
+  .dark body {
     --background: 240 10% 3.9%;
     --foreground: 0 0% 98%;
     --card: 240 10% 3.9%;
@@ -139,22 +146,33 @@
     --border: 240 3.7% 15.9%;
     --input: 240 3.7% 15.9%;
     --ring: 77 24% 38%;
+  }
+}
+
+@layer base {
+  :root {
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+    --radius: 0.5rem;
+    --header-dark-background: 240 8% 15%;
+    --header-dark-foreground: 0 0% 95%;
+  }
+
+  .dark {
     --chart-1: 220 70% 50%;
     --chart-2: 160 60% 45%;
     --chart-3: 30 80% 55%;
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
-    --header-dark-background: 240 8% 15%;
-    --header-dark-foreground: 0 0% 95%;
   }
 }
 
 @layer base {
   * {
     @apply border-border;
-  }
-  body {
-    @apply bg-background text-foreground;
   }
   h1, h2, h3, h4, h5, h6 {
     @apply font-headline;
