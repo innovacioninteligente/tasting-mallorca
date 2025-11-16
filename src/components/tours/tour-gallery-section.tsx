@@ -22,25 +22,27 @@ import Autoplay from "embla-carousel-autoplay";
 import { useRef, useState } from 'react';
 
 interface TourGallerySectionProps {
-    images: string[];
+    images: (string | undefined | null)[];
 }
 
-export function TourGallerySection({ images }: TourGallerySectionProps) {
+export function TourGallerySection({ images: rawImages }: TourGallerySectionProps) {
     const autoplayPlugin = useRef(Autoplay({ delay: 5000, stopOnInteraction: true }));
     const [isLightboxOpen, setIsLightboxOpen] = useState(false);
     const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+
+    const images = rawImages.filter((img): img is string => !!img);
+
+    if (images.length === 0) {
+        return null;
+    }
 
     const openLightbox = (index: number) => {
         setSelectedImageIndex(index);
         setIsLightboxOpen(true);
     };
     
-    if (!images || images.length === 0) {
-        return null;
-    }
-
     const mainImage = images[0];
-    const galleryGridImages = images.slice(1, 4); // Get up to 3 images for the grid
+    const galleryGridImages = images.slice(1, 4);
     const remainingImageCount = images.length > 4 ? images.length - 4 : 0;
 
 
