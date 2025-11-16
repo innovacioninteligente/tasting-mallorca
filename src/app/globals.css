@@ -125,6 +125,29 @@
     --ring: 0 69% 52%;
   }
 
+  .theme-sky {
+    --background: 207 100% 97%;
+    --foreground: 218 80% 15%;
+    --card: 207 100% 99%;
+    --card-foreground: 218 80% 15%;
+    --popover: 207 100% 99%;
+    --popover-foreground: 218 80% 15%;
+    --primary: 211 90% 50%;
+    --primary-foreground: 211 90% 98%;
+    --primary-dark: 211 90% 40%;
+    --secondary: 207 90% 90%;
+    --secondary-foreground: 218 80% 20%;
+    --muted: 207 90% 90%;
+    --muted-foreground: 215 30% 55%;
+    --accent: 200 95% 65%;
+    --accent-foreground: 218 80% 15%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 207 90% 88%;
+    --input: 207 90% 92%;
+    --ring: 211 90% 60%;
+  }
+
   .dark body {
     --background: 240 10% 3.9%;
     --foreground: 0 0% 98%;

@@ -3,7 +3,7 @@
 
 import { createContext, useContext, useEffect, useState } from 'react';
 
-type Theme = 'tasting-mallorca' | 'teal' | 'ocean' | 'forest' | 'sunset';
+type Theme = 'tasting-mallorca' | 'teal' | 'ocean' | 'forest' | 'sunset' | 'sky';
 
 type ThemeProviderProps = {
   children: React.ReactNode;
@@ -44,7 +44,7 @@ export function ThemeProvider({
 
   useEffect(() => {
     const body = window.document.body;
-    body.classList.remove('theme-tasting-mallorca', 'theme-teal', 'theme-ocean', 'theme-forest', 'theme-sunset');
+    body.classList.remove('theme-tasting-mallorca', 'theme-teal', 'theme-ocean', 'theme-forest', 'theme-sunset', 'theme-sky');
     
     if (theme) {
       body.classList.add(`theme-${theme}`);

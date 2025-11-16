@@ -31,6 +31,11 @@ const themes = [
     name: 'sunset',
     label: 'Sunset',
     colors: ['hsl(0 69% 42%)', 'hsl(220 16% 25%)', 'hsl(7 95% 82%)'],
+  },
+  {
+    name: 'sky',
+    label: 'Sky',
+    colors: ['hsl(211 90% 50%)', 'hsl(200 95% 65%)', 'hsl(207 100% 97%)'],
   }
 ];
 
@@ -43,7 +48,7 @@ export function ThemeSwitcher() {
         <CardTitle>Theme</CardTitle>
         <CardDescription>Select a color palette for the entire application.</CardDescription>
       </CardHeader>
-      <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <CardContent className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {themes.map((t) => (
           <button
             key={t.name}
