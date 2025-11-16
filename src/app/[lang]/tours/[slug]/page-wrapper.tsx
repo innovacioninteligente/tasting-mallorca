@@ -1,4 +1,6 @@
 
+'use client';
+
 import React from 'react';
 import { notFound } from 'next/navigation';
 import { Locale } from '@/dictionaries/config';
@@ -30,7 +32,7 @@ export async function generateStaticParams(): Promise<TourPageWrapperProps['para
         .filter(([_, slugValue]) => slugValue) 
         .map(([lang, slug]) => ({
           lang: lang as Locale,
-          slug: encodeURIComponent(slug),
+          slug: slug,
         }))
     );
 
@@ -55,10 +57,10 @@ export async function generateMetadata({ params }: TourPageWrapperProps): Promis
 
   const allSlugs = tour.slug;
   const languages: { [key: string]: string } = {};
-  if (allSlugs.en) languages['en-US'] = `/en/tours/${encodeURIComponent(allSlugs.en)}`;
-  if (allSlugs.de) languages['de-DE'] = `/de/tours/${encodeURIComponent(allSlugs.de)}`;
-  if (allSlugs.fr) languages['fr-FR'] = `/fr/tours/${encodeURIComponent(allSlugs.fr)}`;
-  if (allSlugs.nl) languages['nl-NL'] = `/nl/tours/${encodeURIComponent(allSlugs.nl)}`;
+  if (allSlugs.en) languages['en-US'] = `/en/tours/${allSlugs.en}`;
+  if (allSlugs.de) languages['de-DE'] = `/de/tours/${allSlugs.de}`;
+  if (allSlugs.fr) languages['fr-FR'] = `/fr/tours/${allSlugs.fr}`;
+  if (allSlugs.nl) languages['nl-NL'] = `/nl/tours/${allSlugs.nl}`;
 
 
   return {

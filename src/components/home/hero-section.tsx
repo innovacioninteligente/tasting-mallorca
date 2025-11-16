@@ -22,6 +22,7 @@ export function HeroSection({ dictionary }: { dictionary: HeroDictionary }) {
         fill
         className="object-cover"
         priority
+        sizes="100vw"
         data-ai-hint="mallorca boat trip"
       />
 

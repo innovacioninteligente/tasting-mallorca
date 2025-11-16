@@ -1,5 +1,7 @@
 
-import React from 'react';
+'use client';
+
+import React, { useEffect } from 'react';
 import { notFound } from 'next/navigation';
 import { Locale } from '@/dictionaries/config';
 import { Metadata } from 'next';
@@ -22,10 +24,10 @@ export async function generateStaticParams(): Promise<BlogPostPageWrapperProps['
 
   const paths = result.data.flatMap((post: BlogPost) =>
     Object.entries(post.slug)
-      .filter(([_, slugValue]) => slugValue && post.published) 
+      .filter(([_, slugValue]) => slugValue && post.published)
       .map(([lang, slug]) => ({
         lang: lang as Locale,
-        slug: encodeURIComponent(slug),
+        slug: slug,
       }))
   );
 
@@ -50,10 +52,10 @@ export async function generateMetadata({ params }: BlogPostPageWrapperProps): Pr
   
   const allSlugs = post.slug;
   const languages: { [key: string]: string } = {};
-  if (allSlugs.en) languages['en-US'] = `/en/blog/${encodeURIComponent(allSlugs.en)}`;
-  if (allSlugs.de) languages['de-DE'] = `/de/blog/${encodeURIComponent(allSlugs.de)}`;
-  if (allSlugs.fr) languages['fr-FR'] = `/fr/blog/${encodeURIComponent(allSlugs.fr)}`;
-  if (allSlugs.nl) languages['nl-NL'] = `/nl/blog/${encodeURIComponent(allSlugs.nl)}`;
+  if (allSlugs.en) languages['en-US'] = `/en/blog/${allSlugs.en}`;
+  if (allSlugs.de) languages['de-DE'] = `/de/blog/${allSlugs.de}`;
+  if (allSlugs.fr) languages['fr-FR'] = `/fr/blog/${allSlugs.fr}`;
+  if (allSlugs.nl) languages['nl-NL'] = `/nl/blog/${allSlugs.nl}`;
 
   return {
     title: title,
@@ -100,7 +102,7 @@ export default async function BlogPostPageWrapper({ params }: BlogPostPageWrappe
   
   const postResult = await findBlogPostBySlugAndLang(slug, lang);
 
-  if (!postResult.data) {
+  if (!postResult.data || !postResult.data.published) {
     notFound();
   }
   

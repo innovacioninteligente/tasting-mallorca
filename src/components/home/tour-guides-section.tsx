@@ -39,6 +39,7 @@ export function TourGuidesSection({ dictionary }: TourGuidesSectionProps) {
                         alt={guide.name}
                         fill
                         className="rounded-full object-cover border-4 border-background shadow-lg"
+                        sizes="160px"
                         data-ai-hint={guide.hint}
                         />
                     </div>

@@ -56,6 +56,7 @@ export default async function AboutPage({ params: { lang } }: PageProps) {
           alt="Tasting Mallorca Team"
           fill
           className="object-cover"
+          sizes="100vw"
           data-ai-hint="team work meeting"
         />
         <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
@@ -84,6 +85,7 @@ export default async function AboutPage({ params: { lang } }: PageProps) {
               alt="Local guide showing a product"
               fill
               className="object-cover"
+              sizes="(max-width: 1023px) 100vw, 50vw"
               data-ai-hint="local guide product"
             />
           </div>

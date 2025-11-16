@@ -108,6 +108,7 @@ export function WhatsIncludedSection({ dictionary }: { dictionary: WhatsIncluded
                                             alt={item.image.description}
                                             fill
                                             className="object-cover"
+                                            sizes="50vw"
                                             data-ai-hint={item.image.imageHint}
                                         />
                                     </motion.div>

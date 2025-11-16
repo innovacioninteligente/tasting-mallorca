@@ -29,6 +29,7 @@ export function WhyChooseUsSection({ dictionary }: { dictionary: WhyChooseUsDict
                         alt={aboutUsImage.description}
                         fill
                         className="object-cover"
+                        sizes="(max-width: 767px) 100vw, 33vw"
                         data-ai-hint={aboutUsImage.imageHint}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>

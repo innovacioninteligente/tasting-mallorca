@@ -53,6 +53,7 @@ export default async function PrivateToursPage({ params: { lang } }: PageProps) 
               alt="Scenic view of Mallorca for private tours"
               fill
               className="object-cover"
+              sizes="(max-width: 1023px) 100vw, 50vw"
               data-ai-hint="mallorca landscape boat"
             />
              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>

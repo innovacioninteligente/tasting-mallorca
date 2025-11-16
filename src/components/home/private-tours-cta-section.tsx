@@ -28,6 +28,7 @@ export function PrivateToursCtaSection({ dictionary, lang }: PrivateToursCtaProp
                     alt="Exclusive view of a Mallorcan cove"
                     fill
                     className="object-cover"
+                    sizes="100vw"
                     data-ai-hint="mallorca cove exclusive"
                 />
                 <div className="absolute inset-0 bg-white/50 backdrop-blur-sm"></div>
