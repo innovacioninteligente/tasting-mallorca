@@ -3,7 +3,7 @@
 
 import { UploadCloud, X } from 'lucide-react';
 import Image from 'next/image';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -23,41 +23,21 @@ export function ImageUpload({
   multiple = false,
   onServerImageDelete
 }: ImageUploadProps) {
-  
-  const [internalValue, setInternalValue] = useState(value);
-
-  useEffect(() => {
-    // This effect synchronizes the internal state with the prop from the parent form.
-    // If the prop `value` becomes undefined, null, or an empty array, it resets the internal state.
-    if (!value || (Array.isArray(value) && value.length === 0)) {
-      setInternalValue([]);
-    } else if (Array.isArray(value)) {
-      setInternalValue(value);
-    } else {
-      setInternalValue([value]);
-    }
-  }, [value]);
-
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
-    const newFiles = multiple ? [...internalValue, ...acceptedFiles] : acceptedFiles;
-    setInternalValue(newFiles);
+    const newFiles = multiple ? [...value, ...acceptedFiles] : acceptedFiles;
     if (multiple) {
         onChange(newFiles);
     } else {
         onChange(acceptedFiles[0]);
     }
-  }, [onChange, multiple, internalValue]);
+  }, [onChange, multiple, value]);
 
   const handleRemove = (file: File | string, e: React.MouseEvent) => {
     e.stopPropagation();
     if (typeof file === 'string' && onServerImageDelete) {
-        // This is an existing image URL from the server
         onServerImageDelete(file);
     } else {
-        // This is a local file object
-        const newValue = internalValue.filter(item => item !== file);
-        setInternalValue(newValue);
         onRemove(file);
     }
   };
@@ -80,7 +60,7 @@ export function ImageUpload({
     return URL.createObjectURL(file);
   }
 
-  const filesToDisplay = Array.isArray(internalValue) ? internalValue : (internalValue ? [internalValue] : []);
+  const filesToDisplay = Array.isArray(value) ? value : (value ? [value] : []);
 
 
   return (
@@ -90,7 +70,7 @@ export function ImageUpload({
         className={cn(
           'relative flex cursor-pointer flex-col items-center justify-center gap-2 rounded-md border-2 border-dashed border-muted-foreground/30 bg-secondary/50 p-8 text-center text-muted-foreground transition-colors hover:border-primary/50 hover:bg-secondary',
           isDragActive && 'border-primary bg-primary/10',
-          (filesToDisplay.length > 0 && !multiple) && 'hidden' // Hide dropzone if not multiple and has a file
+          (filesToDisplay.length > 0 && !multiple) && 'hidden'
         )}
       >
         <input {...getInputProps()} />
