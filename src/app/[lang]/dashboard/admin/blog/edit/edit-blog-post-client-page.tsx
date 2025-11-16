@@ -2,60 +2,94 @@
 'use client';
 
 import { AdminRouteGuard } from "@/components/auth/admin-route-guard";
+import { notFound, useRouter } from "next/navigation";
+import { CreateBlogPostInput, BlogPost } from "@/backend/blog/domain/blog.model";
 import { useForm, FormProvider, FieldErrors } from "react-hook-form";
+import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useToast } from "@/hooks/use-toast";
-import { usePathname, useRouter } from "next/navigation";
 import { getStorage, ref as storageRef, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { initializeFirebase } from "@/firebase";
 import { useFormPersistence } from "@/hooks/use-form-persistence";
 import { UploadProgressDialog } from "@/components/upload-progress-dialog";
 import { cloneDeep, mergeWith } from "lodash";
-import { BlogFormHeader } from "../blog-form-header";
-import { BlogForm, getFieldTab } from "../blog-form";
-import { createBlogPost } from "@/app/server-actions/blog/createBlogPost";
+import { parseISO } from "date-fns";
+import { BlogFormHeader } from "../../blog-form-header";
+import { BlogForm } from "../../blog-form";
+import { updateBlogPost } from "@/app/server-actions/blog/updateBlogPost";
 import { translateBlogPostAction, TranslateBlogPostInput } from "@/app/server-actions/blog/translateBlogPostAction";
-import { CreateBlogPostInput, CreateBlogPostInputSchema } from "@/backend/blog/domain/blog.model";
 
-type BlogFormValues = CreateBlogPostInput;
+const formSchema = z.object({
+  id: z.string().optional(),
+  title: z.object({
+    en: z.string().min(1, "English title is required."),
+    de: z.string().optional(),
+    fr: z.string().optional(),
+    nl: z.string().optional(),
+  }),
+  slug: z.object({
+    en: z.string().min(1, "English slug is required."),
+    de: z.string().optional(),
+    fr: z.string().optional(),
+    nl: z.string().optional(),
+  }),
+  summary: z.object({
+    en: z.string().min(1, "English summary is required."),
+    de: z.string().optional(),
+    fr: z.string().optional(),
+    nl: z.string().optional(),
+  }),
+  content: z.object({
+    en: z.string().min(1, "English content is required."),
+    de: z.string().optional(),
+    fr: z.string().optional(),
+    nl: z.string().optional(),
+  }),
+  author: z.string().min(1, "Author is required."),
+  isFeatured: z.boolean().default(false),
+  published: z.boolean().default(false),
+  mainImage: z.any().refine(val => val, "Main image is required."),
+  publishedAt: z.date({ required_error: "Publication date is required." }),
+});
+
+type BlogFormValues = z.infer<typeof formSchema>;
 
 const defaultMultilingual = { en: '', de: '', fr: '', nl: '' };
 
-function getFirstErrorMessage(errors: FieldErrors): { message: string, path: string } | null {
+// Helper to find the first error message from the nested errors object
+function getFirstErrorMessage(errors: FieldErrors): string {
     for (const key in errors) {
         if (Object.prototype.hasOwnProperty.call(errors, key)) {
-            const error = errors[key as keyof FieldErrors] as any;
+            const error = errors[key];
             if (error?.message) {
-                return { message: error.message, path: key };
+                return error.message as string;
             }
-            if (typeof error === 'object' && !Array.isArray(error)) {
-                const nested = getFirstErrorMessage(error);
-                if (nested) {
-                    return { message: nested.message, path: `${key}.${nested.path}` };
-                }
+            if (typeof error === 'object') {
+                const nestedMessage = getFirstErrorMessage(error as FieldErrors);
+                if (nestedMessage) return nestedMessage;
             }
         }
     }
-    return null;
+    return "Please check all fields for errors.";
 }
 
-export default function NewBlogPostPage() {
-    const pathname = usePathname();
-    const router = useRouter();
-    const { toast } = useToast();
-    const lang = pathname.split('/')[1] || 'en';
+interface EditBlogPostClientPageProps {
+    initialData: BlogPost;
+    lang: string;
+}
 
+export function EditBlogPostClientPage({ initialData, lang }: EditBlogPostClientPageProps) {
+    const { toast } = useToast();
+    const router = useRouter();
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isTranslating, setIsTranslating] = useState(false);
     const [uploadProgress, setUploadProgress] = useState(0);
     const [uploadMessage, setUploadMessage] = useState('Starting...');
-    const [activeTab, setActiveTab] = useState('main');
-    const [errorTab, setErrorTab] = useState<string | null>(null);
 
-    const formPersistenceKey = 'blog-form-new';
+    const formPersistenceKey = `blog-form-edit-${initialData.id}`;
     
-    const defaultValues: BlogFormValues = {
+    const defaultValues: BlogFormValues = useMemo(() => ({
         title: { ...defaultMultilingual },
         slug: { ...defaultMultilingual },
         summary: { ...defaultMultilingual },
@@ -65,14 +99,29 @@ export default function NewBlogPostPage() {
         published: false,
         mainImage: undefined,
         publishedAt: new Date(),
-    };
+    }), []);
 
     const form = useForm<BlogFormValues>({
-        resolver: zodResolver(CreateBlogPostInputSchema),
-        defaultValues: defaultValues,
+        resolver: zodResolver(formSchema),
+        defaultValues,
     });
-
+    
     const { clearPersistedData } = useFormPersistence(formPersistenceKey, form, defaultValues);
+
+    useEffect(() => {
+        if (!initialData) return;
+
+        const parsedInitialData = {
+            ...initialData,
+            publishedAt: initialData.publishedAt ? parseISO(initialData.publishedAt as unknown as string) : new Date(),
+        };
+        const mergedData = mergeWith(cloneDeep(defaultValues), parsedInitialData, (objValue, srcValue) => {
+            if (srcValue !== undefined && srcValue !== null) return srcValue;
+            return objValue;
+        });
+        form.reset(mergedData);
+    }, [initialData, form, defaultValues]);
+
 
     const uploadFile = (file: File, postId: string): Promise<string> => {
       return new Promise((resolve, reject) => {
@@ -91,27 +140,20 @@ export default function NewBlogPostPage() {
       });
     };
 
-    const handleInvalidSubmit = (errors: FieldErrors<BlogFormValues>) => {
-        const errorDetails = getFirstErrorMessage(errors);
-        if (errorDetails) {
-            toast({
-                variant: "destructive",
-                title: "Validation Error",
-                description: `Field '${errorDetails.path}' is invalid: ${errorDetails.message}`,
-            });
-            const tabWithError = getFieldTab(errorDetails.path);
-            if (tabWithError) {
-                setActiveTab(tabWithError);
-                setErrorTab(tabWithError);
-                setTimeout(() => setErrorTab(null), 500); 
-            }
-        }
-    };
+    const handleInvalidSubmit = (errors: FieldErrors) => {
+        const firstErrorMessage = getFirstErrorMessage(errors);
+        toast({
+            variant: "destructive",
+            title: "Validation Error",
+            description: firstErrorMessage,
+        });
+    }
 
     const onSubmit = async (data: BlogFormValues) => {
+        if (!initialData) return;
         setIsSubmitting(true);
         try {
-            const postId = crypto.randomUUID();
+            const postId = initialData.id;
 
             let mainImageUrl = data.mainImage;
             if (data.mainImage instanceof File) {
@@ -129,18 +171,16 @@ export default function NewBlogPostPage() {
                 publishedAt: data.publishedAt,
             };
             
-            const result = await createBlogPost(postData as any);
+            const result = await updateBlogPost(postData as any);
     
             if (result.error) throw new Error(result.error);
 
             clearPersistedData();
             
             toast({
-                title: "Post Created!",
-                description: `The post "${data.title.en}" has been created successfully.`,
+                title: "Post Updated!",
+                description: `The post "${data.title.en}" has been saved successfully.`,
             });
-            
-            router.replace(`/${lang}/dashboard/admin/blog/${postId}/edit`, { scroll: false });
     
         } catch (error: any) {
             console.error("Error saving post:", error);
@@ -193,30 +233,29 @@ export default function NewBlogPostPage() {
     }
     
     const basePath = `/${lang}/dashboard/admin/blog`;
-
+    
     return (
-        <AdminRouteGuard>
-            <div className="flex flex-col h-full">
+        <div className="flex flex-col h-full">
+            <FormProvider {...form}>
                 {isSubmitting && <UploadProgressDialog progress={uploadProgress} message={uploadMessage} />}
-                <FormProvider {...form}>
-                    <BlogFormHeader
-                        isSubmitting={isSubmitting}
-                        isTranslating={isTranslating}
-                        onTranslate={handleTranslate}
-                        isEditing={false}
-                        basePath={basePath}
-                    />
-                    <main className="flex-grow overflow-y-scroll px-4 pt-4 md:px-8 lg:px-10">
-                       <form
-                            id="blog-form"
-                            onSubmit={form.handleSubmit(onSubmit, handleInvalidSubmit)}
-                            className="space-y-8"
-                        >
-                           <BlogForm />
-                        </form>
-                    </main>
-                </FormProvider>
-            </div>
-        </AdminRouteGuard>
+                <BlogFormHeader
+                    isSubmitting={isSubmitting}
+                    isTranslating={isTranslating}
+                    onTranslate={handleTranslate}
+                    isEditing={!!initialData}
+                    basePath={basePath}
+                />
+                <main className="flex-grow overflow-y-scroll px-4 pt-4 md:px-8 lg:px-10">
+                    <form
+                        id="blog-form"
+                        onSubmit={form.handleSubmit(onSubmit, handleInvalidSubmit)}
+                        className="space-y-8"
+                    >
+                        <BlogForm />
+                    </form>
+                </main>
+            </FormProvider>
+        </div>
     );
 }
+
