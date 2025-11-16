@@ -212,11 +212,7 @@ export function EditBlogPostClientPage({ initialData, lang }: EditBlogPostClient
             if (!result.data) throw new Error("No translation data returned.");
 
             const translatedData = result.data;
-            
-            const updatedData = mergeWith(cloneDeep(currentData), {
-                ...translatedData,
-            });
-
+            const updatedData = mergeWith(cloneDeep(currentData), translatedData);
             form.reset(updatedData);
 
             await form.trigger();
@@ -241,8 +237,8 @@ export function EditBlogPostClientPage({ initialData, lang }: EditBlogPostClient
     const basePath = `/${lang}/dashboard/admin/blog`;
     
     return (
-        <div className="flex flex-col h-full">
-            <FormProvider {...form}>
+        <FormProvider {...form}>
+            <div className="flex flex-col h-full">
                 {isSubmitting && <UploadProgressDialog progress={uploadProgress} message={uploadMessage} />}
                 <BlogFormHeader
                     isSubmitting={isSubmitting}
@@ -251,7 +247,7 @@ export function EditBlogPostClientPage({ initialData, lang }: EditBlogPostClient
                     isEditing={!!initialData}
                     basePath={basePath}
                 />
-                <main className="flex-grow px-4 pt-4 md:px-8 lg:px-10">
+                <main className="flex-grow overflow-y-scroll px-4 pt-4 md:px-8 lg:px-10">
                     <form
                         id="blog-form"
                         onSubmit={form.handleSubmit(onSubmit, handleInvalidSubmit)}
@@ -260,7 +256,7 @@ export function EditBlogPostClientPage({ initialData, lang }: EditBlogPostClient
                         <BlogForm />
                     </form>
                 </main>
-            </FormProvider>
-        </div>
+            </div>
+        </FormProvider>
     );
 }
