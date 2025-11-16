@@ -15,9 +15,10 @@ import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { Calendar } from "@/components/ui/calendar";
 import { ImageUpload } from "@/app/[lang]/dashboard/admin/tours/new/image-upload";
+import { useState } from "react";
 
 export function getFieldTab(fieldName: string): string {
-    if (fieldName.startsWith('title.de') || fieldName.startsWith('content.fr')) {
+    if (fieldName.startsWith('title.de') || fieldName.startsWith('content.fr') || fieldName.startsWith('slug.de') || fieldName.startsWith('summary.nl')) {
         return 'translations';
     }
     return 'main';
