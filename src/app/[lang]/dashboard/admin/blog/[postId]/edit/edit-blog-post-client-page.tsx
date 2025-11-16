@@ -212,19 +212,12 @@ export function EditBlogPostClientPage({ initialData, lang }: EditBlogPostClient
             if (!result.data) throw new Error("No translation data returned.");
 
             const translatedData = result.data;
-            const updatedData = mergeWith(cloneDeep(currentData), translatedData);
             
-            // Instead of form.reset, use setValue to avoid resetting the 'dirty' state
-            Object.keys(translatedData).forEach(key => {
-                const formKey = key as keyof typeof translatedData;
-                const value = translatedData[formKey];
-                if (typeof value === 'object' && value !== null) {
-                    Object.keys(value).forEach(subKey => {
-                        const langKey = subKey as keyof typeof value;
-                        form.setValue(`${formKey}.${langKey}` as any, value[langKey] || '', { shouldDirty: true });
-                    });
-                }
+            const updatedData = mergeWith(cloneDeep(currentData), {
+                ...translatedData,
             });
+
+            form.reset(updatedData);
 
             await form.trigger();
 
@@ -258,7 +251,7 @@ export function EditBlogPostClientPage({ initialData, lang }: EditBlogPostClient
                     isEditing={!!initialData}
                     basePath={basePath}
                 />
-                <main className="flex-grow overflow-y-scroll px-4 pt-4 md:px-8 lg:px-10">
+                <main className="flex-grow px-4 pt-4 md:px-8 lg:px-10">
                     <form
                         id="blog-form"
                         onSubmit={form.handleSubmit(onSubmit, handleInvalidSubmit)}
