@@ -10,6 +10,7 @@ import { MainLayout } from '@/components/main-layout';
 import { Metadata } from 'next';
 import { Footer } from '@/components/footer';
 import { AlternateLinksProvider } from '@/context/alternate-links-context';
+import { ThemeProvider } from '@/components/theme-provider';
 
 
 const poppins = Poppins({
@@ -73,20 +74,22 @@ export default async function RootLayout({
   return (
     <html lang={lang} className={`${poppins.variable}`} suppressHydrationWarning>
       <body className="font-body antialiased bg-background text-foreground">
-        <FirebaseClientProvider>
-          <AlternateLinksProvider>
-            <div className="flex flex-col min-h-screen">
-              <MainLayout 
-                dictionary={dictionary} 
-                lang={lang}
-                footer={<Footer dictionary={dictionary.footer} lang={lang} />}
-              >
-                {children}
-              </MainLayout>
-            </div>
-          </AlternateLinksProvider>
-          <Toaster />
-        </FirebaseClientProvider>
+        <ThemeProvider>
+          <FirebaseClientProvider>
+            <AlternateLinksProvider>
+              <div className="flex flex-col min-h-screen">
+                <MainLayout 
+                  dictionary={dictionary} 
+                  lang={lang}
+                  footer={<Footer dictionary={dictionary.footer} lang={lang} />}
+                >
+                  {children}
+                </MainLayout>
+              </div>
+            </AlternateLinksProvider>
+            <Toaster />
+          </FirebaseClientProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
