@@ -18,7 +18,8 @@ import { parseISO } from "date-fns";
 import { BlogFormHeader } from "../../blog-form-header";
 import { BlogForm } from "../../blog-form";
 import { updateBlogPost } from "@/app/server-actions/blog/updateBlogPost";
-import { translateBlogPostAction, TranslateBlogPostInput } from "@/app/server-actions/blog/translateBlogPostAction";
+import { translateBlogPostAction } from "@/app/server-actions/blog/translateBlogPostAction";
+import type { TranslateBlogPostInput } from '@/ai/flows/translate-blog-post-flow';
 
 const formSchema = z.object({
   id: z.string().optional(),
