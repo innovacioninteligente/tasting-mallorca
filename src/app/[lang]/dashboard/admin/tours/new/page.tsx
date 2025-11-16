@@ -242,9 +242,11 @@ export default function NewTourPage() {
                     title: currentData.pickupPoint.title.en,
                     description: currentData.pickupPoint.description.en,
                 },
-                itinerary: currentData.itinerary?.map(item => ({
+                 itinerary: currentData.itinerary?.map(item => ({
+                    id: item.id,
+                    type: item.type,
                     title: { en: item.title.en },
-                    activities: { en: item.activities.en || [] },
+                    activities: { en: item.activities?.en || [] },
                 })) || []
             };
 
@@ -260,9 +262,32 @@ export default function NewTourPage() {
                     return srcValue;
                 }
             };
-            const updatedData = mergeWith(cloneDeep(currentData), translatedData, customizer);
-            
-            form.reset(updatedData);
+
+            Object.keys(translatedData).forEach(key => {
+                const formKey = key as keyof typeof translatedData;
+                const value = translatedData[formKey];
+
+                if (formKey === 'itinerary' && Array.isArray(value)) {
+                    value.forEach((item, index) => {
+                        if (item.title) {
+                            form.setValue(`itinerary.${index}.title.de`, item.title.de || '', { shouldDirty: true });
+                            form.setValue(`itinerary.${index}.title.fr`, item.title.fr || '', { shouldDirty: true });
+                            form.setValue(`itinerary.${index}.title.nl`, item.title.nl || '', { shouldDirty: true });
+                        }
+                        if (item.activities) {
+                            form.setValue(`itinerary.${index}.activities.de`, item.activities.de || [], { shouldDirty: true });
+                            form.setValue(`itinerary.${index}.activities.fr`, item.activities.fr || [], { shouldDirty: true });
+                            form.setValue(`itinerary.${index}.activities.nl`, item.activities.nl || [], { shouldDirty: true });
+                        }
+                    });
+                } else if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
+                     Object.keys(value).forEach(subKey => {
+                        const typedSubKey = subKey as keyof typeof value;
+                        const subValue = value[typedSubKey];
+                        form.setValue(`${formKey}.${typedSubKey}` as any, subValue || '', { shouldDirty: true });
+                    });
+                }
+            });
 
             toast({
                 title: "Content Translated!",
