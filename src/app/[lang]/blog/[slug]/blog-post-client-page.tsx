@@ -1,21 +1,31 @@
+
 'use client';
 
 import React, { useEffect } from 'react';
-import { notFound } from 'next/navigation';
+import { notFound, usePathname } from 'next/navigation';
+import Image from 'next/image';
 import { Locale } from '@/dictionaries/config';
 import { BlogPost } from '@/backend/blog/domain/blog.model';
+import { Tour } from '@/backend/tours/domain/tour.model';
+import { useAlternateLinks } from '@/context/alternate-links-context';
 import { BlogPostHeader } from '@/components/blog/blog-post-header';
 import { BlogPostBody } from '@/components/blog/blog-post-body';
-import Image from 'next/image';
-import { useAlternateLinks } from '@/context/alternate-links-context';
+import { BlogPostShare } from '@/components/blog/blog-post-share';
+import { BlogRelatedItems } from '@/components/blog/blog-related-items';
+import { DictionaryType } from '@/dictionaries/get-dictionary';
+
 
 type BlogPostPageProps = {
   post: BlogPost;
   lang: Locale;
+  otherPosts: BlogPost[];
+  recommendedTours: Tour[];
+  dictionary: DictionaryType;
 };
 
-export default function BlogPostClientPage({ post, lang }: BlogPostPageProps) {
+export default function BlogPostClientPage({ post, lang, otherPosts, recommendedTours, dictionary }: BlogPostPageProps) {
   const { setAlternateLinks } = useAlternateLinks();
+  const pathname = usePathname();
 
   useEffect(() => {
     if (post) {
@@ -36,30 +46,41 @@ export default function BlogPostClientPage({ post, lang }: BlogPostPageProps) {
     notFound();
   }
   
+  const fullUrl = typeof window !== 'undefined' ? `${window.location.origin}${pathname}` : '';
+  
   return (
     <article className="bg-background">
         <BlogPostHeader 
             title={post.title[lang] || post.title.en}
             author={post.author}
             publishedAt={post.publishedAt}
+            image={post.mainImage}
             lang={lang}
         />
         
-        <div className="w-full h-[40vh] md:h-[60vh] relative">
-            <Image
-                src={post.mainImage}
-                alt={post.title[lang] || post.title.en}
-                fill
-                className="object-cover"
-                sizes="100vw"
-                priority
-            />
-             <div className="absolute inset-0 bg-black/20"></div>
+        <div className="container mx-auto px-4 py-16">
+            <div className="grid grid-cols-12 gap-8">
+                <aside className="hidden lg:block col-span-1">
+                    <BlogPostShare title={post.title.en} url={fullUrl} />
+                </aside>
+
+                <main className="col-span-12 lg:col-span-8">
+                    <BlogPostBody content={post.content[lang] || post.content.en} />
+                </main>
+                
+                <div className="col-span-12 lg:col-span-3">
+                    {/* Placeholder for potential sidebar content like ads or related links */}
+                </div>
+            </div>
         </div>
 
-        <main className="w-full md:w-[70vw] lg:w-[60vw] xl:w-[50vw] mx-auto px-4 py-16">
-            <BlogPostBody content={post.content[lang] || post.content.en} />
-        </main>
+        <BlogRelatedItems 
+            otherPosts={otherPosts}
+            recommendedTours={recommendedTours}
+            lang={lang}
+            dictionary={dictionary}
+        />
     </article>
   );
 }
+

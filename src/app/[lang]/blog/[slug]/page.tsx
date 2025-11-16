@@ -4,10 +4,13 @@
 import { Suspense } from 'react';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
-import { findAllBlogPosts, findBlogPostBySlugAndLang } from '@/app/server-actions/blog/findBlogPosts';
+import { findAllBlogPosts, findBlogPostBySlug } from '@/app/server-actions/blog/findBlogPosts';
 import { Locale } from '@/dictionaries/config';
 import { BlogPost } from '@/backend/blog/domain/blog.model';
 import BlogPostClientPage from './blog-post-client-page';
+import { findAllTours } from '@/app/server-actions/tours/findTours';
+import { Tour } from '@/backend/tours/domain/tour.model';
+import { getDictionary } from '@/dictionaries/get-dictionary';
 
 type BlogPostParams = {
     slug: string;
@@ -37,7 +40,7 @@ export async function generateStaticParams(): Promise<BlogPostParams[]> {
 export async function generateMetadata({ params }: { params: BlogPostParams }): Promise<Metadata> {
   const { lang, slug: encodedSlug } = params;
   const slug = decodeURIComponent(encodedSlug);
-  const postResult = await findBlogPostBySlugAndLang({ slug, lang });
+  const postResult = await findBlogPostBySlug({ slug, lang });
 
   if (!postResult.data) {
     return { title: 'Post Not Found' };
@@ -83,15 +86,36 @@ export async function generateMetadata({ params }: { params: BlogPostParams }): 
 export default async function BlogPostPageLoader({ params }: { params: BlogPostParams }) {
     const { lang, slug: encodedSlug } = params;
     const slug = decodeURIComponent(encodedSlug);
-    const postResult = await findBlogPostBySlugAndLang({ slug, lang });
+    
+    const [postResult, otherPostsResult, toursResult, dictionary] = await Promise.all([
+      findBlogPostBySlug({ slug, lang }),
+      findAllBlogPosts({}),
+      findAllTours({}),
+      getDictionary(lang),
+    ]);
 
     if (!postResult.data || !postResult.data.published) {
         notFound();
     }
     
+    const otherPosts = (otherPostsResult.data || [])
+      .filter(p => p.id !== postResult.data?.id && p.published)
+      .slice(0, 3) as BlogPost[];
+      
+    const recommendedTours = (toursResult.data || [])
+      .filter(t => t.isFeatured && t.published)
+      .slice(0, 2) as Tour[];
+
     return (
         <Suspense fallback={<div>Loading...</div>}>
-            <BlogPostClientPage post={postResult.data} lang={lang} />
+            <BlogPostClientPage 
+              post={postResult.data}
+              lang={lang}
+              otherPosts={otherPosts}
+              recommendedTours={recommendedTours}
+              dictionary={dictionary}
+            />
         </Suspense>
     );
 }
+
