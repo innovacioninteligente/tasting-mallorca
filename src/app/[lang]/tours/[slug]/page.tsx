@@ -1,9 +1,9 @@
 
-import React from 'react';
+'use client';
+
+import React, { useEffect } from 'react';
 import { notFound } from 'next/navigation';
 import { Locale } from '@/dictionaries/config';
-import { getDictionary } from '@/dictionaries/get-dictionary';
-import { Metadata } from 'next';
 import { TourHeaderSection } from '@/components/tours/tour-header-section';
 import { TourGallerySection } from '@/components/tours/tour-gallery-section';
 import { TourInfoSection } from '@/components/tours/tour-info-section';
@@ -11,121 +11,42 @@ import { TourItinerarySection } from '@/components/tours/tour-itinerary-section'
 import { TourBookingSection } from '@/components/tours/tour-booking-section';
 import { TourOverviewSection } from '@/components/tours/tour-overview-section';
 import { TourDetailsAccordion } from '@/components/tours/tour-details-accordion';
-import { findAllTours, findTourBySlugAndLang } from '@/app/server-actions/tours/findTours';
 import { Tour } from '@/backend/tours/domain/tour.model';
-import { findAllHotels } from '@/app/server-actions/hotels/findHotels';
-import { findAllMeetingPoints } from '@/app/server-actions/meeting-points/findMeetingPoints';
+import { Hotel } from '@/backend/hotels/domain/hotel.model';
+import { MeetingPoint } from '@/backend/meeting-points/domain/meeting-point.model';
+import { useAlternateLinks } from '@/context/alternate-links-context';
+import { DictionaryType } from '@/dictionaries/get-dictionary';
+
 
 type TourPageProps = {
-  params: {
-    slug: string;
-    lang: Locale;
-  };
+  tour: Tour | null;
+  dictionary: DictionaryType;
+  lang: Locale;
+  hotels: Hotel[];
+  meetingPoints: MeetingPoint[];
 };
 
-export async function generateStaticParams(): Promise<TourPageProps['params'][]> {
-  const result = await findAllTours({});
-  if (!result.data) {
-    return [];
-  }
-
-  const paths = result.data
-    .filter((tour: Tour) => tour.published) // Filter for published tours only
-    .flatMap((tour: Tour) =>
-      Object.entries(tour.slug)
-        .filter(([_, slugValue]) => slugValue) 
-        .map(([lang, slug]) => ({
-          lang: lang as Locale,
-          slug: encodeURIComponent(slug),
-        }))
-    );
-
-  return paths;
-}
-
-export async function generateMetadata({ params }: TourPageProps): Promise<Metadata> {
-  const { lang, slug: encodedSlug } = params;
-  const slug = decodeURIComponent(encodedSlug);
-  const tourResult = await findTourBySlugAndLang({ slug, lang });
-
-  if (!tourResult.data) {
-    return {
-      title: 'Tour Not Found',
-    };
-  }
-
-  const tour = tourResult.data;
-  const title = tour.title[lang] || tour.title.en;
-  const description = tour.description[lang] || tour.description.en;
-  const imageUrl = tour.mainImage;
-
-  const allSlugs = tour.slug;
-  const languages: { [key: string]: string } = {};
-  if (allSlugs.en) languages['en-US'] = `/en/tours/${encodeURIComponent(allSlugs.en)}`;
-  if (allSlugs.de) languages['de-DE'] = `/de/tours/${encodeURIComponent(allSlugs.de)}`;
-  if (allSlugs.fr) languages['fr-FR'] = `/fr/tours/${encodeURIComponent(allSlugs.fr)}`;
-  if (allSlugs.nl) languages['nl-NL'] = `/nl/tours/${encodeURIComponent(allSlugs.nl)}`;
-
-
-  return {
-    title: title,
-    description: description,
-    openGraph: {
-      title: title,
-      description: description,
-      images: [
-        {
-          url: imageUrl,
-          width: 1200,
-          height: 630,
-          alt: title,
-        },
-      ],
-      locale: lang,
-      type: 'website',
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title: title,
-      description: description,
-      images: [
-        {
-            url: imageUrl,
-            width: 1200,
-            height: 630,
-            alt: title,
-        }
-      ],
-    },
-    alternates: {
-        canonical: `/${lang}/tours/${slug}`,
-        languages: languages,
-    },
-  };
-}
-
-export default async function TourPage({ params }: { params: { lang: Locale, slug: string } }) {
-  const { lang, slug: encodedSlug } = params;
-  const slug = decodeURIComponent(encodedSlug);
+export default function TourPage({ tour, dictionary, lang, hotels, meetingPoints }: TourPageProps) {
+  const { setAlternateLinks } = useAlternateLinks();
   
-  // Fetch all necessary data in parallel
-  const [
-    dictionary, 
-    tourResult, 
-    hotelsResult, 
-    meetingPointsResult
-  ] = await Promise.all([
-    getDictionary(lang),
-    findTourBySlugAndLang({ slug, lang }),
-    findAllHotels({}),
-    findAllMeetingPoints({})
-  ]);
+  useEffect(() => {
+    if (tour) {
+      const allSlugs = tour.slug;
+      const languages: { [key: string]: string } = {};
+      if (allSlugs.en) languages['en'] = `/en/tours/${encodeURIComponent(allSlugs.en)}`;
+      if (allSlugs.de) languages['de'] = `/de/tours/${encodeURIComponent(allSlugs.de)}`;
+      if (allSlugs.fr) languages['fr'] = `/fr/tours/${encodeURIComponent(allSlugs.fr)}`;
+      if (allSlugs.nl) languages['nl'] = `/nl/tours/${encodeURIComponent(allSlugs.nl)}`;
+      setAlternateLinks(languages);
+    }
+    
+    // Cleanup function to reset links when component unmounts
+    return () => setAlternateLinks({});
+  }, [tour, setAlternateLinks]);
 
-
-  if (!tourResult.data) {
+  if (!tour) {
     notFound();
   }
-  const tour = tourResult.data;
   
   const tourHeaderProps = {
     title: tour.title[lang] || tour.title.en,
@@ -186,8 +107,8 @@ export default async function TourPage({ params }: { params: { lang: Locale, slu
                 dictionary={dictionary.tourDetail.booking} 
                 tour={tour}
                 lang={lang}
-                hotels={hotelsResult.data || []}
-                meetingPoints={meetingPointsResult.data || []}
+                hotels={hotels || []}
+                meetingPoints={meetingPoints || []}
               />
             </aside>
         </main>

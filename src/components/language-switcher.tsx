@@ -10,8 +10,9 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Globe, ChevronDown } from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
-import { i18n, type Locale } from '@/dictionaries/config';
+import { type Locale } from '@/dictionaries/config';
 import { useState, useEffect } from 'react';
+import { useAlternateLinks } from '@/context/alternate-links-context';
 
 type Language = {
   code: Locale;
@@ -30,6 +31,7 @@ const languages: Language[] = [
 export function LanguageSwitcher({ currentLocale }: { currentLocale: Locale }) {
   const pathname = usePathname();
   const router = useRouter();
+  const { alternateLinks } = useAlternateLinks();
   const [selectedLanguage, setSelectedLanguage] = useState<Language>(
     languages.find(l => l.code === currentLocale) || languages[0]
   );
@@ -42,17 +44,15 @@ export function LanguageSwitcher({ currentLocale }: { currentLocale: Locale }) {
 
   const handleLanguageChange = (newLang: Language) => {
     const newLocale = newLang.code;
-    
-    // remove the current locale from the pathname
-    const newPathName = pathname.replace(`/${currentLocale}`, '');
 
-    // For dynamic tour pages, redirect to the main tours listing
-    if (newPathName.startsWith('/tours/')) {
-        router.push(`/${newLocale}/tours`);
-        return;
+    // Use alternate link if available for the selected locale
+    if (alternateLinks[newLocale]) {
+      router.push(alternateLinks[newLocale]);
+      return;
     }
-    
-    // For all other pages, redirect to the same page in the new locale
+
+    // Fallback for non-dynamic pages
+    const newPathName = pathname.replace(`/${currentLocale}`, '');
     const newPath = `/${newLocale}${newPathName || '/'}`;
     router.push(newPath);
   };
