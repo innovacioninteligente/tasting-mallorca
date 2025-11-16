@@ -32,10 +32,10 @@ export default function TourPageClient({ tour, dictionary, lang, hotels, meeting
     if (tour) {
       const allSlugs = tour.slug;
       const languages: { [key: string]: string } = {};
-      if (allSlugs.en) languages['en'] = `/en/tours/${encodeURIComponent(allSlugs.en)}`;
-      if (allSlugs.de) languages['de'] = `/de/tours/${encodeURIComponent(allSlugs.de)}`;
-      if (allSlugs.fr) languages['fr'] = `/fr/tours/${encodeURIComponent(allSlugs.fr)}`;
-      if (allSlugs.nl) languages['nl'] = `/nl/tours/${encodeURIComponent(allSlugs.nl)}`;
+      if (allSlugs.en) languages['en'] = `/en/tours/${allSlugs.en}`;
+      if (allSlugs.de) languages['de'] = `/de/tours/${allSlugs.de}`;
+      if (allSlugs.fr) languages['fr'] = `/fr/tours/${allSlugs.fr}`;
+      if (allSlugs.nl) languages['nl'] = `/nl/tours/${allSlugs.nl}`;
       setAlternateLinks(languages);
     }
     
