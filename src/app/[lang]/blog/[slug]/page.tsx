@@ -4,7 +4,7 @@
 import { Suspense } from 'react';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
-import { findAllBlogPosts, findBlogPostBySlug } from '@/app/server-actions/blog/findBlogPosts';
+import { findAllBlogPosts, findBlogPostBySlugAndLang } from '@/app/server-actions/blog/findBlogPosts';
 import { Locale } from '@/dictionaries/config';
 import { BlogPost } from '@/backend/blog/domain/blog.model';
 import BlogPostClientPage from './blog-post-client-page';
@@ -40,7 +40,7 @@ export async function generateStaticParams(): Promise<BlogPostParams[]> {
 export async function generateMetadata({ params }: { params: BlogPostParams }): Promise<Metadata> {
   const { lang, slug: encodedSlug } = params;
   const slug = decodeURIComponent(encodedSlug);
-  const postResult = await findBlogPostBySlug({ slug, lang });
+  const postResult = await findBlogPostBySlugAndLang({ slug, lang });
 
   if (!postResult.data) {
     return { title: 'Post Not Found' };
@@ -88,7 +88,7 @@ export default async function BlogPostPageLoader({ params }: { params: BlogPostP
     const slug = decodeURIComponent(encodedSlug);
     
     const [postResult, otherPostsResult, toursResult, dictionary] = await Promise.all([
-      findBlogPostBySlug({ slug, lang }),
+      findBlogPostBySlugAndLang({ slug, lang }),
       findAllBlogPosts({}),
       findAllTours({}),
       getDictionary(lang),
