@@ -19,11 +19,11 @@ export function HorizontalTourCard({ tour, lang }: HorizontalTourCardProps) {
     return (
         <Link
             href={`/${lang}/tours/${slug}`}
-            className="block group bg-card rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow border border-transparent hover:border-primary/20"
+            className="block group bg-card rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow border border-border/20 hover:border-primary/30"
             prefetch={false}
         >
             <div className="flex h-full">
-                <div className="relative w-2/5 flex-shrink-0">
+                <div className="relative w-2/5 flex-shrink-0 h-40">
                     <Image
                         src={tour.mainImage}
                         alt={title}
@@ -51,3 +51,4 @@ export function HorizontalTourCard({ tour, lang }: HorizontalTourCardProps) {
         </Link>
     );
 }
+
