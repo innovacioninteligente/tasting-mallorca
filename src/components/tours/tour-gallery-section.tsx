@@ -102,7 +102,7 @@ export function TourGallerySection({ images }: TourGallerySectionProps) {
                             className="object-cover w-full h-full"
                         />
                          {index === galleryGridImages.length - 1 && remainingImageCount > 0 && (
-                            <div className="absolute inset-0 bg-black/30 flex items-center justify-center" onClick={() => openLightbox(index + 1)}>
+                            <div className="absolute inset-0 bg-black/30 flex items-center justify-center" onClick={(e) => { e.stopPropagation(); openLightbox(index + 1); }}>
                                 <Button variant="secondary" className="bg-white/80 hover:bg-white text-black">
                                     <ImageIcon className="w-5 h-5 mr-2" />
                                     +{remainingImageCount}

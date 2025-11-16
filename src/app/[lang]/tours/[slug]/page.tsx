@@ -1,3 +1,4 @@
+
 'use server';
 
 import { Suspense } from 'react';
@@ -37,7 +38,7 @@ export async function generateStaticParams(): Promise<TourPageParams[]> {
 export async function generateMetadata({ params }: { params: TourPageParams }): Promise<Metadata> {
   const { lang, slug: encodedSlug } = params;
   const slug = decodeURIComponent(encodedSlug);
-  const tourResult = await findTourBySlugAndLang(slug, lang);
+  const tourResult = await findTourBySlugAndLang({ slug, lang });
 
   if (!tourResult.data) {
     return { title: 'Tour Not Found' };
@@ -71,7 +72,7 @@ export async function generateMetadata({ params }: { params: TourPageParams }): 
     },
     alternates: {
       canonical: `/${lang}/tours/${slug}`,
-      languages: languages,
+      languages,
     },
   };
 }
@@ -81,7 +82,7 @@ export default async function TourPageLoader({ params }: { params: TourPageParam
     const slug = decodeURIComponent(encodedSlug);
     const [dictionary, tourResult, hotelsResult, meetingPointsResult] = await Promise.all([
         getDictionary(lang),
-        findTourBySlugAndLang(slug, lang),
+        findTourBySlugAndLang({ slug, lang }),
         findAllHotels({}),
         findAllMeetingPoints({}),
     ]);

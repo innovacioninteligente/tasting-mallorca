@@ -2,7 +2,7 @@
 'use server';
 
 import { createSafeAction } from '@/app/server-actions/lib/safe-action';
-import { findAllTours as findAllToursUseCase, findTourById as findTourByIdUseCase, findTourBySlug } from '@/backend/tours/application/findTours';
+import { findTourBySlug, findAllTours as findAllToursUseCase, findTourById as findTourByIdUseCase } from '@/backend/tours/application/findTours';
 import { FirestoreTourRepository } from '@/backend/tours/infrastructure/firestore-tour.repository';
 import { Tour } from '@/backend/tours/domain/tour.model';
 
@@ -45,7 +45,7 @@ export const findAllTours = createSafeAction(
 
 export const findTourBySlugAndLang = createSafeAction(
     {}, // Public action
-    async (slug: string, lang: string): Promise<{ data?: Tour; error?: string; }> => {
+    async ({ slug, lang }: { slug: string, lang: string }): Promise<{ data?: Tour; error?: string; }> => {
         try {
             const tourRepository = new FirestoreTourRepository();
             const tour = await findTourBySlug(tourRepository, slug, lang);

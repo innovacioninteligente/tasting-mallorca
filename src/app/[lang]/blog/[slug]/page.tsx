@@ -1,3 +1,4 @@
+
 'use server';
 
 import { Suspense } from 'react';
@@ -36,7 +37,7 @@ export async function generateStaticParams(): Promise<BlogPostParams[]> {
 export async function generateMetadata({ params }: { params: BlogPostParams }): Promise<Metadata> {
   const { lang, slug: encodedSlug } = params;
   const slug = decodeURIComponent(encodedSlug);
-  const postResult = await findBlogPostBySlugAndLang(slug, lang);
+  const postResult = await findBlogPostBySlugAndLang({ slug, lang });
 
   if (!postResult.data) {
     return { title: 'Post Not Found' };
@@ -82,7 +83,7 @@ export async function generateMetadata({ params }: { params: BlogPostParams }): 
 export default async function BlogPostPageLoader({ params }: { params: BlogPostParams }) {
     const { lang, slug: encodedSlug } = params;
     const slug = decodeURIComponent(encodedSlug);
-    const postResult = await findBlogPostBySlugAndLang(slug, lang);
+    const postResult = await findBlogPostBySlugAndLang({ slug, lang });
 
     if (!postResult.data || !postResult.data.published) {
         notFound();
