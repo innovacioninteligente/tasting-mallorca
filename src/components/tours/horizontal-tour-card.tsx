@@ -19,20 +19,20 @@ export function HorizontalTourCard({ tour, lang }: HorizontalTourCardProps) {
     return (
         <Link
             href={`/${lang}/tours/${slug}`}
-            className="block group bg-card rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-shadow"
+            className="block group bg-card rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow border border-transparent hover:border-primary/20"
             prefetch={false}
         >
-            <div className="flex">
-                <div className="relative h-full w-1/3 flex-shrink-0">
+            <div className="flex h-full">
+                <div className="relative w-2/5 flex-shrink-0">
                     <Image
                         src={tour.mainImage}
                         alt={title}
                         fill
                         className="object-cover transition-transform duration-300 group-hover:scale-105"
-                        sizes="33vw"
+                        sizes="(max-width: 1023px) 40vw, 20vw"
                     />
                 </div>
-                <div className="p-4 flex flex-col justify-between">
+                <div className="p-4 flex flex-col justify-between flex-grow">
                     <div>
                         <h3 className="text-lg font-bold leading-tight mb-2">{title}</h3>
                         <div className="flex items-center gap-2 text-sm text-muted-foreground">

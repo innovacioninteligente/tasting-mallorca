@@ -22,7 +22,7 @@ export function BlogPostHeader({ title, author, publishedAt, image, lang }: Blog
     const date = new Date(publishedAt);
 
     return (
-        <header className="relative w-full h-[60vh] md:h-[70vh]">
+        <header className="relative w-full h-screen">
             <Image
                 src={image}
                 alt={title}
@@ -31,13 +31,13 @@ export function BlogPostHeader({ title, author, publishedAt, image, lang }: Blog
                 sizes="100vw"
                 priority
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-black/20"></div>
-            <div className="absolute inset-0 flex items-end justify-center pb-12 md:pb-24">
-                <div className="container mx-auto px-4 text-center text-white">
+            <div className="absolute inset-0 bg-black/40"></div>
+            <div className="absolute inset-0 flex items-center justify-center p-4">
+                <div className="text-center text-white bg-black/20 backdrop-blur-[7px] p-8 rounded-2xl border border-white/20 max-w-[60vw]">
                      <h1 className="text-4xl md:text-6xl font-extrabold">
                         {title}
                     </h1>
-                    <div className="flex items-center justify-center gap-6 mt-6 text-white/80">
+                    <div className="flex items-center justify-center flex-wrap gap-4 md:gap-6 mt-6 text-white/80">
                         <div className="flex items-center gap-2">
                             <User className="w-5 h-5" />
                             <span className="font-medium">{author}</span>
