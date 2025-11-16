@@ -20,7 +20,7 @@ const themes = [
    {
     name: 'ocean',
     label: 'Ocean Blue',
-    colors: ['hsl(210 89% 41%)', 'hsl(190 77% 68%)', 'hsl(210 40% 96%)'],
+    colors: ['hsl(210 40% 31%)', 'hsl(37 56% 65%)', 'hsl(38 43% 96%)'],
   },
   {
     name: 'desert',

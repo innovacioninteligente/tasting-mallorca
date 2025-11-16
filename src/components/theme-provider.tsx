@@ -29,24 +29,19 @@ export function ThemeProvider({
   storageKey = 'vite-ui-theme',
   ...props
 }: ThemeProviderProps) {
-  const [theme, setTheme] = useState<Theme>(defaultTheme);
-
-  useEffect(() => {
+  const [theme, setTheme] = useState<Theme>(() => {
     try {
-        const storedTheme = localStorage.getItem(storageKey) as Theme | null;
-        if (storedTheme) {
-            setTheme(storedTheme);
-        }
+      const storedTheme = window.localStorage.getItem(storageKey) as Theme | null;
+      return storedTheme || defaultTheme;
     } catch (e) {
-        console.error("Could not access localStorage. Defaulting to initial theme.");
+      return defaultTheme;
     }
-  }, [storageKey]);
+  });
 
   useEffect(() => {
     const body = window.document.body;
-
     body.classList.remove('theme-tasting-mallorca', 'theme-teal', 'theme-ocean', 'theme-desert', 'theme-forest');
-
+    
     if (theme) {
       body.classList.add(`theme-${theme}`);
     }
