@@ -3,7 +3,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowRight, Calendar } from 'lucide-react';
+import { ArrowRight, Calendar, ImageIcon } from 'lucide-react';
 import { BlogPost } from '@/backend/blog/domain/blog.model';
 import { Locale } from '@/dictionaries/config';
 import { format } from 'date-fns';
@@ -24,14 +24,18 @@ export function HorizontalBlogCard({ post, lang }: HorizontalBlogCardProps) {
             prefetch={false}
         >
             <div className="flex h-full">
-                <div className="relative w-2/5 flex-shrink-0">
-                    <Image
-                        src={post.mainImage}
-                        alt={title}
-                        fill
-                        className="object-cover transition-transform duration-300 group-hover:scale-105"
-                        sizes="(max-width: 1023px) 40vw, 20vw"
-                    />
+                <div className="relative w-2/5 flex-shrink-0 bg-secondary flex items-center justify-center">
+                    {post.mainImage ? (
+                        <Image
+                            src={post.mainImage}
+                            alt={title}
+                            fill
+                            className="object-cover transition-transform duration-300 group-hover:scale-105"
+                            sizes="(max-width: 1023px) 40vw, 20vw"
+                        />
+                    ) : (
+                        <ImageIcon className="w-10 h-10 text-muted" />
+                    )}
                 </div>
                 <div className="p-4 flex flex-col justify-between flex-grow">
                     <div>
@@ -51,4 +55,3 @@ export function HorizontalBlogCard({ post, lang }: HorizontalBlogCardProps) {
         </Link>
     );
 }
-

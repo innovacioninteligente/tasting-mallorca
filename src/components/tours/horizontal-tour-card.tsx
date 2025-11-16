@@ -3,7 +3,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowRight, Clock } from 'lucide-react';
+import { ArrowRight, Clock, ImageIcon } from 'lucide-react';
 import { Tour } from '@/backend/tours/domain/tour.model';
 import { Locale } from '@/dictionaries/config';
 
@@ -23,14 +23,18 @@ export function HorizontalTourCard({ tour, lang }: HorizontalTourCardProps) {
             prefetch={false}
         >
             <div className="flex h-full">
-                <div className="relative w-2/5 flex-shrink-0 h-40">
-                    <Image
-                        src={tour.mainImage}
-                        alt={title}
-                        fill
-                        className="object-cover transition-transform duration-300 group-hover:scale-105"
-                        sizes="(max-width: 1023px) 40vw, 20vw"
-                    />
+                <div className="relative w-2/5 flex-shrink-0 h-40 bg-secondary flex items-center justify-center">
+                    {tour.mainImage ? (
+                        <Image
+                            src={tour.mainImage}
+                            alt={title}
+                            fill
+                            className="object-cover transition-transform duration-300 group-hover:scale-105"
+                            sizes="(max-width: 1023px) 40vw, 20vw"
+                        />
+                    ) : (
+                        <ImageIcon className="w-10 h-10 text-muted" />
+                    )}
                 </div>
                 <div className="p-4 flex flex-col justify-between flex-grow">
                     <div>
@@ -51,4 +55,3 @@ export function HorizontalTourCard({ tour, lang }: HorizontalTourCardProps) {
         </Link>
     );
 }
-
