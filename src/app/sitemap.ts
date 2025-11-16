@@ -7,7 +7,7 @@ import { Tour } from '@/backend/tours/domain/tour.model';
 import { BlogPost } from '@/backend/blog/domain/blog.model';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+  const siteUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
 
   // 1. Static Pages
   const staticPages = [
@@ -20,8 +20,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     '/guest-feedback',
     '/road-map',
     '/manage-booking',
-    '/signin',
-    '/signup'
   ];
 
   const staticUrls = staticPages.flatMap(page => 
