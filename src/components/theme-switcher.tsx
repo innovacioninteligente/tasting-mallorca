@@ -10,7 +10,7 @@ const themes = [
   {
     name: 'tasting-mallorca',
     label: 'Tasting Mallorca (Default)',
-    colors: ['hsl(356 90% 32%)', 'hsl(4 85% 46%)', 'hsl(11 50% 96%)'],
+    colors: ['hsl(356 90% 32%)', 'hsl(4 85% 46%)', 'hsl(11 55% 92%)'],
   },
   {
     name: 'teal',
@@ -25,8 +25,13 @@ const themes = [
   {
     name: 'forest',
     label: 'Forest Green',
-    colors: ['hsl(161 74% 14%)', 'hsl(147 18% 51%)', 'hsl(43 100% 50%)'],
+    colors: ['hsl(161 74% 14%)', 'hsl(43 100% 50%)', 'hsl(147 22% 96%)'],
   },
+  {
+    name: 'sunset',
+    label: 'Sunset',
+    colors: ['hsl(0 69% 42%)', 'hsl(220 16% 25%)', 'hsl(7 95% 82%)'],
+  }
 ];
 
 export function ThemeSwitcher() {

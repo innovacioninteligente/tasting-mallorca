@@ -3,7 +3,7 @@
 
 import { createContext, useContext, useEffect, useState } from 'react';
 
-type Theme = 'tasting-mallorca' | 'teal' | 'ocean' | 'desert' | 'forest';
+type Theme = 'tasting-mallorca' | 'teal' | 'ocean' | 'forest' | 'sunset';
 
 type ThemeProviderProps = {
   children: React.ReactNode;
@@ -29,18 +29,22 @@ export function ThemeProvider({
   storageKey = 'vite-ui-theme',
   ...props
 }: ThemeProviderProps) {
-  const [theme, setTheme] = useState<Theme>(() => {
+  const [theme, setTheme] = useState<Theme>(defaultTheme);
+
+  useEffect(() => {
     try {
       const storedTheme = window.localStorage.getItem(storageKey) as Theme | null;
-      return storedTheme || defaultTheme;
+      if (storedTheme) {
+        setTheme(storedTheme);
+      }
     } catch (e) {
-      return defaultTheme;
+      // If localStorage is not available, just use the default.
     }
-  });
+  }, [storageKey]);
 
   useEffect(() => {
     const body = window.document.body;
-    body.classList.remove('theme-tasting-mallorca', 'theme-teal', 'theme-ocean', 'theme-desert', 'theme-forest');
+    body.classList.remove('theme-tasting-mallorca', 'theme-teal', 'theme-ocean', 'theme-forest', 'theme-sunset');
     
     if (theme) {
       body.classList.add(`theme-${theme}`);

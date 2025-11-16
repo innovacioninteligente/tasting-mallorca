@@ -102,6 +102,29 @@
     --ring: 147 18% 61%;
   }
 
+  .theme-sunset {
+    --background: 220 20% 96%;
+    --foreground: 220 29% 10%;
+    --card: 220 20% 99%;
+    --card-foreground: 220 29% 10%;
+    --popover: 220 20% 99%;
+    --popover-foreground: 220 29% 10%;
+    --primary: 0 69% 42%;
+    --primary-foreground: 0 0% 98%;
+    --primary-dark: 0 70% 32%;
+    --secondary: 220 16% 25%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 220 16% 90%;
+    --muted-foreground: 220 9% 45%;
+    --accent: 7 95% 82%;
+    --accent-foreground: 220 29% 10%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 220 16% 85%;
+    --input: 220 16% 90%;
+    --ring: 0 69% 52%;
+  }
+
   .dark body {
     --background: 240 10% 3.9%;
     --foreground: 0 0% 98%;
