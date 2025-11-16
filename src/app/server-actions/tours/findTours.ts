@@ -52,8 +52,8 @@ export const findTourBySlugAndLang = createSafeAction(
             const tourRepository = new FirestoreTourRepository();
             const tour = await findTourBySlug(tourRepository, params.slug, params.lang);
 
-            if (!post) {
-                return { error: 'Tour not found.' };
+            if (!tour || !tour.published) {
+                return { error: 'Tour not found or not published.' };
             }
             return { data: JSON.parse(JSON.stringify(tour)) };
 
@@ -62,4 +62,3 @@ export const findTourBySlugAndLang = createSafeAction(
         }
     }
 );
-

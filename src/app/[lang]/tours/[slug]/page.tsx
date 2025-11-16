@@ -29,14 +29,16 @@ export async function generateStaticParams(): Promise<TourPageProps['params'][]>
     return [];
   }
 
-  const paths = result.data.flatMap((tour: Tour) =>
-    Object.entries(tour.slug)
-      .filter(([_, slugValue]) => slugValue) 
-      .map(([lang, slug]) => ({
-        lang: lang as Locale,
-        slug: encodeURIComponent(slug),
-      }))
-  );
+  const paths = result.data
+    .filter((tour: Tour) => tour.published) // Filter for published tours only
+    .flatMap((tour: Tour) =>
+      Object.entries(tour.slug)
+        .filter(([_, slugValue]) => slugValue) 
+        .map(([lang, slug]) => ({
+          lang: lang as Locale,
+          slug: encodeURIComponent(slug),
+        }))
+    );
 
   return paths;
 }
