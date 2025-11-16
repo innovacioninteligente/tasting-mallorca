@@ -2,5 +2,9 @@
 {
     "subtitle": "Blogbeitrag",
     "title": "Unser neuester Blogbeitrag",
-    "description": "Nachrichten, Geschichten und Tipps zu Mallorca. Alles, was Sie für Ihre nächste Reise wissen müssen."
+    "description": "Nachrichten, Geschichten und Tipps zu Mallorca. Alles, was Sie für Ihre nächste Reise wissen müssen.",
+    "related": {
+        "toursTitle": "Touren, die Ihnen gefallen könnten",
+        "postsTitle": "Weiterlesen"
+    }
 }

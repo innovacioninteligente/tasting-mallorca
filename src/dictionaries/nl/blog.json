@@ -2,5 +2,9 @@
 {
     "subtitle": "Blogpost",
     "title": "Onze Nieuwste Blogpost",
-    "description": "Nieuws, verhalen en tips over Mallorca. Alles wat je moet weten voor je volgende reis."
+    "description": "Nieuws, verhalen en tips over Mallorca. Alles wat je moet weten voor je volgende reis.",
+    "related": {
+        "toursTitle": "Tours die je misschien leuk vindt",
+        "postsTitle": "Blijf lezen"
+    }
 }
