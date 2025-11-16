@@ -1,5 +1,4 @@
 
-
 'use server';
 
 import { Suspense } from 'react';
@@ -20,6 +19,7 @@ import QRCode from "react-qr-code";
 import { adminApp } from '@/firebase/server/config';
 import { getDictionary } from '@/dictionaries/get-dictionary';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Locale } from '@/dictionaries/config';
 
 interface SearchParams {
     booking_id: string;
@@ -84,9 +84,10 @@ async function getFullBookingDetails(booking: Booking) {
 }
 
 
-export default async function BookingSuccessPage({ searchParams, params }: { searchParams: SearchParams, params: { lang: string } }) {
+export default async function BookingSuccessPage({ searchParams, params }: { searchParams: SearchParams, params: { lang: Locale } }) {
     const { booking_id } = searchParams;
-    const dictionary = await getDictionary(params.lang as any);
+    const dictionary = await getDictionary(params.lang);
+    const t = dictionary.bookingSuccess;
 
     if (!booking_id) {
         return notFound();
@@ -99,12 +100,12 @@ export default async function BookingSuccessPage({ searchParams, params }: { sea
              <div className="bg-background text-foreground min-h-screen flex items-center justify-center py-12">
                 <Card className="w-full max-w-md mx-4 text-center">
                     <CardHeader>
-                        <CardTitle>Error</CardTitle>
+                        <CardTitle>{t.errorTitle}</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <p>Could not retrieve booking details. Please check your email for confirmation or contact support.</p>
+                        <p>{t.errorMessage}</p>
                         <Button asChild className="mt-4">
-                            <Link href={`/${params.lang}`}>Go to Homepage</Link>
+                            <Link href={`/${params.lang}`}>{t.goToHomepage}</Link>
                         </Button>
                     </CardContent>
                 </Card>
@@ -133,20 +134,20 @@ export default async function BookingSuccessPage({ searchParams, params }: { sea
                         <CardHeader className="text-center bg-secondary/30 rounded-t-lg pt-8">
                             <CheckCircle className="mx-auto h-16 w-16 text-green-500 mb-4" />
                             <CardTitle className="text-3xl md:text-4xl font-extrabold text-primary">
-                                {isDeposit ? "¡Reserva con Depósito Confirmada!" : "¡Reserva Confirmada!"}
+                                {isDeposit ? t.titleDepositConfirmed : t.titleConfirmed}
                             </CardTitle>
-                            <p className="text-muted-foreground text-lg mt-2">Gracias por confiar en Tasting Mallorca.</p>
+                            <p className="text-muted-foreground text-lg mt-2">{t.thankYou}</p>
                         </CardHeader>
                         <CardContent className="p-6 md:p-8 space-y-6 text-base">
                             <p className="text-center text-muted-foreground">
-                                Hemos enviado un correo de confirmación con todos los detalles de tu reserva. Por favor, revisa tu bandeja de entrada.
+                                {t.confirmationEmail}
                             </p>
                             
                              <Card>
                                 <CardHeader>
                                     <CardTitle className="flex items-center gap-3">
                                         <QrCode className="h-6 w-6"/>
-                                        Tu Ticket Digital
+                                        {t.yourDigitalTicket}
                                     </CardTitle>
                                 </CardHeader>
                                 <CardContent className="flex flex-col md:flex-row items-center justify-center gap-6 p-6">
@@ -159,31 +160,31 @@ export default async function BookingSuccessPage({ searchParams, params }: { sea
                                         />
                                     </div>
                                     <p className="text-muted-foreground text-center md:text-left max-w-xs">
-                                        Presenta este código QR a tu guía al subir al autobús. Este es tu ticket personal e intransferible.
+                                        {t.qrCodeInstruction}
                                     </p>
                                 </CardContent>
                             </Card>
 
                             <div className="border border-border bg-secondary/30 rounded-lg p-4 space-y-3">
-                                <h3 className="font-bold text-xl mb-2 text-foreground">Resumen de tu Aventura</h3>
+                                <h3 className="font-bold text-xl mb-2 text-foreground">{t.adventureSummary}</h3>
                                 <div className="flex justify-between">
-                                    <span className="text-muted-foreground">Tour:</span>
+                                    <span className="text-muted-foreground">{t.tour}</span>
                                     <span className="font-semibold text-right">{tourTitle}</span>
                                 </div>
                                 <div className="flex justify-between">
-                                    <span className="text-muted-foreground">Fecha:</span>
+                                    <span className="text-muted-foreground">{t.date}</span>
                                     <span className="font-semibold">{formattedDate}</span>
                                 </div>
                                 <div className="flex justify-between">
-                                    <span className="text-muted-foreground">Participantes:</span>
+                                    <span className="text-muted-foreground">{t.participants}</span>
                                     <span className="font-semibold">{totalParticipants} ({booking.adults} Adults, {booking.children} Children, {booking.infants} Infants)</span>
                                 </div>
                                 <div className="flex justify-between">
-                                    <span className="text-muted-foreground">Tu hotel:</span>
+                                    <span className="text-muted-foreground">{t.yourHotel}</span>
                                     <span className="font-semibold text-right">{booking.hotelName}</span>
                                 </div>
                                 <div className="flex justify-between">
-                                    <span className="text-muted-foreground">Punto de Encuentro:</span>
+                                    <span className="text-muted-foreground">{t.meetingPoint}</span>
                                     <span className="font-semibold text-right">{booking.meetingPointName}</span>
                                 </div>
                             </div>
@@ -191,20 +192,20 @@ export default async function BookingSuccessPage({ searchParams, params }: { sea
                              <div className="border border-border bg-secondary/30 rounded-lg p-4 space-y-3">
                                 <h3 className="font-bold text-xl mb-2 text-foreground flex items-center gap-2">
                                     <DollarSign className="w-6 h-6"/>
-                                    Resumen del Pago
+                                    {t.paymentSummary}
                                 </h3>
                                 <div className="flex justify-between">
-                                    <span className="text-muted-foreground">Precio Total del Tour:</span>
+                                    <span className="text-muted-foreground">{t.totalPrice}</span>
                                     <span className="font-semibold">€{booking.totalPrice.toFixed(2)}</span>
                                 </div>
                                 <div className="flex justify-between">
-                                    <span className="text-muted-foreground">Importe Pagado:</span>
+                                    <span className="text-muted-foreground">{t.amountPaid}</span>
                                     <span className="font-semibold text-green-600">€{booking.amountPaid.toFixed(2)}</span>
                                 </div>
                                 {isDeposit && (
                                      <>
                                         <div className="flex justify-between text-lg font-bold pt-3 border-t mt-3 text-accent">
-                                            <span>Pendiente de pago (el día del tour):</span>
+                                            <span>{t.amountDue}</span>
                                             <span>€{booking.amountDue.toFixed(2)}</span>
                                         </div>
                                          <Alert variant="default" className="mt-2 text-sm bg-accent/10 border-accent/20 text-accent-foreground">
@@ -221,7 +222,7 @@ export default async function BookingSuccessPage({ searchParams, params }: { sea
                                 <div className="space-y-4">
                                     <h3 className="font-bold text-xl flex items-center gap-2">
                                         <Map className="w-6 h-6 text-primary"/>
-                                        Ruta a tu punto de encuentro
+                                        {t.routeToMeetingPoint}
                                     </h3>
                                     <div className="h-96 rounded-lg overflow-hidden border border-border">
                                         <RouteMap
@@ -235,7 +236,7 @@ export default async function BookingSuccessPage({ searchParams, params }: { sea
                             <Button asChild size="lg" className="w-full font-bold text-lg mt-6">
                             <Link href={`/${params.lang}`}>
                                 <Home className="mr-2 h-5 w-5" />
-                                Ir a la Página Principal
+                                {t.goToMainPage}
                             </Link>
                             </Button>
                         </CardContent>

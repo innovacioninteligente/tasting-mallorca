@@ -1,0 +1,24 @@
+
+{
+    "errorTitle": "Erreur",
+    "errorMessage": "Impossible de récupérer les détails de la réservation. Veuillez vérifier votre e-mail pour une confirmation ou contacter le support.",
+    "goToHomepage": "Aller à la page d'accueil",
+    "titleConfirmed": "Réservation confirmée !",
+    "titleDepositConfirmed": "Réservation avec acompte confirmée !",
+    "thankYou": "Merci de faire confiance à Tasting Mallorca.",
+    "confirmationEmail": "Nous avons envoyé un e-mail de confirmation avec tous les détails de votre réservation. Veuillez vérifier votre boîte de réception.",
+    "yourDigitalTicket": "Votre billet numérique",
+    "qrCodeInstruction": "Présentez ce code QR à votre guide en montant dans le bus. C'est votre billet personnel et non transférable.",
+    "adventureSummary": "Résumé de votre aventure",
+    "tour": "Tour",
+    "date": "Date",
+    "participants": "Participants",
+    "yourHotel": "Votre hôtel",
+    "meetingPoint": "Point de rendez-vous",
+    "paymentSummary": "Résumé du paiement",
+    "totalPrice": "Prix total du tour",
+    "amountPaid": "Montant payé",
+    "amountDue": "Montant dû (le jour du tour)",
+    "routeToMeetingPoint": "Itinéraire vers votre point de rendez-vous",
+    "goToMainPage": "Aller à la page principale"
+}

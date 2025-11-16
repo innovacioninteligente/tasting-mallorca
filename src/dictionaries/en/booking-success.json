@@ -1,0 +1,24 @@
+
+{
+    "errorTitle": "Error",
+    "errorMessage": "Could not retrieve booking details. Please check your email for confirmation or contact support.",
+    "goToHomepage": "Go to Homepage",
+    "titleConfirmed": "Booking Confirmed!",
+    "titleDepositConfirmed": "Booking with Deposit Confirmed!",
+    "thankYou": "Thank you for trusting Tasting Mallorca.",
+    "confirmationEmail": "We have sent a confirmation email with all the details of your booking. Please check your inbox.",
+    "yourDigitalTicket": "Your Digital Ticket",
+    "qrCodeInstruction": "Present this QR code to your guide when boarding the bus. This is your personal and non-transferable ticket.",
+    "adventureSummary": "Your Adventure Summary",
+    "tour": "Tour",
+    "date": "Date",
+    "participants": "Participants",
+    "yourHotel": "Your hotel",
+    "meetingPoint": "Meeting Point",
+    "paymentSummary": "Payment Summary",
+    "totalPrice": "Total Tour Price",
+    "amountPaid": "Amount Paid",
+    "amountDue": "Amount due (on the day of the tour)",
+    "routeToMeetingPoint": "Route to your meeting point",
+    "goToMainPage": "Go to Main Page"
+}

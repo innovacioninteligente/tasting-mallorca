@@ -23,6 +23,7 @@ const dictionaries = {
     guestFeedback: () => import('./en/guest-feedback.json').then((module) => module.default),
     about: () => import('./en/about.json').then((module) => module.default),
     contact: () => import('./en/contact.json').then((module) => module.default),
+    bookingSuccess: () => import('./en/booking-success.json').then((module) => module.default),
     tourDetail: {
       header: () => import('./en/tour-detail/header.json').then(m => m.default),
       overview: () => import('./en/tour-detail/overview.json').then(m => m.default),
@@ -54,6 +55,7 @@ const dictionaries = {
     guestFeedback: () => import('./fr/guest-feedback.json').then((module) => module.default),
     about: () => import('./fr/about.json').then((module) => module.default),
     contact: () => import('./fr/contact.json').then((module) => module.default),
+    bookingSuccess: () => import('./fr/booking-success.json').then((module) => module.default),
     tourDetail: {
       header: () => import('./fr/tour-detail/header.json').then(m => m.default),
       overview: () => import('./fr/tour-detail/overview.json').then(m => m.default),
@@ -85,6 +87,7 @@ const dictionaries = {
     guestFeedback: () => import('./de/guest-feedback.json').then((module) => module.default),
     about: () => import('./de/about.json').then((module) => module.default),
     contact: () => import('./de/contact.json').then((module) => module.default),
+    bookingSuccess: () => import('./de/booking-success.json').then((module) => module.default),
     tourDetail: {
       header: () => import('./de/tour-detail/header.json').then(m => m.default),
       overview: () => import('./de/tour-detail/overview.json').then(m => m.default),
@@ -116,6 +119,7 @@ const dictionaries = {
     guestFeedback: () => import('./nl/guest-feedback.json').then((module) => module.default),
     about: () => import('./nl/about.json').then((module) => module.default),
     contact: () => import('./nl/contact.json').then((module) => module.default),
+    bookingSuccess: () => import('./nl/booking-success.json').then((module) => module.default),
     tourDetail: {
       header: () => import('./nl/tour-detail/header.json').then(m => m.default),
       overview: () => import('./nl/tour-detail/overview.json').then(m => m.default),
@@ -163,6 +167,7 @@ const loadDictionary = async (locale: Locale) => {
         guestFeedback: await lang.guestFeedback(),
         about: await lang.about(),
         contact: await lang.contact(),
+        bookingSuccess: await lang.bookingSuccess(),
         tourDetail,
         dashboard,
     };

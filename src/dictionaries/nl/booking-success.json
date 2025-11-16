@@ -1,0 +1,24 @@
+
+{
+    "errorTitle": "Fout",
+    "errorMessage": "Kon boekingsgegevens niet ophalen. Controleer uw e-mail voor bevestiging of neem contact op met de ondersteuning.",
+    "goToHomepage": "Ga naar de startpagina",
+    "titleConfirmed": "Boeking bevestigd!",
+    "titleDepositConfirmed": "Boeking met aanbetaling bevestigd!",
+    "thankYou": "Bedankt voor uw vertrouwen in Tasting Mallorca.",
+    "confirmationEmail": "We hebben een bevestigingsmail gestuurd met alle details van uw boeking. Controleer uw inbox.",
+    "yourDigitalTicket": "Uw digitale ticket",
+    "qrCodeInstruction": "Toon deze QR-code aan uw gids bij het instappen in de bus. Dit is uw persoonlijke en niet-overdraagbare ticket.",
+    "adventureSummary": "Uw avonturenoverzicht",
+    "tour": "Tour",
+    "date": "Datum",
+    "participants": "Deelnemers",
+    "yourHotel": "Uw hotel",
+    "meetingPoint": "Trefpunt",
+    "paymentSummary": "Betalingsoverzicht",
+    "totalPrice": "Totale tourprijs",
+    "amountPaid": "Betaald bedrag",
+    "amountDue": "Te betalen bedrag (op de dag van de tour)",
+    "routeToMeetingPoint": "Route naar uw trefpunt",
+    "goToMainPage": "Ga naar de hoofdpagina"
+}
