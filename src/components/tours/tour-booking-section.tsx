@@ -28,6 +28,7 @@ import { doc, setDoc } from "firebase/firestore";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { cn } from "@/lib/utils";
 import { type Locale } from '@/dictionaries/config';
+import { RouteMap } from "../route-map";
 
 
 interface TourBookingSectionProps {
@@ -117,6 +118,7 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
     const [language, setLanguage] = useState<string>(() => getInitialState(`${bookingCacheKey}-language`, lang));
     const [paymentOption, setPaymentOption] = useState<'full' | 'deposit'>(() => getInitialState(`${bookingCacheKey}-paymentOption`, 'full'));
     const [selectedHotel, setSelectedHotel] = useState<HotelModel | null>(() => getInitialState(`${bookingCacheKey}-hotel`, null));
+    const [suggestedMeetingPoint, setSuggestedMeetingPoint] = useState<MeetingPoint | null>(null);
     const [customerName, setCustomerName] = useState('');
     const [customerEmail, setCustomerEmail] = useState('');
     const [customerPhone, setCustomerPhone] = useState('');
@@ -124,6 +126,17 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
     const [bookingId, setBookingId] = useState<string | null>(null);
     const [isSearchingHotel, setIsSearchingHotel] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
+
+    useEffect(() => {
+        if (selectedHotel && meetingPoints) {
+            const point = selectedHotel.assignedMeetingPointId
+                ? meetingPoints.find(mp => mp.id === selectedHotel.assignedMeetingPointId)
+                : null;
+            setSuggestedMeetingPoint(point || null);
+        } else {
+            setSuggestedMeetingPoint(null);
+        }
+    }, [selectedHotel, meetingPoints]);
 
     useEffect(() => {
         try {
@@ -144,10 +157,6 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
     const depositPrice = tour.allowDeposit && tour.depositPrice ? tour.depositPrice * (adults + children) : 0;
     
     const amountToPay = paymentOption === 'deposit' ? depositPrice : totalPrice;
-
-    const suggestedMeetingPoint = selectedHotel?.assignedMeetingPointId
-        ? meetingPoints.find(mp => mp.id === selectedHotel.assignedMeetingPointId)
-        : null;
 
     const handleContinueToPayment = async () => {
         if (!firestore || !date || !selectedHotel || !suggestedMeetingPoint || !customerName || !customerEmail || !customerPhone) return;
@@ -602,6 +611,9 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
             default: return Step1;
         }
     }
+    
+    const originCoords = (selectedHotel?.latitude && selectedHotel?.longitude) ? { lat: selectedHotel.latitude, lng: selectedHotel.longitude } : null;
+    const destinationCoords = (suggestedMeetingPoint?.latitude && suggestedMeetingPoint?.longitude) ? { lat: suggestedMeetingPoint.latitude, lng: suggestedMeetingPoint.longitude } : null;
 
     return (
         <>
@@ -640,15 +652,26 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
                         animate={{ opacity: 1, scale: 1 }}
                         exit={{ opacity: 0, scale: 0.95 }}
                         transition={{ duration: 0.3, ease: "easeInOut" }}
-                        className="flex max-w-4xl w-full max-h-[90vh] bg-background rounded-lg shadow-2xl"
+                        className="flex max-w-6xl w-full max-h-[90vh] bg-background rounded-lg shadow-2xl"
                         onClick={(e) => e.stopPropagation()}
                     >
                         <div className="hidden md:block bg-secondary p-8 rounded-l-lg w-2/5">
-                             <h3 className="text-2xl font-bold">{tour.title[lang] || tour.title.en}</h3>
-                             <p className="text-muted-foreground mt-2">{tour.description[lang] || tour.description.en}</p>
-                             <div className="relative h-64 mt-8 rounded-lg overflow-hidden">
-                                 <NextImage src={tour.mainImage} alt={tour.title.en} fill className="object-cover" />
-                             </div>
+                            {originCoords && destinationCoords ? (
+                                <div className="h-full w-full rounded-md overflow-hidden">
+                                     <RouteMap
+                                        origin={originCoords}
+                                        destination={destinationCoords}
+                                    />
+                                </div>
+                            ) : (
+                                <>
+                                    <h3 className="text-2xl font-bold">{tour.title[lang] || tour.title.en}</h3>
+                                    <p className="text-muted-foreground mt-2">{tour.description[lang] || tour.description.en}</p>
+                                    <div className="relative h-64 mt-8 rounded-lg overflow-hidden">
+                                        <NextImage src={tour.mainImage} alt={tour.title.en} fill className="object-cover" />
+                                    </div>
+                                </>
+                            )}
                         </div>
                         <div className="flex flex-col flex-1 min-w-0">
                            <div className="p-6 border-b shrink-0">
