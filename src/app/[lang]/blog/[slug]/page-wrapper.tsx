@@ -35,7 +35,7 @@ export async function generateStaticParams(): Promise<BlogPostPageWrapperProps['
 export async function generateMetadata({ params }: BlogPostPageWrapperProps): Promise<Metadata> {
   const { lang, slug: encodedSlug } = params;
   const slug = decodeURIComponent(encodedSlug);
-  const postResult = await findBlogPostBySlugAndLang({ slug, lang });
+  const postResult = await findBlogPostBySlugAndLang(slug, lang);
 
   if (!postResult.data) {
     return {
@@ -98,7 +98,7 @@ export default async function BlogPostPageWrapper({ params }: BlogPostPageWrappe
   const { lang, slug: encodedSlug } = params;
   const slug = decodeURIComponent(encodedSlug);
   
-  const postResult = await findBlogPostBySlugAndLang({ slug, lang });
+  const postResult = await findBlogPostBySlugAndLang(slug, lang);
 
   if (!postResult.data) {
     notFound();

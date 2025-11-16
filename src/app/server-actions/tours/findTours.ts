@@ -44,13 +44,11 @@ export const findAllTours = createSafeAction(
 );
 
 export const findTourBySlugAndLang = createSafeAction(
-    {
-        // Public action, no roles required
-    },
-    async (params: { slug: string; lang: string; }): Promise<{ data?: Tour; error?: string; }> => {
+    {}, // Public action
+    async (slug: string, lang: string): Promise<{ data?: Tour; error?: string; }> => {
         try {
             const tourRepository = new FirestoreTourRepository();
-            const tour = await findTourBySlug(tourRepository, params.slug, params.lang);
+            const tour = await findTourBySlug(tourRepository, slug, lang);
 
             if (!tour || !tour.published) {
                 return { error: 'Tour not found or not published.' };

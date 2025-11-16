@@ -42,13 +42,11 @@ export const findAllBlogPosts = createSafeAction(
 );
 
 export const findBlogPostBySlugAndLang = createSafeAction(
-    {
-        // Public action, no roles required
-    },
-    async (params: { slug: string; lang: string; }): Promise<{ data?: BlogPost; error?: string; }> => {
+    {}, // Public action
+    async (slug: string, lang: string): Promise<{ data?: BlogPost; error?: string; }> => {
         try {
             const blogRepository = new FirestoreBlogRepository();
-            const post = await findBlogPostBySlug(blogRepository, params.slug, params.lang);
+            const post = await findBlogPostBySlug(blogRepository, slug, lang);
 
             if (!post) {
                 return { error: 'Blog post not found.' };

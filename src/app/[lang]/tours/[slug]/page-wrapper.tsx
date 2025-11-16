@@ -40,7 +40,7 @@ export async function generateStaticParams(): Promise<TourPageWrapperProps['para
 export async function generateMetadata({ params }: TourPageWrapperProps): Promise<Metadata> {
   const { lang, slug: encodedSlug } = params;
   const slug = decodeURIComponent(encodedSlug);
-  const tourResult = await findTourBySlugAndLang({ slug, lang });
+  const tourResult = await findTourBySlugAndLang(slug, lang);
 
   if (!tourResult.data) {
     return {
@@ -109,7 +109,7 @@ export default async function TourPageWrapper({ params }: { params: { lang: Loca
     meetingPointsResult
   ] = await Promise.all([
     getDictionary(lang),
-    findTourBySlugAndLang({ slug, lang }),
+    findTourBySlugAndLang(slug, lang),
     findAllHotels({}),
     findAllMeetingPoints({})
   ]);
