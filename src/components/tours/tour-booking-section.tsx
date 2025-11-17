@@ -699,7 +699,13 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
                                     <h3 className="text-2xl font-bold">{tour.title[lang] || tour.title.en}</h3>
                                     <p className="text-muted-foreground mt-2">{tour.description[lang] || tour.description.en}</p>
                                     <div className="relative h-64 mt-8 rounded-lg overflow-hidden">
-                                        <NextImage src={tour.mainImage} alt={tour.title.en} fill className="object-cover" />
+                                        {tour.mainImage ? (
+                                            <NextImage src={tour.mainImage} alt={tour.title.en} fill className="object-cover" />
+                                        ) : (
+                                            <div className="w-full h-full bg-muted flex items-center justify-center">
+                                                <ImageIcon className="h-16 w-16 text-muted-foreground/30" />
+                                            </div>
+                                        )}
                                     </div>
                                 </>
                             )}
