@@ -51,6 +51,7 @@ export interface Tour {
     startDate: string;
     endDate: string;
     activeDays: string[];
+    languages: string[];
   }[];
   isFeatured: boolean;
   allowDeposit: boolean;
@@ -76,6 +77,7 @@ const availabilityPeriodSchema = z.object({
     startDate: z.date({ required_error: "Start date is required." }),
     endDate: z.date({ required_error: "End date is required." }),
     activeDays: z.array(z.string()).min(1, "At least one active day is required."),
+    languages: z.array(z.string()).min(1, "At least one language is required."),
 });
 
 const pickupPointSchema = z.object({
