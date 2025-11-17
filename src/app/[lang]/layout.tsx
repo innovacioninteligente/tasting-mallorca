@@ -12,6 +12,7 @@ import { Footer } from '@/components/footer';
 import { AlternateLinksProvider } from '@/context/alternate-links-context';
 import { ThemeProvider } from '@/components/theme-provider';
 import { CookieConsent } from '@/components/cookie-consent';
+import { AnalyticsProvider } from '@/components/analytics-provider';
 
 
 const poppins = Poppins({
@@ -74,7 +75,8 @@ export default async function RootLayout({
 
   return (
     <html lang={lang} className={`${poppins.variable}`} suppressHydrationWarning>
-      <body className="font-body antialiased bg-background text-foreground">
+      <body>
+        <AnalyticsProvider />
         <ThemeProvider>
           <FirebaseClientProvider>
             <AlternateLinksProvider>

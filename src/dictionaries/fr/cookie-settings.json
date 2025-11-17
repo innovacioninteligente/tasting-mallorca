@@ -1,0 +1,18 @@
+
+{
+    "title": "Personnaliser les préférences de cookies",
+    "description": "Vous pouvez gérer vos préférences de cookies ci-dessous. Pour plus de détails, veuillez consulter notre Politique en matière de cookies.",
+    "necessary": {
+        "title": "Cookies strictement nécessaires",
+        "description": "Ces cookies sont essentiels au fonctionnement du site web et ne peuvent pas être désactivés."
+    },
+    "analytics": {
+        "title": "Cookies d'analyse",
+        "description": "Ces cookies nous permettent de compter les visites et les sources de trafic afin de mesurer et d'améliorer les performances de notre site."
+    },
+    "marketing": {
+        "title": "Cookies de marketing",
+        "description": "Ces cookies peuvent être définis sur notre site par nos partenaires publicitaires pour créer un profil de vos intérêts."
+    },
+    "saveButton": "Enregistrer les préférences"
+}

@@ -1,0 +1,18 @@
+
+{
+    "title": "Cookie-Einstellungen anpassen",
+    "description": "Sie können Ihre Cookie-Einstellungen unten verwalten. Weitere Einzelheiten finden Sie in unserer Cookie-Richtlinie.",
+    "necessary": {
+        "title": "Unbedingt notwendige Cookies",
+        "description": "Diese Cookies sind für die Funktion der Website unerlässlich und können nicht deaktiviert werden."
+    },
+    "analytics": {
+        "title": "Analyse-Cookies",
+        "description": "Diese Cookies ermöglichen es uns, Besuche und Verkehrsquellen zu zählen, damit wir die Leistung unserer Website messen und verbessern können."
+    },
+    "marketing": {
+        "title": "Marketing-Cookies",
+        "description": "Diese Cookies können über unsere Website von unseren Werbepartnern gesetzt werden, um ein Profil Ihrer Interessen zu erstellen."
+    },
+    "saveButton": "Einstellungen speichern"
+}

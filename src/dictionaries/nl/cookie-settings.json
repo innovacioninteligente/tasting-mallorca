@@ -1,0 +1,18 @@
+
+{
+    "title": "Cookievoorkeuren aanpassen",
+    "description": "U kunt hieronder uw cookievoorkeuren beheren. Raadpleeg ons Cookiebeleid voor meer details.",
+    "necessary": {
+        "title": "Strikt noodzakelijke cookies",
+        "description": "Deze cookies zijn essentieel voor het functioneren van de website en kunnen niet worden uitgeschakeld."
+    },
+    "analytics": {
+        "title": "Analytics Cookies",
+        "description": "Met deze cookies kunnen we bezoeken en verkeersbronnen tellen, zodat we de prestaties van onze site kunnen meten en verbeteren."
+    },
+    "marketing": {
+        "title": "Marketingcookies",
+        "description": "Deze cookies kunnen via onze site worden ingesteld door onze advertentiepartners om een profiel van uw interesses op te bouwen."
+    },
+    "saveButton": "Voorkeuren opslaan"
+}
