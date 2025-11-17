@@ -24,13 +24,13 @@ import { Hotel as HotelModel } from "@/backend/hotels/domain/hotel.model";
 import { MeetingPoint } from "@/backend/meeting-points/domain/meeting-point.model";
 import { useUser, useFirestore } from "@/firebase";
 import { Tour } from "@/backend/tours/domain/tour.model";
-import { doc, setDoc } from "firebase/firestore";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { cn } from "@/lib/utils";
 import { type Locale } from '@/dictionaries/config';
 import { RouteMap } from "../route-map";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useToast } from "@/hooks/use-toast";
+import { createPendingBooking } from '@/app/server-actions/bookings/createPendingBooking';
 
 
 interface TourBookingSectionProps {
@@ -112,7 +112,6 @@ const getInitialState = <T,>(key: string, defaultValue: T): T => {
 
 export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoints }: TourBookingSectionProps) {
     const { user } = useUser();
-    const firestore = useFirestore();
     const { toast } = useToast();
     const isMobile = useIsMobile();
     const [isSheetOpen, setIsSheetOpen] = useState(false);
@@ -203,13 +202,11 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
     const amountToPay = paymentOption === 'deposit' ? depositPrice : totalPrice;
 
     const handleContinueToPayment = async () => {
-        if (!firestore || !date || !selectedHotel || !suggestedMeetingPoint || !customerName || !customerEmail || !customerPhone) return;
+        if (!date || !selectedHotel || !suggestedMeetingPoint || !customerName || !customerEmail || !customerPhone) return;
         
         setIsSubmitting(true);
-        const newBookingId = crypto.randomUUID();
         
         const bookingData = {
-            id: newBookingId,
             tourId: tour.id,
             userId: user?.uid || 'anonymous',
             date: date,
@@ -222,26 +219,31 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
             meetingPointId: suggestedMeetingPoint.id,
             meetingPointName: suggestedMeetingPoint.name,
             totalPrice: totalPrice,
-            amountPaid: 0,
-            amountDue: totalPrice,
             paymentType: paymentOption,
-            status: 'pending' as 'pending',
-            ticketStatus: 'valid' as 'valid',
             customerName,
             customerEmail,
             customerPhone,
         };
 
         try {
-            await setDoc(doc(firestore, "bookings", newBookingId), bookingData);
-            setBookingId(newBookingId);
-            setStep(step + 1);
-        } catch (error) {
+            const result = await createPendingBooking(bookingData);
+            if (result.error) {
+                throw new Error(result.error);
+            }
+            
+            if (result.data?.bookingId) {
+                setBookingId(result.data.bookingId);
+                setStep(step + 1);
+            } else {
+                throw new Error('Failed to get booking ID from server.');
+            }
+
+        } catch (error: any) {
             console.error("Error creating pending booking:", error);
             toast({
                 variant: 'destructive',
                 title: 'Error creating booking',
-                description: 'Could not save your booking. Please try again.',
+                description: error.message || 'Could not save your booking. Please try again.',
             });
         } finally {
             setIsSubmitting(false);
@@ -635,7 +637,7 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
                 )}
             </div>
             <div className="space-y-3">
-                 <Button size="lg" className="w-full font-bold text-lg py-7 bg-accent text-accent-foreground hover:bg-accent/90" onClick={async () => await handleContinueToPayment()} disabled={!selectedHotel || !suggestedMeetingPoint || !customerName || !customerEmail || !customerPhone || isSubmitting}>
+                 <Button size="lg" className="w-full font-bold text-lg py-7 bg-accent text-accent-foreground hover:bg-accent/90" onClick={handleContinueToPayment} disabled={!selectedHotel || !suggestedMeetingPoint || !customerName || !customerEmail || !customerPhone || isSubmitting}>
                     {isSubmitting ? <Loader2 className="animate-spin h-5 w-5" /> : dictionary.continueToPayment}
                 </Button>
                  <Button variant="ghost" size="lg" className="w-full" onClick={handlePrevStep}>
