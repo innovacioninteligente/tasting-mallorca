@@ -17,7 +17,7 @@ type ThemeProviderState = {
 };
 
 const initialState: ThemeProviderState = {
-  theme: 'tasting-mallorca',
+  theme: 'ocean',
   setTheme: () => null,
 };
 
@@ -25,7 +25,7 @@ const ThemeProviderContext = createContext<ThemeProviderState>(initialState);
 
 export function ThemeProvider({
   children,
-  defaultTheme = 'tasting-mallorca',
+  defaultTheme = 'ocean',
   storageKey = 'vite-ui-theme',
   ...props
 }: ThemeProviderProps) {
@@ -78,3 +78,5 @@ export const useTheme = () => {
 
   return context;
 };
+
+    

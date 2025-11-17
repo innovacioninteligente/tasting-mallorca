@@ -8,19 +8,19 @@ import { cn } from '@/lib/utils';
 
 const themes = [
   {
+    name: 'ocean',
+    label: 'Ocean Blue (Default)',
+    colors: ['hsl(210 40% 31%)', 'hsl(37 56% 65%)', 'hsl(38 43% 96%)'],
+  },
+  {
     name: 'tasting-mallorca',
-    label: 'Tasting Mallorca (Default)',
+    label: 'Tasting Mallorca',
     colors: ['hsl(356 90% 32%)', 'hsl(4 85% 46%)', 'hsl(11 55% 92%)'],
   },
   {
     name: 'teal',
     label: 'Deep Teal',
     colors: ['hsl(181 88% 33%)', 'hsl(199 41% 54%)', 'hsl(199 41% 95%)'],
-  },
-   {
-    name: 'ocean',
-    label: 'Ocean Blue',
-    colors: ['hsl(210 40% 31%)', 'hsl(37 56% 65%)', 'hsl(38 43% 96%)'],
   },
   {
     name: 'forest',
@@ -79,3 +79,5 @@ export function ThemeSwitcher() {
     </Card>
   );
 }
+
+    

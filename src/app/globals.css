@@ -11,26 +11,26 @@
   }
   
   .theme-tasting-mallorca {
-    --background: 11 55% 92%;
-    --foreground: 60 1% 17%;
-    --card: 11 50% 96%;
-    --card-foreground: 60 1% 17%;
-    --popover: 11 50% 96%;
-    --popover-foreground: 60 1% 17%;
-    --primary: 356 90% 32%;
-    --primary-foreground: 11 55% 92%;
-    --primary-dark: 356 90% 22%;
-    --secondary: 216 4% 85%;
-    --secondary-foreground: 60 1% 17%;
-    --muted: 216 4% 85%;
-    --muted-foreground: 216 4% 45%;
-    --accent: 4 85% 46%;
-    --accent-foreground: 0 0% 98%;
+    --background: 38 43% 96%;
+    --foreground: 222 65% 19%;
+    --card: 38 43% 99%;
+    --card-foreground: 222 65% 19%;
+    --popover: 38 43% 99%;
+    --popover-foreground: 222 65% 19%;
+    --primary: 210 40% 31%;
+    --primary-foreground: 38 43% 98%;
+    --primary-dark: 222 65% 19%;
+    --secondary: 210 40% 90%;
+    --secondary-foreground: 222 65% 15%;
+    --muted: 210 40% 90%;
+    --muted-foreground: 215 16% 47%;
+    --accent: 37 56% 65%;
+    --accent-foreground: 222 65% 19%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
-    --border: 216 4% 75%;
-    --input: 216 4% 80%;
-    --ring: 356 90% 40%;
+    --border: 210 40% 88%;
+    --input: 210 40% 90%;
+    --ring: 210 40% 41%;
   }
 
   .theme-teal {
@@ -236,3 +236,5 @@
     display: none;
   }
 }
+
+    
