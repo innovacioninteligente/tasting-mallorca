@@ -31,14 +31,14 @@ export function Header({ dictionary, lang }: HeaderProps) {
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       {/* Main Header */}
       <div className="w-full md:w-[80vw] mx-auto px-4 flex h-20 items-center justify-between">
-        <Link href={`/${lang}/`} className="flex items-center gap-2 font-semibold" prefetch={false}>
-            <div className="relative h-14 w-14">
+        <Link href={`/${lang}/`} className="flex items-center gap-0 font-semibold" prefetch={false}>
+            <div className="relative h-16 w-16">
               <Image
                   src="https://firebasestorage.googleapis.com/v0/b/tasting-mallorca.firebasestorage.app/o/web%2Fbranding%2FICONO-AZUL.png?alt=media&token=5f6b7c16-5a14-4d45-bbdb-f3a70138e8b7"
                   alt="Tasting Mallorca Logo"
                   fill
                   className="object-contain"
-                  sizes="56px"
+                  sizes="64px"
               />
             </div>
             <span className="text-xl font-bold text-foreground">Tasting Mallorca</span>
@@ -77,14 +77,14 @@ export function Header({ dictionary, lang }: HeaderProps) {
                 <SheetTitle className="sr-only">Menu</SheetTitle>
               </SheetHeader>
               <div className="flex flex-col gap-6 p-6">
-                <Link href={`/${lang}/`} className="flex items-center gap-2 font-semibold" prefetch={false} onClick={() => setIsMobileMenuOpen(false)}>
-                   <div className="relative h-10 w-10">
+                <Link href={`/${lang}/`} className="flex items-center gap-0 font-semibold" prefetch={false} onClick={() => setIsMobileMenuOpen(false)}>
+                   <div className="relative h-12 w-12">
                         <Image
                             src="https://firebasestorage.googleapis.com/v0/b/tasting-mallorca.firebasestorage.app/o/web%2Fbranding%2FICONO-AZUL.png?alt=media&token=5f6b7c16-5a14-4d45-bbdb-f3a70138e8b7"
                             alt="Tasting Mallorca Logo"
                             fill
                             className="object-contain"
-                            sizes="40px"
+                            sizes="48px"
                         />
                     </div>
                     <span className="text-xl font-bold text-foreground">Tasting Mallorca</span>
@@ -118,3 +118,5 @@ export function Header({ dictionary, lang }: HeaderProps) {
     </header>
   );
 }
+
+    
