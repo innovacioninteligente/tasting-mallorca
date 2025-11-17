@@ -29,6 +29,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { cn } from "@/lib/utils";
 import { type Locale } from '@/dictionaries/config';
 import { RouteMap } from "../route-map";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 
 interface TourBookingSectionProps {
@@ -105,6 +106,7 @@ const getInitialState = <T,>(key: string, defaultValue: T): T => {
 export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoints }: TourBookingSectionProps) {
     const { user } = useUser();
     const firestore = useFirestore();
+    const isMobile = useIsMobile();
     const [isSheetOpen, setIsSheetOpen] = useState(false);
     const [isBookingFlowActive, setIsBookingFlowActive] = useState(false);
     const [step, setStep] = useState(1);
@@ -277,6 +279,25 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
     }).join(` ${dictionary.and} `);
 
 
+    const DatePickerContent = () => (
+        <Calendar
+            mode="single"
+            selected={date}
+            onSelect={(selectedDate) => {
+                setDate(selectedDate);
+                if (isMobile) setIsSheetOpen(false);
+            }}
+            disabled={isDateDisabled}
+            initialFocus={!isMobile}
+            classNames={{
+                day: "text-base h-11 w-11",
+                head_cell: "text-base w-11",
+                nav_button: "h-9 w-9"
+            }}
+        />
+    );
+
+
     const Step1 = (
         <motion.div
             key="step1"
@@ -365,28 +386,31 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
                 </div>
                 <div>
                     <label className="text-sm font-medium text-muted-foreground">{dictionary.date}</label>
-                     <Popover>
-                        <PopoverTrigger asChild>
-                           <Button variant="outline" className="w-full justify-start text-left font-normal mt-1 text-base h-11">
-                                <CalendarIcon className="mr-2 h-4 w-4" />
-                                {date ? formattedDate : "Pick a date"}
-                            </Button>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0">
-                            <Calendar
-                                mode="single"
-                                selected={date}
-                                onSelect={setDate}
-                                disabled={isDateDisabled}
-                                initialFocus
-                                classNames={{
-                                    day: "text-base h-11 w-11",
-                                    head_cell: "text-base w-11",
-                                    nav_button: "h-9 w-9"
-                                }}
-                            />
-                        </PopoverContent>
-                    </Popover>
+                     {isMobile ? (
+                        <Sheet>
+                             <SheetTrigger asChild>
+                                 <Button variant="outline" className="w-full justify-start text-left font-normal mt-1 text-base h-11">
+                                    <CalendarIcon className="mr-2 h-4 w-4" />
+                                    {date ? formattedDate : "Pick a date"}
+                                </Button>
+                            </SheetTrigger>
+                            <SheetContent side="bottom" className="rounded-t-2xl max-h-[90vh] p-0 flex flex-col items-center">
+                                 <DatePickerContent />
+                            </SheetContent>
+                        </Sheet>
+                    ) : (
+                        <Popover>
+                            <PopoverTrigger asChild>
+                               <Button variant="outline" className="w-full justify-start text-left font-normal mt-1 text-base h-11">
+                                    <CalendarIcon className="mr-2 h-4 w-4" />
+                                    {date ? formattedDate : "Pick a date"}
+                                </Button>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-auto p-0">
+                                <DatePickerContent />
+                            </PopoverContent>
+                        </Popover>
+                    )}
                      {availabilitySummary && (
                         <Alert variant="default" className="mt-2 text-sm bg-secondary/50">
                             <Info className="h-4 w-4" />
