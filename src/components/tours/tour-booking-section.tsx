@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetTrigger, SheetClose } from "@/components/ui/sheet";
 import { Input } from "@/components/ui/input";
-import { Calendar as CalendarIcon, Users, DollarSign, Minus, Plus, Languages, ArrowLeft, Hotel, CheckCircle, MapPin, Search, X, CreditCard, Banknote, Info, User as UserIcon, Phone, Baby, PersonStanding, ImageIcon } from "lucide-react";
+import { Calendar as CalendarIcon, Users, DollarSign, Minus, Plus, Languages, ArrowLeft, Hotel, CheckCircle, MapPin, Search, X, CreditCard, Banknote, Info, User as UserIcon, Phone, Baby, PersonStanding, ImageIcon, Loader2 } from "lucide-react";
 import NextImage from "next/image";
 import { useState, useEffect, useMemo } from "react";
 import { Calendar } from "@/components/ui/calendar";
@@ -29,6 +29,7 @@ import { cn } from "@/lib/utils";
 import { type Locale } from '@/dictionaries/config';
 import { RouteMap } from "../route-map";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useToast } from "@/hooks/use-toast";
 
 
 interface TourBookingSectionProps {
@@ -111,6 +112,7 @@ const getInitialState = <T,>(key: string, defaultValue: T): T => {
 export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoints }: TourBookingSectionProps) {
     const { user } = useUser();
     const firestore = useFirestore();
+    const { toast } = useToast();
     const isMobile = useIsMobile();
     const [isSheetOpen, setIsSheetOpen] = useState(false);
     const [isBookingFlowActive, setIsBookingFlowActive] = useState(false);
@@ -132,6 +134,7 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
     const [customerPhone, setCustomerPhone] = useState('');
     
     const [bookingId, setBookingId] = useState<string | null>(null);
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSearchingHotel, setIsSearchingHotel] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
     const [isCalendarSheetOpen, setIsCalendarSheetOpen] = useState(false);
@@ -200,8 +203,8 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
     const handleContinueToPayment = async () => {
         if (!firestore || !date || !selectedHotel || !suggestedMeetingPoint || !customerName || !customerEmail || !customerPhone) return;
         
+        setIsSubmitting(true);
         const newBookingId = crypto.randomUUID();
-        setBookingId(newBookingId);
         
         const bookingData = {
             id: newBookingId,
@@ -229,9 +232,17 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
 
         try {
             await setDoc(doc(firestore, "bookings", newBookingId), bookingData);
+            setBookingId(newBookingId);
             setStep(step + 1);
         } catch (error) {
             console.error("Error creating pending booking:", error);
+            toast({
+                variant: 'destructive',
+                title: 'Error creating booking',
+                description: 'Could not save your booking. Please try again.',
+            });
+        } finally {
+            setIsSubmitting(false);
         }
     };
     
@@ -622,8 +633,8 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
                 )}
             </div>
             <div className="space-y-3">
-                 <Button size="lg" className="w-full font-bold text-lg py-7 bg-accent text-accent-foreground hover:bg-accent/90" onClick={handleContinueToPayment} disabled={!selectedHotel || !suggestedMeetingPoint || !customerName || !customerEmail || !customerPhone}>
-                    {dictionary.continueToPayment}
+                 <Button size="lg" className="w-full font-bold text-lg py-7 bg-accent text-accent-foreground hover:bg-accent/90" onClick={async () => await handleContinueToPayment()} disabled={!selectedHotel || !suggestedMeetingPoint || !customerName || !customerEmail || !customerPhone || isSubmitting}>
+                    {isSubmitting ? <Loader2 className="animate-spin h-5 w-5" /> : dictionary.continueToPayment}
                 </Button>
                  <Button variant="ghost" size="lg" className="w-full" onClick={handlePrevStep}>
                     <ArrowLeft className="mr-2 h-4 w-4" />
@@ -755,7 +766,11 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
                             </div>
                              <div className="flex-1 p-6 min-h-0 overflow-y-auto">
                                 <AnimatePresence mode="wait">
-                                    {renderBookingFlow()}
+                                    {isSubmitting && step === 3 ? (
+                                        <div className="flex items-center justify-center h-full">
+                                            <Loader2 className="h-8 w-8 animate-spin" />
+                                        </div>
+                                    ) : renderBookingFlow()}
                                 </AnimatePresence>
                             </div>
                         </div>
@@ -790,7 +805,11 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
                            <div className="overflow-y-auto flex-grow">
                                 <div className="p-4">
                                      <AnimatePresence mode="wait">
-                                        {renderBookingFlow()}
+                                        {isSubmitting && step === 3 ? (
+                                            <div className="flex items-center justify-center h-48">
+                                                <Loader2 className="h-8 w-8 animate-spin" />
+                                            </div>
+                                        ) : renderBookingFlow()}
                                     </AnimatePresence>
                                 </div>
                            </div>
@@ -801,5 +820,3 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
         </>
     );
 }
-
-    
