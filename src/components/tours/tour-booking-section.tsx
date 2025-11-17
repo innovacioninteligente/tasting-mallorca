@@ -128,6 +128,7 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
     const [bookingId, setBookingId] = useState<string | null>(null);
     const [isSearchingHotel, setIsSearchingHotel] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
+    const [isCalendarSheetOpen, setIsCalendarSheetOpen] = useState(false);
 
     useEffect(() => {
         if (selectedHotel && meetingPoints) {
@@ -285,7 +286,7 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
             selected={date}
             onSelect={(selectedDate) => {
                 setDate(selectedDate);
-                if (isMobile) setIsSheetOpen(false);
+                if (isMobile) setIsCalendarSheetOpen(false);
             }}
             disabled={isDateDisabled}
             initialFocus={!isMobile}
@@ -387,7 +388,7 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
                 <div>
                     <label className="text-sm font-medium text-muted-foreground">{dictionary.date}</label>
                      {isMobile ? (
-                        <Sheet>
+                        <Sheet open={isCalendarSheetOpen} onOpenChange={setIsCalendarSheetOpen}>
                              <SheetTrigger asChild>
                                  <Button variant="outline" className="w-full justify-start text-left font-normal mt-1 text-base h-11">
                                     <CalendarIcon className="mr-2 h-4 w-4" />
