@@ -171,16 +171,16 @@ export function DashboardSidebar({ isMobileMenuOpen, setIsMobileMenuOpen }: Dash
       <aside className="hidden w-72 flex-col border-r bg-card md:flex shrink-0">
         <div className="flex h-20 items-center border-b px-6">
           <Link href={`/${lang}/`} className="flex items-center gap-2 font-semibold">
-            <div className="relative h-10 w-10">
+            <div className="relative h-12 w-12">
               <Image
                   src="https://firebasestorage.googleapis.com/v0/b/tasting-mallorca.firebasestorage.app/o/web%2Fbranding%2FICONO-AZUL.png?alt=media&token=5f6b7c16-5a14-4d45-bbdb-f3a70138e8b7"
                   alt="Tasting Mallorca Logo"
                   fill
                   className="object-contain"
-                  sizes="40px"
+                  sizes="48px"
               />
             </div>
-             <span className="text-xl font-bold">Tasting Mallorca</span>
+             <span className="text-xl font-bold text-foreground">Tasting Mallorca</span>
           </Link>
         </div>
         <SidebarContent />
@@ -201,7 +201,7 @@ export function DashboardSidebar({ isMobileMenuOpen, setIsMobileMenuOpen }: Dash
                       sizes="40px"
                   />
                 </div>
-                <span className="text-xl font-bold">Tasting Mallorca</span>
+                <span className="text-xl font-bold text-foreground">Tasting Mallorca</span>
             </Link>
           </SheetHeader>
           <SidebarContent />

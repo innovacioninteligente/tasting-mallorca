@@ -70,7 +70,7 @@ export function DashboardHeader() {
                       sizes="32px"
                   />
                 </div>
-                 <span className="text-lg font-bold">Tasting Mallorca</span>
+                 <span className="text-lg font-bold text-foreground">Tasting Mallorca</span>
             </Link>
         </div>
         
