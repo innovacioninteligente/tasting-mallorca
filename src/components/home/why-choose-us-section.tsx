@@ -51,7 +51,7 @@ export function WhyChooseUsSection({ dictionary }: { dictionary: WhyChooseUsDict
 
                 {/* Right Side - Content */}
                 <div className="md:pr-8">
-                <h2 className="text-4xl md:text-5xl font-extrabold">{dictionary.title}</h2>
+                <h2 className="text-4xl md:text-5xl font-extrabold text-foreground">{dictionary.title}</h2>
                 <p className="mt-4 text-lg text-muted-foreground max-w-xl">
                     {dictionary.subtitle}
                 </p>

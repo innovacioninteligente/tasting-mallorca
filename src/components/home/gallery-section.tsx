@@ -53,7 +53,7 @@ export function GallerySection({ dictionary }: GallerySectionProps) {
                 <Camera className="w-6 h-6 text-accent" />
                 <p className="text-accent font-cursive font-bold text-lg">{dictionary.subtitle}</p>
                 </div>
-                <h2 className="text-4xl md:text-5xl font-extrabold mt-2">{dictionary.title}</h2>
+                <h2 className="text-4xl md:text-5xl font-extrabold mt-2 text-foreground">{dictionary.title}</h2>
                 <p className="mt-4 text-lg text-muted-foreground max-w-xl mx-auto">
                 {dictionary.description}
                 </p>

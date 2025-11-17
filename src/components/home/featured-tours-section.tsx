@@ -24,7 +24,7 @@ export function FeaturedToursSection({ dictionary, lang, tours }: FeaturedToursP
         <section id="featured-tours" className="py-24 bg-secondary flex flex-col items-center">
             <div className="container text-center mb-12">
                 <p className="text-accent font-cursive font-bold text-lg">{dictionary.subtitle}</p>
-                <h2 className="text-4xl md:text-5xl font-extrabold mt-2">{dictionary.title}</h2>
+                <h2 className="text-4xl md:text-5xl font-extrabold mt-2 text-foreground">{dictionary.title}</h2>
                 <p className="mt-4 text-lg text-muted-foreground max-w-xl mx-auto">
                 {dictionary.description}
                 </p>
