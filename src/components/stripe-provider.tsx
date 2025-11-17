@@ -18,27 +18,33 @@ interface StripeProviderProps {
   name: string;
   email: string;
   metadata: { [key: string]: string };
-  onReady: (isReady: boolean) => void;
+  onReady: (isLoading: boolean) => void;
 }
 
 export function StripeProvider({ children, amount, name, email, metadata, onReady }: StripeProviderProps) {
   const [clientSecret, setClientSecret] = useState('');
 
   useEffect(() => {
+    let isMounted = true;
     if (amount > 0) {
-      onReady(false); // Signal that loading is starting
+      onReady(true); // Signal that loading is starting
       createPaymentIntent(amount, name, email, metadata).then((data) => {
-        if (data.clientSecret) {
-          setClientSecret(data.clientSecret);
-          onReady(true); // Signal that loading is complete
-        } else {
-            console.error(data.error);
-            onReady(true); // Also signal ready on error to allow retry
+        if (isMounted) {
+            if (data.clientSecret) {
+                setClientSecret(data.clientSecret);
+                onReady(false); // Signal that loading is complete
+            } else {
+                console.error(data.error);
+                onReady(false); // Also signal ready on error to allow retry
+            }
         }
       });
     }
+    return () => {
+        isMounted = false;
+    }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [amount, name, email, metadata]);
+  }, [amount, name, email, metadata.bookingId]); // Only depend on stable values
 
   const options: StripeElementsOptions = {
     clientSecret,
@@ -56,7 +62,6 @@ export function StripeProvider({ children, amount, name, email, metadata, onRead
   };
   
   if (!clientSecret) {
-    // The parent component handles the loading indicator.
     return null;
   }
 

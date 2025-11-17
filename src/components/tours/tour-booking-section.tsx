@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { Button } from "@/components/ui/button";
@@ -135,7 +136,7 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
     
     const [bookingId, setBookingId] = useState<string | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [isPaymentReady, setIsPaymentReady] = useState(false);
+    const [isPaymentLoading, setIsPaymentLoading] = useState(true);
     const [isSearchingHotel, setIsSearchingHotel] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
     const [isCalendarSheetOpen, setIsCalendarSheetOpen] = useState(false);
@@ -290,15 +291,15 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
 
         return baseUrl;
     }
-
-    const paymentMetadata = {
+    
+    const paymentMetadata = useMemo(() => ({
         bookingId: bookingId || '',
         tourId: tour.id,
         userId: user?.uid || 'anonymous',
         totalPrice: totalPrice.toString(),
         paymentType: paymentOption,
-    };
-    
+    }), [bookingId, tour.id, user?.uid, totalPrice, paymentOption]);
+
     const isDateDisabled = (day: Date): boolean => {
         if (!tour.availabilityPeriods || tour.availabilityPeriods.length === 0) {
             return false;
@@ -666,6 +667,12 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
                 </div>
             </div>
 
+            {isPaymentLoading && (
+                <div className="flex items-center justify-center h-full py-10">
+                    <Loader2 className="h-8 w-8 animate-spin" />
+                </div>
+            )}
+            
             {bookingId && (
                 <StripeProvider
                     key={bookingId}
@@ -673,15 +680,10 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
                     name={customerName || 'Customer'}
                     email={customerEmail || 'anonymous'}
                     metadata={paymentMetadata}
-                    onReady={setIsPaymentReady}
+                    onReady={setIsPaymentLoading}
                 >
                     <CheckoutForm dictionary={dictionary} handlePrevStep={handlePrevStep} returnUrl={getReturnUrl()} />
                 </StripeProvider>
-            )}
-            {!isPaymentReady && (
-                 <div className="flex items-center justify-center h-full py-10">
-                    <Loader2 className="h-8 w-8 animate-spin" />
-                </div>
             )}
         </motion.div>
     );
