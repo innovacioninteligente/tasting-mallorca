@@ -24,6 +24,7 @@ const dictionaries = {
     about: () => import('./en/about.json').then((module) => module.default),
     contact: () => import('./en/contact.json').then((module) => module.default),
     bookingSuccess: () => import('./en/booking-success.json').then((module) => module.default),
+    cookieConsent: () => import('./en/cookie-consent.json').then((module) => module.default),
     tourDetail: {
       header: () => import('./en/tour-detail/header.json').then(m => m.default),
       overview: () => import('./en/tour-detail/overview.json').then(m => m.default),
@@ -56,6 +57,7 @@ const dictionaries = {
     about: () => import('./fr/about.json').then((module) => module.default),
     contact: () => import('./fr/contact.json').then((module) => module.default),
     bookingSuccess: () => import('./fr/booking-success.json').then((module) => module.default),
+    cookieConsent: () => import('./fr/cookie-consent.json').then((module) => module.default),
     tourDetail: {
       header: () => import('./fr/tour-detail/header.json').then(m => m.default),
       overview: () => import('./fr/tour-detail/overview.json').then(m => m.default),
@@ -88,6 +90,7 @@ const dictionaries = {
     about: () => import('./de/about.json').then((module) => module.default),
     contact: () => import('./de/contact.json').then((module) => module.default),
     bookingSuccess: () => import('./de/booking-success.json').then((module) => module.default),
+    cookieConsent: () => import('./de/cookie-consent.json').then((module) => module.default),
     tourDetail: {
       header: () => import('./de/tour-detail/header.json').then(m => m.default),
       overview: () => import('./de/tour-detail/overview.json').then(m => m.default),
@@ -120,6 +123,7 @@ const dictionaries = {
     about: () => import('./nl/about.json').then((module) => module.default),
     contact: () => import('./nl/contact.json').then((module) => module.default),
     bookingSuccess: () => import('./nl/booking-success.json').then((module) => module.default),
+    cookieConsent: () => import('./nl/cookie-consent.json').then((module) => module.default),
     tourDetail: {
       header: () => import('./nl/tour-detail/header.json').then(m => m.default),
       overview: () => import('./nl/tour-detail/overview.json').then(m => m.default),
@@ -168,6 +172,7 @@ const loadDictionary = async (locale: Locale) => {
         about: await lang.about(),
         contact: await lang.contact(),
         bookingSuccess: await lang.bookingSuccess(),
+        cookieConsent: await lang.cookieConsent(),
         tourDetail,
         dashboard,
     };

@@ -11,6 +11,7 @@ import { Metadata } from 'next';
 import { Footer } from '@/components/footer';
 import { AlternateLinksProvider } from '@/context/alternate-links-context';
 import { ThemeProvider } from '@/components/theme-provider';
+import { CookieConsent } from '@/components/cookie-consent';
 
 
 const poppins = Poppins({
@@ -86,6 +87,7 @@ export default async function RootLayout({
                   {children}
                 </MainLayout>
               </div>
+              <CookieConsent dictionary={dictionary.cookieConsent} lang={lang} />
             </AlternateLinksProvider>
             <Toaster />
           </FirebaseClientProvider>
