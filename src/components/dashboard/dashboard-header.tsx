@@ -61,13 +61,13 @@ export function DashboardHeader() {
         <h1 className="text-xl font-semibold hidden md:block">{!isFormPage && pageTitle}</h1>
         <div className="md:hidden">
              <Link href={`/${lang}/`} className="flex items-center gap-2 font-semibold">
-                <div className="relative h-8 w-8">
+                <div className="relative h-10 w-10">
                   <Image
                       src="https://firebasestorage.googleapis.com/v0/b/tasting-mallorca.firebasestorage.app/o/web%2Fbranding%2FICONO-AZUL.png?alt=media&token=5f6b7c16-5a14-4d45-bbdb-f3a70138e8b7"
                       alt="Tasting Mallorca Logo"
                       fill
                       className="object-contain"
-                      sizes="32px"
+                      sizes="40px"
                   />
                 </div>
                  <span className="text-lg font-bold text-foreground">Tasting Mallorca</span>

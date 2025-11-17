@@ -31,7 +31,6 @@ interface RootLayoutProps {
 export async function generateMetadata({ params: { lang } }: RootLayoutProps): Promise<Metadata> {
   const dictionary = await getDictionary(lang);
   const { subtitle } = dictionary.home;
-  const imageUrl = "https://firebasestorage.googleapis.com/v0/b/tasting-mallorca.firebasestorage.app/o/web%2Fimages%2F036.PNG?alt=media&token=00e634e2-716f-495d-807e-5c15dfe2ea09";
   const faviconUrl = "https://firebasestorage.googleapis.com/v0/b/tasting-mallorca.firebasestorage.app/o/web%2Fbranding%2FICONO-AZUL.png?alt=media&token=5f6b7c16-5a14-4d45-bbdb-f3a70138e8b7";
 
   return {
@@ -42,26 +41,6 @@ export async function generateMetadata({ params: { lang } }: RootLayoutProps): P
     description: subtitle,
     icons: {
       icon: faviconUrl,
-    },
-    openGraph: {
-      title: 'Tasting Mallorca | Authentic Food & Culture Tours',
-      description: subtitle,
-      images: [
-        {
-          url: imageUrl,
-          width: 1200,
-          height: 630,
-          alt: 'Tasting Mallorca Tours',
-        },
-      ],
-      locale: lang,
-      type: 'website',
-    },
-     twitter: {
-      card: 'summary_large_image',
-      title: 'Tasting Mallorca | Authentic Food & Culture Tours',
-      description: subtitle,
-      images: [imageUrl],
     },
   };
 }

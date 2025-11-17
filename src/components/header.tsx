@@ -32,13 +32,13 @@ export function Header({ dictionary, lang }: HeaderProps) {
       {/* Main Header */}
       <div className="w-full md:w-[80vw] mx-auto px-4 flex h-20 items-center justify-between">
         <Link href={`/${lang}/`} className="flex items-center gap-2 font-semibold" prefetch={false}>
-            <div className="relative h-12 w-12">
+            <div className="relative h-14 w-14">
               <Image
                   src="https://firebasestorage.googleapis.com/v0/b/tasting-mallorca.firebasestorage.app/o/web%2Fbranding%2FICONO-AZUL.png?alt=media&token=5f6b7c16-5a14-4d45-bbdb-f3a70138e8b7"
                   alt="Tasting Mallorca Logo"
                   fill
                   className="object-contain"
-                  sizes="48px"
+                  sizes="56px"
               />
             </div>
             <span className="text-xl font-bold text-foreground">Tasting Mallorca</span>
