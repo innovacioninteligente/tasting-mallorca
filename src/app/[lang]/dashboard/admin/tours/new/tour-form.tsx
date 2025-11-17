@@ -47,14 +47,17 @@ type TourFormValues = z.infer<typeof CreateTourInputSchema>;
 
 const weekDays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 const weekDayInitials = ["L", "M", "X", "J", "V", "S", "D"];
+const availableLanguages = ["en", "de", "fr", "nl"];
 
 function AvailabilityPeriodCreator({ onAddPeriod }: { onAddPeriod: (period: z.infer<typeof CreateTourInputSchema.shape.availabilityPeriods.element>) => void }) {
     const [dateRange, setDateRange] = useState<DateRange | undefined>({ from: new Date(), to: addDays(new Date(), 20) });
     const [activeDays, setActiveDays] = useState<string[]>([]);
+    const [languages, setLanguages] = useState<string[]>([]);
     const [showCreator, setShowCreator] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
     const handleSavePeriod = () => {
+        setError(null);
         if (!dateRange?.from || !dateRange?.to) {
             setError("Debes seleccionar un rango de fechas.");
             return;
@@ -63,10 +66,14 @@ function AvailabilityPeriodCreator({ onAddPeriod }: { onAddPeriod: (period: z.in
             setError("Debes seleccionar al menos un día activo.");
             return;
         }
-        onAddPeriod({ startDate: dateRange.from, endDate: dateRange.to, activeDays });
+        if (languages.length === 0) {
+            setError("Debes seleccionar al menos un idioma.");
+            return;
+        }
+        onAddPeriod({ startDate: dateRange.from, endDate: dateRange.to, activeDays, languages });
         setDateRange({ from: new Date(), to: addDays(new Date(), 20) });
         setActiveDays([]);
-        setError(null);
+        setLanguages([]);
         setShowCreator(false);
     };
 
@@ -77,6 +84,14 @@ function AvailabilityPeriodCreator({ onAddPeriod }: { onAddPeriod: (period: z.in
             setActiveDays(weekDays);
         }
     };
+    
+    const handleToggleAllLanguages = () => {
+        if (languages.length === availableLanguages.length) {
+            setLanguages([]);
+        } else {
+            setLanguages(availableLanguages);
+        }
+    }
 
     if (!showCreator) {
         return (
@@ -142,6 +157,26 @@ function AvailabilityPeriodCreator({ onAddPeriod }: { onAddPeriod: (period: z.in
                         </ToggleGroup>
                         <Button type="button" variant="link" size="sm" onClick={handleToggleAllWeek} className="px-2">
                            All week
+                        </Button>
+                    </div>
+                </div>
+                 <div>
+                    <FormLabel>Available Languages</FormLabel>
+                    <div className="flex flex-wrap items-center gap-2 mt-1">
+                        <ToggleGroup type="multiple" value={languages} onValueChange={setLanguages} variant="outline" className="flex-wrap justify-start">
+                            {availableLanguages.map((lang) => (
+                                <ToggleGroupItem
+                                    key={lang}
+                                    value={lang}
+                                    aria-label={`Toggle ${lang}`}
+                                    className="w-10 h-10 data-[state=on]:bg-primary data-[state=on]:text-primary-foreground uppercase"
+                                >
+                                    {lang}
+                                </ToggleGroupItem>
+                            ))}
+                        </ToggleGroup>
+                         <Button type="button" variant="link" size="sm" onClick={handleToggleAllLanguages} className="px-2">
+                           All languages
                         </Button>
                     </div>
                 </div>
@@ -514,12 +549,17 @@ export function TourForm({ initialData, onServerImageDelete, activeTab, onTabCha
                       <CardContent className="p-3 flex justify-between items-center">
                       <div>
                           <p className="font-semibold">{format(field.startDate, "dd/MM/yy")} - {format(field.endDate, "dd/MM/yy")}</p>
-                          <div className="flex gap-1 mt-1">
-                          {weekDays.map((day, i) => (
-                              <span key={day} className={cn("text-xs w-6 h-6 flex items-center justify-center rounded-full", field.activeDays.includes(day) ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground")}>
-                                  {weekDayInitials[i]}
-                              </span>
-                          ))}
+                          <div className="flex gap-1.5 mt-2">
+                              {weekDays.map((day, i) => (
+                                  <span key={day} className={cn("text-xs font-mono w-6 h-6 flex items-center justify-center rounded-full", field.activeDays.includes(day) ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground")}>
+                                      {weekDayInitials[i]}
+                                  </span>
+                              ))}
+                          </div>
+                          <div className="flex gap-1.5 mt-2">
+                            {(field.languages || []).map(lang => (
+                                <Badge key={lang} variant="outline" className="uppercase text-xs">{lang}</Badge>
+                            ))}
                           </div>
                       </div>
                       <Button type="button" variant="ghost" size="icon" onClick={() => remove(index)}>
@@ -906,3 +946,4 @@ export function TourForm({ initialData, onServerImageDelete, activeTab, onTabCha
     </div>
   );
 }
+
