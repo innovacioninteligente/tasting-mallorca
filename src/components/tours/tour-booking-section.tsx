@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { Button } from "@/components/ui/button";
@@ -8,7 +7,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetTr
 import { Input } from "@/components/ui/input";
 import { Calendar as CalendarIcon, Users, DollarSign, Minus, Plus, Languages, ArrowLeft, Hotel, CheckCircle, MapPin, Search, X, CreditCard, Banknote, Info, User as UserIcon, Phone, Baby, PersonStanding, ImageIcon } from "lucide-react";
 import NextImage from "next/image";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Calendar } from "@/components/ui/calendar";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
@@ -75,6 +74,12 @@ interface TourBookingSectionProps {
 }
 
 const locales: { [key: string]: typeof es } = { en: enUS, fr, de, nl, es };
+const allLanguages = [
+    { code: 'en', name: 'English' },
+    { code: 'fr', name: 'Français' },
+    { code: 'de', name: 'Deutsch' },
+    { code: 'nl', name: 'Nederlands' }
+];
 
 const dayNameToIndex: { [key: string]: number } = {
     Sunday: 0,
@@ -118,6 +123,7 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
     const [infants, setInfants] = useState<number>(() => getInitialState(`${bookingCacheKey}-infants`, 0));
     const [date, setDate] = useState<Date | undefined>(() => getInitialState(`${bookingCacheKey}-date`, undefined));
     const [language, setLanguage] = useState<string>(() => getInitialState(`${bookingCacheKey}-language`, lang));
+    const [availableLanguages, setAvailableLanguages] = useState(allLanguages);
     const [paymentOption, setPaymentOption] = useState<'full' | 'deposit'>(() => getInitialState(`${bookingCacheKey}-paymentOption`, 'full'));
     const [selectedHotel, setSelectedHotel] = useState<HotelModel | null>(() => getInitialState(`${bookingCacheKey}-hotel`, null));
     const [suggestedMeetingPoint, setSuggestedMeetingPoint] = useState<MeetingPoint | null>(null);
@@ -129,6 +135,36 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
     const [isSearchingHotel, setIsSearchingHotel] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
     const [isCalendarSheetOpen, setIsCalendarSheetOpen] = useState(false);
+
+    useEffect(() => {
+        if (!date) {
+            setAvailableLanguages(allLanguages);
+            return;
+        }
+
+        const selectedDayOfWeek = date.getDay();
+        const activePeriod = tour.availabilityPeriods?.find(period => {
+            const start = parseISO(period.startDate);
+            const end = parseISO(period.endDate);
+            const activeWeekDays = period.activeDays.map(d => dayNameToIndex[d]);
+            
+            return isWithinInterval(date, { start, end }) && activeWeekDays.includes(selectedDayOfWeek);
+        });
+
+        if (activePeriod && activePeriod.languages) {
+            const newAvailableLanguages = allLanguages.filter(l => activePeriod.languages.includes(l.code));
+            setAvailableLanguages(newAvailableLanguages);
+
+            // If current language is not in the new list, reset to the first available one
+            if (!newAvailableLanguages.some(l => l.code === language)) {
+                setLanguage(newAvailableLanguages[0]?.code || lang);
+            }
+        } else {
+            // No specific period found, maybe fallback to a default or show none
+            setAvailableLanguages([]);
+        }
+    }, [date, tour.availabilityPeriods, language, lang]);
+
 
     useEffect(() => {
         if (selectedHotel && meetingPoints) {
@@ -430,7 +466,7 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
                 </div>
                 <div>
                      <label className="text-sm font-medium text-muted-foreground">{dictionary.language}</label>
-                     <Select value={language} onValueChange={setLanguage}>
+                     <Select value={language} onValueChange={setLanguage} disabled={availableLanguages.length <= 1}>
                         <SelectTrigger className="w-full mt-1 text-base h-11">
                             <div className="flex items-center gap-2">
                                 <Languages className="h-4 w-4 text-muted-foreground" />
@@ -438,10 +474,9 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
                             </div>
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="en">English</SelectItem>
-                            <SelectItem value="fr">Français</SelectItem>
-                            <SelectItem value="de">Deutsch</SelectItem>
-                            <SelectItem value="nl">Nederlands</SelectItem>
+                           {availableLanguages.map(lang => (
+                                <SelectItem key={lang.code} value={lang.code}>{lang.name}</SelectItem>
+                           ))}
                         </SelectContent>
                     </Select>
                 </div>
@@ -766,3 +801,5 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
         </>
     );
 }
+
+    
