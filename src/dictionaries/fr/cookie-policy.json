@@ -1,0 +1,32 @@
+
+{
+    "title": "Politique en matière de cookies",
+    "lastUpdated": "25 juillet 2024",
+    "sections": {
+        "introduction": {
+            "title": "Introduction",
+            "content": "Cette politique en matière de cookies explique ce que sont les cookies et comment nous les utilisons sur notre site web, tastingmallorca.com. Vous devez lire cette politique pour comprendre quel type de cookies nous utilisons, les informations que nous collectons à l'aide des cookies et comment ces informations sont utilisées."
+        },
+        "whatAreCookies": {
+            "title": "Que sont les cookies ?",
+            "content": "Les cookies sont de petits fichiers texte qui sont stockés sur votre ordinateur ou votre appareil mobile lorsque vous visitez un site web. Ils sont largement utilisés pour faire fonctionner les sites web, ou pour les faire fonctionner plus efficacement, ainsi que pour fournir des informations aux propriétaires du site."
+        },
+        "howWeUseCookies": {
+            "title": "Comment nous utilisons les cookies",
+            "content": "Nous utilisons des cookies pour diverses raisons détaillées ci-dessous. Malheureusement, dans la plupart des cas, il n'existe pas d'options standard pour désactiver les cookies sans désactiver complètement les fonctionnalités et les caractéristiques qu'ils ajoutent à ce site. Il est recommandé de laisser tous les cookies si vous n'êtes pas sûr d'en avoir besoin ou non, au cas où ils seraient utilisés pour fournir un service que vous utilisez."
+        },
+        "typesOfCookies": {
+            "title": "Types de cookies que nous utilisons",
+            "content": [
+                "Cookies essentiels : Ces cookies sont indispensables pour que vous puissiez naviguer sur le site web et utiliser ses fonctionnalités, comme l'accès aux zones sécurisées du site. Sans ces cookies, les services que vous avez demandés, comme le processus de réservation, ne peuvent pas être fournis.",
+                "Cookies de préférence : Ces cookies permettent au site web de se souvenir des choix que vous faites (comme votre préférence de langue) pour fournir des fonctionnalités améliorées et plus personnelles.",
+                "Cookies de performance : Nous pouvons utiliser des cookies tiers, tels que Google Analytics, pour collecter des informations sur la manière dont les visiteurs utilisent notre site web. Ces informations sont utilisées pour compiler des rapports et nous aider à améliorer le site. Les cookies collectent des informations sous une forme anonyme.",
+                "Cookies fonctionnels : Ces cookies sont liés à la fonctionnalité de notre site web. Par exemple, les cookies de Firebase pour l'authentification des utilisateurs et la gestion des sessions, et les cookies de Stripe pour le traitement sécurisé des paiements."
+            ]
+        },
+        "managingCookies": {
+            "title": "Gestion des cookies",
+            "content": "Vous avez le droit de décider d'accepter ou de refuser les cookies. Vous pouvez définir vos préférences en matière de cookies via notre bannière de consentement aux cookies. Si vous choisissez de désactiver les cookies, vous pourrez toujours utiliser notre site web, bien que votre accès à certaines fonctionnalités et zones de notre site web puisse être restreint."
+        }
+    }
+}

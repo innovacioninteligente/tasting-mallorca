@@ -1,0 +1,27 @@
+
+{
+    "title": "Privacybeleid",
+    "lastUpdated": "25 juli 2024",
+    "sections": {
+        "introduction": {
+            "title": "Inleiding",
+            "content": "Welkom bij Tasting Mallorca. Wij zetten ons in voor de bescherming van uw privacy. Dit privacybeleid legt uit hoe wij uw informatie verzamelen, gebruiken, openbaar maken en beschermen wanneer u onze website tastingmallorca.com bezoekt, inclusief enige andere mediavorm, mediakanaal, mobiele website of mobiele applicatie die hiermee verband houdt of eraan is gekoppeld."
+        },
+        "dataWeCollect": {
+            "title": "Gegevens die we verzamelen",
+            "content": "Wij kunnen op verschillende manieren informatie over u verzamelen. De informatie die wij op de Site kunnen verzamelen, omvat:\n\n- Persoonlijke gegevens: Persoonlijk identificeerbare informatie, zoals uw naam, e-mailadres en telefoonnummer, die u vrijwillig aan ons verstrekt wanneer u zich op de Site registreert, een boeking maakt of een vraag stelt via ons contactformulier.\n- Betalingsgegevens: Gegevens die nodig zijn om uw betaling te verwerken, zoals uw naam, e-mail en betalingsgegevens, die veilig worden verzameld en verwerkt door onze betalingsverwerker, Stripe. Wij slaan uw volledige betalingsgegevens niet op onze servers op."
+        },
+        "howWeUseData": {
+            "title": "Hoe wij uw gegevens gebruiken",
+            "content": "Het hebben van nauwkeurige informatie over u stelt ons in staat om u een soepele, efficiënte en op maat gemaakte ervaring te bieden. Concreet kunnen we de via de Site verzamelde informatie over u gebruiken om:\n\n- Uw account aan te maken en te beheren.\n- Uw boekingen en betalingen te verwerken.\n- U bevestigingen en andere transactionele e-mails te sturen.\n- Op uw vragen te reageren en ondersteuning te bieden.\n- Gebruik en trends te analyseren om onze website en uw ervaring te verbeteren."
+        },
+        "dataSharing": {
+            "title": "Het delen van uw informatie",
+            "content": "Wij kunnen de informatie die wij over u hebben verzameld in bepaalde situaties delen. Uw informatie kan als volgt worden bekendgemaakt:\n\n- Wettelijk of ter bescherming van rechten: Als wij van mening zijn dat het vrijgeven van informatie over u noodzakelijk is om te reageren op een juridisch proces, om mogelijke schendingen van ons beleid te onderzoeken of te verhelpen, of om de rechten, eigendommen en veiligheid van anderen te beschermen, kunnen wij uw informatie delen zoals toegestaan of vereist door enige toepasselijke wet, regel of voorschrift.\n- Derde dienstverleners: Wij kunnen uw informatie delen met derden die diensten voor ons of namens ons uitvoeren, waaronder betalingsverwerking (Stripe), gegevensanalyse, e-mailbezorging, hostingdiensten (Firebase) en klantenservice."
+        },
+        "userRights": {
+            "title": "Uw rechten",
+            "content": "U hebt het recht om uw persoonlijke gegevens die wij bewaren in te zien, te corrigeren of te verzoeken om verwijdering. Als u deze rechten wilt uitoefenen, neem dan contact met ons op via de onderstaande contactgegevens."
+        }
+    }
+}

@@ -1,0 +1,27 @@
+
+{
+    "title": "Privacy Policy",
+    "lastUpdated": "July 25, 2024",
+    "sections": {
+        "introduction": {
+            "title": "Introduction",
+            "content": "Welcome to Tasting Mallorca. We are committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website tastingmallorca.com, including any other media form, media channel, mobile website, or mobile application related or connected thereto."
+        },
+        "dataWeCollect": {
+            "title": "Data We Collect",
+            "content": "We may collect information about you in a variety of ways. The information we may collect on the Site includes:\n\n- Personal Data: Personally identifiable information, such as your name, email address, and telephone number, that you voluntarily give to us when you register with the Site, make a booking, or submit an inquiry through our contact form.\n- Payment Data: Data necessary to process your payment, such as your name, email, and payment information, which is securely collected and processed by our payment processor, Stripe. We do not store your full payment information on our servers."
+        },
+        "howWeUseData": {
+            "title": "How We Use Your Data",
+            "content": "Having accurate information about you permits us to provide you with a smooth, efficient, and customized experience. Specifically, we may use information collected about you via the Site to:\n\n- Create and manage your account.\n- Process your bookings and payments.\n- Send you confirmation and other transactional emails.\n- Respond to your inquiries and offer support.\n- Analyze usage and trends to improve our website and your experience."
+        },
+        "dataSharing": {
+            "title": "Sharing Your Information",
+            "content": "We may share information we have collected about you in certain situations. Your information may be disclosed as follows:\n\n- By Law or to Protect Rights: If we believe the release of information about you is necessary to respond to legal process, to investigate or remedy potential violations of our policies, or to protect the rights, property, and safety of others, we may share your information as permitted or required by any applicable law, rule, or regulation.\n- Third-Party Service Providers: We may share your information with third parties that perform services for us or on our behalf, including payment processing (Stripe), data analysis, email delivery, hosting services (Firebase), and customer service."
+        },
+        "userRights": {
+            "title": "Your Rights",
+            "content": "You have the right to access, correct, or request deletion of your personal data that we hold. If you wish to exercise these rights, please contact us using the contact information provided below."
+        }
+    }
+}

@@ -1,0 +1,31 @@
+
+{
+    "title": "Nutzungsbedingungen",
+    "lastUpdated": "25. Juli 2024",
+    "sections": {
+        "agreement": {
+            "title": "1. Vereinbarung der Bedingungen",
+            "content": "Durch den Zugriff auf die Website tastingmallorca.com erklären Sie sich mit diesen Nutzungsbedingungen einverstanden. Wenn Sie mit diesen Bedingungen nicht einverstanden sind, dürfen Sie die Website nicht nutzen."
+        },
+        "bookings": {
+            "title": "2. Buchungen und Zahlungen",
+            "content": "Alle Buchungen unterliegen der Verfügbarkeit. Wir behalten uns das Recht vor, eine Buchung jederzeit abzulehnen. Zahlungen werden über unseren Drittanbieter-Zahlungsabwickler, Stripe, verarbeitet. Sie stimmen zu, aktuelle, vollständige und genaue Kauf- und Kontoinformationen für alle über die Website getätigten Käufe bereitzustellen."
+        },
+        "cancellations": {
+            "title": "3. Stornierungs- und Rückerstattungsrichtlinie",
+            "content": "Sie können bis zu 24 Stunden vor dem Erlebnis für eine volle Rückerstattung stornieren. Für eine volle Rückerstattung müssen Sie mindestens 24 Stunden vor der Startzeit des Erlebnisses stornieren. Wenn Sie weniger als 24 Stunden vor der Startzeit des Erlebnisses stornieren, wird der von Ihnen gezahlte Betrag nicht zurückerstattet. Änderungen, die weniger als 24 Stunden vor der Startzeit des Erlebnisses vorgenommen werden, werden nicht akzeptiert."
+        },
+        "deposits": {
+            "title": "4. Anzahlungsrichtlinie",
+            "content": "Für bestimmte Touren bieten wir die Möglichkeit, mit einer Anzahlung zu buchen. Der Anzahlungsbetrag sichert Ihren Platz auf der Tour. Der Restbetrag ist direkt an den Guide am Tag der Tour zu zahlen. Anzahlungen werden im Falle einer Stornierung durch den Kunden nicht zurückerstattet."
+        },
+        "userAccounts": {
+            "title": "5. Benutzerkonten",
+            "content": "Sie sind für die Wahrung der Vertraulichkeit Ihres Kontos und Passworts verantwortlich und erklären sich damit einverstanden, die Verantwortung für alle Aktivitäten zu übernehmen, die unter Ihrem Konto stattfinden. Wir behalten uns das Recht vor, Konten nach unserem alleinigen Ermessen zu kündigen."
+        },
+        "intellectualProperty": {
+            "title": "6. Geistiges Eigentum",
+            "content": "Die Website und ihre ursprünglichen Inhalte, Merkmale und Funktionen sind Eigentum von Tasting Mallorca und sind durch internationales Urheberrecht, Markenrecht, Patentrecht, Geschäftsgeheimnisrecht und andere Gesetze zum Schutz des geistigen Eigentums oder der Eigentumsrechte geschützt."
+        }
+    }
+}

@@ -1,0 +1,32 @@
+
+{
+    "title": "Cookie Policy",
+    "lastUpdated": "July 25, 2024",
+    "sections": {
+        "introduction": {
+            "title": "Introduction",
+            "content": "This Cookie Policy explains what cookies are and how we use them on our website, tastingmallorca.com. You should read this policy to understand what type of cookies we use, the information we collect using cookies, and how that information is used."
+        },
+        "whatAreCookies": {
+            "title": "What Are Cookies?",
+            "content": "Cookies are small text files that are stored on your computer or mobile device when you visit a website. They are widely used to make websites work, or work more efficiently, as well as to provide information to the owners of the site."
+        },
+        "howWeUseCookies": {
+            "title": "How We Use Cookies",
+            "content": "We use cookies for a variety of reasons detailed below. Unfortunately, in most cases, there are no industry standard options for disabling cookies without completely disabling the functionality and features they add to this site. It is recommended that you leave on all cookies if you are not sure whether you need them or not in case they are used to provide a service that you use."
+        },
+        "typesOfCookies": {
+            "title": "Types of Cookies We Use",
+            "content": [
+                "Essential Cookies: These cookies are essential for you to be able to move around the website and use its features, such as accessing secure areas of the site. Without these cookies, services you have asked for, like the booking process, cannot be provided.",
+                "Preference Cookies: These cookies allow the website to remember choices you make (such as your language preference) to provide enhanced, more personal features.",
+                "Performance Cookies: We may use third-party cookies, such as Google Analytics, to collect information about how visitors use our website. This information is used to compile reports and help us improve the site. The cookies collect information in an anonymous form.",
+                "Functional Cookies: These cookies are related to the functionality of our website. For example, cookies from Firebase for user authentication and session management, and cookies from Stripe for secure payment processing."
+            ]
+        },
+        "managingCookies": {
+            "title": "Managing Cookies",
+            "content": "You have the right to decide whether to accept or reject cookies. You can set your cookie preferences through our cookie consent banner. If you choose to disable cookies, you may still use our website though your access to some functionality and areas of our website may be restricted."
+        }
+    }
+}

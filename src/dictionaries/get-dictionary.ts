@@ -25,6 +25,9 @@ const dictionaries = {
     contact: () => import('./en/contact.json').then((module) => module.default),
     bookingSuccess: () => import('./en/booking-success.json').then((module) => module.default),
     cookieConsent: () => import('./en/cookie-consent.json').then((module) => module.default),
+    privacyPolicy: () => import('./en/privacy-policy.json').then((module) => module.default),
+    cookiePolicy: () => import('./en/cookie-policy.json').then((module) => module.default),
+    termsOfService: () => import('./en/terms-of-service.json').then((module) => module.default),
     tourDetail: {
       header: () => import('./en/tour-detail/header.json').then(m => m.default),
       overview: () => import('./en/tour-detail/overview.json').then(m => m.default),
@@ -58,6 +61,9 @@ const dictionaries = {
     contact: () => import('./fr/contact.json').then((module) => module.default),
     bookingSuccess: () => import('./fr/booking-success.json').then((module) => module.default),
     cookieConsent: () => import('./fr/cookie-consent.json').then((module) => module.default),
+    privacyPolicy: () => import('./fr/privacy-policy.json').then((module) => module.default),
+    cookiePolicy: () => import('./fr/cookie-policy.json').then((module) => module.default),
+    termsOfService: () => import('./fr/terms-of-service.json').then((module) => module.default),
     tourDetail: {
       header: () => import('./fr/tour-detail/header.json').then(m => m.default),
       overview: () => import('./fr/tour-detail/overview.json').then(m => m.default),
@@ -91,6 +97,9 @@ const dictionaries = {
     contact: () => import('./de/contact.json').then((module) => module.default),
     bookingSuccess: () => import('./de/booking-success.json').then((module) => module.default),
     cookieConsent: () => import('./de/cookie-consent.json').then((module) => module.default),
+    privacyPolicy: () => import('./de/privacy-policy.json').then((module) => module.default),
+    cookiePolicy: () => import('./de/cookie-policy.json').then((module) => module.default),
+    termsOfService: () => import('./de/terms-of-service.json').then((module) => module.default),
     tourDetail: {
       header: () => import('./de/tour-detail/header.json').then(m => m.default),
       overview: () => import('./de/tour-detail/overview.json').then(m => m.default),
@@ -124,6 +133,9 @@ const dictionaries = {
     contact: () => import('./nl/contact.json').then((module) => module.default),
     bookingSuccess: () => import('./nl/booking-success.json').then((module) => module.default),
     cookieConsent: () => import('./nl/cookie-consent.json').then((module) => module.default),
+    privacyPolicy: () => import('./nl/privacy-policy.json').then((module) => module.default),
+    cookiePolicy: () => import('./nl/cookie-policy.json').then((module) => module.default),
+    termsOfService: () => import('./nl/terms-of-service.json').then((module) => module.default),
     tourDetail: {
       header: () => import('./nl/tour-detail/header.json').then(m => m.default),
       overview: () => import('./nl/tour-detail/overview.json').then(m => m.default),
@@ -173,6 +185,9 @@ const loadDictionary = async (locale: Locale) => {
         contact: await lang.contact(),
         bookingSuccess: await lang.bookingSuccess(),
         cookieConsent: await lang.cookieConsent(),
+        privacyPolicy: await lang.privacyPolicy(),
+        cookiePolicy: await lang.cookiePolicy(),
+        termsOfService: await lang.termsOfService(),
         tourDetail,
         dashboard,
     };

@@ -1,0 +1,31 @@
+
+{
+    "title": "Conditions d'utilisation",
+    "lastUpdated": "25 juillet 2024",
+    "sections": {
+        "agreement": {
+            "title": "1. Acceptation des conditions",
+            "content": "En accédant au site web à l'adresse tastingmallorca.com, vous acceptez d'être lié par ces conditions d'utilisation, toutes les lois et réglementations applicables, et vous acceptez d'être responsable du respect de toutes les lois locales applicables."
+        },
+        "bookings": {
+            "title": "2. Réservations et paiements",
+            "content": "Toutes les réservations sont soumises à disponibilité. Nous nous réservons le droit de refuser toute réservation à notre discrétion. Les paiements sont traités par notre processeur de paiement tiers, Stripe. Vous acceptez de fournir des informations d'achat et de compte actuelles, complètes et exactes pour tous les achats effectués via le Site."
+        },
+        "cancellations": {
+            "title": "3. Politique d'annulation et de remboursement",
+            "content": "Vous pouvez annuler jusqu'à 24 heures avant l'expérience pour un remboursement complet. Pour un remboursement complet, vous devez annuler au moins 24 heures avant l'heure de début de l'expérience. Si vous annulez moins de 24 heures avant l'heure de début de l'expérience, le montant que vous avez payé ne sera pas remboursé. Toute modification effectuée moins de 24 heures avant l'heure de début de l'expérience ne sera pas acceptée."
+        },
+        "deposits": {
+            "title": "4. Politique d'acompte",
+            "content": "Pour certaines visites, nous pouvons offrir la possibilité de réserver avec un acompte. Le montant de l'acompte garantit votre place pour la visite. Le solde restant est dû et doit être payé directement au guide le jour de la visite. Les acomptes ne sont pas remboursables en cas d'annulation par le client."
+        },
+        "userAccounts": {
+            "title": "5. Comptes d'utilisateurs",
+            "content": "Vous êtes responsable du maintien de la confidentialité de votre compte et de votre mot de passe et vous acceptez la responsabilité de toutes les activités qui se déroulent sous votre compte. Nous nous réservons le droit de résilier des comptes à notre seule discrétion."
+        },
+        "intellectualProperty": {
+            "title": "6. Propriété intellectuelle",
+            "content": "Le Site et son contenu, ses caractéristiques et ses fonctionnalités d'origine sont la propriété de Tasting Mallorca et sont protégés par le droit d'auteur international, les marques de commerce, les brevets, les secrets commerciaux et d'autres lois sur la propriété intellectuelle ou les droits de propriété."
+        }
+    }
+}

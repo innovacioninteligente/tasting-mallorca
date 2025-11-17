@@ -1,0 +1,32 @@
+
+{
+    "title": "Cookiebeleid",
+    "lastUpdated": "25 juli 2024",
+    "sections": {
+        "introduction": {
+            "title": "Inleiding",
+            "content": "Dit cookiebeleid legt uit wat cookies zijn en hoe we ze gebruiken op onze website, tastingmallorca.com. U dient dit beleid te lezen om te begrijpen welk type cookies we gebruiken, de informatie die we verzamelen met behulp van cookies en hoe die informatie wordt gebruikt."
+        },
+        "whatAreCookies": {
+            "title": "Wat zijn cookies?",
+            "content": "Cookies zijn kleine tekstbestanden die op uw computer of mobiele apparaat worden opgeslagen wanneer u een website bezoekt. Ze worden veel gebruikt om websites te laten werken, of efficiënter te laten werken, en om informatie te verstrekken aan de eigenaren van de site."
+        },
+        "howWeUseCookies": {
+            "title": "Hoe wij cookies gebruiken",
+            "content": "We gebruiken cookies om verschillende redenen die hieronder worden beschreven. Helaas zijn er in de meeste gevallen geen standaardopties om cookies uit te schakelen zonder de functionaliteit en functies die ze aan deze site toevoegen volledig uit te schakelen. Het wordt aanbevolen dat u alle cookies laat staan als u niet zeker weet of u ze nodig heeft of niet, voor het geval ze worden gebruikt om een service te bieden die u gebruikt."
+        },
+        "typesOfCookies": {
+            "title": "Soorten cookies die we gebruiken",
+            "content": [
+                "Essentiële cookies: Deze cookies zijn essentieel om u in staat te stellen door de website te navigeren en de functies ervan te gebruiken, zoals toegang tot beveiligde delen van de site. Zonder deze cookies kunnen de door u gevraagde diensten, zoals het boekingsproces, niet worden geleverd.",
+                "Voorkeurscookies: Deze cookies stellen de website in staat om keuzes te onthouden die u maakt (zoals uw taalvoorkeur) om verbeterde, meer persoonlijke functies te bieden.",
+                "Prestatiecookies: We kunnen cookies van derden gebruiken, zoals Google Analytics, om informatie te verzamelen over hoe bezoekers onze website gebruiken. Deze informatie wordt gebruikt om rapporten samen te stellen en ons te helpen de site te verbeteren. De cookies verzamelen informatie in een anonieme vorm.",
+                "Functionele cookies: Deze cookies zijn gerelateerd aan de functionaliteit van onze website. Bijvoorbeeld cookies van Firebase voor gebruikersauthenticatie en sessiebeheer, en cookies van Stripe voor veilige betalingsverwerking."
+            ]
+        },
+        "managingCookies": {
+            "title": "Cookies beheren",
+            "content": "U hebt het recht om te beslissen of u cookies accepteert of weigert. U kunt uw cookievoorkeuren instellen via onze cookie-toestemmingsbanner. Als u ervoor kiest om cookies uit te schakelen, kunt u onze website nog steeds gebruiken, hoewel uw toegang tot sommige functionaliteiten en delen van onze website mogelijk beperkt is."
+        }
+    }
+}

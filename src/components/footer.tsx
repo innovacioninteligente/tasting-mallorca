@@ -25,7 +25,7 @@ export async function Footer({ dictionary, lang }: FooterProps) {
         
         {/* Top Row */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <div className="flex flex-col gap-4 lg:col-span-2">
+            <div className="flex flex-col gap-4">
                 <Link href={`/${lang}/`} className="flex items-center gap-2 font-semibold" prefetch={false}>
                     <div className="relative h-10 w-10">
                       <Image
@@ -51,6 +51,15 @@ export async function Footer({ dictionary, lang }: FooterProps) {
                     <li><Link href={`/${lang}/contact`} className="hover:text-primary transition-colors">{dictionary.quickLinks.contact}</Link></li>
                 </ul>
             </div>
+             <div>
+                <h3 className="text-xl font-bold mb-4">{dictionary.legal.title}</h3>
+                <ul className="space-y-2 text-base">
+                    <li><Link href={`/${lang}/manage-booking`} className="hover:text-primary transition-colors">{dictionary.legal.manageBooking}</Link></li>
+                    <li><Link href={`/${lang}/legal/privacy-policy`} className="hover:text-primary transition-colors">{dictionary.legal.privacy}</Link></li>
+                     <li><Link href={`/${lang}/legal/cookie-policy`} className="hover:text-primary transition-colors">Cookie Policy</Link></li>
+                    <li><Link href={`/${lang}/legal/terms-of-service`} className="hover:text-primary transition-colors">{dictionary.legal.terms}</Link></li>
+                </ul>
+            </div>
             <div>
                 <h3 className="text-xl font-bold mb-4">{dictionary.contactUs.title}</h3>
                 <ul className="space-y-3 text-base">
@@ -70,7 +79,6 @@ export async function Footer({ dictionary, lang }: FooterProps) {
             </div>
         </div>
 
-        {/* Bottom Row */}
         {(tours.length > 0 || blogPosts.length > 0) && (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 border-t border-border pt-8">
                  {tours.length > 0 && (

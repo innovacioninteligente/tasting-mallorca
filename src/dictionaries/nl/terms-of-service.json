@@ -1,0 +1,31 @@
+
+{
+    "title": "Servicevoorwaarden",
+    "lastUpdated": "25 juli 2024",
+    "sections": {
+        "agreement": {
+            "title": "1. Akkoord met de voorwaarden",
+            "content": "Door de website op tastingmallorca.com te bezoeken, gaat u ermee akkoord gebonden te zijn aan deze servicevoorwaarden, alle toepasselijke wet- en regelgeving, en gaat u ermee akkoord dat u verantwoordelijk bent voor de naleving van alle toepasselijke lokale wetten."
+        },
+        "bookings": {
+            "title": "2. Boekingen en betalingen",
+            "content": "Alle boekingen zijn afhankelijk van beschikbaarheid. Wij behouden ons het recht voor om elke boeking naar eigen goeddunken te weigeren. Betalingen worden verwerkt via onze externe betalingsverwerker, Stripe. U gaat ermee akkoord actuele, volledige en nauwkeurige aankoop- en accountinformatie te verstrekken voor alle aankopen die via de Site worden gedaan."
+        },
+        "cancellations": {
+            "title": "3. Annulerings- en restitutiebeleid",
+            "content": "U kunt tot 24 uur van tevoren annuleren voor een volledige restitutie. Voor een volledige restitutie moet u ten minste 24 uur voor de starttijd van de ervaring annuleren. Als u minder dan 24 uur voor de starttijd van de ervaring annuleert, wordt het door u betaalde bedrag niet gerestitueerd. Wijzigingen die minder dan 24 uur voor de starttijd van de ervaring worden aangebracht, worden niet geaccepteerd."
+        },
+        "deposits": {
+            "title": "4. Aanbetalingsbeleid",
+            "content": "Voor bepaalde tours kunnen we de mogelijkheid bieden om met een aanbetaling te boeken. Het aanbetalingsbedrag verzekert uw plaats op de tour. Het resterende saldo dient op de dag van de tour rechtstreeks aan de gids te worden betaald. Aanbetalingen worden niet gerestitueerd in geval van annulering door de klant."
+        },
+        "userAccounts": {
+            "title": "5. Gebruikersaccounts",
+            "content": "U bent verantwoordelijk voor het handhaven van de vertrouwelijkheid van uw account en wachtwoord en u stemt ermee in de verantwoordelijkheid te aanvaarden voor alle activiteiten die onder uw account plaatsvinden. Wij behouden ons het recht voor om accounts naar eigen goeddunken te beëindigen."
+        },
+        "intellectualProperty": {
+            "title": "6. Intellectueel eigendom",
+            "content": "De Site en de oorspronkelijke inhoud, functies en functionaliteit zijn eigendom van Tasting Mallorca en worden beschermd door internationaal auteursrecht, handelsmerk, octrooi, handelsgeheim en andere wetten op het gebied van intellectueel eigendom of eigendomsrechten."
+        }
+    }
+}

@@ -1,0 +1,27 @@
+
+{
+    "title": "Datenschutzrichtlinie",
+    "lastUpdated": "25. Juli 2024",
+    "sections": {
+        "introduction": {
+            "title": "Einführung",
+            "content": "Willkommen bei Tasting Mallorca. Wir verpflichten uns, Ihre Privatsphäre zu schützen. Diese Datenschutzrichtlinie erklärt, wie wir Ihre persönlichen Daten erfassen, verwenden, offenlegen und schützen, wenn Sie unsere Website tastingmallorca.com besuchen, einschließlich aller anderen Medienformen, Medienkanäle, mobilen Websites oder mobilen Anwendungen, die damit verbunden sind."
+        },
+        "dataWeCollect": {
+            "title": "Daten, die wir erfassen",
+            "content": "Wir können auf verschiedene Weise Informationen über Sie sammeln. Die Informationen, die wir auf der Website sammeln können, umfassen:\n\n- Persönliche Daten: Persönlich identifizierbare Informationen wie Ihr Name, Ihre E-Mail-Adresse und Telefonnummer, die Sie uns freiwillig zur Verfügung stellen, wenn Sie sich auf der Website registrieren, eine Buchung vornehmen oder eine Anfrage über unser Kontaktformular senden.\n- Zahlungsdaten: Für die Zahlungsabwicklung notwendige Daten wie Ihr Name, Ihre E-Mail-Adresse und Zahlungsinformationen, die von unserem Zahlungsabwickler Stripe sicher erfasst und verarbeitet werden. Wir speichern Ihre vollständigen Zahlungsinformationen nicht auf unseren Servern."
+        },
+        "howWeUseData": {
+            "title": "Wie wir Ihre Daten verwenden",
+            "content": "Genaue Informationen über Sie zu haben, ermöglicht es uns, Ihnen ein reibungsloses, effizientes und personalisiertes Erlebnis zu bieten. Insbesondere können wir die über Sie über die Website gesammelten Informationen verwenden, um:\n\n- Ein persönliches Konto für Sie zu erstellen und zu verwalten.\n- Ihre Buchungen und Zahlungen zu bearbeiten.\n- Ihnen Bestätigungen und andere transaktionale E-Mails zu senden.\n- Ihre Anfragen zu beantworten und Ihnen Unterstützung zu bieten.\n- Die Nutzung und Trends zu analysieren, um unsere Website und Ihre Erfahrung zu verbessern."
+        },
+        "dataSharing": {
+            "title": "Weitergabe Ihrer Daten",
+            "content": "Wir können die von uns über Sie gesammelten Informationen in bestimmten Situationen weitergeben. Ihre Informationen können wie folgt weitergegeben werden:\n\n- An Drittanbieter: Wir können Ihre Informationen an Dritte weitergeben, die Dienstleistungen für uns oder in unserem Namen erbringen, einschließlich Zahlungsabwicklung (Stripe) und Hosting-Dienste (Firebase).\n- Gesetzliche Anforderungen: Wir können Ihre Informationen offenlegen, wenn dies gesetzlich vorgeschrieben ist, um rechtlichen Verfahren nachzukommen, auf rechtmäßige Anfragen von Behörden zu reagieren oder unsere Rechte zu schützen."
+        },
+        "userRights": {
+            "title": "Ihre Rechte",
+            "content": "Sie haben das Recht, auf die von uns über Sie gespeicherten personenbezogenen Daten zuzugreifen, sie zu korrigieren oder deren Löschung zu verlangen. Wenn Sie von diesen Rechten Gebrauch machen möchten, kontaktieren Sie uns bitte unter den unten angegebenen Kontaktinformationen."
+        }
+    }
+}

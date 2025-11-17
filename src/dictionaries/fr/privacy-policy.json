@@ -1,0 +1,27 @@
+
+{
+    "title": "Politique de confidentialité",
+    "lastUpdated": "25 juillet 2024",
+    "sections": {
+        "introduction": {
+            "title": "Introduction",
+            "content": "Bienvenue chez Tasting Mallorca. Nous nous engageons à protéger votre vie privée. Cette politique de confidentialité explique comment nous collectons, utilisons, divulguons et protégeons vos informations lorsque vous visitez notre site web tastingmallorca.com, y compris toute autre forme de média, canal médiatique, site web mobile ou application mobile qui y est lié ou connecté."
+        },
+        "dataWeCollect": {
+            "title": "Données que nous collectons",
+            "content": "Nous pouvons collecter des informations vous concernant de différentes manières. Les informations que nous pouvons collecter sur le Site comprennent :\n\n- Données personnelles : Informations personnellement identifiables, telles que votre nom, votre adresse e-mail et votre numéro de téléphone, que vous nous fournissez volontairement lorsque vous vous inscrivez sur le Site, effectuez une réservation ou soumettez une demande via notre formulaire de contact.\n- Données de paiement : Données nécessaires pour traiter votre paiement, telles que votre nom, votre e-mail et vos informations de paiement, qui sont collectées et traitées en toute sécurité par notre processeur de paiement, Stripe. Nous ne stockons pas vos informations de paiement complètes sur nos serveurs."
+        },
+        "howWeUseData": {
+            "title": "Comment nous utilisons vos données",
+            "content": "Disposer d'informations précises sur vous nous permet de vous offrir une expérience fluide, efficace et personnalisée. Plus précisément, nous pouvons utiliser les informations collectées à votre sujet via le Site pour :\n\n- Créer et gérer votre compte.\n- Traiter vos réservations et paiements.\n- Vous envoyer des confirmations et d'autres e-mails transactionnels.\n- Répondre à vos demandes et vous offrir un support.\n- Analyser l'utilisation et les tendances pour améliorer notre site web et votre expérience."
+        },
+        "dataSharing": {
+            "title": "Partage de vos informations",
+            "content": "Nous pouvons partager les informations que nous avons collectées à votre sujet dans certaines situations. Vos informations peuvent être divulguées comme suit :\n\n- Par la loi ou pour protéger des droits : Si nous pensons que la divulgation d'informations vous concernant est nécessaire pour répondre à une procédure légale, pour enquêter ou remédier à des violations potentielles de nos politiques, ou pour protéger les droits, la propriété et la sécurité d'autrui, nous pouvons partager vos informations comme le permet ou l'exige toute loi, règle ou réglementation applicable.\n- Fournisseurs de services tiers : Nous pouvons partager vos informations avec des tiers qui fournissent des services pour nous ou en notre nom, y compris le traitement des paiements (Stripe), l'analyse de données, la livraison d'e-mails, les services d'hébergement (Firebase) et le service client."
+        },
+        "userRights": {
+            "title": "Vos droits",
+            "content": "Vous avez le droit d'accéder, de corriger ou de demander la suppression de vos données personnelles que nous détenons. Si vous souhaitez exercer ces droits, veuillez nous contacter aux coordonnées fournies ci-dessous."
+        }
+    }
+}
