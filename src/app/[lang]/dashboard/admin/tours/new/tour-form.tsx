@@ -44,16 +44,26 @@ export function getFieldTab(fieldName: string): string {
 
 
 type TourFormValues = z.infer<typeof CreateTourInputSchema>;
+type AvailabilityPeriod = TourFormValues['availabilityPeriods'][number];
 
 const weekDays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 const weekDayInitials = ["L", "M", "X", "J", "V", "S", "D"];
 const availableLanguages = ["en", "de", "fr", "nl"];
 
-function AvailabilityPeriodCreator({ onAddPeriod }: { onAddPeriod: (period: z.infer<typeof CreateTourInputSchema.shape.availabilityPeriods.element>) => void }) {
-    const [dateRange, setDateRange] = useState<DateRange | undefined>({ from: new Date(), to: addDays(new Date(), 20) });
-    const [activeDays, setActiveDays] = useState<string[]>([]);
-    const [languages, setLanguages] = useState<string[]>([]);
-    const [showCreator, setShowCreator] = useState(false);
+function AvailabilityPeriodForm({ 
+    onSave,
+    onCancel,
+    initialData
+}: { 
+    onSave: (period: AvailabilityPeriod) => void;
+    onCancel: () => void;
+    initialData?: AvailabilityPeriod;
+}) {
+    const [dateRange, setDateRange] = useState<DateRange | undefined>(
+        initialData ? { from: new Date(initialData.startDate), to: new Date(initialData.endDate) } : { from: new Date(), to: addDays(new Date(), 20) }
+    );
+    const [activeDays, setActiveDays] = useState<string[]>(initialData?.activeDays || []);
+    const [languages, setLanguages] = useState<string[]>(initialData?.languages || []);
     const [error, setError] = useState<string | null>(null);
 
     const handleSavePeriod = () => {
@@ -70,13 +80,9 @@ function AvailabilityPeriodCreator({ onAddPeriod }: { onAddPeriod: (period: z.in
             setError("Debes seleccionar al menos un idioma.");
             return;
         }
-        onAddPeriod({ startDate: dateRange.from, endDate: dateRange.to, activeDays, languages });
-        setDateRange({ from: new Date(), to: addDays(new Date(), 20) });
-        setActiveDays([]);
-        setLanguages([]);
-        setShowCreator(false);
+        onSave({ startDate: dateRange.from, endDate: dateRange.to, activeDays, languages });
     };
-
+    
     const handleToggleAllWeek = () => {
         if (activeDays.length === weekDays.length) {
             setActiveDays([]);
@@ -91,15 +97,6 @@ function AvailabilityPeriodCreator({ onAddPeriod }: { onAddPeriod: (period: z.in
         } else {
             setLanguages(availableLanguages);
         }
-    }
-
-    if (!showCreator) {
-        return (
-            <Button type="button" variant="outline" onClick={() => setShowCreator(true)} className="mt-4 w-full">
-                <PlusCircle className="mr-2 h-4 w-4" />
-                Add New Availability Period
-            </Button>
-        );
     }
 
     return (
@@ -182,7 +179,7 @@ function AvailabilityPeriodCreator({ onAddPeriod }: { onAddPeriod: (period: z.in
                 </div>
                 {error && <p className="text-sm font-medium text-destructive">{error}</p>}
                 <div className="flex gap-2 justify-end">
-                    <Button type="button" variant="ghost" onClick={() => setShowCreator(false)}>Cancel</Button>
+                    <Button type="button" variant="ghost" onClick={onCancel}>Cancel</Button>
                     <Button type="button" onClick={handleSavePeriod}>Save Period</Button>
                 </div>
             </CardContent>
@@ -248,9 +245,11 @@ interface TourFormProps {
 
 export function TourForm({ initialData, onServerImageDelete, activeTab, onTabChange, errorTab }: TourFormProps) {
   const [editingItineraryId, setEditingItineraryId] = useState<string | null>(null);
+  const [isAddingPeriod, setIsAddingPeriod] = useState(false);
+  const [editingPeriodIndex, setEditingPeriodIndex] = useState<number | null>(null);
   const form = useFormContext<TourFormValues>();
 
-  const { fields, append, remove } = useFieldArray({
+  const { fields, append, remove, update } = useFieldArray({
     control: form.control,
     name: "availabilityPeriods",
   });
@@ -540,39 +539,68 @@ export function TourForm({ initialData, onServerImageDelete, activeTab, onTabCha
                       )}
                       />
               )}
-              <div>
-              <h3 className="text-lg font-medium mb-2">Availability Periods</h3>
-              <FormMessage>{form.formState.errors.availabilityPeriods?.root?.message}</FormMessage>
-              <div className="space-y-3">
-                  {fields.map((field, index) => (
-                  <Card key={field.id} className="bg-secondary/30">
-                      <CardContent className="p-3 flex justify-between items-center">
-                      <div>
-                          <p className="font-semibold">{format(field.startDate, "dd/MM/yy")} - {format(field.endDate, "dd/MM/yy")}</p>
-                          <div className="flex gap-1.5 mt-2">
-                              {weekDays.map((day, i) => (
-                                  <span key={day} className={cn("text-xs font-mono w-6 h-6 flex items-center justify-center rounded-full", field.activeDays.includes(day) ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground")}>
-                                      {weekDayInitials[i]}
-                                  </span>
-                              ))}
-                          </div>
-                          <div className="flex gap-1.5 mt-2">
-                            {(field.languages || []).map(lang => (
-                                <Badge key={lang} variant="outline" className="uppercase text-xs">{lang}</Badge>
-                            ))}
-                          </div>
-                      </div>
-                      <Button type="button" variant="ghost" size="icon" onClick={() => remove(index)}>
-                          <Trash2 className="h-4 w-4 text-destructive" />
-                      </Button>
-                      </CardContent>
-                  </Card>
-                  ))}
-              </div>
-
-              <AvailabilityPeriodCreator onAddPeriod={(period) => append(period)} />
-              <FormMessage>{form.formState.errors.availabilityPeriods?.message}</FormMessage>
-              </div>
+                <div>
+                    <h3 className="text-lg font-medium mb-2">Availability Periods</h3>
+                    <FormMessage>{form.formState.errors.availabilityPeriods?.root?.message}</FormMessage>
+                    <div className="space-y-3">
+                        {fields.map((field, index) =>
+                            editingPeriodIndex === index ? (
+                                <AvailabilityPeriodForm
+                                    key={field.id}
+                                    initialData={field}
+                                    onSave={(updatedPeriod) => {
+                                        update(index, updatedPeriod);
+                                        setEditingPeriodIndex(null);
+                                    }}
+                                    onCancel={() => setEditingPeriodIndex(null)}
+                                />
+                            ) : (
+                                <Card key={field.id} className="bg-secondary/30">
+                                    <CardContent className="p-3 flex justify-between items-center">
+                                        <div>
+                                            <p className="font-semibold">{format(new Date(field.startDate), "dd/MM/yy")} - {format(new Date(field.endDate), "dd/MM/yy")}</p>
+                                            <div className="flex gap-1.5 mt-2">
+                                                {weekDays.map((day, i) => (
+                                                    <span key={day} className={cn("text-xs font-mono w-6 h-6 flex items-center justify-center rounded-full", field.activeDays.includes(day) ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground")}>
+                                                        {weekDayInitials[i]}
+                                                    </span>
+                                                ))}
+                                            </div>
+                                            <div className="flex gap-1.5 mt-2">
+                                                {(field.languages || []).map(lang => (
+                                                    <Badge key={lang} variant="outline" className="uppercase text-xs">{lang}</Badge>
+                                                ))}
+                                            </div>
+                                        </div>
+                                        <div className="flex items-center gap-1">
+                                            <Button type="button" variant="ghost" size="icon" onClick={() => setEditingPeriodIndex(index)}>
+                                                <Edit className="h-4 w-4 text-muted-foreground" />
+                                            </Button>
+                                            <Button type="button" variant="ghost" size="icon" onClick={() => remove(index)}>
+                                                <Trash2 className="h-4 w-4 text-destructive" />
+                                            </Button>
+                                        </div>
+                                    </CardContent>
+                                </Card>
+                            )
+                        )}
+                    </div>
+                     {isAddingPeriod ? (
+                        <AvailabilityPeriodForm
+                            onSave={(period) => {
+                                append(period);
+                                setIsAddingPeriod(false);
+                            }}
+                            onCancel={() => setIsAddingPeriod(false)}
+                        />
+                    ) : (
+                        <Button type="button" variant="outline" onClick={() => setIsAddingPeriod(true)} className="mt-4 w-full">
+                            <PlusCircle className="mr-2 h-4 w-4" />
+                            Add New Availability Period
+                        </Button>
+                    )}
+                    <FormMessage>{form.formState.errors.availabilityPeriods?.message}</FormMessage>
+                </div>
           </CardContent>
           </Card>
       </TabsContent>
@@ -946,4 +974,3 @@ export function TourForm({ initialData, onServerImageDelete, activeTab, onTabCha
     </div>
   );
 }
-
