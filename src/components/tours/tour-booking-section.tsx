@@ -134,7 +134,8 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
     const [customerPhone, setCustomerPhone] = useState('');
     
     const [bookingId, setBookingId] = useState<string | null>(null);
-    const [isPaymentLoading, setIsPaymentLoading] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isPaymentReady, setIsPaymentReady] = useState(false);
     const [isSearchingHotel, setIsSearchingHotel] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
     const [isCalendarSheetOpen, setIsCalendarSheetOpen] = useState(false);
@@ -203,7 +204,7 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
     const handleContinueToPayment = async () => {
         if (!firestore || !date || !selectedHotel || !suggestedMeetingPoint || !customerName || !customerEmail || !customerPhone) return;
         
-        setIsPaymentLoading(true);
+        setIsSubmitting(true);
         const newBookingId = crypto.randomUUID();
         
         const bookingData = {
@@ -241,7 +242,8 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
                 title: 'Error creating booking',
                 description: 'Could not save your booking. Please try again.',
             });
-            setIsPaymentLoading(false);
+        } finally {
+            setIsSubmitting(false);
         }
     };
     
@@ -632,8 +634,8 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
                 )}
             </div>
             <div className="space-y-3">
-                 <Button size="lg" className="w-full font-bold text-lg py-7 bg-accent text-accent-foreground hover:bg-accent/90" onClick={async () => await handleContinueToPayment()} disabled={!selectedHotel || !suggestedMeetingPoint || !customerName || !customerEmail || !customerPhone || isPaymentLoading}>
-                    {isPaymentLoading ? <Loader2 className="animate-spin h-5 w-5" /> : dictionary.continueToPayment}
+                 <Button size="lg" className="w-full font-bold text-lg py-7 bg-accent text-accent-foreground hover:bg-accent/90" onClick={async () => await handleContinueToPayment()} disabled={!selectedHotel || !suggestedMeetingPoint || !customerName || !customerEmail || !customerPhone || isSubmitting}>
+                    {isSubmitting ? <Loader2 className="animate-spin h-5 w-5" /> : dictionary.continueToPayment}
                 </Button>
                  <Button variant="ghost" size="lg" className="w-full" onClick={handlePrevStep}>
                     <ArrowLeft className="mr-2 h-4 w-4" />
@@ -671,12 +673,12 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
                     name={customerName || 'Customer'}
                     email={customerEmail || 'anonymous'}
                     metadata={paymentMetadata}
-                    onReady={(isReady) => setIsPaymentLoading(!isReady)}
+                    onReady={setIsPaymentReady}
                 >
                     <CheckoutForm dictionary={dictionary} handlePrevStep={handlePrevStep} returnUrl={getReturnUrl()} />
                 </StripeProvider>
             )}
-            {isPaymentLoading && (
+            {!isPaymentReady && (
                  <div className="flex items-center justify-center h-full py-10">
                     <Loader2 className="h-8 w-8 animate-spin" />
                 </div>

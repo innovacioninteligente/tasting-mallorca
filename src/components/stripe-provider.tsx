@@ -5,7 +5,6 @@ import { useState, useEffect } from 'react';
 import { loadStripe, StripeElementsOptions } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
 import { createPaymentIntent } from '@/app/actions/stripe';
-import { Loader2 } from 'lucide-react';
 
 // Make sure to call `loadStripe` outside of a component’s render to avoid
 // recreating the `Stripe` object on every render.
@@ -27,18 +26,19 @@ export function StripeProvider({ children, amount, name, email, metadata, onRead
 
   useEffect(() => {
     if (amount > 0) {
-      onReady(false);
+      onReady(false); // Signal that loading is starting
       createPaymentIntent(amount, name, email, metadata).then((data) => {
         if (data.clientSecret) {
           setClientSecret(data.clientSecret);
+          onReady(true); // Signal that loading is complete
         } else {
-            // Handle error case
             console.error(data.error);
-            onReady(true); // Allow user to try again
+            onReady(true); // Also signal ready on error to allow retry
         }
       });
     }
-  }, [amount, name, email, metadata, onReady]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [amount, name, email, metadata]);
 
   const options: StripeElementsOptions = {
     clientSecret,
@@ -55,17 +55,8 @@ export function StripeProvider({ children, amount, name, email, metadata, onRead
     loader: 'always'
   };
   
-  useEffect(() => {
-      if(clientSecret) {
-        // This is a bit of a hack. We need to wait for Stripe to fully initialize.
-        // There's no perfect callback, so we'll use a short timeout.
-        const timer = setTimeout(() => onReady(true), 1000); 
-        return () => clearTimeout(timer);
-      }
-  }, [clientSecret, onReady]);
-
   if (!clientSecret) {
-    // Parent component will show loader
+    // The parent component handles the loading indicator.
     return null;
   }
 
