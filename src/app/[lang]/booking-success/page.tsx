@@ -4,7 +4,7 @@
 import { Suspense } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { CheckCircle, Home, Map, DollarSign, QrCode, AlertTriangle } from 'lucide-react';
+import { CheckCircle, Home, Map, DollarSign, QrCode, AlertTriangle, Check, X, Info } from 'lucide-react';
 import Link from 'next/link';
 import { RouteMap } from '@/components/route-map';
 import { notFound } from 'next/navigation';
@@ -126,6 +126,12 @@ export default async function BookingSuccessPage({ searchParams, params }: { sea
 
     const totalParticipants = booking.adults + booking.children + booking.infants;
 
+    const tourDetails = tour?.details;
+    const tDetails = dictionary.tourDetail.tourDetails;
+    const notSuitableFor = (tourDetails?.notSuitableFor?.[params.lang] || tourDetails?.notSuitableFor?.en || '').split('\n').filter(Boolean);
+    const whatToBring = (tourDetails?.whatToBring?.[params.lang] || tourDetails?.whatToBring?.en || '').split('\n').filter(Boolean);
+    const beforeYouGo = (tourDetails?.beforeYouGo?.[params.lang] || tourDetails?.beforeYouGo?.en || '').split('\n').filter(Boolean);
+
     return (
         <Suspense fallback={<div className="h-screen w-full flex items-center justify-center">Loading confirmation...</div>}>
             <div className="bg-background text-foreground min-h-screen flex items-center justify-center py-12">
@@ -232,6 +238,40 @@ export default async function BookingSuccessPage({ searchParams, params }: { sea
                                     </div>
                                 </div>
                             )}
+
+                             { (notSuitableFor.length > 0 || whatToBring.length > 0 || beforeYouGo.length > 0) && (
+                                <div className="border border-border bg-secondary/30 rounded-lg p-4 space-y-4">
+                                    <h3 className="font-bold text-xl mb-2 text-foreground flex items-center gap-2">
+                                        <Info className="w-6 h-6"/>
+                                        {tDetails.importantInfoTitle}
+                                    </h3>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm">
+                                        <div>
+                                            {notSuitableFor.length > 0 && <>
+                                                <h4 className="font-semibold mb-2">{tDetails.notSuitableTitle}</h4>
+                                                <ul className="space-y-1 text-muted-foreground list-disc pl-5">
+                                                    {notSuitableFor.map((item, index) => <li key={index}>{item}</li>)}
+                                                </ul>
+                                            </>}
+                                             {whatToBring.length > 0 && <>
+                                                <h4 className="font-semibold mt-4 mb-2">{tDetails.whatToBringTitle}</h4>
+                                                <ul className="space-y-1 text-muted-foreground list-disc pl-5">
+                                                    {whatToBring.map((item, index) => <li key={index}>{item}</li>)}
+                                                </ul>
+                                            </>}
+                                        </div>
+                                        <div>
+                                            {beforeYouGo.length > 0 && <>
+                                                <h4 className="font-semibold mb-2">{tDetails.beforeYouGoTitle}</h4>
+                                                <ul className="space-y-1 text-muted-foreground list-disc pl-5">
+                                                    {beforeYouGo.map((item, index) => <li key={index}>{item}</li>)}
+                                                </ul>
+                                            </>}
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
 
                             <Button asChild size="lg" className="w-full font-bold text-lg mt-6">
                             <Link href={`/${params.lang}`}>
