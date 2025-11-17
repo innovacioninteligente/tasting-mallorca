@@ -5,7 +5,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Tour } from "@/backend/tours/domain/tour.model";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Edit, Eye, Loader2, Trash2 } from "lucide-react";
+import { Edit, Eye, Loader2, Trash2, ImageIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
@@ -89,13 +89,19 @@ export function TourList({ tours, error }: TourListProps) {
                     {tours.map((tour) => (
                         <TableRow key={tour.id}>
                             <TableCell>
-                                <Image
-                                    src={tour.mainImage}
-                                    alt={tour.title.en}
-                                    width={64}
-                                    height={64}
-                                    className="rounded-md object-cover aspect-square"
-                                />
+                                {tour.mainImage ? (
+                                    <Image
+                                        src={tour.mainImage}
+                                        alt={tour.title.en}
+                                        width={64}
+                                        height={64}
+                                        className="rounded-md object-cover aspect-square"
+                                    />
+                                ) : (
+                                    <div className="w-16 h-16 bg-secondary rounded-md flex items-center justify-center">
+                                        <ImageIcon className="h-6 w-6 text-muted-foreground" />
+                                    </div>
+                                )}
                             </TableCell>
                             <TableCell className="font-medium">{tour.title.en}</TableCell>
                             <TableCell>
