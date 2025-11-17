@@ -14,10 +14,32 @@ interface PageProps {
 export async function generateMetadata({ params: { lang } }: PageProps): Promise<Metadata> {
     const dictionary = await getDictionary(lang);
     const { pageTitle, pageDescription } = dictionary.privateTours;
+    const imageUrl = "https://firebasestorage.googleapis.com/v0/b/tasting-mallorca.firebasestorage.app/o/web%2Fimages%2F010_suavizado.jpg?alt=media&token=05180246-a644-495f-9f18-3ee66a6b2f76";
+
 
     return {
-        title: pageTitle,
+        title: `${pageTitle} | Tasting Mallorca`,
         description: pageDescription,
+         openGraph: {
+            title: `${pageTitle} | Tasting Mallorca`,
+            description: pageDescription,
+            images: [
+                {
+                    url: imageUrl,
+                    width: 1200,
+                    height: 630,
+                    alt: pageTitle,
+                },
+            ],
+            locale: lang,
+            type: 'website',
+        },
+        twitter: {
+            card: 'summary_large_image',
+            title: `${pageTitle} | Tasting Mallorca`,
+            description: pageDescription,
+            images: [imageUrl],
+        },
     };
 }
 
