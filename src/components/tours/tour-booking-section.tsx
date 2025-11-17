@@ -134,7 +134,7 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
     const [customerPhone, setCustomerPhone] = useState('');
     
     const [bookingId, setBookingId] = useState<string | null>(null);
-    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isPaymentLoading, setIsPaymentLoading] = useState(false);
     const [isSearchingHotel, setIsSearchingHotel] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
     const [isCalendarSheetOpen, setIsCalendarSheetOpen] = useState(false);
@@ -203,7 +203,7 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
     const handleContinueToPayment = async () => {
         if (!firestore || !date || !selectedHotel || !suggestedMeetingPoint || !customerName || !customerEmail || !customerPhone) return;
         
-        setIsSubmitting(true);
+        setIsPaymentLoading(true);
         const newBookingId = crypto.randomUUID();
         
         const bookingData = {
@@ -241,8 +241,7 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
                 title: 'Error creating booking',
                 description: 'Could not save your booking. Please try again.',
             });
-        } finally {
-            setIsSubmitting(false);
+            setIsPaymentLoading(false);
         }
     };
     
@@ -633,8 +632,8 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
                 )}
             </div>
             <div className="space-y-3">
-                 <Button size="lg" className="w-full font-bold text-lg py-7 bg-accent text-accent-foreground hover:bg-accent/90" onClick={async () => await handleContinueToPayment()} disabled={!selectedHotel || !suggestedMeetingPoint || !customerName || !customerEmail || !customerPhone || isSubmitting}>
-                    {isSubmitting ? <Loader2 className="animate-spin h-5 w-5" /> : dictionary.continueToPayment}
+                 <Button size="lg" className="w-full font-bold text-lg py-7 bg-accent text-accent-foreground hover:bg-accent/90" onClick={async () => await handleContinueToPayment()} disabled={!selectedHotel || !suggestedMeetingPoint || !customerName || !customerEmail || !customerPhone || isPaymentLoading}>
+                    {isPaymentLoading ? <Loader2 className="animate-spin h-5 w-5" /> : dictionary.continueToPayment}
                 </Button>
                  <Button variant="ghost" size="lg" className="w-full" onClick={handlePrevStep}>
                     <ArrowLeft className="mr-2 h-4 w-4" />
@@ -672,9 +671,15 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
                     name={customerName || 'Customer'}
                     email={customerEmail || 'anonymous'}
                     metadata={paymentMetadata}
+                    onReady={(isReady) => setIsPaymentLoading(!isReady)}
                 >
                     <CheckoutForm dictionary={dictionary} handlePrevStep={handlePrevStep} returnUrl={getReturnUrl()} />
                 </StripeProvider>
+            )}
+            {isPaymentLoading && (
+                 <div className="flex items-center justify-center h-full py-10">
+                    <Loader2 className="h-8 w-8 animate-spin" />
+                </div>
             )}
         </motion.div>
     );
@@ -733,7 +738,7 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
                         onClick={(e) => e.stopPropagation()}
                     >
                         <div className="hidden md:block bg-secondary p-8 rounded-l-lg w-2/5">
-                            {originCoords && destinationCoords ? (
+                            {originCoords && destinationCoords && step === 2 ? (
                                 <div className="h-full w-full rounded-md overflow-hidden">
                                      <RouteMap
                                         origin={originCoords}
@@ -766,11 +771,7 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
                             </div>
                              <div className="flex-1 p-6 min-h-0 overflow-y-auto">
                                 <AnimatePresence mode="wait">
-                                    {isSubmitting && step === 3 ? (
-                                        <div className="flex items-center justify-center h-full">
-                                            <Loader2 className="h-8 w-8 animate-spin" />
-                                        </div>
-                                    ) : renderBookingFlow()}
+                                    {renderBookingFlow()}
                                 </AnimatePresence>
                             </div>
                         </div>
@@ -781,7 +782,7 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
 
 
             {/* --- Mobile Booking Sheet --- */}
-            <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-background border-t border-border p-4 shadow-[0_-4px_10px_rgba(0,0,0,0.05)] z-50">
+            <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-background border-t border-border p-4 shadow-[0_-4px_10px_rgba(0,0,0,0.05)] z-40">
                 <div className="flex items-center justify-between gap-4">
                      <div>
                         <p className="text-sm text-muted-foreground">{dictionary.priceLabel}</p>
@@ -805,11 +806,7 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
                            <div className="overflow-y-auto flex-grow">
                                 <div className="p-4">
                                      <AnimatePresence mode="wait">
-                                        {isSubmitting && step === 3 ? (
-                                            <div className="flex items-center justify-center h-48">
-                                                <Loader2 className="h-8 w-8 animate-spin" />
-                                            </div>
-                                        ) : renderBookingFlow()}
+                                         {renderBookingFlow()}
                                     </AnimatePresence>
                                 </div>
                            </div>

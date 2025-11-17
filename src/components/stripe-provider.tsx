@@ -34,10 +34,11 @@ export function StripeProvider({ children, amount, name, email, metadata, onRead
         } else {
             // Handle error case
             console.error(data.error);
+            onReady(true); // Allow user to try again
         }
       });
     }
-  }, [amount, name, email, metadata]);
+  }, [amount, name, email, metadata, onReady]);
 
   const options: StripeElementsOptions = {
     clientSecret,
@@ -64,7 +65,7 @@ export function StripeProvider({ children, amount, name, email, metadata, onRead
   }, [clientSecret, onReady]);
 
   if (!clientSecret) {
-    // Parent component will show loader based on onReady(false)
+    // Parent component will show loader
     return null;
   }
 
