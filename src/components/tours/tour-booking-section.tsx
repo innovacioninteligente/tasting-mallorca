@@ -395,8 +395,14 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
                                     {date ? formattedDate : "Pick a date"}
                                 </Button>
                             </SheetTrigger>
-                            <SheetContent side="bottom" className="rounded-t-2xl max-h-[90vh] p-0 flex flex-col items-center">
-                                 <DatePickerContent />
+                            <SheetContent side="bottom" className="rounded-t-2xl max-h-[90vh] p-0 flex flex-col">
+                                <SheetHeader className="p-4 border-b">
+                                    <SheetTitle>Select a date</SheetTitle>
+                                    <SheetDescription>Choose an available date for your tour.</SheetDescription>
+                                </SheetHeader>
+                                <div className="flex justify-center">
+                                    <DatePickerContent />
+                                </div>
                             </SheetContent>
                         </Sheet>
                     ) : (
