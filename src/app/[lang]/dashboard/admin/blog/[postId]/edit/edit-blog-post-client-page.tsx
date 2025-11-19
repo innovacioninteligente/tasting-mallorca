@@ -168,7 +168,7 @@ export function EditBlogPostClientPage({ initialData, lang }: EditBlogPostClient
             const postData = {
                 ...data,
                 id: postId,
-                mainImage: mainImageUrl,
+                mainImage: mainImageUrl, // Ensure new URL is included
                 publishedAt: data.publishedAt,
             };
             
