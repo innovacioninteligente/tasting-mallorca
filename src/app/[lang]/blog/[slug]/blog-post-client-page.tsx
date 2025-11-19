@@ -83,4 +83,3 @@ export default function BlogPostClientPage({ post, lang, otherPosts, recommended
     </article>
   );
 }
-
