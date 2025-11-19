@@ -47,8 +47,13 @@ export function BlogPostList({ posts, error, lang }: BlogPostListProps) {
                 </TableRow>
             </TableHeader>
             <TableBody>
-                {posts.map((post) => (
-                    <TableRow key={post.id}>
+                {posts.map((post) =>{
+
+                    console.log('BLOG POST', post)
+
+                    return(
+
+                        <TableRow key={post.id}>
                         <TableCell>
                             <Image
                                 src={post.mainImage}
@@ -81,8 +86,10 @@ export function BlogPostList({ posts, error, lang }: BlogPostListProps) {
                                 </Button>
                             </div>
                         </TableCell>
-                    </TableRow>
-                ))}
+                        </TableRow>
+
+                    )
+                })}
             </TableBody>
         </Table>
     );
