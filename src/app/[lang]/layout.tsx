@@ -42,6 +42,9 @@ export async function generateMetadata({ params: { lang } }: RootLayoutProps): P
     icons: {
       icon: faviconUrl,
     },
+    verification: {
+      google: 'QnN3dHRfMkm0txTl3OeQebTrLXhdEvodXTA2LSDzVRg',
+    },
   };
 }
 
