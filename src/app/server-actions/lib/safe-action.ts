@@ -36,34 +36,34 @@ export function createSafeAction<TInput, TOutput>(
   return async (
     input: TInput
   ): Promise<{ data?: TOutput; error?: string }> => {
-    
+
     // Validate input with Zod schema if provided
     if (authOptions.inputSchema) {
-        const validationResult = authOptions.inputSchema.safeParse(input);
-        if (!validationResult.success) {
-            const { formErrors, fieldErrors } = validationResult.error.flatten();
-            const firstFieldErrorKey = Object.keys(fieldErrors)[0];
-            const firstError = firstFieldErrorKey 
-                ? `El campo '${firstFieldErrorKey}' - ${fieldErrors[firstFieldErrorKey]?.[0]}`
-                : formErrors[0];
+      const validationResult = authOptions.inputSchema.safeParse(input);
+      if (!validationResult.success) {
+        const { formErrors, fieldErrors } = validationResult.error.flatten();
+        const firstFieldErrorKey = Object.keys(fieldErrors)[0];
+        const firstError = firstFieldErrorKey
+          ? `El campo '${firstFieldErrorKey}' - ${(fieldErrors as any)[firstFieldErrorKey]?.[0]}`
+          : formErrors[0];
 
-            return { error: 'Invalid input: ' + firstError };
-        }
+        return { error: 'Invalid input: ' + firstError };
+      }
     }
 
     const isPublicAction = !authOptions.allowedRoles || authOptions.allowedRoles.length === 0;
 
     if (isPublicAction) {
-        try {
-            return await action(input);
-        } catch (error: any) {
-             console.error('Error in public safe action:', error);
-             return { error: error.message || 'An unexpected server error occurred in public action.' };
-        }
+      try {
+        return await action(input);
+      } catch (error: any) {
+        console.error('Error in public safe action:', error);
+        return { error: error.message || 'An unexpected server error occurred in public action.' };
+      }
     }
-    
+
     // If it's not a public action, proceed with authentication
-    const sessionCookie = cookies().get('session')?.value;
+    const sessionCookie = (await cookies()).get('session')?.value;
 
     if (!sessionCookie) {
       return { error: 'Unauthorized: No session cookie provided.' };
@@ -97,7 +97,7 @@ export function createSafeAction<TInput, TOutput>(
         return { error: 'Unauthorized: Session expired. Please sign in again.' };
       }
       if (error.code === 'auth/session-cookie-revoked') {
-          return { error: 'Unauthorized: Session revoked. Please sign in again.' };
+        return { error: 'Unauthorized: Session revoked. Please sign in again.' };
       }
       return { error: error.message || 'An unexpected server error occurred.' };
     }

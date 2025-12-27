@@ -1,9 +1,11 @@
-
 {
     "newActivity": "Neue Aktivität",
     "provider": "Anbieter der Aktivität",
     "addToFavorites": "Zu Favoriten hinzufügen",
     "share": "Teilen",
     "explore": "Mallorca Entdecken",
-    "seePlaces": "Sehenswürdigkeiten"
+    "seePlaces": "Sehenswürdigkeiten",
+    "freeCancellation": "Kostenlose Stornierung",
+    "instantConfirmation": "Sofortige Bestätigung",
+    "mobileTicket": "Mobiles Ticket"
 }

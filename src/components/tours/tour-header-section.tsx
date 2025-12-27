@@ -1,22 +1,21 @@
-
 'use client';
 
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { Heart, Share2 } from "lucide-react";
+import { Share2 } from "lucide-react";
+import { TrustSignals } from "./trust-signals";
+
 
 interface TourHeaderSectionProps {
     tour: {
         title: string;
     };
     dictionary: {
-        newActivity: string;
-        provider: string;
-        addToFavorites: string;
         share: string;
-        explore: string;
-        seePlaces: string;
+        freeCancellation: string;
+        instantConfirmation: string;
+        mobileTicket: string;
+        [key: string]: string;
     };
 }
 
@@ -41,22 +40,19 @@ export function TourHeaderSection({ tour, dictionary }: TourHeaderSectionProps) 
             }
         } catch (error) {
             console.error("Error sharing:", error);
-             toast({
-                variant: "destructive",
-                title: "Error",
-                description: "Could not share the tour at this moment.",
-            });
+            // Ignore abort errors
         }
     };
-    
+
     return (
         <header className="bg-secondary/50 py-8">
             <div className="w-full md:w-[80vw] mx-auto px-4">
                 <div className="flex flex-col md:flex-row md:items-center md:justify-between">
                     <div>
-                        <h1 className="text-4xl md:text-5xl font-extrabold text-foreground" style={{ viewTransitionName: `tour-title-${tour.title}` }}>
+                        <h1 className="text-4xl md:text-5xl font-extrabold text-foreground mb-4" style={{ viewTransitionName: `tour-title-${tour.title}` }}>
                             {tour.title}
                         </h1>
+                        <TrustSignals dictionary={dictionary} />
                     </div>
                     <div className="flex items-center gap-4 mt-6 md:mt-0">
                         <Button variant="ghost" className="flex items-center gap-2" onClick={handleShare}>
@@ -69,3 +65,4 @@ export function TourHeaderSection({ tour, dictionary }: TourHeaderSectionProps) 
         </header>
     );
 }
+

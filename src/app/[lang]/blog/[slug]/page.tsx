@@ -11,10 +11,11 @@ import BlogPostClientPage from './blog-post-client-page';
 import { findAllTours } from '@/app/server-actions/tours/findTours';
 import { Tour } from '@/backend/tours/domain/tour.model';
 import { getDictionary } from '@/dictionaries/get-dictionary';
+import { SchemaBuilder } from '@/lib/seo/schema-builder';
 
 type BlogPostParams = {
-    slug: string;
-    lang: Locale;
+  slug: string;
+  lang: Locale;
 };
 
 export async function generateStaticParams(): Promise<BlogPostParams[]> {
@@ -26,13 +27,13 @@ export async function generateStaticParams(): Promise<BlogPostParams[]> {
   const paths = result.data
     .filter((post: BlogPost) => post.published)
     .flatMap((post: BlogPost) =>
-    Object.entries(post.slug)
-      .filter(([_, slugValue]) => slugValue)
-      .map(([lang, slug]) => ({
-        lang: lang as Locale,
-        slug: slug,
-      }))
-  );
+      Object.entries(post.slug)
+        .filter(([_, slugValue]) => slugValue)
+        .map(([lang, slug]) => ({
+          lang: lang as Locale,
+          slug: slug,
+        }))
+    );
 
   return paths;
 }
@@ -50,7 +51,7 @@ export async function generateMetadata({ params }: { params: BlogPostParams }): 
   const title = post.title[lang] || post.title.en;
   const description = post.summary[lang] || post.summary.en;
   const imageUrl = post.mainImage;
-  
+
   const allSlugs = post.slug;
   const languages: { [key: string]: string } = {};
   if (allSlugs.en) languages['en-US'] = `/en/blog/${allSlugs.en}`;
@@ -84,38 +85,44 @@ export async function generateMetadata({ params }: { params: BlogPostParams }): 
 }
 
 export default async function BlogPostPageLoader({ params }: { params: BlogPostParams }) {
-    const { lang, slug: encodedSlug } = params;
-    const slug = decodeURIComponent(encodedSlug);
-    
-    const [postResult, otherPostsResult, toursResult, dictionary] = await Promise.all([
-      findBlogPostBySlugAndLang({ slug, lang }),
-      findAllBlogPosts({}),
-      findAllTours({}),
-      getDictionary(lang),
-    ]);
+  const { lang, slug: encodedSlug } = params;
+  const slug = decodeURIComponent(encodedSlug);
 
-    if (!postResult.data || !postResult.data.published) {
-        notFound();
-    }
-    
-    const otherPosts = (otherPostsResult.data || [])
-      .filter(p => p.id !== postResult.data?.id && p.published)
-      .slice(0, 3) as BlogPost[];
-      
-    const recommendedTours = (toursResult.data || [])
-      .filter(t => t.isFeatured && t.published)
-      .slice(0, 2) as Tour[];
+  const [postResult, otherPostsResult, toursResult, dictionary] = await Promise.all([
+    findBlogPostBySlugAndLang({ slug, lang }),
+    findAllBlogPosts({}),
+    findAllTours({}),
+    getDictionary(lang),
+  ]);
 
-    return (
-        <Suspense fallback={<div>Loading...</div>}>
-            <BlogPostClientPage 
-              post={postResult.data}
-              lang={lang}
-              otherPosts={otherPosts}
-              recommendedTours={recommendedTours}
-              dictionary={dictionary}
-            />
-        </Suspense>
-    );
+  if (!postResult.data || !postResult.data.published) {
+    notFound();
+  }
+
+  const otherPosts = (otherPostsResult.data || [])
+    .filter(p => p.id !== postResult.data?.id && p.published)
+    .slice(0, 3) as BlogPost[];
+
+  const recommendedTours = (toursResult.data || [])
+    .filter(t => t.isFeatured && t.published)
+    .slice(0, 2) as Tour[];
+
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(SchemaBuilder.generateBlogPostSchema(postResult.data, lang))
+        }}
+      />
+      <BlogPostClientPage
+        post={postResult.data}
+        lang={lang}
+        otherPosts={otherPosts}
+        recommendedTours={recommendedTours}
+        dictionary={dictionary}
+      />
+    </Suspense>
+  );
 }
 

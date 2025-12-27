@@ -1,21 +1,10 @@
-
 import { Hotel } from '../domain/hotel.model';
 import { HotelRepository } from '../domain/hotel.repository';
 import { MeetingPointRepository } from '@/backend/meeting-points/domain/meeting-point.repository';
 import { MeetingPoint } from '@/backend/meeting-points/domain/meeting-point.model';
+import { getDistance } from '@/lib/geo-utils';
 
-// Haversine formula to calculate distance between two lat/lon points
-function getDistance(lat1: number, lon1: number, lat2: number, lon2: number) {
-    const R = 6371; // Radius of the Earth in km
-    const dLat = (lat2 - lat1) * Math.PI / 180;
-    const dLon = (lon2 - lon1) * Math.PI / 180;
-    const a =
-        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-        Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-        Math.sin(dLon / 2) * Math.sin(dLon / 2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    return R * c; // Distance in km
-}
+const REGIONS = ['North', 'East', 'South', 'West', 'Central'];
 
 export async function assignMeetingPointToHotels(
     hotelRepository: HotelRepository,
@@ -38,30 +27,53 @@ export async function assignMeetingPointToHotels(
                 continue;
             }
 
-            let closestMeetingPoint: MeetingPoint | null = null;
-            let minDistance = Infinity;
+            const newAssignments: { [key: string]: string } = {};
+            let globalClosestPointId: string | null = null;
+            let globalMinDistance = Infinity;
 
+            // 1. Calculate best Meeting Point for EACH Region
+            for (const region of REGIONS) {
+                const regionPoints = meetingPoints.filter(mp => mp.region === region && mp.latitude !== undefined && mp.longitude !== undefined);
+
+                let regionClosestPoint: MeetingPoint | null = null;
+                let regionMinDistance = Infinity;
+
+                for (const point of regionPoints) {
+                    const distance = getDistance(hotel.latitude, hotel.longitude, point.latitude!, point.longitude!);
+
+                    if (distance < regionMinDistance) {
+                        regionMinDistance = distance;
+                        regionClosestPoint = point;
+                    }
+                }
+
+                if (regionClosestPoint) {
+                    newAssignments[region] = regionClosestPoint.id;
+                }
+            }
+
+            // 2. Calculate the global closest point (for backward compatibility)
+            // We can reuse the logic or just loop all valid points
             for (const point of meetingPoints) {
-                 // Skip meeting points that don't have coordinates
-                if (point.latitude === undefined || point.longitude === undefined) {
-                    continue;
-                }
+                if (point.latitude === undefined || point.longitude === undefined) continue;
                 const distance = getDistance(hotel.latitude, hotel.longitude, point.latitude, point.longitude);
-                if (distance < minDistance) {
-                    minDistance = distance;
-                    closestMeetingPoint = point;
+                if (distance < globalMinDistance) {
+                    globalMinDistance = distance;
+                    globalClosestPointId = point.id;
                 }
             }
 
-            if (closestMeetingPoint && hotel.assignedMeetingPointId !== closestMeetingPoint.id) {
-                await hotelRepository.update({
-                    id: hotel.id,
-                    assignedMeetingPointId: closestMeetingPoint.id,
-                });
-                updatedCount++;
-            }
+            // 3. Update the Hotel
+            // We update if the assignments map is different or if it's a new field
+            // Ideally should check for deep equality, but here we just overwrite to be safe and ensure migration
+            await hotelRepository.update({
+                id: hotel.id,
+                assignedMeetingPoints: newAssignments,
+                assignedMeetingPointId: globalClosestPointId // Maintain for legacy
+            });
+            updatedCount++;
         }
-        
+
         return { success: true, updatedCount };
 
     } catch (error: any) {

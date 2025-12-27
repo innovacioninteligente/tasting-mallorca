@@ -4,24 +4,27 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
+import HeroImage from '../../../public/images/banner-hero.png';
 
 type HeroDictionary = {
-    welcome: string;
-    title: string;
-    subtitle: string;
-    bookNow: string;
-    viewAllTours: string;
+  welcome: string;
+  title: string;
+  subtitle: string;
+  bookNow: string;
+  viewAllTours: string;
 }
 
 export function HeroSection({ dictionary }: { dictionary: HeroDictionary }) {
   return (
     <section className="relative w-full min-h-screen flex items-center justify-center text-center pb-20 bg-background">
       <Image
-        src="https://firebasestorage.googleapis.com/v0/b/tasting-mallorca.firebasestorage.app/o/web%2Fimages%2Fbanner-hero.png?alt=media&token=cebdf583-f589-4835-b72f-197a731e2d1f"
+        src={HeroImage}
         alt="Tasting Mallorca Hero background"
         fill
         className="object-cover"
         priority
+        fetchPriority="high"
+        placeholder="blur"
         sizes="100vw"
         data-ai-hint="mallorca boat trip"
       />

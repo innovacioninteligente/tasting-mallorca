@@ -1,4 +1,4 @@
-import type {Config} from 'tailwindcss';
+import type { Config } from 'tailwindcss';
 
 export default {
   darkMode: ['class'],
@@ -12,7 +12,7 @@ export default {
       fontFamily: {
         body: ['var(--font-poppins)', 'sans-serif'],
         headline: ['var(--font-poppins)', 'sans-serif'],
-        cursive: ['"Edu NSW ACT Cursive"', 'cursive'],
+        cursive: ['var(--font-cursive)', 'cursive'],
         code: ['monospace'],
       },
       colors: {
@@ -107,4 +107,3 @@ export default {
   plugins: [require('tailwindcss-animate')],
 } satisfies Config;
 
-    

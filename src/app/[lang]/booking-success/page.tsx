@@ -1,6 +1,4 @@
 
-'use server';
-
 import { Suspense } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -15,17 +13,23 @@ import { Hotel } from '@/backend/hotels/domain/hotel.model';
 import { MeetingPoint } from '@/backend/meeting-points/domain/meeting-point.model';
 import { format } from 'date-fns';
 import { es, fr, de, nl } from 'date-fns/locale';
+import { Locale as DateFnsLocale } from 'date-fns';
 import QRCode from "react-qr-code";
 import { adminApp } from '@/firebase/server/config';
 import { getDictionary } from '@/dictionaries/get-dictionary';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Locale } from '@/dictionaries/config';
+import Stripe from 'stripe';
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+    apiVersion: '2024-06-20',
+});
 
 interface SearchParams {
     booking_id: string;
 }
 
-const locales: { [key: string]: Locale } = { es, fr, de, nl };
+const locales: Record<string, DateFnsLocale> = { es, fr, de, nl };
 
 async function getBookingData(bookingId: string) {
     const MAX_RETRIES = 3;
@@ -34,13 +38,13 @@ async function getBookingData(bookingId: string) {
     try {
         adminApp; // Ensure Firebase Admin is initialized
         const db = getFirestore();
-        
+
         for (let i = 0; i < MAX_RETRIES; i++) {
             const bookingSnapshot = await db.collection('bookings').doc(bookingId).get();
 
             if (bookingSnapshot.exists) {
                 const booking = bookingSnapshot.data() as Booking;
-                
+
                 // If confirmed, we are good to go.
                 if (booking.status === 'confirmed') {
                     return getFullBookingDetails(booking);
@@ -67,13 +71,13 @@ async function getFullBookingDetails(booking: Booking) {
     const db = getFirestore();
     const tourSnapshot = await db.collection('tours').doc(booking.tourId).get();
     const tour = tourSnapshot.exists ? tourSnapshot.data() as Tour : null;
-    
+
     let hotel: Hotel | null = null;
     if (booking.hotelId) {
         const hotelSnapshot = await db.collection('hotels').doc(booking.hotelId).get();
         hotel = hotelSnapshot.exists ? hotelSnapshot.data() as Hotel : null;
     }
-    
+
     let meetingPoint: MeetingPoint | null = null;
     if (booking.meetingPointId) {
         const meetingPointSnapshot = await db.collection('meetingPoints').doc(booking.meetingPointId).get();
@@ -83,21 +87,78 @@ async function getFullBookingDetails(booking: Booking) {
     return { booking, tour, hotel, meetingPoint };
 }
 
+async function manualVerifyBooking(bookingId: string, paymentIntentId: string): Promise<any | null> {
+    try {
+        console.log(`🔍 Attempting manual verification for booking ${bookingId} with PI ${paymentIntentId} `);
+        const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
 
-export default async function BookingSuccessPage({ searchParams, params }: { searchParams: SearchParams, params: { lang: Locale } }) {
-    const { booking_id } = searchParams;
-    const dictionary = await getDictionary(params.lang);
+        if (paymentIntent.status === 'succeeded') {
+            const db = getFirestore();
+            const bookingRef = db.collection('bookings').doc(bookingId);
+            const bookingSnapshot = await bookingRef.get();
+
+            if (!bookingSnapshot.exists) return null;
+
+            const booking = bookingSnapshot.data() as Booking;
+
+            // Only update if still pending
+            if (booking.status === 'pending') {
+                const metadata = paymentIntent.metadata;
+                // Fallback to booking total price if metadata is missing (should not happen)
+                const totalPrice = metadata.totalPrice ? parseFloat(metadata.totalPrice) : booking.totalPrice;
+                const amountPaid = paymentIntent.amount / 100;
+                const amountDue = totalPrice - amountPaid;
+
+                await bookingRef.update({
+                    status: 'confirmed',
+                    amountPaid: amountPaid,
+                    amountDue: amountDue,
+                });
+
+                console.log(`✅ Manually confirmed booking ${bookingId} `);
+
+                // Return updated data
+                return getFullBookingDetails({
+                    ...booking,
+                    status: 'confirmed',
+                    amountPaid,
+                    amountDue
+                });
+            } else {
+                return getFullBookingDetails(booking);
+            }
+        }
+        return null;
+    } catch (error) {
+        console.error("Error verifying payment intent:", error);
+        return null;
+    }
+}
+
+
+export default async function BookingSuccessPage({ searchParams, params }: { searchParams: Promise<SearchParams & { payment_intent?: string }>, params: Promise<{ lang: Locale }> }) {
+    const { booking_id, payment_intent } = await searchParams;
+    const { lang } = await params;
+    const dictionary = await getDictionary(lang);
     const t = dictionary.bookingSuccess;
 
     if (!booking_id) {
         return notFound();
     }
 
-    const data = await getBookingData(booking_id);
+    let data = await getBookingData(booking_id);
 
-    if (!data) {
+    // If booking is not found or still pending, and we have a payment_intent, try to verify manually
+    if ((!data || data.booking.status === 'pending') && payment_intent) {
+        const verifiedData = await manualVerifyBooking(booking_id, payment_intent);
+        if (verifiedData) {
+            data = verifiedData;
+        }
+    }
+
+    if (!data || data.booking.status !== 'confirmed') {
         return (
-             <div className="bg-background text-foreground min-h-screen flex items-center justify-center py-12">
+            <div className="bg-background text-foreground min-h-screen flex items-center justify-center py-12">
                 <Card className="w-full max-w-md mx-4 text-center">
                     <CardHeader>
                         <CardTitle>{t.errorTitle}</CardTitle>
@@ -105,20 +166,20 @@ export default async function BookingSuccessPage({ searchParams, params }: { sea
                     <CardContent>
                         <p>{t.errorMessage}</p>
                         <Button asChild className="mt-4">
-                            <Link href={`/${params.lang}`}>{t.goToHomepage}</Link>
+                            <Link href={`/ ${lang} `}>{t.goToHomepage}</Link>
                         </Button>
                     </CardContent>
                 </Card>
             </div>
         );
     }
-    
+
     const { booking, tour, hotel, meetingPoint } = data;
-    const locale = locales[params.lang] || undefined;
+    const locale = locales[lang] || undefined;
     const bookingDate = (booking.date as any).toDate ? (booking.date as any).toDate() : new Date(booking.date);
     const formattedDate = format(bookingDate, "PPP", { locale });
-    
-    const tourTitle = tour?.title[params.lang] || tour?.title.en || 'Tour';
+
+    const tourTitle = tour?.title[lang] || tour?.title.en || 'Tour';
     const isDeposit = booking.paymentType === 'deposit';
 
     const originCoords = (hotel?.latitude && hotel?.longitude) ? { lat: hotel.latitude, lng: hotel.longitude } : null;
@@ -128,9 +189,9 @@ export default async function BookingSuccessPage({ searchParams, params }: { sea
 
     const tourDetails = tour?.details;
     const tDetails = dictionary.tourDetail.tourDetails;
-    const notSuitableFor = (tourDetails?.notSuitableFor?.[params.lang] || tourDetails?.notSuitableFor?.en || '').split('\n').filter(Boolean);
-    const whatToBring = (tourDetails?.whatToBring?.[params.lang] || tourDetails?.whatToBring?.en || '').split('\n').filter(Boolean);
-    const beforeYouGo = (tourDetails?.beforeYouGo?.[params.lang] || tourDetails?.beforeYouGo?.en || '').split('\n').filter(Boolean);
+    const notSuitableFor = (tourDetails?.notSuitableFor?.[lang] || tourDetails?.notSuitableFor?.en || '').split('\n').filter(Boolean);
+    const whatToBring = (tourDetails?.whatToBring?.[lang] || tourDetails?.whatToBring?.en || '').split('\n').filter(Boolean);
+    const beforeYouGo = (tourDetails?.beforeYouGo?.[lang] || tourDetails?.beforeYouGo?.en || '').split('\n').filter(Boolean);
 
     return (
         <Suspense fallback={<div className="h-screen w-full flex items-center justify-center">Loading confirmation...</div>}>
@@ -148,11 +209,11 @@ export default async function BookingSuccessPage({ searchParams, params }: { sea
                             <p className="text-center text-muted-foreground">
                                 {t.confirmationEmail}
                             </p>
-                            
-                             <Card>
+
+                            <Card>
                                 <CardHeader>
                                     <CardTitle className="flex items-center gap-3">
-                                        <QrCode className="h-6 w-6"/>
+                                        <QrCode className="h-6 w-6" />
                                         {t.yourDigitalTicket}
                                     </CardTitle>
                                 </CardHeader>
@@ -194,10 +255,10 @@ export default async function BookingSuccessPage({ searchParams, params }: { sea
                                     <span className="font-semibold text-right">{booking.meetingPointName}</span>
                                 </div>
                             </div>
-                            
-                             <div className="border border-border bg-secondary/30 rounded-lg p-4 space-y-3">
+
+                            <div className="border border-border bg-secondary/30 rounded-lg p-4 space-y-3">
                                 <h3 className="font-bold text-xl mb-2 text-foreground flex items-center gap-2">
-                                    <DollarSign className="w-6 h-6"/>
+                                    <DollarSign className="w-6 h-6" />
                                     {t.paymentSummary}
                                 </h3>
                                 <div className="flex justify-between">
@@ -209,12 +270,12 @@ export default async function BookingSuccessPage({ searchParams, params }: { sea
                                     <span className="font-semibold text-green-600">€{booking.amountPaid.toFixed(2)}</span>
                                 </div>
                                 {isDeposit && (
-                                     <>
+                                    <>
                                         <div className="flex justify-between text-lg font-bold pt-3 border-t mt-3 text-accent">
                                             <span>{t.amountDue}</span>
                                             <span>€{booking.amountDue.toFixed(2)}</span>
                                         </div>
-                                         <Alert variant="default" className="mt-2 text-sm bg-accent/10 border-accent/20 text-accent-foreground">
+                                        <Alert variant="default" className="mt-2 text-sm bg-accent/10 border-accent/20 text-accent-foreground">
                                             <AlertTriangle className="h-4 w-4" />
                                             <AlertDescription>
                                                 {dictionary.tourDetail.booking.depositReminder}
@@ -227,7 +288,7 @@ export default async function BookingSuccessPage({ searchParams, params }: { sea
                             {originCoords && destinationCoords && (
                                 <div className="space-y-4">
                                     <h3 className="font-bold text-xl flex items-center gap-2">
-                                        <Map className="w-6 h-6 text-primary"/>
+                                        <Map className="w-6 h-6 text-primary" />
                                         {t.routeToMeetingPoint}
                                     </h3>
                                     <div className="h-96 rounded-lg overflow-hidden border border-border">
@@ -239,10 +300,10 @@ export default async function BookingSuccessPage({ searchParams, params }: { sea
                                 </div>
                             )}
 
-                             { (notSuitableFor.length > 0 || whatToBring.length > 0 || beforeYouGo.length > 0) && (
+                            {(notSuitableFor.length > 0 || whatToBring.length > 0 || beforeYouGo.length > 0) && (
                                 <div className="border border-border bg-secondary/30 rounded-lg p-4 space-y-4">
                                     <h3 className="font-bold text-xl mb-2 text-foreground flex items-center gap-2">
-                                        <Info className="w-6 h-6"/>
+                                        <Info className="w-6 h-6" />
                                         {tDetails.importantInfoTitle}
                                     </h3>
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm">
@@ -253,7 +314,7 @@ export default async function BookingSuccessPage({ searchParams, params }: { sea
                                                     {notSuitableFor.map((item, index) => <li key={index}>{item}</li>)}
                                                 </ul>
                                             </>}
-                                             {whatToBring.length > 0 && <>
+                                            {whatToBring.length > 0 && <>
                                                 <h4 className="font-semibold mt-4 mb-2">{tDetails.whatToBringTitle}</h4>
                                                 <ul className="space-y-1 text-muted-foreground list-disc pl-5">
                                                     {whatToBring.map((item, index) => <li key={index}>{item}</li>)}
@@ -274,10 +335,10 @@ export default async function BookingSuccessPage({ searchParams, params }: { sea
 
 
                             <Button asChild size="lg" className="w-full font-bold text-lg mt-6">
-                            <Link href={`/${params.lang}`}>
-                                <Home className="mr-2 h-5 w-5" />
-                                {t.goToMainPage}
-                            </Link>
+                                <Link href={`/ ${lang} `}>
+                                    <Home className="mr-2 h-5 w-5" />
+                                    {t.goToMainPage}
+                                </Link>
                             </Button>
                         </CardContent>
                     </Card>

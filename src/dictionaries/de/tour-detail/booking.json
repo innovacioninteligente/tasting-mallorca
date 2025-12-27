@@ -1,4 +1,3 @@
-
 {
     "title": "Diese Aktivität Buchen",
     "priceLabel": "Preis pro Person",
@@ -33,5 +32,6 @@
     "from": "von",
     "to": "bis",
     "and": "und",
-    "depositReminder": "Eine kleine Erinnerung: Der Restbetrag wird am Tag der Tour bezahlt — Barzahlung wird bevorzugt."
+    "depositReminder": "Hinweis: Der Restbetrag ist am Tag der Tour zu zahlen – Barzahlung wird bevorzugt.",
+    "regionMismatchWarning": "Hinweis: Das ausgewählte Hotel befindet sich in einer anderen Region. Wir haben den nächstgelegenen Treffpunkt für diese Tour vorgeschlagen."
 }

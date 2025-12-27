@@ -63,9 +63,9 @@ function Directions({
       .catch((e) => {
         console.error('Directions request failed', e);
         if ((e as any).code === 'REQUEST_DENIED') {
-             setError("El servicio de direcciones no está activado para tu clave de API.");
+          setError("El servicio de direcciones no está activado para tu clave de API.");
         } else {
-             setError("No se pudo calcular la ruta.");
+          setError("No se pudo calcular la ruta.");
         }
         setRoutes([]);
       });
@@ -74,35 +74,35 @@ function Directions({
   return (
     <>
       <div className="absolute top-2 left-1/2 -translate-x-1/2 z-10 bg-background p-1 rounded-md shadow-lg flex items-center gap-1">
-        <Button 
-            variant="ghost" 
-            size="icon" 
-            onClick={() => setTravelMode('DRIVING')} 
-            className={cn("h-10 w-10", travelMode === 'DRIVING' && 'bg-primary/20 text-primary')}
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => setTravelMode('DRIVING')}
+          className={cn("h-10 w-10", travelMode === 'DRIVING' && 'bg-primary/20 text-primary')}
         >
           <Car className="h-5 w-5" />
         </Button>
-        <Button 
-            variant="ghost" 
-            size="icon" 
-            onClick={() => setTravelMode('WALKING')} 
-            className={cn("h-10 w-10", travelMode === 'WALKING' && 'bg-primary/20 text-primary')}
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => setTravelMode('WALKING')}
+          className={cn("h-10 w-10", travelMode === 'WALKING' && 'bg-primary/20 text-primary')}
         >
           <Footprints className="h-5 w-5" />
         </Button>
-        <Button 
-            variant="ghost" 
-            size="icon" 
-            onClick={() => setTravelMode('BICYCLING')} 
-            className={cn("h-10 w-10", travelMode === 'BICYCLING' && 'bg-primary/20 text-primary')}
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => setTravelMode('BICYCLING')}
+          className={cn("h-10 w-10", travelMode === 'BICYCLING' && 'bg-primary/20 text-primary')}
         >
           <Bike className="h-5 w-5" />
         </Button>
-        <Button 
-            variant="ghost"
-            size="icon" 
-            onClick={() => setTravelMode('TRANSIT')} 
-            className={cn("h-10 w-10", travelMode === 'TRANSIT' && 'bg-primary/20 text-primary')}
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => setTravelMode('TRANSIT')}
+          className={cn("h-10 w-10", travelMode === 'TRANSIT' && 'bg-primary/20 text-primary')}
         >
           <Bus className="h-5 w-5" />
         </Button>
@@ -115,32 +115,38 @@ function Directions({
           </p>
         </div>
       )}
-      
+
       {origin && <AdvancedMarker position={origin} title="Tu hotel" />}
       {destination && <AdvancedMarker position={destination} title="Punto de encuentro" />}
-      
+
       {error && routes.length === 0 && (
-       <div className="absolute top-16 left-1/2 -translate-x-1/2 bg-destructive text-destructive-foreground p-2 rounded-md shadow-lg text-sm">
-         {error}
-       </div>
-     )}
-  </>
+        <div className="absolute top-16 left-1/2 -translate-x-1/2 bg-destructive text-destructive-foreground p-2 rounded-md shadow-lg text-sm">
+          {error}
+        </div>
+      )}
+    </>
   );
 }
 
-export function RouteMap({ origin, destination }: { origin: google.maps.LatLngLiteral; destination: google.maps.LatLngLiteral; }) {
+interface RouteMapProps {
+  origin?: google.maps.LatLngLiteral;
+  destination?: google.maps.LatLngLiteral;
+  className?: string;
+}
+
+export function RouteMap({ origin, destination, className }: RouteMapProps) {
   const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
 
   if (!apiKey) {
     return <div className="flex items-center justify-center h-full bg-destructive text-destructive-foreground p-4">Error: Google Maps API Key is missing.</div>;
   }
-  
+
   if (!origin || !destination) {
-      return <div className="flex items-center justify-center h-full">Proporciona un origen y destino.</div>;
+    return <div className="flex items-center justify-center h-full bg-muted/30 text-muted-foreground text-sm">Proporciona un origen y destino.</div>;
   }
 
   return (
-    <div className="w-full h-full">
+    <div className={cn("w-full h-full min-h-[300px] relative rounded-lg overflow-hidden", className)}>
       <APIProvider apiKey={apiKey} libraries={['marker', 'routes', 'geocoding']}>
         <Map
           defaultCenter={origin}

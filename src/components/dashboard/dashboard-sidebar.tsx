@@ -1,4 +1,3 @@
-
 'use client';
 
 import Link from 'next/link';
@@ -19,6 +18,7 @@ import {
   Briefcase,
   Newspaper,
   MessageSquareHeart,
+  Wrench,
 } from 'lucide-react';
 import { useAuth, useUser } from '@/firebase';
 import { cn } from '@/lib/utils';
@@ -33,21 +33,22 @@ const navItems = [
 ];
 
 const adminNavItems = [
-    { href: '/dashboard/admin/tours', label: 'Manage Tours', icon: Mountain, role: 'admin' },
-    { href: '/dashboard/admin/blog', label: 'Manage Blog', icon: Newspaper, role: 'admin' },
-    { href: '/dashboard/admin/guest-feedback', label: 'Manage Feedback', icon: MessageSquareHeart, role: 'admin' },
-    { href: '/dashboard/admin/private-tours', label: 'Private Tours', icon: Briefcase, role: 'admin' },
-    { href: '/dashboard/users', label: 'Manage Users', icon: Users, role: 'admin' },
-    { href: '/dashboard/admin/hotels', label: 'Manage Hotels', icon: Hotel, role: 'admin' },
-    { href: '/dashboard/admin/meeting-points', label: 'Manage Meeting Points', icon: MapPin, role: 'admin' },
+  { href: '/dashboard/admin/tours', label: 'Manage Tours', icon: Mountain, role: 'admin' },
+  { href: '/dashboard/admin/blog', label: 'Manage Blog', icon: Newspaper, role: 'admin' },
+  { href: '/dashboard/admin/guest-feedback', label: 'Manage Feedback', icon: MessageSquareHeart, role: 'admin' },
+  { href: '/dashboard/admin/private-tours', label: 'Private Tours', icon: Briefcase, role: 'admin' },
+  { href: '/dashboard/users', label: 'Manage Users', icon: Users, role: 'admin' },
+  { href: '/dashboard/admin/hotels', label: 'Manage Hotels', icon: Hotel, role: 'admin' },
+  { href: '/dashboard/admin/meeting-points', label: 'Manage Meeting Points', icon: MapPin, role: 'admin' },
 ];
 
 const guideNavItems = [
-    { href: '/dashboard/guide/validate-ticket', label: 'Validate Ticket', roles: ['guide', 'admin'] }
+  { href: '/dashboard/guide/validate-ticket', label: 'Validate Ticket', roles: ['guide', 'admin'] }
 ]
 
 const bottomNavItems = [
-    { href: '/dashboard/settings', label: 'Settings', icon: Settings },
+  { href: '/dashboard/admin/settings', label: 'Settings', icon: Settings }, // Modified href for Settings
+  { href: '/dashboard/admin/tools', label: 'Tools', icon: Wrench }, // Added Tools link
 ];
 
 interface DashboardSidebarProps {
@@ -60,7 +61,7 @@ export function DashboardSidebar({ isMobileMenuOpen, setIsMobileMenuOpen }: Dash
   const auth = useAuth();
   const { user } = useUser();
   const router = useRouter();
-  
+
   const lang = pathname.split('/')[1] || 'en';
 
   const handleSignOut = async () => {
@@ -81,6 +82,45 @@ export function DashboardSidebar({ isMobileMenuOpen, setIsMobileMenuOpen }: Dash
             const href = `/${lang}${item.href}`;
             const Icon = item.icon;
             return (
+              <Button
+                key={item.href}
+                asChild
+                variant={pathname.startsWith(href) ? 'secondary' : 'ghost'}
+                className="w-full justify-start text-base"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                <Link href={href}>
+                  <Icon className="mr-3 h-5 w-5" />
+                  {item.label}
+                </Link>
+              </Button>
+            );
+          })}
+
+          {userRole === 'admin' && adminNavItems.map((item) => {
+            const href = `/${lang}${item.href}`;
+            const Icon = item.icon;
+            return (
+              <Button
+                key={item.href}
+                asChild
+                variant={pathname.startsWith(href) ? 'secondary' : 'ghost'}
+                className="w-full justify-start text-base"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                <Link href={href}>
+                  <Icon className="mr-3 h-5 w-5" />
+                  {item.label}
+                </Link>
+              </Button>
+            );
+          })}
+
+          {guideNavItems.map((item) => {
+            const href = `/${lang}${item.href}`;
+            const Icon = QrCode;
+            if (userRole && item.roles.includes(userRole)) {
+              return (
                 <Button
                   key={item.href}
                   asChild
@@ -93,69 +133,30 @@ export function DashboardSidebar({ isMobileMenuOpen, setIsMobileMenuOpen }: Dash
                     {item.label}
                   </Link>
                 </Button>
-            );
-          })}
-
-          {userRole === 'admin' && adminNavItems.map((item) => {
-              const href = `/${lang}${item.href}`;
-              const Icon = item.icon;
-              return (
-                  <Button
-                    key={item.href}
-                    asChild
-                    variant={pathname.startsWith(href) ? 'secondary' : 'ghost'}
-                    className="w-full justify-start text-base"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    <Link href={href}>
-                      <Icon className="mr-3 h-5 w-5" />
-                      {item.label}
-                    </Link>
-                  </Button>
               );
-          })}
-          
-          {guideNavItems.map((item) => {
-              const href = `/${lang}${item.href}`;
-              const Icon = QrCode;
-              if (userRole && item.roles.includes(userRole)) {
-                return (
-                    <Button
-                        key={item.href}
-                        asChild
-                        variant={pathname.startsWith(href) ? 'secondary' : 'ghost'}
-                        className="w-full justify-start text-base"
-                        onClick={() => setIsMobileMenuOpen(false)}
-                    >
-                        <Link href={href}>
-                            <Icon className="mr-3 h-5 w-5" />
-                            {item.label}
-                        </Link>
-                    </Button>
-                );
-              }
-              return null;
+            }
+            return null;
           })}
         </nav>
       </div>
       <div className="mt-auto flex flex-col gap-2 border-t p-4">
         {bottomNavItems.map((item) => {
-             const href = `/${lang}${item.href}`;
-             const Icon = item.icon;
-             return (
-                 <Button
-                    key={item.href}
-                    asChild
-                     variant={pathname.startsWith(href) ? 'secondary' : 'ghost'}
-                     className="w-full justify-start text-base"
-                     onClick={() => setIsMobileMenuOpen(false)}
-                 >
-                    <Link href={href}>
-                     <Icon className="mr-3 h-5 w-5" />
-                     {item.label}
-                    </Link>
-                 </Button>
-             );
+          const href = `/${lang}${item.href}`;
+          const Icon = item.icon;
+          return (
+            <Button
+              key={item.href}
+              asChild
+              variant={pathname.startsWith(href) ? 'secondary' : 'ghost'}
+              className="w-full justify-start text-base"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              <Link href={href}>
+                <Icon className="mr-3 h-5 w-5" />
+                {item.label}
+              </Link>
+            </Button>
+          );
         })}
         <Button variant="ghost" className="w-full justify-start text-base" onClick={handleSignOut}>
           <LogOut className="mr-3 h-5 w-5" />
@@ -173,14 +174,14 @@ export function DashboardSidebar({ isMobileMenuOpen, setIsMobileMenuOpen }: Dash
           <Link href={`/${lang}/`} className="flex items-center gap-0 font-semibold">
             <div className="relative h-14 w-14">
               <Image
-                  src="https://firebasestorage.googleapis.com/v0/b/tasting-mallorca.firebasestorage.app/o/web%2Fbranding%2FICONO-AZUL.png?alt=media&token=5f6b7c16-5a14-4d45-bbdb-f3a70138e8b7"
-                  alt="Tasting Mallorca Logo"
-                  fill
-                  className="object-contain"
-                  sizes="56px"
+                src="https://firebasestorage.googleapis.com/v0/b/tasting-mallorca.firebasestorage.app/o/web%2Fbranding%2FICONO-AZUL.png?alt=media&token=5f6b7c16-5a14-4d45-bbdb-f3a70138e8b7"
+                alt="Tasting Mallorca Logo"
+                fill
+                className="object-contain"
+                sizes="56px"
               />
             </div>
-             <span className="text-xl font-bold text-foreground">Tasting Mallorca</span>
+            <span className="text-xl font-bold text-foreground">Tasting Mallorca</span>
           </Link>
         </div>
         <SidebarContent />
@@ -190,18 +191,18 @@ export function DashboardSidebar({ isMobileMenuOpen, setIsMobileMenuOpen }: Dash
       <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
         <SheetContent side="left" className="flex w-72 flex-col bg-card p-0">
           <SheetHeader className="flex h-20 flex-row items-center justify-between border-b px-6">
-             <SheetTitle className='sr-only'>Main Menu</SheetTitle>
-             <Link href={`/${lang}/`} className="flex items-center gap-0 font-semibold" onClick={() => setIsMobileMenuOpen(false)}>
-                <div className="relative h-12 w-12">
-                  <Image
-                      src="https://firebasestorage.googleapis.com/v0/b/tasting-mallorca.firebasestorage.app/o/web%2Fbranding%2FICONO-AZUL.png?alt=media&token=5f6b7c16-5a14-4d45-bbdb-f3a70138e8b7"
-                      alt="Tasting Mallorca Logo"
-                      fill
-                      className="object-contain"
-                      sizes="48px"
-                  />
-                </div>
-                <span className="text-xl font-bold text-foreground">Tasting Mallorca</span>
+            <SheetTitle className='sr-only'>Main Menu</SheetTitle>
+            <Link href={`/${lang}/`} className="flex items-center gap-0 font-semibold" onClick={() => setIsMobileMenuOpen(false)}>
+              <div className="relative h-12 w-12">
+                <Image
+                  src="https://firebasestorage.googleapis.com/v0/b/tasting-mallorca.firebasestorage.app/o/web%2Fbranding%2FICONO-AZUL.png?alt=media&token=5f6b7c16-5a14-4d45-bbdb-f3a70138e8b7"
+                  alt="Tasting Mallorca Logo"
+                  fill
+                  className="object-contain"
+                  sizes="48px"
+                />
+              </div>
+              <span className="text-xl font-bold text-foreground">Tasting Mallorca</span>
             </Link>
           </SheetHeader>
           <SidebarContent />
@@ -211,4 +212,3 @@ export function DashboardSidebar({ isMobileMenuOpen, setIsMobileMenuOpen }: Dash
   );
 }
 
-    

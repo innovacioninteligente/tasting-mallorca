@@ -3,6 +3,7 @@
 import '../globals.css';
 import { Toaster } from "@/components/ui/toaster";
 import { Poppins } from 'next/font/google';
+import localFont from 'next/font/local';
 import { getDictionary } from '@/dictionaries/get-dictionary';
 import { Locale } from '@/dictionaries/config';
 import { FirebaseClientProvider } from '@/firebase/client-provider';
@@ -11,24 +12,33 @@ import { Metadata } from 'next';
 import { Footer } from '@/components/footer';
 import { AlternateLinksProvider } from '@/context/alternate-links-context';
 import { ThemeProvider } from '@/components/theme-provider';
-import { CookieConsent } from '@/components/cookie-consent';
+// import { CookieConsent } from '@/components/cookie-consent';
 import { AnalyticsProvider } from '@/components/analytics-provider';
+import { ClientCookieConsent } from '@/components/client-cookie-consent';
 
 
 const poppins = Poppins({
   subsets: ['latin'],
   weight: ['300', '400', '500', '600', '700', '800'],
   variable: '--font-poppins',
+  display: 'swap',
+});
+
+const cursive = localFont({
+  src: '../../../public/fonts/NathalynDemo.otf',
+  variable: '--font-cursive',
+  display: 'swap',
 });
 
 interface RootLayoutProps {
   children: React.ReactNode;
-  params: {
+  params: Promise<{
     lang: Locale;
-  };
+  }>;
 }
 
-export async function generateMetadata({ params: { lang } }: RootLayoutProps): Promise<Metadata> {
+export async function generateMetadata({ params }: RootLayoutProps): Promise<Metadata> {
+  const { lang } = await params;
   const dictionary = await getDictionary(lang);
   const { subtitle } = dictionary.home;
   const faviconUrl = "https://firebasestorage.googleapis.com/v0/b/tasting-mallorca.firebasestorage.app/o/web%2Fbranding%2FICONO-AZUL.png?alt=media&token=5f6b7c16-5a14-4d45-bbdb-f3a70138e8b7";
@@ -48,30 +58,28 @@ export async function generateMetadata({ params: { lang } }: RootLayoutProps): P
   };
 }
 
-export default async function RootLayout({
-  children,
-  params,
-}: RootLayoutProps) {
+export default async function RootLayout(props: RootLayoutProps) {
+  const params = await props.params;
   const { lang } = params;
   const dictionary = await getDictionary(lang);
 
   return (
-    <html lang={lang} className={`${poppins.variable}`} suppressHydrationWarning>
+    <html lang={lang} className={`${poppins.variable} ${cursive.variable}`} suppressHydrationWarning>
       <body>
         <AnalyticsProvider />
         <ThemeProvider>
           <FirebaseClientProvider>
             <AlternateLinksProvider>
               <div className="flex flex-col min-h-screen">
-                <MainLayout 
-                  dictionary={dictionary} 
+                <MainLayout
+                  dictionary={dictionary}
                   lang={lang}
                   footer={<Footer dictionary={dictionary.footer} lang={lang} />}
                 >
-                  {children}
+                  {props.children}
                 </MainLayout>
               </div>
-              <CookieConsent dictionary={dictionary.cookieConsent} lang={lang} />
+              <ClientCookieConsent dictionary={dictionary.cookieConsent} lang={lang} />
             </AlternateLinksProvider>
             <Toaster />
           </FirebaseClientProvider>

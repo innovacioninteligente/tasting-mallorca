@@ -1,4 +1,3 @@
-
 {
     "title": "Book This Activity",
     "priceLabel": "Price per person",
@@ -33,5 +32,6 @@
     "from": "from",
     "to": "to",
     "and": "and",
-    "depositReminder": "A small reminder: the balance due will be paid on the day of the tour — cash payment is appreciated."
+    "depositReminder": "A small reminder: the balance due will be paid on the day of the tour — cash payment is appreciated.",
+    "regionMismatchWarning": "Note: The selected hotel is in a different region. We have suggested the closest meeting point for this tour."
 }

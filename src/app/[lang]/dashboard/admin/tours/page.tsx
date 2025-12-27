@@ -10,10 +10,11 @@ import { TourList } from "./tour-list";
 import { findAllTours } from "@/app/server-actions/tours/findTours";
 import { Tour } from "@/backend/tours/domain/tour.model";
 
-export default async function TourManagementPage({ params }: { params: { lang: string }}) {
-    const createTourLink = `/${params.lang}/dashboard/admin/tours/new`;
+export default async function TourManagementPage({ params }: { params: Promise<{ lang: string }> }) {
+    const { lang } = await params;
+    const createTourLink = `/${lang}/dashboard/admin/tours/new`;
     const result = await findAllTours({});
-    
+
     return (
         <AdminRouteGuard>
             <div className="flex justify-between items-center mb-6">
@@ -33,7 +34,7 @@ export default async function TourManagementPage({ params }: { params: { lang: s
             <Card>
                 <CardHeader>
                     <CardTitle>Tours Existentes</CardTitle>
-                     <CardDescription>
+                    <CardDescription>
                         Aquí puedes ver y gestionar todos los tours existentes.
                     </CardDescription>
                 </CardHeader>

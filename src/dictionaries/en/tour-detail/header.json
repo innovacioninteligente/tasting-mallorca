@@ -1,9 +1,11 @@
-
 {
     "newActivity": "New Activity",
     "provider": "Activity provider",
     "addToFavorites": "Add to favorites",
     "share": "Share",
     "explore": "Explore Mallorca",
-    "seePlaces": "Places to see"
+    "seePlaces": "Places to see",
+    "freeCancellation": "Free Cancellation",
+    "instantConfirmation": "Instant Confirmation",
+    "mobileTicket": "Mobile Ticket"
 }

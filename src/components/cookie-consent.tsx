@@ -7,7 +7,7 @@ import { Cookie } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import { CookieSettingsDialog } from './cookie-settings';
-import { COOKIE_CONSENT_KEY } from './analytics-provider';
+import { COOKIE_CONSENT_KEY } from '@/lib/constants';
 
 interface CookieConsentProps {
     dictionary: {
@@ -48,7 +48,7 @@ export function CookieConsent({ dictionary, lang }: CookieConsentProps) {
 
     const handleDecline = () => {
         try {
-             const consent = { necessary: true, analytics: false, marketing: false, timestamp: new Date().toISOString() };
+            const consent = { necessary: true, analytics: false, marketing: false, timestamp: new Date().toISOString() };
             localStorage.setItem(COOKIE_CONSENT_KEY, JSON.stringify(consent));
             window.dispatchEvent(new Event('storage'));
         } catch (error) {

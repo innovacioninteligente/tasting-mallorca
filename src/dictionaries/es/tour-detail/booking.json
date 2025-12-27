@@ -1,4 +1,3 @@
-
 {
     "title": "Reservar esta actividad",
     "priceLabel": "Precio por persona",
@@ -33,5 +32,6 @@
     "from": "desde",
     "to": "hasta",
     "and": "y",
-    "depositReminder": "Un pequeño recordatorio: el importe restante se pagará el día de la excursión — se agradece el pago en efectivo."
+    "depositReminder": "Recordatorio: El saldo restante se pagará el día del tour — se agradece el pago en efectivo.",
+    "regionMismatchWarning": "Nota: El hotel seleccionado está en una región diferente. Hemos sugerido el punto de encuentro más cercano para este tour."
 }

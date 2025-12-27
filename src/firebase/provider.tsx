@@ -21,22 +21,8 @@ export function FirebaseProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const [firebase, setFirebase] = React.useState<{
-    app: FirebaseApp;
-    auth: Auth;
-    firestore: Firestore;
-  } | null>(null);
+  const [firebase] = React.useState(() => initializeFirebase());
 
-  React.useEffect(() => {
-    const { app, auth, firestore } = initializeFirebase();
-    setFirebase({ app, auth, firestore });
-  }, []);
-
-  if (!firebase) {
-    // You can show a loading skeleton here
-    return null;
-  }
-  
   return (
     <FirebaseContext.Provider value={firebase}>
       {children}

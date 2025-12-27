@@ -1,4 +1,3 @@
-
 {
     "title": "Boek Deze Activiteit",
     "priceLabel": "Prijs per persoon",
@@ -33,5 +32,6 @@
     "from": "van",
     "to": "tot",
     "and": "en",
-    "depositReminder": "Een kleine herinnering: het resterende bedrag wordt op de dag van de tour betaald — contante betaling wordt op prijs gesteld."
+    "depositReminder": "Let op: Het restbedrag dient op de dag van de tour betaald te worden – contante betaling wordt gewaardeerd.",
+    "regionMismatchWarning": "Let op: Het geselecteerde hotel bevindt zich in een andere regio. We hebben het dichtstbijzijnde trefpunt voor deze tour voorgesteld."
 }

@@ -9,5 +9,6 @@ export interface Hotel {
   subRegion: string;
   latitude: number;
   longitude: number;
-  assignedMeetingPointId?: string | null;
+  assignedMeetingPointId?: string | null; // @deprecated Use assignedMeetingPoints instead
+  assignedMeetingPoints?: { [key: string]: string }; // key is the Region (North, South, etc.)
 }

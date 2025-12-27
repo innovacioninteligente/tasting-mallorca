@@ -4,12 +4,21 @@ import { useState, useEffect } from 'react';
 import Script from 'next/script';
 import { usePathname } from 'next/navigation';
 
-export const COOKIE_CONSENT_KEY = 'cookie_consent_preferences';
+import { COOKIE_CONSENT_KEY } from '@/lib/constants';
+
+// Remove the local export
+
 
 interface ConsentState {
     necessary: boolean;
     analytics: boolean;
     marketing: boolean;
+}
+
+declare global {
+    interface Window {
+        dataLayer: any[];
+    }
 }
 
 export function AnalyticsProvider() {
@@ -59,13 +68,13 @@ export function AnalyticsProvider() {
     if (!consent) {
         return null;
     }
-    
+
     const GTM_ID = process.env.NEXT_PUBLIC_GTM_ID;
 
     return (
         <>
-            {/* Google Tag Manager - Base script always loaded */}
-            <Script id="gtm-base" strategy="afterInteractive">
+            {/* Google Tag Manager - Base script loaded lazily */}
+            <Script id="gtm-base" strategy="lazyOnload">
                 {`
                     (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
                     new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -75,11 +84,12 @@ export function AnalyticsProvider() {
                 `}
             </Script>
 
-             {/* Consent update script */}
-            <Script id="gtm-consent-init" strategy="afterInteractive">
+            {/* Consent update script */}
+            {/* Consent update script */}
+            <Script id="gtm-consent-init" strategy="lazyOnload">
                 {`
                     window.dataLayer = window.dataLayer || [];
-                    function gtag(){dataLayer.push(arguments);}
+                    function gtag(){window.dataLayer.push(arguments);}
                     gtag('consent', 'default', {
                         'ad_storage': 'denied',
                         'ad_user_data': 'denied',
@@ -88,10 +98,12 @@ export function AnalyticsProvider() {
                     });
                 `}
             </Script>
-            
+
             {consent.analytics && (
-                 <Script id="gtm-consent-analytics" strategy="afterInteractive">
+                <Script id="gtm-consent-analytics" strategy="lazyOnload">
                     {`
+                        window.dataLayer = window.dataLayer || [];
+                        function gtag(){window.dataLayer.push(arguments);}
                         gtag('consent', 'update', {
                             'analytics_storage': 'granted'
                         });
@@ -99,9 +111,11 @@ export function AnalyticsProvider() {
                 </Script>
             )}
 
-             {consent.marketing && (
-                 <Script id="gtm-consent-marketing" strategy="afterInteractive">
+            {consent.marketing && (
+                <Script id="gtm-consent-marketing" strategy="lazyOnload">
                     {`
+                        window.dataLayer = window.dataLayer || [];
+                        function gtag(){window.dataLayer.push(arguments);}
                         gtag('consent', 'update', {
                             'ad_storage': 'granted',
                             'ad_user_data': 'granted',

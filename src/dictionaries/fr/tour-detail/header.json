@@ -1,9 +1,11 @@
-
 {
     "newActivity": "Nouvelle Activité",
     "provider": "Fournisseur de l'activité",
     "addToFavorites": "Ajouter aux favoris",
     "share": "Partager",
     "explore": "Explorer Majorque",
-    "seePlaces": "Lieux à voir"
+    "seePlaces": "Lieux à voir",
+    "freeCancellation": "Annulation gratuite",
+    "instantConfirmation": "Confirmation immédiate",
+    "mobileTicket": "Billet mobile"
 }

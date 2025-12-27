@@ -14,8 +14,8 @@ import { Tour } from '@/backend/tours/domain/tour.model';
 import { Hotel } from '@/backend/hotels/domain/hotel.model';
 import { MeetingPoint } from '@/backend/meeting-points/domain/meeting-point.model';
 import { useAlternateLinks } from '@/context/alternate-links-context';
+import { RelatedToursSection } from '@/components/tours/related-tours-section';
 import { DictionaryType } from '@/dictionaries/get-dictionary';
-
 
 type TourPageProps = {
   tour: Tour | null;
@@ -23,11 +23,12 @@ type TourPageProps = {
   lang: Locale;
   hotels: Hotel[];
   meetingPoints: MeetingPoint[];
+  relatedTours: Tour[];
 };
 
-export default function TourPageClient({ tour, dictionary, lang, hotels, meetingPoints }: TourPageProps) {
+export default function TourPageClient({ tour, dictionary, lang, hotels, meetingPoints, relatedTours }: TourPageProps) {
   const { setAlternateLinks } = useAlternateLinks();
-  
+
   useEffect(() => {
     if (tour) {
       const allSlugs = tour.slug;
@@ -38,7 +39,7 @@ export default function TourPageClient({ tour, dictionary, lang, hotels, meeting
       if (allSlugs.nl) languages['nl'] = `/nl/tours/${allSlugs.nl}`;
       setAlternateLinks(languages);
     }
-    
+
     // Cleanup function to reset links when component unmounts
     return () => setAlternateLinks({});
   }, [tour, setAlternateLinks, lang]);
@@ -46,7 +47,7 @@ export default function TourPageClient({ tour, dictionary, lang, hotels, meeting
   if (!tour) {
     notFound();
   }
-  
+
   const tourHeaderProps = {
     title: tour.title[lang] || tour.title.en,
   };
@@ -54,63 +55,77 @@ export default function TourPageClient({ tour, dictionary, lang, hotels, meeting
   const tourOverviewProps = {
     overview: tour.overview[lang] || tour.overview.en,
   };
-  
+
   const tourDetailsProps = {
-      highlightsTitle: dictionary.tourDetail.tourDetails.highlightsTitle,
-      highlights: (tour.details?.highlights?.[lang as keyof typeof tour.details.highlights] || tour.details?.highlights?.en || '').split('\n').filter(Boolean),
-      detailTitle: dictionary.tourDetail.tourDetails.detailTitle,
-      detailContent: (tour.details?.fullDescription?.[lang as keyof typeof tour.details.fullDescription] || tour.details?.fullDescription?.en || '').split('\n').filter(Boolean),
-      includesTitle: dictionary.tourDetail.tourDetails.includesTitle,
-      included: (tour.details?.included?.[lang as keyof typeof tour.details.included] || tour.details?.included?.en || '').split('\n').filter(Boolean),
-      notIncluded: (tour.details?.notIncluded?.[lang as keyof typeof tour.details.notIncluded] || tour.details?.notIncluded?.en || '').split('\n').filter(Boolean),
-      importantInfoTitle: dictionary.tourDetail.tourDetails.importantInfoTitle,
-      notSuitableTitle: dictionary.tourDetail.tourDetails.notSuitableTitle,
-      notSuitableItems: (tour.details?.notSuitableFor?.[lang as keyof typeof tour.details.notSuitableFor] || tour.details?.notSuitableFor?.en || '').split('\n').filter(Boolean),
-      whatToBringTitle: dictionary.tourDetail.tourDetails.whatToBringTitle,
-      whatToBringItems: (tour.details?.whatToBring?.[lang as keyof typeof tour.details.whatToBring] || tour.details?.whatToBring?.en || '').split('\n').filter(Boolean),
-      beforeYouGoTitle: dictionary.tourDetail.tourDetails.beforeYouGoTitle,
-      beforeYouGoItems: (tour.details?.beforeYouGo?.[lang as keyof typeof tour.details.beforeYouGo] || tour.details?.beforeYouGo?.en || '').split('\n').filter(Boolean),
+    highlightsTitle: dictionary.tourDetail.tourDetails.highlightsTitle,
+    highlights: (tour.details?.highlights?.[lang as keyof typeof tour.details.highlights] || tour.details?.highlights?.en || '').split('\n').filter(Boolean),
+    detailTitle: dictionary.tourDetail.tourDetails.detailTitle,
+    detailContent: (tour.details?.fullDescription?.[lang as keyof typeof tour.details.fullDescription] || tour.details?.fullDescription?.en || '').split('\n').filter(Boolean),
+    includesTitle: dictionary.tourDetail.tourDetails.includesTitle,
+    included: (tour.details?.included?.[lang as keyof typeof tour.details.included] || tour.details?.included?.en || '').split('\n').filter(Boolean),
+    notIncluded: (tour.details?.notIncluded?.[lang as keyof typeof tour.details.notIncluded] || tour.details?.notIncluded?.en || '').split('\n').filter(Boolean),
+    importantInfoTitle: dictionary.tourDetail.tourDetails.importantInfoTitle,
+    notSuitableTitle: dictionary.tourDetail.tourDetails.notSuitableTitle,
+    notSuitableItems: (tour.details?.notSuitableFor?.[lang as keyof typeof tour.details.notSuitableFor] || tour.details?.notSuitableFor?.en || '').split('\n').filter(Boolean),
+    whatToBringTitle: dictionary.tourDetail.tourDetails.whatToBringTitle,
+    whatToBringItems: (tour.details?.whatToBring?.[lang as keyof typeof tour.details.whatToBring] || tour.details?.whatToBring?.en || '').split('\n').filter(Boolean),
+    beforeYouGoTitle: dictionary.tourDetail.tourDetails.beforeYouGoTitle,
+    beforeYouGoItems: (tour.details?.beforeYouGo?.[lang as keyof typeof tour.details.beforeYouGo] || tour.details?.beforeYouGo?.en || '').split('\n').filter(Boolean),
   };
-  
+
   const tourItineraryProps = {
-      ...dictionary.tourDetail.itinerary,
-      pickupTitle: tour.pickupPoint.title[lang] || tour.pickupPoint.title.en,
-      pickupPoints: (tour.pickupPoint.description[lang] || tour.pickupPoint.description.en).split('\n').filter(Boolean),
-      dropoffTitle: tour.pickupPoint.title[lang] || tour.pickupPoint.title.en,
-      dropoffPoints: (tour.pickupPoint.description[lang] || tour.pickupPoint.description.en).split('\n').filter(Boolean),
-      stops: tour.itinerary.map(item => ({
-        type: item.type,
-        icon: item.icon as any,
-        title: item.title[lang] || item.title.en,
-        duration: item.duration,
-        activities: (item.activities as any)[lang] || item.activities.en || [],
-      }))
+    ...dictionary.tourDetail.itinerary,
+    pickupTitle: tour.pickupPoint.title[lang] || tour.pickupPoint.title.en,
+    pickupPoints: (tour.pickupPoint.description[lang] || tour.pickupPoint.description.en).split('\n').filter(Boolean),
+    dropoffTitle: tour.pickupPoint.title[lang] || tour.pickupPoint.title.en,
+    dropoffPoints: (tour.pickupPoint.description[lang] || tour.pickupPoint.description.en).split('\n').filter(Boolean),
+    stops: tour.itinerary.map(item => ({
+      type: item.type,
+      icon: item.icon as any,
+      title: item.title[lang] || item.title.en,
+      duration: item.duration,
+      activities: (item.activities as any)[lang] || item.activities.en || [],
+    }))
   };
 
   const allImages = [tour.mainImage, ...tour.galleryImages];
 
   return (
     <div className="bg-background">
-        <TourHeaderSection tour={tourHeaderProps} dictionary={dictionary.tourDetail.header} />
-        <TourGallerySection images={allImages} />
+      <TourHeaderSection tour={tourHeaderProps} dictionary={dictionary.tourDetail.header} />
+      <TourGallerySection images={allImages} />
 
-        <main className="w-full md:w-[80vw] mx-auto px-4 py-16 grid grid-cols-1 lg:grid-cols-3 gap-12">
-            <div className="lg:col-span-2 space-y-12">
-              <TourOverviewSection overview={tourOverviewProps.overview} dictionary={dictionary.tourDetail.overview} />
-              <TourInfoSection dictionary={dictionary.tourDetail.tourInfo} />
-              <TourItinerarySection dictionary={tourItineraryProps} />
-              <TourDetailsAccordion dictionary={tourDetailsProps} />
-            </div>
-            <aside className="lg:col-span-1">
-              <TourBookingSection 
-                dictionary={dictionary.tourDetail.booking} 
-                tour={tour}
-                lang={lang}
-                hotels={hotels || []}
-                meetingPoints={meetingPoints || []}
-              />
-            </aside>
-        </main>
+      <main className="w-full xl:w-[90vw] 2xl:w-[80vw] mx-auto px-4 py-16 grid grid-cols-1 lg:grid-cols-5 gap-12">
+        <div className="lg:col-span-3 space-y-12">
+          <TourOverviewSection overview={tourOverviewProps.overview} dictionary={dictionary.tourDetail.overview} />
+          <TourInfoSection dictionary={{
+            ...dictionary.tourDetail.tourInfo,
+            infoPoints: dictionary.tourDetail.tourInfo.infoPoints.map(point => ({
+              ...point,
+              icon: point.icon as any
+            }))
+          }} />
+          <TourItinerarySection dictionary={tourItineraryProps} />
+          <TourDetailsAccordion dictionary={tourDetailsProps} />
+        </div>
+        <aside className="lg:col-span-2" id="booking-section">
+          <TourBookingSection
+            dictionary={dictionary.tourDetail.booking}
+            tour={tour}
+            lang={lang}
+            hotels={hotels || []}
+            meetingPoints={meetingPoints || []}
+          />
+        </aside>
+
+        <RelatedToursSection
+          title={dictionary.featuredTours.title || 'You might also like'}
+          lang={lang}
+          tours={relatedTours}
+        />
+
+      </main>
+
     </div>
   );
 }

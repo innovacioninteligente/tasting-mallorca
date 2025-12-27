@@ -11,6 +11,7 @@ import { getDictionary } from '@/dictionaries/get-dictionary';
 import { Locale } from '@/dictionaries/config';
 import { Tour } from '@/backend/tours/domain/tour.model';
 import TourPageClient from './tour-page-client';
+import { SchemaBuilder } from '@/lib/seo/schema-builder';
 
 type TourPageParams = {
   slug: string;
@@ -35,8 +36,8 @@ export async function generateStaticParams(): Promise<TourPageParams[]> {
   return paths;
 }
 
-export async function generateMetadata({ params }: { params: TourPageParams }): Promise<Metadata> {
-  const { lang, slug: encodedSlug } = params;
+export async function generateMetadata({ params }: { params: Promise<TourPageParams> }): Promise<Metadata> {
+  const { lang, slug: encodedSlug } = await params;
   const slug = decodeURIComponent(encodedSlug);
   const tourResult = await findTourBySlugAndLang({ slug, lang });
 
@@ -77,29 +78,48 @@ export async function generateMetadata({ params }: { params: TourPageParams }): 
   };
 }
 
-export default async function TourPageLoader({ params }: { params: TourPageParams }) {
-    const { lang, slug: encodedSlug } = params;
-    const slug = decodeURIComponent(encodedSlug);
-    const [dictionary, tourResult, hotelsResult, meetingPointsResult] = await Promise.all([
-        getDictionary(lang),
-        findTourBySlugAndLang({ slug, lang }),
-        findAllHotels({}),
-        findAllMeetingPoints({}),
-    ]);
+export default async function TourPageLoader({ params }: { params: Promise<TourPageParams> }) {
+  const { lang, slug: encodedSlug } = await params;
+  const slug = decodeURIComponent(encodedSlug);
+  const [dictionary, tourResult, hotelsResult, meetingPointsResult, allToursResult] = await Promise.all([
+    getDictionary(lang),
+    findTourBySlugAndLang({ slug, lang }),
+    findAllHotels({}),
+    findAllMeetingPoints({}),
+    findAllTours({}),
+  ]);
 
-    if (!tourResult.data) {
-        notFound();
-    }
+  if (!tourResult.data) {
+    notFound();
+  }
 
-    return (
-        <Suspense fallback={<div>Loading...</div>}>
-            <TourPageClient
-                tour={tourResult.data}
-                dictionary={dictionary}
-                lang={lang}
-                hotels={hotelsResult.data || []}
-                meetingPoints={meetingPointsResult.data || []}
-            />
-        </Suspense>
-    );
+  const otherTours = (allToursResult.data || [])
+    .filter(t => t.id !== tourResult.data?.id && t.published)
+    .slice(0, 3);
+
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify([
+            SchemaBuilder.generateTourSchema(tourResult.data, lang),
+            SchemaBuilder.generateFAQSchema([
+              { question: dictionary.tourDetail?.booking?.pickupPoint || 'Meeting Point', answer: tourResult.data.generalInfo.pickupInfo[lang] || tourResult.data.generalInfo.pickupInfo.en },
+              { question: dictionary.tourDetail?.tourDetails?.includesTitle || 'Included', answer: tourResult.data.details?.included?.[lang] || tourResult.data.details?.included?.en || '' },
+              // Add more FAQs based on available data
+            ])
+          ])
+        }}
+      />
+      <TourPageClient
+        tour={tourResult.data}
+        dictionary={dictionary}
+        lang={lang}
+        hotels={hotelsResult.data || []}
+        meetingPoints={meetingPointsResult.data || []}
+        relatedTours={otherTours}
+      />
+    </Suspense>
+  );
 }
