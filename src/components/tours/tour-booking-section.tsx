@@ -16,6 +16,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { format, isWithinInterval, parseISO } from "date-fns";
+import { createPortal } from "react-dom";
 import { fr, de, nl, enUS, es } from 'date-fns/locale';
 import { AnimatePresence, motion } from "framer-motion";
 import { StripeProvider } from '@/components/stripe-provider';
@@ -149,6 +150,11 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
     const [isLocating, setIsLocating] = useState(false);
     const [showRegionMismatch, setShowRegionMismatch] = useState(false);
     const [isMapExpanded, setIsMapExpanded] = useState(false);
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
 
     // Explicit coordinates for geolocation result (to ensure map shows)
     const [customLocationCoords, setCustomLocationCoords] = useState<{ lat: number, lng: number } | null>(null);
@@ -256,7 +262,7 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
 
         navigator.geolocation.getCurrentPosition(onGeoSuccess, onGeoError, {
             enableHighAccuracy: true,
-            timeout: 10000,
+            timeout: 30000,
             maximumAge: 0
         });
     };
@@ -978,63 +984,66 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
                     )}
                 </AnimatePresence>
             </div>
-            <AnimatePresence>
-                {isBookingFlowActive && (
-                    <div
-                        className="hidden lg:flex fixed inset-0 bg-black/60 backdrop-blur-sm z-50 items-center justify-center p-4 md:p-8"
-                        onClick={() => setIsBookingFlowActive(false)}
-                    >
-                        <motion.div
-                            key="expanded-card"
-                            initial={{ opacity: 0, scale: 0.95 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            exit={{ opacity: 0, scale: 0.95 }}
-                            transition={{ duration: 0.3, ease: "easeInOut" }}
-                            className="flex max-w-6xl w-full max-h-[90vh] bg-background rounded-lg shadow-2xl"
-                            onClick={(e) => e.stopPropagation()}
+            {mounted && createPortal(
+                <AnimatePresence>
+                    {isBookingFlowActive && (
+                        <div
+                            className="hidden lg:flex fixed inset-0 bg-black/60 backdrop-blur-sm z-[9999] items-center justify-center p-4 md:p-8"
+                            onClick={() => setIsBookingFlowActive(false)}
                         >
-                            <div className="hidden md:block bg-secondary p-8 rounded-l-lg w-2/5">
-                                {originCoords && destinationCoords && step === 2 ? (
-                                    <div className="h-full w-full rounded-md overflow-hidden">
-                                        <RouteMap
-                                            origin={originCoords}
-                                            destination={destinationCoords}
-                                        />
-                                    </div>
-                                ) : (
-                                    <>
-                                        <h3 className="text-2xl font-bold">{tour.title[lang] || tour.title.en}</h3>
-                                        <p className="text-muted-foreground mt-2">{tour.description[lang] || tour.description.en}</p>
-                                        <div className="relative h-64 mt-8 rounded-lg overflow-hidden">
-                                            {tour.mainImage ? (
-                                                <NextImage src={tour.mainImage} alt={tour.title.en} fill className="object-cover" />
-                                            ) : (
-                                                <div className="w-full h-full bg-muted flex items-center justify-center">
-                                                    <ImageIcon className="h-16 w-16 text-muted-foreground/30" />
-                                                </div>
-                                            )}
+                            <motion.div
+                                key="expanded-card"
+                                initial={{ opacity: 0, scale: 0.95 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                exit={{ opacity: 0, scale: 0.95 }}
+                                transition={{ duration: 0.3, ease: "easeInOut" }}
+                                className="flex max-w-6xl w-full max-h-[90vh] bg-background rounded-lg shadow-2xl"
+                                onClick={(e) => e.stopPropagation()}
+                            >
+                                <div className="hidden md:block bg-secondary p-8 rounded-l-lg w-2/5">
+                                    {originCoords && destinationCoords && step === 2 ? (
+                                        <div className="h-full w-full rounded-md overflow-hidden">
+                                            <RouteMap
+                                                origin={originCoords}
+                                                destination={destinationCoords}
+                                            />
                                         </div>
-                                    </>
-                                )}
-                            </div>
-                            <div className="flex flex-col flex-1 min-w-0">
-                                <div className="p-6 border-b shrink-0">
-                                    <CardTitle className="text-2xl font-bold">{
-                                        isSearchingHotel ? dictionary.searchHotel :
-                                            step === 2 ? dictionary.bookingSummary :
-                                                step === 3 ? dictionary.finalSummary : dictionary.title
-                                    }</CardTitle>
+                                    ) : (
+                                        <>
+                                            <h3 className="text-2xl font-bold">{tour.title[lang] || tour.title.en}</h3>
+                                            <p className="text-muted-foreground mt-2">{tour.description[lang] || tour.description.en}</p>
+                                            <div className="relative h-64 mt-8 rounded-lg overflow-hidden">
+                                                {tour.mainImage ? (
+                                                    <NextImage src={tour.mainImage} alt={tour.title.en} fill className="object-cover" />
+                                                ) : (
+                                                    <div className="w-full h-full bg-muted flex items-center justify-center">
+                                                        <ImageIcon className="h-16 w-16 text-muted-foreground/30" />
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </>
+                                    )}
                                 </div>
-                                <div className="flex-1 p-6 min-h-0 overflow-y-auto">
-                                    <AnimatePresence mode="wait">
-                                        {renderBookingFlow()}
-                                    </AnimatePresence>
+                                <div className="flex flex-col flex-1 min-w-0">
+                                    <div className="p-6 border-b shrink-0">
+                                        <CardTitle className="text-2xl font-bold">{
+                                            isSearchingHotel ? dictionary.searchHotel :
+                                                step === 2 ? dictionary.bookingSummary :
+                                                    step === 3 ? dictionary.finalSummary : dictionary.title
+                                        }</CardTitle>
+                                    </div>
+                                    <div className="flex-1 p-6 min-h-0 overflow-y-auto">
+                                        <AnimatePresence mode="wait">
+                                            {renderBookingFlow()}
+                                        </AnimatePresence>
+                                    </div>
                                 </div>
-                            </div>
-                        </motion.div>
-                    </div>
-                )}
-            </AnimatePresence>
+                            </motion.div>
+                        </div>
+                    )}
+                </AnimatePresence>,
+                document.body
+            )}
 
 
             {/* --- Mobile Booking Sheet --- */}
