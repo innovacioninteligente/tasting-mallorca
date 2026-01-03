@@ -8,7 +8,7 @@ const cspHeader = `
     font-src 'self' data: https://fonts.gstatic.com;
     connect-src 'self' https://firebasestorage.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://www.googleapis.com https://api.stripe.com https://maps.googleapis.com https://m.stripe.network https://firestore.googleapis.com;
     media-src 'self' https://firebasestorage.googleapis.com;
-    frame-src 'self' https://js.stripe.com https://hooks.stripe.com https://www.google.com;
+    frame-src 'self' https://js.stripe.com https://hooks.stripe.com https://www.google.com https://amparo-aesthetics.firebaseapp.com;
     object-src 'none';
     base-uri 'self';
     form-action 'self';

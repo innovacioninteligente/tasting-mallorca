@@ -814,7 +814,7 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
                                         {isMapExpanded ? <Minimize2 className="h-4 w-4" /> : <Maximize2 className="h-4 w-4" />}
                                     </Button>
                                 </div>
-                                <div className="absolute inset-0 pointer-events-none z-0">
+                                <div className={cn("absolute inset-0 z-0", isMapExpanded ? "pointer-events-auto" : "pointer-events-none")}>
                                     <RouteMap
                                         origin={originCoords || undefined}
                                         destination={destinationCoords || undefined}

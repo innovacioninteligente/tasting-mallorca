@@ -39,7 +39,8 @@ function Directions({
     setDirectionsRenderer(
       new window.google.maps.DirectionsRenderer({
         map,
-        suppressMarkers: true,
+        suppressMarkers: true, // IMPORTANT: We want to show our own custom markers
+        preserveViewport: false,
       })
     );
   }, [map]);
@@ -61,11 +62,13 @@ function Directions({
         setError(null);
       })
       .catch((e) => {
-        console.error('Directions request failed', e);
+        console.error(`Directions request failed for mode ${travelMode}`, e);
         if ((e as any).code === 'REQUEST_DENIED') {
-          setError("El servicio de direcciones no está activado para tu clave de API.");
+          setError("API Error: Request Denied");
+        } else if ((e as any).code === 'ZERO_RESULTS') {
+          setError(`No route found for ${travelMode}`);
         } else {
-          setError("No se pudo calcular la ruta.");
+          setError("Could not calculate route.");
         }
         setRoutes([]);
       });
