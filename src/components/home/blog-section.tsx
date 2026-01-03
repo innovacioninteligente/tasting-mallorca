@@ -1,11 +1,12 @@
 
 'use client';
 
+import { SectionBadge } from '@/components/ui/section-badge';
 import { type getDictionary } from '@/dictionaries/get-dictionary';
-import { Sprout } from 'lucide-react';
 import { BlogPost } from '@/backend/blog/domain/blog.model';
 import { Locale } from '@/dictionaries/config';
 import { BlogCard } from '../blog-card';
+import { BookOpen } from 'lucide-react';
 
 type BlogSectionProps = {
     dictionary: Awaited<ReturnType<typeof getDictionary>>['blog'];
@@ -22,13 +23,13 @@ export function BlogSection({ dictionary, posts, lang }: BlogSectionProps) {
     return (
         <section className="py-24 bg-background flex flex-col items-center">
             <div className="container text-center mb-12">
-                <div className='flex justify-center items-center gap-2'>
-                <Sprout className="w-6 h-6 text-accent" />
-                <p className="text-accent font-cursive font-bold text-lg">{dictionary.subtitle}</p>
-                </div>
+                <SectionBadge className="mb-4">
+                    <BookOpen className="w-5 h-5" />
+                    {dictionary.subtitle}
+                </SectionBadge>
                 <h2 className="text-4xl md:text-5xl font-extrabold mt-2 text-foreground">{dictionary.title}</h2>
                 <p className="mt-4 text-lg text-muted-foreground max-w-xl mx-auto">
-                {dictionary.description}
+                    {dictionary.description}
                 </p>
             </div>
             <div className="w-full px-4 md:px-0 md:w-[80vw] mx-auto">
@@ -38,6 +39,6 @@ export function BlogSection({ dictionary, posts, lang }: BlogSectionProps) {
                     ))}
                 </div>
             </div>
-      </section>
+        </section>
     );
 }

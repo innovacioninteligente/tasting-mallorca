@@ -33,5 +33,9 @@
     "to": "to",
     "and": "and",
     "depositReminder": "A small reminder: the balance due will be paid on the day of the tour — cash payment is appreciated.",
-    "regionMismatchWarning": "Note: The selected hotel is in a different region. We have suggested the closest meeting point for this tour."
+    "regionMismatchWarning": "Your hotel is in different region, but this tour picks up in that region. The closest meeting point in that region has been selected.",
+    "regionMismatchTitle": "Zone Mismatch",
+    "fullNamePlaceholder": "John Doe",
+    "emailPlaceholder": "john@example.com",
+    "phonePlaceholder": "+1 234 567 890"
 }

@@ -3,8 +3,10 @@
 
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import { SectionBadge } from '@/components/ui/section-badge';
 import Image from 'next/image';
 import HeroImage from '../../../public/images/banner-hero.png';
+import { Sparkles } from 'lucide-react';
 
 type HeroDictionary = {
   welcome: string;
@@ -31,7 +33,10 @@ export function HeroSection({ dictionary }: { dictionary: HeroDictionary }) {
 
       <div className="container relative">
         <div className="max-w-2xl mx-auto">
-          <h2 className="text-lg font-cursive font-bold text-accent mb-2">{dictionary.welcome}</h2>
+          <SectionBadge className="mb-4">
+            <Sparkles className="w-5 h-5" />
+            {dictionary.welcome}
+          </SectionBadge>
           <h1 className="text-5xl md:text-7xl font-extrabold tracking-tighter leading-tight text-foreground">
             {dictionary.title}
           </h1>

@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -7,7 +6,7 @@
   body {
     @apply theme-ocean;
   }
-  
+
   .theme-tasting-mallorca {
     --background: 38 43% 96%;
     --foreground: 222 65% 19%;
@@ -53,7 +52,7 @@
     --input: 199 41% 90%;
     --ring: 181 88% 43%;
   }
-  
+
   .theme-ocean {
     --background: 38 43% 96%;
     --foreground: 222 65% 19%;
@@ -67,7 +66,7 @@
     --secondary: 210 40% 90%;
     --secondary-foreground: 222 65% 15%;
     --muted: 210 40% 90%;
-    --muted-foreground: 215 16% 47%;
+    --muted-foreground: 215 25% 40%;
     --accent: 37 100% 64.6%;
     --accent-foreground: 222 65% 19%;
     --destructive: 0 84.2% 60.2%;
@@ -195,7 +194,13 @@
   * {
     @apply border-border;
   }
-  h1, h2, h3, h4, h5, h6 {
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     @apply font-headline text-foreground;
   }
 }
@@ -209,30 +214,34 @@
   .custom-video-controls::-webkit-media-controls-panel {
     background-color: rgba(0, 0, 0, 0.6);
   }
+
   .custom-video-controls::-webkit-media-controls-play-button,
   .custom-video-controls::-webkit-media-controls-mute-button,
   .custom-video-controls::-webkit-media-controls-fullscreen-button {
     filter: brightness(2);
   }
+
   .custom-video-controls::-webkit-media-controls-current-time-display,
   .custom-video-controls::-webkit-media-controls-time-remaining-display {
     color: white;
   }
+
   .custom-video-controls::-webkit-media-controls-timeline {
     height: 5px;
     border-radius: 2px;
     background-color: rgba(255, 255, 255, 0.3);
   }
+
   .custom-video-controls::-webkit-media-controls-timeline:hover {
     height: 7px;
   }
+
   .custom-video-controls::-webkit-media-progress-bar {
     background-color: hsl(var(--primary));
   }
+
   .custom-video-controls::-webkit-media-controls-seek-back-button,
   .custom-video-controls::-webkit-media-controls-seek-forward-button {
     display: none;
   }
 }
-
-    

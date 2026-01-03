@@ -5,21 +5,22 @@ import Image from 'next/image';
 import { Camera, X, ArrowRight } from 'lucide-react';
 import { useState } from 'react';
 import {
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  DialogDescription,
+    Dialog,
+    DialogContent,
+    DialogTitle,
+    DialogDescription,
 } from "@/components/ui/dialog";
 import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
+    Carousel,
+    CarouselContent,
+    CarouselItem,
+    CarouselNext,
+    CarouselPrevious,
 } from "@/components/ui/carousel";
 import { Button } from '../ui/button';
 import Link from 'next/link';
 import { type getDictionary } from '@/dictionaries/get-dictionary';
+import { SectionBadge } from '@/components/ui/section-badge';
 
 type GallerySectionProps = {
     dictionary: Awaited<ReturnType<typeof getDictionary>>['gallery'];
@@ -49,15 +50,16 @@ export function GallerySection({ dictionary }: GallerySectionProps) {
     return (
         <section className="py-24 bg-background flex flex-col items-center">
             <div className="container text-center mb-12">
-                <div className='flex justify-center items-center gap-2'>
-                <Camera className="w-6 h-6 text-accent" />
-                <p className="text-accent font-cursive font-bold text-lg">{dictionary.subtitle}</p>
-                </div>
+                <SectionBadge className="mb-4">
+                    <Camera className="w-5 h-5" />
+                    {dictionary.subtitle}
+                </SectionBadge>
                 <h2 className="text-4xl md:text-5xl font-extrabold mt-2 text-foreground">{dictionary.title}</h2>
                 <p className="mt-4 text-lg text-muted-foreground max-w-xl mx-auto">
-                {dictionary.description}
+                    {dictionary.description}
                 </p>
             </div>
+
             <div className="w-full px-4 md:px-0 md:w-[80vw] mx-auto">
                 <div className="grid grid-cols-2 md:grid-cols-4 auto-rows-[250px] gap-2 md:gap-4">
                     {galleryImages.map((img, index) => (
@@ -69,11 +71,12 @@ export function GallerySection({ dictionary }: GallerySectionProps) {
                                 className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-105"
                                 data-ai-hint={img.hint}
                                 sizes="(max-width: 768px) 50vw, (max-width: 1200px) 25vw, 20vw"
+                                unoptimized
                             />
-                             <div className="absolute inset-0 bg-black/10 transition-colors group-hover:bg-black/20"></div>
+                            <div className="absolute inset-0 bg-black/10 transition-colors group-hover:bg-black/20"></div>
                         </div>
                     ))}
-                     <div className="col-span-2 md:col-span-2 p-8 rounded-xl bg-secondary flex flex-col items-center justify-center text-center">
+                    <div className="col-span-2 md:col-span-2 p-8 rounded-xl bg-secondary flex flex-col items-center justify-center text-center">
                         <h3 className="text-3xl font-extrabold text-foreground">{dictionary.ctaTitle}</h3>
                         <p className="mt-2 text-muted-foreground">{dictionary.ctaSubtitle}</p>
                         <Button asChild size="lg" className="mt-6 font-bold rounded-full group">
@@ -86,10 +89,10 @@ export function GallerySection({ dictionary }: GallerySectionProps) {
                 </div>
             </div>
 
-             <Dialog open={isLightboxOpen} onOpenChange={setIsLightboxOpen}>
+            <Dialog open={isLightboxOpen} onOpenChange={setIsLightboxOpen}>
                 <DialogContent className="max-w-none w-screen h-screen p-0 bg-background/80 backdrop-blur-sm border-0 flex items-center justify-center">
                     <DialogTitle className="sr-only">Image Gallery Lightbox</DialogTitle>
-                     <DialogDescription className="sr-only">A carousel of gallery images in a larger view.</DialogDescription>
+                    <DialogDescription className="sr-only">A carousel of gallery images in a larger view.</DialogDescription>
                     <Carousel
                         opts={{
                             loop: true,
@@ -117,6 +120,6 @@ export function GallerySection({ dictionary }: GallerySectionProps) {
                     </Carousel>
                 </DialogContent>
             </Dialog>
-      </section>
+        </section >
     );
 }

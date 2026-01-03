@@ -11,7 +11,7 @@ import BlogPostClientPage from './blog-post-client-page';
 import { findAllTours } from '@/app/server-actions/tours/findTours';
 import { Tour } from '@/backend/tours/domain/tour.model';
 import { getDictionary } from '@/dictionaries/get-dictionary';
-import { SchemaBuilder } from '@/lib/seo/schema-builder';
+import { schemaBuilder } from '@/lib/seo/schema-builder';
 
 type BlogPostParams = {
   slug: string;
@@ -38,8 +38,8 @@ export async function generateStaticParams(): Promise<BlogPostParams[]> {
   return paths;
 }
 
-export async function generateMetadata({ params }: { params: BlogPostParams }): Promise<Metadata> {
-  const { lang, slug: encodedSlug } = params;
+export async function generateMetadata({ params }: { params: Promise<BlogPostParams> }): Promise<Metadata> {
+  const { lang, slug: encodedSlug } = await params;
   const slug = decodeURIComponent(encodedSlug);
   const postResult = await findBlogPostBySlugAndLang({ slug, lang });
 
@@ -84,8 +84,8 @@ export async function generateMetadata({ params }: { params: BlogPostParams }): 
   };
 }
 
-export default async function BlogPostPageLoader({ params }: { params: BlogPostParams }) {
-  const { lang, slug: encodedSlug } = params;
+export default async function BlogPostPageLoader({ params }: { params: Promise<BlogPostParams> }) {
+  const { lang, slug: encodedSlug } = await params;
   const slug = decodeURIComponent(encodedSlug);
 
   const [postResult, otherPostsResult, toursResult, dictionary] = await Promise.all([
@@ -112,7 +112,7 @@ export default async function BlogPostPageLoader({ params }: { params: BlogPostP
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify(SchemaBuilder.generateBlogPostSchema(postResult.data, lang))
+          __html: JSON.stringify(schemaBuilder.generateBlogPostSchema(postResult.data, lang))
         }}
       />
       <BlogPostClientPage

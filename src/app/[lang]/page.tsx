@@ -6,7 +6,7 @@ import { findAllTours } from '../server-actions/tours/findTours';
 import { findAllBlogPosts } from '../server-actions/blog/findBlogPosts';
 import { Tour } from '@/backend/tours/domain/tour.model';
 import { BlogPost } from '@/backend/blog/domain/blog.model';
-import { SchemaBuilder } from '@/lib/seo/schema-builder';
+import { schemaBuilder } from '@/lib/seo/schema-builder';
 import { Metadata } from 'next';
 
 interface PageProps {
@@ -64,8 +64,8 @@ export default async function Page({ params }: PageProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify([
-            SchemaBuilder.generateOrganizationSchema(),
-            SchemaBuilder.generateWebsiteSchema()
+            schemaBuilder.generateOrganizationSchema(),
+            schemaBuilder.generateWebsiteSchema()
           ])
         }}
       />

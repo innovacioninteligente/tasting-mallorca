@@ -22,7 +22,7 @@ import { StripeProvider } from '@/components/stripe-provider';
 import CheckoutForm from '@/components/checkout-form';
 import { Hotel as HotelModel } from "@/backend/hotels/domain/hotel.model";
 import { MeetingPoint } from "@/backend/meeting-points/domain/meeting-point.model";
-import { useUser, useFirestore } from "@/firebase";
+import { useUser } from "@/firebase";
 import { Tour } from "@/backend/tours/domain/tour.model";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { cn } from "@/lib/utils";
@@ -71,6 +71,10 @@ interface TourBookingSectionProps {
         to: string;
         and: string;
         regionMismatchWarning?: string;
+        regionMismatchTitle?: string;
+        fullNamePlaceholder?: string;
+        emailPlaceholder?: string;
+        phonePlaceholder?: string;
     };
     tour: Tour;
     lang: string;
@@ -123,14 +127,14 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
 
     const bookingCacheKey = `booking-form-${tour.id}`;
 
-    const [adults, setAdults] = useState<number>(() => getInitialState(`${bookingCacheKey}-adults`, 2));
-    const [children, setChildren] = useState<number>(() => getInitialState(`${bookingCacheKey}-children`, 0));
-    const [infants, setInfants] = useState<number>(() => getInitialState(`${bookingCacheKey}-infants`, 0));
-    const [date, setDate] = useState<Date | undefined>(() => getInitialState(`${bookingCacheKey}-date`, undefined));
-    const [language, setLanguage] = useState<string>(() => getInitialState(`${bookingCacheKey}-language`, lang));
+    const [adults, setAdults] = useState<number>(2);
+    const [children, setChildren] = useState<number>(0);
+    const [infants, setInfants] = useState<number>(0);
+    const [date, setDate] = useState<Date | undefined>(undefined);
+    const [language, setLanguage] = useState<string>(lang);
     const [availableLanguages, setAvailableLanguages] = useState(allLanguages);
-    const [paymentOption, setPaymentOption] = useState<'full' | 'deposit'>(() => getInitialState(`${bookingCacheKey}-paymentOption`, 'full'));
-    const [selectedHotel, setSelectedHotel] = useState<HotelModel | null>(() => getInitialState(`${bookingCacheKey}-hotel`, null));
+    const [paymentOption, setPaymentOption] = useState<'full' | 'deposit'>('full');
+    const [selectedHotel, setSelectedHotel] = useState<HotelModel | null>(null);
     const [suggestedMeetingPoint, setSuggestedMeetingPoint] = useState<MeetingPoint | null>(null);
     const [customerName, setCustomerName] = useState('');
     const [customerEmail, setCustomerEmail] = useState('');
@@ -172,66 +176,89 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
         }
 
         setIsLocating(true);
-        navigator.geolocation.getCurrentPosition(
-            (position) => {
-                const { latitude, longitude } = position.coords;
-                // Save user's coords to show on map
-                setCustomLocationCoords({ lat: latitude, lng: longitude });
 
-                // Filter meeting points by Tour Region
-                const regionPoints = meetingPoints.filter(mp => mp.region === tour.region);
+        const onGeoSuccess = (position: GeolocationPosition) => {
+            const { latitude, longitude } = position.coords;
+            // Save user's coords to show on map
+            setCustomLocationCoords({ lat: latitude, lng: longitude });
 
-                if (regionPoints.length === 0) {
-                    toast({
-                        variant: 'destructive',
-                        title: 'No Meeting Points',
-                        description: `No meeting points found for this tour region (${tour.region}).`,
-                    });
-                    setIsLocating(false);
-                    return;
-                }
+            // Filter meeting points by Tour Region
+            const regionPoints = meetingPoints.filter(mp => mp.region === tour.region);
 
-                let closestPoint: MeetingPoint | null = null;
-                let minDistance = Infinity;
-
-                for (const point of regionPoints) {
-                    if (point.latitude === undefined || point.longitude === undefined) continue;
-
-                    const distance = getDistance(latitude, longitude, point.latitude, point.longitude);
-                    if (distance < minDistance) {
-                        minDistance = distance;
-                        closestPoint = point;
-                    }
-                }
-
-                if (closestPoint) {
-                    setSelectedHotel(null); // Clear hotel selection as we are using custom location
-                    setSuggestedMeetingPoint(closestPoint);
-                    setShowRegionMismatch(false); // Reset mismatch when using geo
-                    setIsSearchingHotel(false); // Close search view if open
-                    toast({
-                        title: 'Location Found',
-                        description: `Closest meeting point: ${closestPoint.name}`,
-                    });
-                } else {
-                    toast({
-                        variant: 'destructive',
-                        title: 'Error',
-                        description: 'Could not find a close meeting point.',
-                    });
-                }
-                setIsLocating(false);
-            },
-            (error) => {
-                console.error("Geolocation error:", error);
+            if (regionPoints.length === 0) {
                 toast({
                     variant: 'destructive',
-                    title: 'Location Error',
-                    description: 'Could not retrieve your location. Please check your permissions.',
+                    title: 'No Meeting Points',
+                    description: `No meeting points found for this tour region (${tour.region}).`,
                 });
                 setIsLocating(false);
+                return;
             }
-        );
+
+            let closestPoint: MeetingPoint | null = null;
+            let minDistance = Infinity;
+
+            for (const point of regionPoints) {
+                if (point.latitude === undefined || point.longitude === undefined) continue;
+
+                const distance = getDistance(latitude, longitude, point.latitude, point.longitude);
+                if (distance < minDistance) {
+                    minDistance = distance;
+                    closestPoint = point;
+                }
+            }
+
+            if (closestPoint) {
+                setSelectedHotel(null); // Clear hotel selection as we are using custom location
+                setSuggestedMeetingPoint(closestPoint);
+                setShowRegionMismatch(false); // Reset mismatch when using geo
+                setIsSearchingHotel(false); // Close search view if open
+                toast({
+                    title: 'Location Found',
+                    description: `Closest meeting point: ${closestPoint.name}`,
+                });
+            } else {
+                toast({
+                    variant: 'destructive',
+                    title: 'Error',
+                    description: 'Could not find a close meeting point.',
+                });
+            }
+            setIsLocating(false);
+        };
+
+        const onGeoError = (error: GeolocationPositionError) => {
+            console.error("Geolocation error:", error, error.code, error.message);
+
+            let errorMessage = "Could not retrieve your location.";
+
+            switch (error.code) {
+                case error.PERMISSION_DENIED:
+                    errorMessage = "Location permission denied. Please enable it in your browser settings.";
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    errorMessage = "Location information is unavailable.";
+                    break;
+                case error.TIMEOUT:
+                    errorMessage = "The request to get user location timed out.";
+                    break;
+                default:
+                    errorMessage = error.message || "An unknown error occurred.";
+            }
+
+            toast({
+                variant: 'destructive',
+                title: 'Location Error',
+                description: errorMessage,
+            });
+            setIsLocating(false);
+        };
+
+        navigator.geolocation.getCurrentPosition(onGeoSuccess, onGeoError, {
+            enableHighAccuracy: true,
+            timeout: 10000,
+            maximumAge: 0
+        });
     };
 
     useEffect(() => {
@@ -265,36 +292,66 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
 
 
     useEffect(() => {
+        // Hydrate state from localStorage on mount
+        setAdults(getInitialState(`${bookingCacheKey}-adults`, 2));
+        setChildren(getInitialState(`${bookingCacheKey}-children`, 0));
+        setInfants(getInitialState(`${bookingCacheKey}-infants`, 0));
+        setDate(getInitialState(`${bookingCacheKey}-date`, undefined));
+        setLanguage(getInitialState(`${bookingCacheKey}-language`, lang));
+        setPaymentOption(getInitialState(`${bookingCacheKey}-paymentOption`, 'full'));
+        setSelectedHotel(getInitialState(`${bookingCacheKey}-hotel`, null));
+    }, [bookingCacheKey, lang]);
+
+    useEffect(() => {
         if (selectedHotel && meetingPoints) {
             // Reset custom location coords when hotel is selected
             setCustomLocationCoords(null);
 
-            // Priority:
-            // 1. Region-specific assignment
-            // 2. Legacy global assignment
-            let pointId = selectedHotel.assignedMeetingPoints?.[tour.region];
-            if (!pointId) {
-                pointId = selectedHotel.assignedMeetingPointId || undefined;
-            }
+            // Filter valid points for this tour's region
+            const validTourPoints = meetingPoints.filter(mp => mp.region === tour.region);
 
             // Check for region mismatch
-            // If hotel region is different from tour region, show warning
-            if (selectedHotel.region !== tour.region) {
-                setShowRegionMismatch(true);
-            } else {
-                setShowRegionMismatch(false);
+            const isMismatch = selectedHotel.region !== tour.region;
+            setShowRegionMismatch(isMismatch);
+
+            if (validTourPoints.length === 0) {
+                setSuggestedMeetingPoint(null);
+                return;
             }
 
-            const point = pointId
-                ? meetingPoints.find(mp => mp.id === pointId)
-                : null;
-            setSuggestedMeetingPoint(point || null);
+            let bestPoint: MeetingPoint | null = null;
+
+            // Logic: Always find the closest VALID point (inside tour region)
+            // regardless of whether there is a mismatch or not.
+            // Even if the hotel has an assigned point, if that point is not in validTourPoints, we should ignore it 
+            // and find the closest valid one (or maybe checking if the assigned one IS valid).
+
+            // 1. Try to see if the hotel has a specific assignment for this region that is valid
+            const assignedPointId = selectedHotel.assignedMeetingPoints?.[tour.region];
+            if (assignedPointId) {
+                const assignedPoint = validTourPoints.find(mp => mp.id === assignedPointId);
+                if (assignedPoint) {
+                    bestPoint = assignedPoint;
+                }
+            }
+
+            // 2. If no valid assignment found, calculate distance to all valid points and pick closest
+            if (!bestPoint && selectedHotel.latitude && selectedHotel.longitude) {
+                let minDistance = Infinity;
+                for (const point of validTourPoints) {
+                    if (point.latitude === undefined || point.longitude === undefined) continue;
+                    const distance = getDistance(selectedHotel.latitude, selectedHotel.longitude, point.latitude, point.longitude);
+                    if (distance < minDistance) {
+                        minDistance = distance;
+                        bestPoint = point;
+                    }
+                }
+            }
+
+            setSuggestedMeetingPoint(bestPoint || null);
+
         } else {
             // Don't clear suggested meeting point strictly if we have custom coords (from geolocation)
-            // But if we deselect hotel manually, we usually clear. 
-            // The handleUseMyLocation sets selectedHotel(null) but sets suggestedMeetingPoint(point).
-            // This effect triggers when selectedHotel changes to null.
-            // If selectedHotel is null AND customLocationCoords is null, clear point.
             if (!customLocationCoords) {
                 setSuggestedMeetingPoint(null);
                 setShowRegionMismatch(false);
@@ -390,12 +447,21 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
         }
     };
 
-    const filteredHotels = searchQuery
-        ? hotels.filter(hotel =>
+    const filteredHotels = hotels
+        .filter(hotel => !searchQuery ||
             hotel.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
             (hotel.address && hotel.address.toLowerCase().includes(searchQuery.toLowerCase()))
         )
-        : hotels;
+        .sort((a, b) => {
+            const aIsRegion = a.region === tour.region ? 1 : 0;
+            const bIsRegion = b.region === tour.region ? 1 : 0;
+            // Prioritize hotels in the same region
+            if (aIsRegion !== bIsRegion) {
+                return bIsRegion - aIsRegion;
+            }
+            // Then sort alphabetically
+            return a.name.localeCompare(b.name);
+        });
 
     const locale = locales[lang as Locale] || enUS;
     const formattedDate = date ? format(date, "PPP", { locale }) : "Pick a date";
@@ -712,7 +778,7 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
                             <MapPin className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
                             <div>
                                 <span className="font-semibold text-foreground">{dictionary.suggestedPickup}:</span>
-                                <p>{suggestedMeetingPoint.name}</p>
+                                <p>{suggestedMeetingPoint.name} {suggestedMeetingPoint.time && <span className="font-mono text-xs bg-muted px-1.5 py-0.5 rounded ml-1">{suggestedMeetingPoint.time}</span>}</p>
                                 <p className="text-xs">{suggestedMeetingPoint.address}</p>
                             </div>
                         </div>
@@ -720,7 +786,7 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
                     {showRegionMismatch && dictionary.regionMismatchWarning && (
                         <Alert variant="destructive" className="mt-4 bg-yellow-50 text-yellow-900 border-yellow-200">
                             <Info className="h-4 w-4 text-yellow-700" />
-                            <AlertTitle className="text-yellow-800">Note</AlertTitle>
+                            <AlertTitle className="text-yellow-800">{dictionary.regionMismatchTitle || "Zone Mismatch"}</AlertTitle>
                             <AlertDescription>
                                 {dictionary.regionMismatchWarning}
                             </AlertDescription>
@@ -768,13 +834,13 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
 
                 <div className="space-y-4">
                     <Label htmlFor="customerName" className="text-base font-medium text-muted-foreground">{dictionary.yourName}</Label>
-                    <Input id="customerName" value={customerName} onChange={(e) => setCustomerName(e.target.value)} placeholder="Full Name" className="h-11 text-base" />
+                    <Input id="customerName" value={customerName} onChange={(e) => setCustomerName(e.target.value)} placeholder={dictionary.fullNamePlaceholder || "Full Name"} className="h-11 text-base" />
 
                     <Label htmlFor="customerEmail" className="text-base font-medium text-muted-foreground">{dictionary.yourEmail}</Label>
-                    <Input id="customerEmail" type="email" value={customerEmail} onChange={(e) => setCustomerEmail(e.target.value)} placeholder="your@email.com" className="h-11 text-base" />
+                    <Input id="customerEmail" type="email" value={customerEmail} onChange={(e) => setCustomerEmail(e.target.value)} placeholder={dictionary.emailPlaceholder || "your@email.com"} className="h-11 text-base" />
 
                     <Label htmlFor="customerPhone" className="text-base font-medium text-muted-foreground">{dictionary.yourPhone || 'Your Phone'}</Label>
-                    <Input id="customerPhone" type="tel" value={customerPhone} onChange={(e) => setCustomerPhone(e.target.value)} placeholder="+34 123 456 789" className="h-11 text-base" />
+                    <Input id="customerPhone" type="tel" value={customerPhone} onChange={(e) => setCustomerPhone(e.target.value)} placeholder={dictionary.phonePlaceholder || "+34 123 456 789"} className="h-11 text-base" />
                 </div>
 
 

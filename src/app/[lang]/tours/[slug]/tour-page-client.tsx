@@ -1,12 +1,12 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { notFound } from 'next/navigation';
 import { Locale } from '@/dictionaries/config';
 import { TourHeaderSection } from '@/components/tours/tour-header-section';
 import { TourGallerySection } from '@/components/tours/tour-gallery-section';
 import { TourInfoSection } from '@/components/tours/tour-info-section';
-import { TourItinerarySection } from '@/components/tours/tour-itinerary-section';
+// import { TourItinerarySection } from '@/components/tours/tour-itinerary-section'; // Removed
 import { TourBookingSection } from '@/components/tours/tour-booking-section';
 import { TourOverviewSection } from '@/components/tours/tour-overview-section';
 import { TourDetailsAccordion } from '@/components/tours/tour-details-accordion';
@@ -16,6 +16,9 @@ import { MeetingPoint } from '@/backend/meeting-points/domain/meeting-point.mode
 import { useAlternateLinks } from '@/context/alternate-links-context';
 import { RelatedToursSection } from '@/components/tours/related-tours-section';
 import { DictionaryType } from '@/dictionaries/get-dictionary';
+import { VisualItinerary } from '@/components/tours/visual-itinerary';
+import { TrustSignals } from '@/components/tours/trust-signals';
+
 
 type TourPageProps = {
   tour: Tour | null;
@@ -28,6 +31,7 @@ type TourPageProps = {
 
 export default function TourPageClient({ tour, dictionary, lang, hotels, meetingPoints, relatedTours }: TourPageProps) {
   const { setAlternateLinks } = useAlternateLinks();
+  const bookingRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     if (tour) {
@@ -47,6 +51,10 @@ export default function TourPageClient({ tour, dictionary, lang, hotels, meeting
   if (!tour) {
     notFound();
   }
+
+  const handleBookClick = () => {
+    bookingRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
 
   const tourHeaderProps = {
     title: tour.title[lang] || tour.title.en,
@@ -73,31 +81,19 @@ export default function TourPageClient({ tour, dictionary, lang, hotels, meeting
     beforeYouGoItems: (tour.details?.beforeYouGo?.[lang as keyof typeof tour.details.beforeYouGo] || tour.details?.beforeYouGo?.en || '').split('\n').filter(Boolean),
   };
 
-  const tourItineraryProps = {
-    ...dictionary.tourDetail.itinerary,
-    pickupTitle: tour.pickupPoint.title[lang] || tour.pickupPoint.title.en,
-    pickupPoints: (tour.pickupPoint.description[lang] || tour.pickupPoint.description.en).split('\n').filter(Boolean),
-    dropoffTitle: tour.pickupPoint.title[lang] || tour.pickupPoint.title.en,
-    dropoffPoints: (tour.pickupPoint.description[lang] || tour.pickupPoint.description.en).split('\n').filter(Boolean),
-    stops: tour.itinerary.map(item => ({
-      type: item.type,
-      icon: item.icon as any,
-      title: item.title[lang] || item.title.en,
-      duration: item.duration,
-      activities: (item.activities as any)[lang] || item.activities.en || [],
-    }))
-  };
-
   const allImages = [tour.mainImage, ...tour.galleryImages];
 
   return (
-    <div className="bg-background">
+    <div className="bg-background relative">
       <TourHeaderSection tour={tourHeaderProps} dictionary={dictionary.tourDetail.header} />
       <TourGallerySection images={allImages} />
 
-      <main className="w-full xl:w-[90vw] 2xl:w-[80vw] mx-auto px-4 py-16 grid grid-cols-1 lg:grid-cols-5 gap-12">
+      <main className="w-full xl:w-[90vw] 2xl:w-[80vw] mx-auto px-4 py-8 md:py-16 grid grid-cols-1 lg:grid-cols-5 gap-12">
         <div className="lg:col-span-3 space-y-12">
+          {/* Mobile Booking Trigger (Visible only on mobile inside flow if needed, but we have the sticky bar) */}
+
           <TourOverviewSection overview={tourOverviewProps.overview} dictionary={dictionary.tourDetail.overview} />
+
           <TourInfoSection dictionary={{
             ...dictionary.tourDetail.tourInfo,
             infoPoints: dictionary.tourDetail.tourInfo.infoPoints.map(point => ({
@@ -105,17 +101,27 @@ export default function TourPageClient({ tour, dictionary, lang, hotels, meeting
               icon: point.icon as any
             }))
           }} />
-          <TourItinerarySection dictionary={tourItineraryProps} />
+
+          {/* Visual Itinerary Replacement */}
+          <div className="space-y-6">
+            <h2 className="text-2xl font-bold font-cursive text-primary">{dictionary.tourDetail.itinerary.title}</h2>
+            <VisualItinerary tour={tour} lang={lang} />
+          </div>
+
           <TourDetailsAccordion dictionary={tourDetailsProps} />
         </div>
-        <aside className="lg:col-span-2" id="booking-section">
-          <TourBookingSection
-            dictionary={dictionary.tourDetail.booking}
-            tour={tour}
-            lang={lang}
-            hotels={hotels || []}
-            meetingPoints={meetingPoints || []}
-          />
+
+        <aside className="lg:col-span-2" id="booking-section" ref={bookingRef}>
+          <div className="sticky top-24 space-y-6">
+            <TourBookingSection
+              dictionary={dictionary.tourDetail.booking}
+              tour={tour}
+              lang={lang}
+              hotels={hotels || []}
+              meetingPoints={meetingPoints || []}
+            />
+            <TrustSignals />
+          </div>
         </aside>
 
         <RelatedToursSection
@@ -125,6 +131,8 @@ export default function TourPageClient({ tour, dictionary, lang, hotels, meeting
         />
 
       </main>
+
+
 
     </div>
   );

@@ -34,7 +34,7 @@ export function BlogPostHeader({ title, author, publishedAt, image, lang }: Blog
             <div className="absolute inset-0 bg-black/40"></div>
             <div className="absolute inset-0 flex items-center justify-center p-4">
                 <div className="text-center text-white bg-black/20 backdrop-blur-[7px] p-8 rounded-2xl border border-white/20 w-full md:max-w-[60vw]">
-                     <h1 className="text-4xl md:text-6xl font-extrabold">
+                    <h1 className="text-4xl md:text-6xl font-extrabold text-white">
                         {title}
                     </h1>
                     <div className="flex items-center justify-center flex-wrap gap-4 md:gap-6 mt-6 text-white/80">

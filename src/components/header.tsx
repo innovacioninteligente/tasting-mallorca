@@ -12,8 +12,8 @@ import { useState } from 'react';
 import Image from 'next/image';
 
 type HeaderProps = {
-    dictionary: Awaited<ReturnType<typeof getDictionary>>['header'];
-    lang: Locale;
+  dictionary: Awaited<ReturnType<typeof getDictionary>>['header'];
+  lang: Locale;
 }
 
 export function Header({ dictionary, lang }: HeaderProps) {
@@ -32,16 +32,14 @@ export function Header({ dictionary, lang }: HeaderProps) {
       {/* Main Header */}
       <div className="w-full md:w-[80vw] mx-auto px-4 flex h-20 items-center justify-between">
         <Link href={`/${lang}/`} className="flex items-center gap-0 font-semibold" prefetch={false}>
-            <div className="relative h-16 w-16">
-              <Image
-                  src="https://firebasestorage.googleapis.com/v0/b/tasting-mallorca.firebasestorage.app/o/web%2Fbranding%2FICONO-AZUL.png?alt=media&token=5f6b7c16-5a14-4d45-bbdb-f3a70138e8b7"
-                  alt="Tasting Mallorca Logo"
-                  fill
-                  className="object-contain"
-                  sizes="64px"
-              />
-            </div>
-            <span className="text-xl font-bold text-foreground">Tasting Mallorca</span>
+          <Image
+            src="https://firebasestorage.googleapis.com/v0/b/tasting-mallorca.firebasestorage.app/o/web%2Fimages%2Flogo.png?alt=media&token=89f9e11f-00a4-4390-9dbb-96a195d92883"
+            alt="Tasting Mallorca Logo"
+            width={262}
+            height={100}
+            className="h-14 w-auto object-contain"
+            priority
+          />
         </Link>
 
         <nav className="hidden items-center gap-6 text-base lg:flex">
@@ -56,12 +54,12 @@ export function Header({ dictionary, lang }: HeaderProps) {
             </Link>
           ))}
         </nav>
-        
+
         <div className="hidden items-center gap-4 lg:flex">
-           <LanguageSwitcher currentLocale={lang} />
-           <Button asChild size="lg" className="font-bold text-base rounded-full px-6 py-6 bg-accent hover:bg-accent/90 text-accent-foreground">
-              <Link href={`/${lang}/tours`}>{dictionary.startBooking}</Link>
-           </Button>
+          <LanguageSwitcher currentLocale={lang} />
+          <Button asChild size="lg" className="font-bold text-base rounded-full px-6 py-6 bg-accent hover:bg-accent/90 text-accent-foreground">
+            <Link href={`/${lang}/tours`}>{dictionary.startBooking}</Link>
+          </Button>
         </div>
 
         <div className="lg:hidden">
@@ -78,16 +76,14 @@ export function Header({ dictionary, lang }: HeaderProps) {
               </SheetHeader>
               <div className="flex flex-col gap-6 p-6">
                 <Link href={`/${lang}/`} className="flex items-center gap-0 font-semibold" prefetch={false} onClick={() => setIsMobileMenuOpen(false)}>
-                   <div className="relative h-12 w-12">
-                        <Image
-                            src="https://firebasestorage.googleapis.com/v0/b/tasting-mallorca.firebasestorage.app/o/web%2Fbranding%2FICONO-AZUL.png?alt=media&token=5f6b7c16-5a14-4d45-bbdb-f3a70138e8b7"
-                            alt="Tasting Mallorca Logo"
-                            fill
-                            className="object-contain"
-                            sizes="48px"
-                        />
-                    </div>
-                    <span className="text-xl font-bold text-foreground">Tasting Mallorca</span>
+                  <Image
+                    src="https://firebasestorage.googleapis.com/v0/b/tasting-mallorca.firebasestorage.app/o/web%2Fimages%2Flogo.png?alt=media&token=89f9e11f-00a4-4390-9dbb-96a195d92883"
+                    alt="Tasting Mallorca Logo"
+                    width={262}
+                    height={100}
+                    className="h-12 w-auto object-contain"
+                    priority
+                  />
                 </Link>
                 <nav className="flex flex-col gap-4 text-lg">
                   {navLinks.map((link) => (
@@ -102,13 +98,13 @@ export function Header({ dictionary, lang }: HeaderProps) {
                     </Link>
                   ))}
                 </nav>
-                 <div className="mt-4">
+                <div className="mt-4">
                   <LanguageSwitcher currentLocale={lang} />
                 </div>
                 <div className="flex flex-col gap-4 mt-4">
-                   <Button asChild size="lg" className="font-bold text-lg bg-accent hover:bg-accent/90 text-accent-foreground">
-                      <Link href={`/${lang}/tours`} onClick={() => setIsMobileMenuOpen(false)}>{dictionary.startBooking}</Link>
-                   </Button>
+                  <Button asChild size="lg" className="font-bold text-lg bg-accent hover:bg-accent/90 text-accent-foreground">
+                    <Link href={`/${lang}/tours`} onClick={() => setIsMobileMenuOpen(false)}>{dictionary.startBooking}</Link>
+                  </Button>
                 </div>
               </div>
             </SheetContent>
@@ -119,4 +115,3 @@ export function Header({ dictionary, lang }: HeaderProps) {
   );
 }
 
-    

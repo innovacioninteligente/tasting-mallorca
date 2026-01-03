@@ -11,7 +11,7 @@ import { getDictionary } from '@/dictionaries/get-dictionary';
 import { Locale } from '@/dictionaries/config';
 import { Tour } from '@/backend/tours/domain/tour.model';
 import TourPageClient from './tour-page-client';
-import { SchemaBuilder } from '@/lib/seo/schema-builder';
+import { schemaBuilder } from '@/lib/seo/schema-builder';
 
 type TourPageParams = {
   slug: string;
@@ -103,11 +103,10 @@ export default async function TourPageLoader({ params }: { params: Promise<TourP
         type="application/ld+json"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify([
-            SchemaBuilder.generateTourSchema(tourResult.data, lang),
-            SchemaBuilder.generateFAQSchema([
+            schemaBuilder.generateTourSchema(tourResult.data, lang),
+            schemaBuilder.generateFAQSchema([
               { question: dictionary.tourDetail?.booking?.pickupPoint || 'Meeting Point', answer: tourResult.data.generalInfo.pickupInfo[lang] || tourResult.data.generalInfo.pickupInfo.en },
               { question: dictionary.tourDetail?.tourDetails?.includesTitle || 'Included', answer: tourResult.data.details?.included?.[lang] || tourResult.data.details?.included?.en || '' },
-              // Add more FAQs based on available data
             ])
           ])
         }}

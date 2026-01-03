@@ -45,7 +45,7 @@ export function TourCard({ tour, lang }: TourCardProps) {
                                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
                             />
                             <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                            <Button size="icon" variant="secondary" className="absolute top-4 right-4 rounded-full h-8 w-8 bg-white/90 backdrop-blur-md text-foreground shadow-sm hover:bg-white transition-colors">
+                            <Button size="icon" variant="secondary" className="absolute top-4 right-4 rounded-full h-8 w-8 bg-white/90 backdrop-blur-md text-foreground shadow-sm hover:bg-white transition-colors" aria-label="Add to favorites">
                                 <Heart className="h-4 w-4" />
                             </Button>
                         </>

@@ -41,45 +41,51 @@ export default function BlogPostClientPage({ post, lang, otherPosts, recommended
     // Cleanup function to reset links when component unmounts
     return () => setAlternateLinks({});
   }, [post, setAlternateLinks, lang]);
-  
+
   if (!post) {
     notFound();
   }
-  
-  const fullUrl = typeof window !== 'undefined' ? `${window.location.origin}${pathname}` : '';
-  
+
+  const [fullUrl, setFullUrl] = React.useState('');
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setFullUrl(`${window.location.origin}${pathname}`);
+    }
+  }, [pathname]);
+
   return (
     <article className="bg-background">
-        <BlogPostHeader 
-            title={post.title[lang] || post.title.en}
-            author={post.author}
-            publishedAt={post.publishedAt}
-            image={post.mainImage}
-            lang={lang}
-        />
-        
-        <div className="container mx-auto px-4 py-16">
-            <div className="grid grid-cols-12 gap-8">
-                <aside className="hidden lg:block col-span-1">
-                    <BlogPostShare title={post.title.en} url={fullUrl} />
-                </aside>
+      <BlogPostHeader
+        title={post.title[lang] || post.title.en}
+        author={post.author}
+        publishedAt={post.publishedAt}
+        image={post.mainImage}
+        lang={lang}
+      />
 
-                <main className="col-span-12 lg:col-span-8">
-                    <BlogPostBody content={post.content[lang] || post.content.en} />
-                </main>
-                
-                <div className="col-span-12 lg:col-span-3">
-                    {/* Placeholder for potential sidebar content like ads or related links */}
-                </div>
-            </div>
+      <div className="container mx-auto px-4 py-16">
+        <div className="grid grid-cols-12 gap-8">
+          <aside className="hidden lg:block col-span-1">
+            <BlogPostShare title={post.title.en} url={fullUrl} />
+          </aside>
+
+          <main className="col-span-12 lg:col-span-8">
+            <BlogPostBody content={post.content[lang] || post.content.en} />
+          </main>
+
+          <div className="col-span-12 lg:col-span-3">
+            {/* Placeholder for potential sidebar content like ads or related links */}
+          </div>
         </div>
+      </div>
 
-        <BlogRelatedItems 
-            otherPosts={otherPosts}
-            recommendedTours={recommendedTours}
-            lang={lang}
-            dictionary={dictionary}
-        />
+      <BlogRelatedItems
+        otherPosts={otherPosts}
+        recommendedTours={recommendedTours}
+        lang={lang}
+        dictionary={dictionary}
+      />
     </article>
   );
 }

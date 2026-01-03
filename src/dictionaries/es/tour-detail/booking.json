@@ -33,5 +33,9 @@
     "to": "hasta",
     "and": "y",
     "depositReminder": "Recordatorio: El saldo restante se pagará el día del tour — se agradece el pago en efectivo.",
-    "regionMismatchWarning": "Nota: El hotel seleccionado está en una región diferente. Hemos sugerido el punto de encuentro más cercano para este tour."
+    "regionMismatchWarning": "Tu hotel está en una zona diferente, pero este tour recoge en esa zona. Se ha seleccionado el punto de encuentro más cercano en esa zona.",
+    "regionMismatchTitle": "Zona diferente",
+    "fullNamePlaceholder": "Juan Pérez",
+    "emailPlaceholder": "juan@ejemplo.com",
+    "phonePlaceholder": "+34 600 000 000"
 }

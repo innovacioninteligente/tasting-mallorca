@@ -252,7 +252,10 @@ export default async function BookingSuccessPage({ searchParams, params }: { sea
                                 </div>
                                 <div className="flex justify-between">
                                     <span className="text-muted-foreground">{t.meetingPoint}</span>
-                                    <span className="font-semibold text-right">{booking.meetingPointName}</span>
+                                    <span className="font-semibold text-right">
+                                        {booking.meetingPointName}
+                                        {meetingPoint?.time && <span className="block text-xs text-muted-foreground text-right">{meetingPoint.time}</span>}
+                                    </span>
                                 </div>
                             </div>
 
