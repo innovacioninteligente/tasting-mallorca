@@ -43,7 +43,18 @@ export function BookingSuccessTracker({
                     }
                 }
             });
-            console.log('Purchase event fired:', { transactionId, value });
+
+            // Google Ads Conversion Event
+            // Using 'send_to' to route specifically to the Ads conversion label
+            const gtag = (window as any).gtag || function () { (window.dataLayer || []).push(arguments); };
+            gtag('event', 'conversion', {
+                'send_to': 'AW-17852397239/5VzgCKH00dwbELft18BC',
+                'value': value,
+                'currency': currency,
+                'transaction_id': transactionId
+            });
+
+            console.log('Purchase & Conversion events fired:', { transactionId, value });
             firedRef.current = true;
         }
     }, [transactionId, value, currency, items, user_data]);
