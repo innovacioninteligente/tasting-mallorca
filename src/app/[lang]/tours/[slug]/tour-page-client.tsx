@@ -42,6 +42,23 @@ export default function TourPageClient({ tour, dictionary, lang, hotels, meeting
       if (allSlugs.fr) languages['fr'] = `/fr/tours/${allSlugs.fr}`;
       if (allSlugs.nl) languages['nl'] = `/nl/tours/${allSlugs.nl}`;
       setAlternateLinks(languages);
+
+      // Trigger view_item event
+      if (typeof window !== 'undefined' && window.dataLayer) {
+        window.dataLayer.push({
+          event: 'view_item',
+          ecommerce: {
+            currency: 'EUR',
+            value: tour.price,
+            items: [{
+              item_id: tour.id,
+              item_name: tour.title[lang] || tour.title.en,
+              price: tour.price,
+              quantity: 1
+            }]
+          }
+        });
+      }
     }
 
     // Cleanup function to reset links when component unmounts

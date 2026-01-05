@@ -19,6 +19,8 @@ import { adminApp } from '@/firebase/server/config';
 import { getDictionary } from '@/dictionaries/get-dictionary';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Locale } from '@/dictionaries/config';
+import { BookingSuccessTracker } from '@/components/analytics/booking-success-tracker';
+import { hashUserData } from '@/lib/hash-utils';
 import Stripe from 'stripe';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
@@ -345,6 +347,21 @@ export default async function BookingSuccessPage({ searchParams, params }: { sea
                             </Button>
                         </CardContent>
                     </Card>
+                    <BookingSuccessTracker
+                        transactionId={booking.id}
+                        value={booking.totalPrice}
+                        currency="EUR"
+                        items={[{
+                            item_id: tour?.id || 'unknown',
+                            item_name: tourTitle,
+                            price: tour?.price || 0,
+                            quantity: totalParticipants
+                        }]}
+                        user_data={{
+                            email_hashed: hashUserData(booking.customerEmail),
+                            phone_hashed: hashUserData(booking.customerPhone)
+                        }}
+                    />
                 </div>
             </div>
         </Suspense>

@@ -100,29 +100,52 @@ export function AnalyticsProvider() {
             </Script>
 
             {consent.analytics && (
-                <Script id="gtm-consent-analytics" strategy="lazyOnload">
-                    {`
-                        window.dataLayer = window.dataLayer || [];
-                        function gtag(){window.dataLayer.push(arguments);}
-                        gtag('consent', 'update', {
-                            'analytics_storage': 'granted'
-                        });
-                    `}
-                </Script>
+                <>
+                    <Script id="gtm-consent-analytics" strategy="lazyOnload">
+                        {`
+                            window.dataLayer = window.dataLayer || [];
+                            function gtag(){window.dataLayer.push(arguments);}
+                            gtag('consent', 'update', {
+                                'analytics_storage': 'granted'
+                            });
+                        `}
+                    </Script>
+
+                    {/* Google Ads Tag (AW-17852397239) loaded when analytics/marketing consent is appropriate.
+                        We group it with analytics/marketing common flow or separate it. 
+                        Since it's conversion tracking, it's often linked to Marketing, but let's stick to the user's "align with GTM" request.
+                        However, usually AW tags are marketing.
+                    */}
+                </>
             )}
 
             {consent.marketing && (
-                <Script id="gtm-consent-marketing" strategy="lazyOnload">
-                    {`
-                        window.dataLayer = window.dataLayer || [];
-                        function gtag(){window.dataLayer.push(arguments);}
-                        gtag('consent', 'update', {
-                            'ad_storage': 'granted',
-                            'ad_user_data': 'granted',
-                            'ad_personalization': 'granted'
-                        });
-                    `}
-                </Script>
+                <>
+                    <Script id="gtm-consent-marketing" strategy="lazyOnload">
+                        {`
+                            window.dataLayer = window.dataLayer || [];
+                            function gtag(){window.dataLayer.push(arguments);}
+                            gtag('consent', 'update', {
+                                'ad_storage': 'granted',
+                                'ad_user_data': 'granted',
+                                'ad_personalization': 'granted'
+                            });
+                        `}
+                    </Script>
+                    <Script
+                        async
+                        src="https://www.googletagmanager.com/gtag/js?id=AW-17852397239"
+                        strategy="lazyOnload"
+                    />
+                    <Script id="google-ads-config" strategy="lazyOnload">
+                        {`
+                            window.dataLayer = window.dataLayer || [];
+                            function gtag(){dataLayer.push(arguments);}
+                            gtag('js', new Date());
+                            gtag('config', 'AW-17852397239');
+                        `}
+                    </Script>
+                </>
             )}
         </>
     );
