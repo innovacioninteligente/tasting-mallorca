@@ -65,18 +65,9 @@ export function AnalyticsProvider() {
     }, [pathname, consent]);
 
 
-    if (!consent) {
-        return null;
-    }
-
+    // 3. Manual Script Injection (Meta, GTM, Ads)
     useEffect(() => {
         if (!consent) return;
-
-        // 1. Google Tag Manager (Base) & Consent Init
-        // We load this providing we have AT LEAST decided on consent (even if denied, GTM manages consent signal)
-        // OR we can be strict and only load if consent.analytics is true. 
-        // Current implementation was: Load GTM Base lazily always? No, strictly usage of consent logic inside.
-        // Actually, GTM is best loaded early with 'denied' state.
 
         // Manual Injection helper
         const injectScript = (id: string, src: string | null, innerHTML: string | null) => {
@@ -101,8 +92,7 @@ export function AnalyticsProvider() {
            `);
         }
 
-        // Default Consent (Denied) - Fire immediately if not set
-        // Note: Ideally this runs absolutely first, but simple useEffect is acceptable for Client-side nav
+        // Default Consent (Denied)
         if (typeof window.dataLayer === 'undefined') {
             window.dataLayer = [];
             window.dataLayer.push(['consent', 'default', {
@@ -113,7 +103,7 @@ export function AnalyticsProvider() {
             }]);
         }
 
-        // 2. Update Consent based on State
+        // Update Consent based on State
         if (consent.analytics) {
             window.dataLayer.push(['consent', 'update', { 'analytics_storage': 'granted' }]);
         }
@@ -134,7 +124,7 @@ export function AnalyticsProvider() {
              `);
         }
 
-        // 3. Meta Pixel (Marketing)
+        // Meta Pixel (Marketing)
         const PIXEL_ID = process.env.NEXT_PUBLIC_FACEBOOK_PIXEL_ID;
         if (consent.marketing && PIXEL_ID) {
             injectScript('fb-pixel', null, `
@@ -153,7 +143,9 @@ export function AnalyticsProvider() {
 
     }, [consent]);
 
-    if (!consent) return null;
+    if (!consent) {
+        return null;
+    }
 
     return null; // Render nothing, scripts are injected manually
 }
