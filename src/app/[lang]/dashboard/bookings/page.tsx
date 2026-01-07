@@ -7,9 +7,10 @@ import { BookingsClientPage } from "./bookings-client-page";
 import { Locale } from "@/dictionaries/config";
 import { AdminRouteGuard } from "@/components/auth/admin-route-guard";
 
-export default async function BookingsPage({ params }: { params: { lang: Locale }}) {
+export default async function BookingsPage(props: { params: Promise<{ lang: Locale }> }) {
+    const params = await props.params;
     const result = await findBookings({});
-    
+
     return (
         <AdminRouteGuard>
             <Card>

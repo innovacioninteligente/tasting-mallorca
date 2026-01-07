@@ -12,8 +12,8 @@ const CreatePendingBookingSchema = z.object({
   children: z.number(),
   infants: z.number(),
   language: z.string(),
-  hotelId: z.string(),
-  hotelName: z.string(),
+  hotelId: z.string().optional().nullable(),
+  hotelName: z.string().optional().nullable(),
   meetingPointId: z.string(),
   meetingPointName: z.string(),
   totalPrice: z.number(),
@@ -21,6 +21,8 @@ const CreatePendingBookingSchema = z.object({
   customerName: z.string(),
   customerEmail: z.string().email(),
   customerPhone: z.string(),
+  customerLatitude: z.number().optional(),
+  customerLongitude: z.number().optional(),
 });
 
 type InputType = z.infer<typeof CreatePendingBookingSchema>;

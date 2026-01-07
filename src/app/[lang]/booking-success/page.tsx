@@ -184,7 +184,11 @@ export default async function BookingSuccessPage({ searchParams, params }: { sea
     const tourTitle = tour?.title[lang] || tour?.title.en || 'Tour';
     const isDeposit = booking.paymentType === 'deposit';
 
-    const originCoords = (hotel?.latitude && hotel?.longitude) ? { lat: hotel.latitude, lng: hotel.longitude } : null;
+    const originCoords = (hotel?.latitude && hotel?.longitude)
+        ? { lat: hotel.latitude, lng: hotel.longitude }
+        : (booking.customerLatitude && booking.customerLongitude)
+            ? { lat: booking.customerLatitude, lng: booking.customerLongitude }
+            : null;
     const destinationCoords = (meetingPoint?.latitude && meetingPoint?.longitude) ? { lat: meetingPoint.latitude, lng: meetingPoint.longitude } : null;
 
     const totalParticipants = booking.adults + booking.children + booking.infants;
@@ -290,15 +294,15 @@ export default async function BookingSuccessPage({ searchParams, params }: { sea
                                 )}
                             </div>
 
-                            {originCoords && destinationCoords && (
+                            {destinationCoords && (
                                 <div className="space-y-4">
                                     <h3 className="font-bold text-xl flex items-center gap-2">
                                         <Map className="w-6 h-6 text-primary" />
-                                        {t.routeToMeetingPoint}
+                                        {originCoords ? t.routeToMeetingPoint : t.meetingPoint}
                                     </h3>
                                     <div className="h-96 rounded-lg overflow-hidden border border-border">
                                         <RouteMap
-                                            origin={originCoords}
+                                            origin={originCoords || undefined}
                                             destination={destinationCoords}
                                         />
                                     </div>

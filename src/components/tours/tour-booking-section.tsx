@@ -387,7 +387,10 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
     const amountToPay = paymentOption === 'deposit' ? depositPrice : totalPrice;
 
     const handleContinueToPayment = async () => {
-        if (!date || !selectedHotel || !suggestedMeetingPoint || !customerName || !customerEmail || !customerPhone) return;
+        // Validation: Must have date, ALL customer details, AND (Hotel OR MeetingPoint)
+        // Since meetingPoint is derived from Hotel or Location, strictly speaking we need suggestedMeetingPoint.
+        // We allow selectedHotel to be null if suggestedMeetingPoint is set (Custom Location case).
+        if (!date || !suggestedMeetingPoint || !customerName || !customerEmail || !customerPhone) return;
 
         setIsSubmitting(true);
 
@@ -399,8 +402,8 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
             children,
             infants,
             language: language,
-            hotelId: selectedHotel.id,
-            hotelName: selectedHotel.name,
+            hotelId: selectedHotel?.id || null,
+            hotelName: selectedHotel?.name || (customLocationCoords ? 'Custom Location' : null),
             meetingPointId: suggestedMeetingPoint.id,
             meetingPointName: suggestedMeetingPoint.name,
             totalPrice: totalPrice,
@@ -408,6 +411,8 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
             customerName,
             customerEmail,
             customerPhone,
+            customerLatitude: customLocationCoords?.lat,
+            customerLongitude: customLocationCoords?.lng,
         };
 
         try {
@@ -944,7 +949,7 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
                 )}
             </div>
             <div className="space-y-3">
-                <Button size="lg" className="w-full font-bold text-lg py-7 bg-accent text-accent-foreground hover:bg-accent/90" onClick={handleContinueToPayment} disabled={!selectedHotel || !suggestedMeetingPoint || !customerName || !customerEmail || !customerPhone || isSubmitting}>
+                <Button size="lg" className="w-full font-bold text-lg py-7 bg-accent text-accent-foreground hover:bg-accent/90" onClick={handleContinueToPayment} disabled={(!selectedHotel && !suggestedMeetingPoint) || !customerName || !customerEmail || !customerPhone || isSubmitting}>
                     {isSubmitting ? <Loader2 className="animate-spin h-5 w-5" /> : dictionary.continueToPayment}
                 </Button>
                 <Button variant="ghost" size="lg" className="w-full" onClick={handlePrevStep}>

@@ -22,16 +22,18 @@ export interface Booking {
   status: BookingStatus;
   ticketStatus: TicketStatus;
   language: string;
-  hotelId: string;
-  hotelName: string;
+  hotelId?: string | null;
+  hotelName?: string | null;
   meetingPointId: string;
   meetingPointName: string;
   customerName: string;
   customerEmail: string;
   customerPhone: string;
+  customerLatitude?: number;
+  customerLongitude?: number;
 }
 
 export interface BookingWithDetails extends Booking {
-    tour?: Tour;
-    payment?: Payment;
+  tour?: Tour;
+  payment?: Payment;
 }

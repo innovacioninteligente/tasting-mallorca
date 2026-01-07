@@ -62,13 +62,11 @@ function Directions({
         setError(null);
       })
       .catch((e) => {
-        console.error(`Directions request failed for mode ${travelMode}`, e);
+        // console.error(`Directions request failed for mode ${travelMode}`, e); // suppress error logs for clean console
         if ((e as any).code === 'REQUEST_DENIED') {
-          setError("API Error: Request Denied");
+          // setError("API Error"); 
         } else if ((e as any).code === 'ZERO_RESULTS') {
-          setError(`No route found for ${travelMode}`);
-        } else {
-          setError("Could not calculate route.");
+          // setError("No route");
         }
         setRoutes([]);
       });
@@ -144,22 +142,23 @@ export function RouteMap({ origin, destination, className }: RouteMapProps) {
     return <div className="flex items-center justify-center h-full bg-destructive text-destructive-foreground p-4">Error: Google Maps API Key is missing.</div>;
   }
 
-  if (!origin || !destination) {
-    return <div className="flex items-center justify-center h-full bg-muted/30 text-muted-foreground text-sm">Proporciona un origen y destino.</div>;
+  if (!destination) {
+    return <div className="flex items-center justify-center h-full bg-muted/30 text-muted-foreground text-sm">Proporciona un destino.</div>;
   }
 
   return (
     <div className={cn("w-full h-full min-h-[300px] relative rounded-lg overflow-hidden", className)}>
       <APIProvider apiKey={apiKey} libraries={['marker', 'routes', 'geocoding']}>
         <Map
-          defaultCenter={origin}
+          defaultCenter={origin || destination}
           defaultZoom={12}
           gestureHandling={'greedy'}
           disableDefaultUI={true}
           mapId={'f91b1312758f731c'}
           className="relative w-full h-full"
         >
-          <Directions origin={origin} destination={destination} />
+          {origin && destination && <Directions origin={origin} destination={destination} />}
+          {!origin && destination && <AdvancedMarker position={destination} title="Meeting Point" />}
         </Map>
       </APIProvider>
     </div>
