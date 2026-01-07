@@ -18,6 +18,7 @@ import { RelatedToursSection } from '@/components/tours/related-tours-section';
 import { DictionaryType } from '@/dictionaries/get-dictionary';
 import { VisualItinerary } from '@/components/tours/visual-itinerary';
 import { TrustSignals } from '@/components/tours/trust-signals';
+import { sendMetaEvent } from '@/app/server-actions/analytics/sendMetaEvent';
 
 
 type TourPageProps = {
@@ -29,9 +30,13 @@ type TourPageProps = {
   relatedTours: Tour[];
 };
 
+
+// ... existing imports ...
+
 export default function TourPageClient({ tour, dictionary, lang, hotels, meetingPoints, relatedTours }: TourPageProps) {
   const { setAlternateLinks } = useAlternateLinks();
   const bookingRef = useRef<HTMLElement>(null);
+  const viewContentFired = useRef(false);
 
   useEffect(() => {
     if (tour) {
@@ -43,21 +48,44 @@ export default function TourPageClient({ tour, dictionary, lang, hotels, meeting
       if (allSlugs.nl) languages['nl'] = `/nl/tours/${allSlugs.nl}`;
       setAlternateLinks(languages);
 
-      // Trigger view_item event
-      if (typeof window !== 'undefined' && window.dataLayer) {
-        window.dataLayer.push({
-          event: 'view_item',
-          ecommerce: {
-            currency: 'EUR',
-            value: tour.price,
-            items: [{
-              item_id: tour.id,
-              item_name: tour.title[lang] || tour.title.en,
-              price: tour.price,
-              quantity: 1
-            }]
-          }
-        });
+      // Track ViewContent (Once)
+      if (!viewContentFired.current) {
+        const eventId = `view_${tour.id}_${Date.now()}`;
+        const eventParams = {
+          currency: 'EUR',
+          value: tour.price,
+          content_ids: [tour.id],
+          content_type: 'product',
+          content_name: tour.title[lang] || tour.title.en,
+        };
+
+        // 1. GTM View Item
+        if (typeof window !== 'undefined' && window.dataLayer) {
+          window.dataLayer.push({
+            event: 'view_item',
+            ecommerce: {
+              currency: 'EUR',
+              value: tour.price,
+              items: [{
+                item_id: tour.id,
+                item_name: tour.title[lang] || tour.title.en,
+                price: tour.price,
+                quantity: 1
+              }]
+            }
+          });
+        }
+
+        // 2. Meta Pixel
+        const fbq = (window as any).fbq;
+        if (fbq) {
+          fbq('track', 'ViewContent', eventParams, { eventID: eventId });
+        }
+
+        // 3. Meta CAPI
+        sendMetaEvent('ViewContent', eventId, {}, eventParams);
+
+        viewContentFired.current = true;
       }
     }
 

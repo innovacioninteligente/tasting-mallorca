@@ -33,6 +33,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { useToast } from "@/hooks/use-toast";
 import { createPendingBooking } from '@/app/server-actions/bookings/createPendingBooking';
 import { getDistance } from "@/lib/geo-utils";
+import { sendMetaEvent } from '@/app/server-actions/analytics/sendMetaEvent';
 
 
 
@@ -434,8 +435,57 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
         }
     };
 
+
+
+    // ... (keep existing imports)
+
+    // ... inside component ...
+
+    // Track 'Search' event when a meeting point is found/selected
+    useEffect(() => {
+        if (suggestedMeetingPoint) {
+            const eventId = `search_${tour.id}_${Date.now()}`;
+            const eventParams = {
+                content_category: 'Hotel/Location',
+                content_ids: [suggestedMeetingPoint.id],
+                content_name: suggestedMeetingPoint.name,
+                currency: 'EUR',
+                value: tour.price * (adults + children) // Estimated value
+            };
+
+            // Pixel
+            const fbq = (window as any).fbq;
+            if (fbq) {
+                fbq('track', 'Search', eventParams, { eventID: eventId });
+            }
+
+            // CAPI
+            sendMetaEvent('Search', eventId, {}, eventParams);
+        }
+    }, [suggestedMeetingPoint, tour.id, tour.price, adults, children]);
+
+
     const handleStartBooking = () => {
         if (!date) return;
+
+        // Track 'InitiateCheckout' event
+        const eventId = `init_checkout_${tour.id}_${Date.now()}`;
+        const eventParams = {
+            currency: 'EUR',
+            value: (tour.price * adults) + (tour.childPrice * children),
+            content_ids: [tour.id],
+            content_name: tour.title[lang] || tour.title.en,
+            num_items: adults + children + infants,
+            content_type: 'product'
+        };
+
+        const fbq = (window as any).fbq;
+        if (fbq) {
+            fbq('track', 'InitiateCheckout', eventParams, { eventID: eventId });
+        }
+
+        sendMetaEvent('InitiateCheckout', eventId, {}, eventParams);
+
         setIsBookingFlowActive(true);
         setStep(2);
     }

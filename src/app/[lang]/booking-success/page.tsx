@@ -359,8 +359,11 @@ export default async function BookingSuccessPage({ searchParams, params }: { sea
                         }]}
                         user_data={{
                             email_hashed: hashUserData(booking.customerEmail),
-                            phone_hashed: hashUserData(booking.customerPhone)
+                            phone_hashed: hashUserData(booking.customerPhone),
+                            email_plain: booking.customerEmail,
+                            phone_plain: booking.customerPhone
                         }}
+                        lang={lang}
                     />
                 </div>
             </div>
