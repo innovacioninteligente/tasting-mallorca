@@ -1,7 +1,7 @@
 
 'use client';
 
-import Image from 'next/image';
+import { ImageWithSkeleton } from '@/components/ui/image-with-skeleton';
 import { Button } from '@/components/ui/button';
 import { Twitter, Facebook, Instagram } from 'lucide-react';
 import { type getDictionary } from '@/dictionaries/get-dictionary';
@@ -34,7 +34,7 @@ export function TourGuidesSection({ dictionary }: TourGuidesSectionProps) {
                         <div key={guide.name} className="flex flex-col items-center text-center">
                             <div className="relative mb-4">
                                 <div className="relative w-40 h-40">
-                                    <Image
+                                    <ImageWithSkeleton
                                         src={guide.image}
                                         alt={guide.name}
                                         fill

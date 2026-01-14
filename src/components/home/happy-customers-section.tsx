@@ -4,11 +4,31 @@
 import Image from 'next/image';
 import { type getDictionary } from '@/dictionaries/get-dictionary';
 import { SectionBadge } from '@/components/ui/section-badge';
-import { Smile } from 'lucide-react';
+import { useState } from 'react';
+import { Skeleton } from '@/components/ui/skeleton';
 
 type HappyCustomersProps = {
     dictionary: Awaited<ReturnType<typeof getDictionary>>['happyCustomers'];
 }
+
+const CustomerImage = ({ src, alt, dataAiHint, sizes }: { src: string, alt: string, dataAiHint: string, sizes: string }) => {
+    const [isLoading, setIsLoading] = useState(true);
+    return (
+        <>
+            {isLoading && <Skeleton className="absolute inset-0 w-full h-full" />}
+            <Image
+                src={src}
+                alt={alt}
+                fill
+                className={`object-cover transition-opacity duration-300 ${isLoading ? 'opacity-0' : 'opacity-100'}`}
+                sizes={sizes}
+                data-ai-hint={dataAiHint}
+                unoptimized
+                onLoad={() => setIsLoading(false)}
+            />
+        </>
+    );
+};
 
 export function HappyCustomersSection({ dictionary }: HappyCustomersProps) {
     const stats = dictionary.stats;
@@ -26,16 +46,16 @@ export function HappyCustomersSection({ dictionary }: HappyCustomersProps) {
                     {/* Image collage */}
                     <div className="relative h-[500px]">
                         <div className="absolute w-[70%] h-[70%] top-0 left-0 overflow-hidden rounded-full">
-                            <Image src="https://firebasestorage.googleapis.com/v0/b/tasting-mallorca.firebasestorage.app/o/web%2Ffotos%20seccion%20Why%20travelers%20choose%20us%2FDSC07627-Mejorado-NR-2.jpg?alt=media&token=4031fc96-1a4a-423c-85a4-c68eb8d461c7" alt="Woman smiling on a boat" fill className="object-cover" sizes="(max-width: 768px) 70vw, 35vw" data-ai-hint="woman boat travel" unoptimized />
+                            <CustomerImage src="https://firebasestorage.googleapis.com/v0/b/tasting-mallorca.firebasestorage.app/o/web%2Ffotos%20seccion%20Why%20travelers%20choose%20us%2FDSC07627-Mejorado-NR-2.jpg?alt=media&token=4031fc96-1a4a-423c-85a4-c68eb8d461c7" alt="Woman smiling on a boat" sizes="(max-width: 768px) 70vw, 35vw" dataAiHint="woman boat travel" />
                         </div>
                         <div className="absolute w-[40%] h-[40%] top-10 right-0 bg-gray-700 overflow-hidden rounded-full border-4 border-primary-dark">
-                            <Image src="https://firebasestorage.googleapis.com/v0/b/tasting-mallorca.firebasestorage.app/o/web%2Ffotos%20seccion%20Why%20travelers%20choose%20us%2FDSC07923-Mejorado-NR-2.jpg?alt=media&token=5dc22bfb-2a8f-4add-ad96-f00d603289b0" alt="Happy couple on a tour" fill className="object-cover" sizes="(max-width: 768px) 40vw, 20vw" data-ai-hint="happy couple tour" unoptimized />
+                            <CustomerImage src="https://firebasestorage.googleapis.com/v0/b/tasting-mallorca.firebasestorage.app/o/web%2Ffotos%20seccion%20Why%20travelers%20choose%20us%2FDSC07923-Mejorado-NR-2.jpg?alt=media&token=5dc22bfb-2a8f-4add-ad96-f00d603289b0" alt="Happy couple on a tour" sizes="(max-width: 768px) 40vw, 20vw" dataAiHint="happy couple tour" />
                         </div>
                         <div className="absolute w-[45%] h-[45%] bottom-0 right-1/4 bg-gray-700 overflow-hidden rounded-full border-4 border-primary-dark">
-                            <Image src="https://firebasestorage.googleapis.com/v0/b/tasting-mallorca.firebasestorage.app/o/web%2Ffotos%20seccion%20Why%20travelers%20choose%20us%2FDSC08002-Mejorado-NR-2.jpg?alt=media&token=0aa4bd95-1b32-4650-b338-59ec2b8aab3a" alt="Woman enjoying a view in Mallorca" fill className="object-cover" sizes="(max-width: 768px) 45vw, 22vw" data-ai-hint="woman mallorca view" unoptimized />
+                            <CustomerImage src="https://firebasestorage.googleapis.com/v0/b/tasting-mallorca.firebasestorage.app/o/web%2Ffotos%20seccion%20Why%20travelers%20choose%20us%2FDSC08002-Mejorado-NR-2.jpg?alt=media&token=0aa4bd95-1b32-4650-b338-59ec2b8aab3a" alt="Woman enjoying a view in Mallorca" sizes="(max-width: 768px) 45vw, 22vw" dataAiHint="woman mallorca view" />
                         </div>
                         <div className="absolute w-[35%] h-[35%] bottom-0 left-5 bg-gray-700 overflow-hidden rounded-full border-4 border-primary-dark">
-                            <Image src="https://firebasestorage.googleapis.com/v0/b/tasting-mallorca.firebasestorage.app/o/web%2Ffotos%20seccion%20Why%20travelers%20choose%20us%2FDSC09752-Mejorado-NR.jpg?alt=media&token=bf9bec5a-b459-46af-82c4-5cdb8d4ef1ea" alt="Group of friends on a boat trip" fill className="object-cover" sizes="(max-width: 768px) 35vw, 17vw" data-ai-hint="friends boat trip" unoptimized />
+                            <CustomerImage src="https://firebasestorage.googleapis.com/v0/b/tasting-mallorca.firebasestorage.app/o/web%2Ffotos%20seccion%20Why%20travelers%20choose%20us%2FDSC09752-Mejorado-NR.jpg?alt=media&token=bf9bec5a-b459-46af-82c4-5cdb8d4ef1ea" alt="Group of friends on a boat trip" sizes="(max-width: 768px) 35vw, 17vw" dataAiHint="friends boat trip" />
                         </div>
                     </div>
 

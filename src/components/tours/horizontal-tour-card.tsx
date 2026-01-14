@@ -6,6 +6,8 @@ import Link from 'next/link';
 import { ArrowRight, Clock, ImageIcon } from 'lucide-react';
 import { Tour } from '@/backend/tours/domain/tour.model';
 import { Locale } from '@/dictionaries/config';
+import { useState } from 'react';
+import { Skeleton } from '@/components/ui/skeleton';
 
 interface HorizontalTourCardProps {
     tour: Tour;
@@ -15,6 +17,7 @@ interface HorizontalTourCardProps {
 export function HorizontalTourCard({ tour, lang }: HorizontalTourCardProps) {
     const slug = tour.slug[lang as keyof typeof tour.slug] || tour.slug.en;
     const title = tour.title[lang as keyof typeof tour.title] || tour.title.en;
+    const [isLoading, setIsLoading] = useState(true);
 
     return (
         <Link
@@ -25,13 +28,18 @@ export function HorizontalTourCard({ tour, lang }: HorizontalTourCardProps) {
             <div className="flex h-full">
                 <div className="relative w-2/5 flex-shrink-0 h-40 bg-secondary flex items-center justify-center">
                     {tour.mainImage ? (
-                        <Image
-                            src={tour.mainImage}
-                            alt={title}
-                            fill
-                            className="object-cover transition-transform duration-300 group-hover:scale-105"
-                            sizes="(max-width: 1023px) 40vw, 20vw"
-                        />
+                        <>
+                            {isLoading && <Skeleton className="absolute inset-0 w-full h-full" />}
+                            <Image
+                                src={tour.mainImage}
+                                alt={title}
+                                fill
+                                className={`object-cover transition-transform duration-300 group-hover:scale-105 ${isLoading ? 'opacity-0' : 'opacity-100'}`}
+                                sizes="(max-width: 1023px) 40vw, 20vw"
+                                unoptimized
+                                onLoad={() => setIsLoading(false)}
+                            />
+                        </>
                     ) : (
                         <ImageIcon className="w-10 h-10 text-muted" />
                     )}

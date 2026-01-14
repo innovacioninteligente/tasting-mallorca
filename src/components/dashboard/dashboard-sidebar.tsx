@@ -24,7 +24,7 @@ import { useAuth, useUser } from '@/firebase';
 import { cn } from '@/lib/utils';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetClose } from '../ui/sheet';
 import React from 'react';
-import Image from 'next/image';
+import { ImageWithSkeleton } from '@/components/ui/image-with-skeleton';
 
 const navItems = [
   { href: '/dashboard/overview', label: 'Overview', icon: LayoutDashboard },
@@ -173,7 +173,7 @@ export function DashboardSidebar({ isMobileMenuOpen, setIsMobileMenuOpen }: Dash
         <div className="flex h-20 items-center border-b px-6">
           <Link href={`/${lang}/`} className="flex items-center gap-0 font-semibold">
             <div className="relative h-14 w-14">
-              <Image
+              <ImageWithSkeleton
                 src="https://firebasestorage.googleapis.com/v0/b/tasting-mallorca.firebasestorage.app/o/web%2Fbranding%2FICONO-AZUL.png?alt=media&token=5f6b7c16-5a14-4d45-bbdb-f3a70138e8b7"
                 alt="Tasting Mallorca Logo"
                 fill
@@ -194,7 +194,7 @@ export function DashboardSidebar({ isMobileMenuOpen, setIsMobileMenuOpen }: Dash
             <SheetTitle className='sr-only'>Main Menu</SheetTitle>
             <Link href={`/${lang}/`} className="flex items-center gap-0 font-semibold" onClick={() => setIsMobileMenuOpen(false)}>
               <div className="relative h-12 w-12">
-                <Image
+                <ImageWithSkeleton
                   src="https://firebasestorage.googleapis.com/v0/b/tasting-mallorca.firebasestorage.app/o/web%2Fbranding%2FICONO-AZUL.png?alt=media&token=5f6b7c16-5a14-4d45-bbdb-f3a70138e8b7"
                   alt="Tasting Mallorca Logo"
                   fill

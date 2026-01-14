@@ -6,19 +6,19 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Edit, Trash2, Star, CheckCircle, Eye } from "lucide-react";
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
+import { ImageWithSkeleton } from "@/components/ui/image-with-skeleton";
 import { format } from "date-fns";
 import { GuestFeedback } from "@/backend/feedback/domain/feedback.model";
 import { deleteGuestFeedback } from "@/app/server-actions/feedback/deleteGuestFeedback";
@@ -32,7 +32,7 @@ interface FeedbackListProps {
 export function FeedbackList({ feedbacks, error, onEdit }: FeedbackListProps) {
     const router = useRouter();
     const { toast } = useToast();
-    
+
     if (error) {
         return <p className="text-destructive text-center py-12">Error: {error}</p>;
     }
@@ -61,7 +61,7 @@ export function FeedbackList({ feedbacks, error, onEdit }: FeedbackListProps) {
             router.refresh();
         }
     }
-    
+
     return (
         <Table>
             <TableHeader>
@@ -79,7 +79,7 @@ export function FeedbackList({ feedbacks, error, onEdit }: FeedbackListProps) {
                     <TableRow key={feedback.id}>
                         <TableCell>
                             {feedback.photoUrl ? (
-                                <Image
+                                <ImageWithSkeleton
                                     src={feedback.photoUrl}
                                     alt={`Photo by ${feedback.name}`}
                                     width={64}
@@ -100,17 +100,17 @@ export function FeedbackList({ feedbacks, error, onEdit }: FeedbackListProps) {
                             </div>
                         </TableCell>
                         <TableCell>
-                           <div className="flex flex-col gap-2">
+                            <div className="flex flex-col gap-2">
                                 <Badge variant={feedback.published ? 'default' : 'secondary'}>
                                     {feedback.published ? 'Publicado' : 'Borrador'}
                                 </Badge>
                                 {feedback.isFeatured && (
-                                     <Badge variant="outline" className="text-accent border-accent/50">
-                                        <CheckCircle className="mr-1.5 h-3 w-3"/>
+                                    <Badge variant="outline" className="text-accent border-accent/50">
+                                        <CheckCircle className="mr-1.5 h-3 w-3" />
                                         Destacado
                                     </Badge>
                                 )}
-                           </div>
+                            </div>
                         </TableCell>
                         <TableCell>{format(new Date(feedback.tourDate), "PPP")}</TableCell>
                         <TableCell>
@@ -128,16 +128,16 @@ export function FeedbackList({ feedbacks, error, onEdit }: FeedbackListProps) {
                                     </AlertDialogTrigger>
                                     <AlertDialogContent>
                                         <AlertDialogHeader>
-                                        <AlertDialogTitle>¿Estás seguro?</AlertDialogTitle>
-                                        <AlertDialogDescription>
-                                            Esta acción no se puede deshacer. Se eliminará permanentemente esta opinión.
-                                        </AlertDialogDescription>
+                                            <AlertDialogTitle>¿Estás seguro?</AlertDialogTitle>
+                                            <AlertDialogDescription>
+                                                Esta acción no se puede deshacer. Se eliminará permanentemente esta opinión.
+                                            </AlertDialogDescription>
                                         </AlertDialogHeader>
                                         <AlertDialogFooter>
-                                        <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                                        <AlertDialogAction onClick={() => handleDelete(feedback.id)}>
-                                            Continuar
-                                        </AlertDialogAction>
+                                            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                                            <AlertDialogAction onClick={() => handleDelete(feedback.id)}>
+                                                Continuar
+                                            </AlertDialogAction>
                                         </AlertDialogFooter>
                                     </AlertDialogContent>
                                 </AlertDialog>
@@ -146,6 +146,6 @@ export function FeedbackList({ feedbacks, error, onEdit }: FeedbackListProps) {
                     </TableRow>
                 ))}
             </TableBody>
-        </Table>
+        </Table >
     );
 }

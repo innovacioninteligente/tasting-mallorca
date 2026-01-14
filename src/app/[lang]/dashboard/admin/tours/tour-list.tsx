@@ -8,17 +8,17 @@ import { Button } from "@/components/ui/button";
 import { Edit, Eye, Loader2, Trash2, ImageIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import Image from "next/image";
+import { ImageWithSkeleton } from "@/components/ui/image-with-skeleton";
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { useToast } from "@/hooks/use-toast";
 import { deleteTour } from "@/app/server-actions/tours/deleteTour";
@@ -35,7 +35,7 @@ export function TourList({ tours, error }: TourListProps) {
     const router = useRouter();
     const { toast } = useToast();
     const [isDeleting, setIsDeleting] = useState(false);
-    
+
     if (error) {
         return <p className="text-destructive text-center py-12">Error: {error}</p>;
     }
@@ -50,7 +50,7 @@ export function TourList({ tours, error }: TourListProps) {
             </div>
         );
     }
-    
+
     const handleDelete = async (tourId: string) => {
         setIsDeleting(true);
         const result = await deleteTour(tourId);
@@ -90,7 +90,7 @@ export function TourList({ tours, error }: TourListProps) {
                         <TableRow key={tour.id}>
                             <TableCell>
                                 {tour.mainImage ? (
-                                    <Image
+                                    <ImageWithSkeleton
                                         src={tour.mainImage}
                                         alt={tour.title.en}
                                         width={64}
@@ -134,17 +134,17 @@ export function TourList({ tours, error }: TourListProps) {
                                         </AlertDialogTrigger>
                                         <AlertDialogContent>
                                             <AlertDialogHeader>
-                                            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                                            <AlertDialogDescription>
-                                                This action cannot be undone. This will permanently delete the tour and all associated images from the servers.
-                                            </AlertDialogDescription>
+                                                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                                                <AlertDialogDescription>
+                                                    This action cannot be undone. This will permanently delete the tour and all associated images from the servers.
+                                                </AlertDialogDescription>
                                             </AlertDialogHeader>
                                             <AlertDialogFooter>
-                                            <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                            <AlertDialogAction onClick={() => handleDelete(tour.id)} disabled={isDeleting}>
-                                                {isDeleting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                                                Continue
-                                            </AlertDialogAction>
+                                                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                                <AlertDialogAction onClick={() => handleDelete(tour.id)} disabled={isDeleting}>
+                                                    {isDeleting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                                                    Continue
+                                                </AlertDialogAction>
                                             </AlertDialogFooter>
                                         </AlertDialogContent>
                                     </AlertDialog>
@@ -153,7 +153,7 @@ export function TourList({ tours, error }: TourListProps) {
                         </TableRow>
                     ))}
                 </TableBody>
-            </Table>
+            </Table >
         </>
     );
 }

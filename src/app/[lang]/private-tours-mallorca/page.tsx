@@ -1,6 +1,6 @@
 
 import { Metadata } from 'next';
-import Image from 'next/image';
+import { ImageWithSkeleton } from '@/components/ui/image-with-skeleton';
 import { PrivateTourForm } from './private-tour-form';
 import { getDictionary } from '@/dictionaries/get-dictionary';
 import { Locale } from '@/dictionaries/config';
@@ -12,35 +12,35 @@ interface PageProps {
 }
 
 export async function generateMetadata({ params: { lang } }: PageProps): Promise<Metadata> {
-    const dictionary = await getDictionary(lang);
-    const { pageTitle, pageDescription } = dictionary.privateTours;
-    const imageUrl = "https://firebasestorage.googleapis.com/v0/b/tasting-mallorca.firebasestorage.app/o/web%2Fimages%2F010_suavizado.jpg?alt=media&token=05180246-a644-495f-9f18-3ee66a6b2f76";
+  const dictionary = await getDictionary(lang);
+  const { pageTitle, pageDescription } = dictionary.privateTours;
+  const imageUrl = "https://firebasestorage.googleapis.com/v0/b/tasting-mallorca.firebasestorage.app/o/web%2Fimages%2F010_suavizado.jpg?alt=media&token=05180246-a644-495f-9f18-3ee66a6b2f76";
 
 
-    return {
-        title: `${pageTitle} | Tasting Mallorca`,
-        description: pageDescription,
-         openGraph: {
-            title: `${pageTitle} | Tasting Mallorca`,
-            description: pageDescription,
-            images: [
-                {
-                    url: imageUrl,
-                    width: 1200,
-                    height: 630,
-                    alt: pageTitle,
-                },
-            ],
-            locale: lang,
-            type: 'website',
+  return {
+    title: `${pageTitle} | Tasting Mallorca`,
+    description: pageDescription,
+    openGraph: {
+      title: `${pageTitle} | Tasting Mallorca`,
+      description: pageDescription,
+      images: [
+        {
+          url: imageUrl,
+          width: 1200,
+          height: 630,
+          alt: pageTitle,
         },
-        twitter: {
-            card: 'summary_large_image',
-            title: `${pageTitle} | Tasting Mallorca`,
-            description: pageDescription,
-            images: [imageUrl],
-        },
-    };
+      ],
+      locale: lang,
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${pageTitle} | Tasting Mallorca`,
+      description: pageDescription,
+      images: [imageUrl],
+    },
+  };
 }
 
 
@@ -56,7 +56,7 @@ export default async function PrivateToursPage({ params: { lang } }: PageProps) 
           <div className="order-2 lg:order-1">
             <div className="max-w-xl">
               <h1 className="text-4xl md:text-5xl font-extrabold font-headline">
-                {titleParts[0]} 
+                {titleParts[0]}
                 {titleParts[1] && (
                   <span className="text-accent">–{titleParts[1]}</span>
                 )}
@@ -70,7 +70,7 @@ export default async function PrivateToursPage({ params: { lang } }: PageProps) 
             </div>
           </div>
           <div className="order-1 lg:order-2 h-[400px] lg:h-[600px] relative rounded-2xl overflow-hidden">
-            <Image
+            <ImageWithSkeleton
               src="https://firebasestorage.googleapis.com/v0/b/tasting-mallorca.firebasestorage.app/o/web%2Fimages%2F010_suavizado.jpg?alt=media&token=05180246-a644-495f-9f18-3ee66a6b2f76"
               alt="Scenic view of Mallorca for private tours"
               fill
@@ -78,7 +78,7 @@ export default async function PrivateToursPage({ params: { lang } }: PageProps) 
               sizes="(max-width: 1023px) 100vw, 50vw"
               data-ai-hint="mallorca landscape boat"
             />
-             <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+            <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
           </div>
         </div>
       </div>

@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Edit, Eye } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import Image from "next/image";
+import { ImageWithSkeleton } from "@/components/ui/image-with-skeleton";
 import { format } from "date-fns";
 
 interface BlogPostListProps {
@@ -19,7 +19,7 @@ interface BlogPostListProps {
 
 export function BlogPostList({ posts, error, lang }: BlogPostListProps) {
     const pathname = usePathname();
-    
+
     if (error) {
         return <p className="text-destructive text-center py-12">Error: {error}</p>;
     }
@@ -47,45 +47,46 @@ export function BlogPostList({ posts, error, lang }: BlogPostListProps) {
                 </TableRow>
             </TableHeader>
             <TableBody>
-                {posts.map((post) =>{
+                {posts.map((post) => {
 
                     console.log('BLOG POST', post)
 
-                    return(
+                    return (
 
                         <TableRow key={post.id}>
-                        <TableCell>
-                            <Image
-                                src={post.mainImage}
-                                alt={post.title.en}
-                                width={64}
-                                height={64}
-                                className="rounded-md object-cover aspect-square"
-                            />
-                        </TableCell>
-                        <TableCell className="font-medium">{post.title.en}</TableCell>
-                        <TableCell>
-                            <Badge variant={post.published ? 'default' : 'secondary'}>
-                                {post.published ? 'Publicado' : 'Borrador'}
-                            </Badge>
-                        </TableCell>
-                        <TableCell>{format(new Date(post.publishedAt), "PPP")}</TableCell>
-                        <TableCell>
-                            <div className="flex gap-2">
-                                <Button asChild variant="outline" size="sm">
-                                    <Link href={`${pathname}/${post.id}/edit`}>
-                                        <Edit className="mr-2 h-4 w-4" />
-                                        Editar
-                                    </Link>
-                                </Button>
-                                <Button asChild variant="ghost" size="sm" disabled={!post.published}>
-                                    <Link href={`/${lang}/blog/${post.slug.en}`} target="_blank">
-                                        <Eye className="mr-2 h-4 w-4" />
-                                        Ver
-                                    </Link>
-                                </Button>
-                            </div>
-                        </TableCell>
+                            <TableCell>
+                                <TableCell>
+                                    <ImageWithSkeleton
+                                        src={post.mainImage}
+                                        alt={post.title.en}
+                                        width={64}
+                                        height={64}
+                                        className="rounded-md object-cover aspect-square"
+                                    />
+                                </TableCell>
+                                <TableCell className="font-medium">{post.title.en}</TableCell>
+                                <TableCell>
+                                    <Badge variant={post.published ? 'default' : 'secondary'}>
+                                        {post.published ? 'Publicado' : 'Borrador'}
+                                    </Badge>
+                                </TableCell>
+                                <TableCell>{format(new Date(post.publishedAt), "PPP")}</TableCell>
+                                <TableCell>
+                                    <div className="flex gap-2">
+                                        <Button asChild variant="outline" size="sm">
+                                            <Link href={`${pathname}/${post.id}/edit`}>
+                                                <Edit className="mr-2 h-4 w-4" />
+                                                Editar
+                                            </Link>
+                                        </Button>
+                                        <Button asChild variant="ghost" size="sm" disabled={!post.published}>
+                                            <Link href={`/${lang}/blog/${post.slug.en}`} target="_blank">
+                                                <Eye className="mr-2 h-4 w-4" />
+                                                Ver
+                                            </Link>
+                                        </Button>
+                                    </div>
+                                </TableCell>
                         </TableRow>
 
                     )

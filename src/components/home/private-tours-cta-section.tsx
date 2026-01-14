@@ -1,7 +1,7 @@
 
 'use client';
 
-import Image from 'next/image';
+import { ImageWithSkeleton } from '@/components/ui/image-with-skeleton';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Map, Users, Clock, ArrowRight } from 'lucide-react';
@@ -13,7 +13,7 @@ type PrivateToursCtaProps = {
 }
 
 export function PrivateToursCtaSection({ dictionary, lang }: PrivateToursCtaProps) {
-    
+
     const benefits = [
         { icon: <Map className="w-6 h-6 text-accent" />, text: dictionary.benefit1 },
         { icon: <Users className="w-6 h-6 text-accent" />, text: dictionary.benefit2 },
@@ -23,7 +23,7 @@ export function PrivateToursCtaSection({ dictionary, lang }: PrivateToursCtaProp
     return (
         <section className="relative py-24 bg-background">
             <div className="absolute inset-0">
-                <Image
+                <ImageWithSkeleton
                     src="https://firebasestorage.googleapis.com/v0/b/tasting-mallorca.firebasestorage.app/o/web%2FFoto%20fondo%20Private%20Tour%2FDSC09705-Mejorado-NR.jpg?alt=media&token=11e66546-a510-4421-9a5c-9e68d3db28f4"
                     alt="Exclusive view of a Mallorcan cove"
                     fill
@@ -33,7 +33,7 @@ export function PrivateToursCtaSection({ dictionary, lang }: PrivateToursCtaProp
                 />
                 <div className="absolute inset-0 bg-white/50 backdrop-blur-sm"></div>
             </div>
-            
+
             <div className="relative container mx-auto w-full md:w-[90vw] px-4 md:px-0 text-center">
                 <div className="max-w-3xl mx-auto bg-background/80 backdrop-blur-md p-8 md:p-12 rounded-2xl shadow-xl border border-white/20">
                     <h2 className="text-4xl md:text-5xl font-extrabold text-foreground">{dictionary.title}</h2>
@@ -43,7 +43,7 @@ export function PrivateToursCtaSection({ dictionary, lang }: PrivateToursCtaProp
 
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 mt-12 text-left">
                         {benefits.map((benefit, index) => (
-                             <div key={index} className="flex items-start gap-4">
+                            <div key={index} className="flex items-start gap-4">
                                 <div className="flex-shrink-0 w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center">
                                     {benefit.icon}
                                 </div>

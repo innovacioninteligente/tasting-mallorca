@@ -5,11 +5,11 @@ import Image from 'next/image';
 import { ImageIcon, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
+    Carousel,
+    CarouselContent,
+    CarouselItem,
+    CarouselNext,
+    CarouselPrevious,
 } from "@/components/ui/carousel";
 import {
     Dialog,
@@ -17,9 +17,29 @@ import {
     DialogTitle,
     DialogDescription,
     DialogClose,
-  } from "@/components/ui/dialog";
+} from "@/components/ui/dialog";
 import Autoplay from "embla-carousel-autoplay";
 import { useRef, useState } from 'react';
+import { Skeleton } from '@/components/ui/skeleton';
+
+const GalleryImage = ({ src, alt, className, sizes, priority = false, style, onClick }: any) => {
+    const [isLoading, setIsLoading] = useState(true);
+    return (
+        <div className={`relative w-full h-full ${className}`} onClick={onClick} style={style}>
+            {isLoading && <Skeleton className="absolute inset-0 w-full h-full" />}
+            <Image
+                src={src}
+                alt={alt}
+                fill
+                sizes={sizes}
+                className={`object-cover w-full h-full transition-opacity duration-300 ${isLoading ? 'opacity-0' : 'opacity-100'}`}
+                priority={priority}
+                unoptimized
+                onLoad={() => setIsLoading(false)}
+            />
+        </div>
+    );
+};
 
 interface TourGallerySectionProps {
     images: (string | undefined | null)[];
@@ -40,7 +60,7 @@ export function TourGallerySection({ images: rawImages }: TourGallerySectionProp
         setSelectedImageIndex(index);
         setIsLightboxOpen(true);
     };
-    
+
     const mainImage = images[0];
     const galleryGridImages = images.slice(1, 4);
     const remainingImageCount = images.length > 4 ? images.length - 4 : 0;
@@ -61,12 +81,10 @@ export function TourGallerySection({ images: rawImages }: TourGallerySectionProp
                         {images.map((image, index) => (
                             <CarouselItem key={index}>
                                 <div className="aspect-video relative rounded-lg overflow-hidden">
-                                     <Image
+                                    <GalleryImage
                                         src={image}
                                         alt={`Tour gallery image ${index + 1}`}
-                                        fill
                                         sizes="100vw"
-                                        className="object-cover w-full h-full"
                                         priority={index === 0}
                                     />
                                 </div>
@@ -82,12 +100,11 @@ export function TourGallerySection({ images: rawImages }: TourGallerySectionProp
             <div className="hidden md:grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2 h-[50vh]">
                 {/* Main Image */}
                 <div className="col-span-1 md:col-span-2 lg:col-span-2 row-span-2 relative rounded-lg overflow-hidden cursor-pointer" onClick={() => openLightbox(0)}>
-                    <Image
+                    <GalleryImage
                         src={mainImage}
                         alt="Main tour image"
-                        fill
                         sizes="(max-width: 1023px) 100vw, 50vw"
-                        className="object-cover w-full h-full view-transition"
+                        className="view-transition"
                         priority
                         style={{ viewTransitionName: `tour-image-main` } as React.CSSProperties}
                     />
@@ -95,22 +112,20 @@ export function TourGallerySection({ images: rawImages }: TourGallerySectionProp
 
                 {/* Smaller Images */}
                 {galleryGridImages.map((image, index) => (
-                     <div key={index} className="relative rounded-lg overflow-hidden cursor-pointer" onClick={() => openLightbox(index + 1)}>
-                        <Image
+                    <div key={index} className="relative rounded-lg overflow-hidden cursor-pointer" onClick={() => openLightbox(index + 1)}>
+                        <GalleryImage
                             src={image}
                             alt={`Tour gallery image ${index + 2}`}
-                            fill
                             sizes="25vw"
-                            className="object-cover w-full h-full"
                         />
-                         {index === galleryGridImages.length - 1 && remainingImageCount > 0 && (
+                        {index === galleryGridImages.length - 1 && remainingImageCount > 0 && (
                             <div className="absolute inset-0 bg-black/30 flex items-center justify-center" onClick={(e) => { e.stopPropagation(); openLightbox(index + 1); }}>
                                 <Button variant="secondary" className="bg-white/80 hover:bg-white text-black">
                                     <ImageIcon className="w-5 h-5 mr-2" />
                                     +{remainingImageCount}
                                 </Button>
                             </div>
-                         )}
+                        )}
                     </div>
                 ))}
             </div>
@@ -136,6 +151,7 @@ export function TourGallerySection({ images: rawImages }: TourGallerySectionProp
                                             fill
                                             className="object-contain"
                                             sizes="100vw"
+                                            unoptimized
                                         />
                                     </div>
                                 </CarouselItem>

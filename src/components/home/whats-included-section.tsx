@@ -6,10 +6,32 @@ import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Bus, Users, UtensilsCrossed, Mountain, Landmark, ShieldCheck } from 'lucide-react';
 import { type getDictionary } from '@/dictionaries/get-dictionary';
 import { SectionBadge } from '@/components/ui/section-badge';
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
+import { Skeleton } from '@/components/ui/skeleton';
 
 type WhatsIncludedDictionary = Awaited<ReturnType<typeof getDictionary>>['whatsIncluded'];
+
+const IncludedImage = ({ item }: { item: typeof includedItemsData[0] }) => {
+    const [isLoading, setIsLoading] = useState(true);
+    if (!item.image) return null;
+
+    return (
+        <>
+            {isLoading && <Skeleton className="absolute inset-0 w-full h-full" />}
+            <Image
+                src={item.image.imageUrl}
+                alt={item.image.description}
+                fill
+                className={`object-cover transition-opacity duration-300 ${isLoading ? 'opacity-0' : 'opacity-100'}`}
+                sizes="50vw"
+                data-ai-hint={item.image.imageHint}
+                unoptimized
+                onLoad={() => setIsLoading(false)}
+            />
+        </>
+    );
+};
 
 const includedItemsData = [
     {
@@ -107,14 +129,7 @@ export function WhatsIncludedSection({ dictionary }: { dictionary: WhatsIncluded
                                         transition={{ duration: 0.5, ease: "easeInOut" }}
                                         className="absolute inset-0"
                                     >
-                                        <Image
-                                            src={item.image.imageUrl}
-                                            alt={item.image.description}
-                                            fill
-                                            className="object-cover"
-                                            sizes="50vw"
-                                            data-ai-hint={item.image.imageHint}
-                                        />
+                                        <IncludedImage item={item} />
                                     </motion.div>
                                 );
                             })}

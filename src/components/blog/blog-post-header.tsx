@@ -5,7 +5,7 @@ import { format } from 'date-fns';
 import { es, fr, de, nl } from 'date-fns/locale';
 import { Calendar, User } from 'lucide-react';
 import { Locale } from '@/dictionaries/config';
-import Image from 'next/image';
+import { ImageWithSkeleton } from '@/components/ui/image-with-skeleton';
 
 interface BlogPostHeaderProps {
     title: string;
@@ -23,7 +23,7 @@ export function BlogPostHeader({ title, author, publishedAt, image, lang }: Blog
 
     return (
         <header className="relative w-full h-screen">
-            <Image
+            <ImageWithSkeleton
                 src={image}
                 alt={title}
                 fill
