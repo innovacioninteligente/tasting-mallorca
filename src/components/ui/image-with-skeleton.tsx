@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 interface ImageWithSkeletonProps extends Omit<ImageProps, "onLoad"> {
     wrapperClassName?: string;
     skeletonClassName?: string;
+    onImageLoad?: (event: React.SyntheticEvent<HTMLImageElement, Event>) => void;
 }
 
 export function ImageWithSkeleton({
@@ -16,10 +17,18 @@ export function ImageWithSkeleton({
     className,
     wrapperClassName,
     skeletonClassName,
+    onImageLoad,
     ...props
 }: ImageWithSkeletonProps) {
     const [isLoading, setIsLoading] = useState(true);
     const isFill = props.fill || false;
+
+    const handleLoad = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+        setIsLoading(false);
+        if (onImageLoad) {
+            onImageLoad(e);
+        }
+    };
 
     return (
         <div className={cn("relative overflow-hidden", isFill && "w-full h-full", wrapperClassName)}>
@@ -34,7 +43,7 @@ export function ImageWithSkeleton({
                     isLoading ? "opacity-0" : "opacity-100",
                     className
                 )}
-                onLoad={() => setIsLoading(false)}
+                onLoad={handleLoad}
                 unoptimized
                 {...props}
             />

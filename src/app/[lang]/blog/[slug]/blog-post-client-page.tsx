@@ -3,7 +3,6 @@
 
 import React, { useEffect } from 'react';
 import { notFound, usePathname } from 'next/navigation';
-import Image from 'next/image';
 import { Locale } from '@/dictionaries/config';
 import { BlogPost } from '@/backend/blog/domain/blog.model';
 import { Tour } from '@/backend/tours/domain/tour.model';

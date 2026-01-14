@@ -55,38 +55,37 @@ export function BlogPostList({ posts, error, lang }: BlogPostListProps) {
 
                         <TableRow key={post.id}>
                             <TableCell>
-                                <TableCell>
-                                    <ImageWithSkeleton
-                                        src={post.mainImage}
-                                        alt={post.title.en}
-                                        width={64}
-                                        height={64}
-                                        className="rounded-md object-cover aspect-square"
-                                    />
-                                </TableCell>
-                                <TableCell className="font-medium">{post.title.en}</TableCell>
-                                <TableCell>
-                                    <Badge variant={post.published ? 'default' : 'secondary'}>
-                                        {post.published ? 'Publicado' : 'Borrador'}
-                                    </Badge>
-                                </TableCell>
-                                <TableCell>{format(new Date(post.publishedAt), "PPP")}</TableCell>
-                                <TableCell>
-                                    <div className="flex gap-2">
-                                        <Button asChild variant="outline" size="sm">
-                                            <Link href={`${pathname}/${post.id}/edit`}>
-                                                <Edit className="mr-2 h-4 w-4" />
-                                                Editar
-                                            </Link>
-                                        </Button>
-                                        <Button asChild variant="ghost" size="sm" disabled={!post.published}>
-                                            <Link href={`/${lang}/blog/${post.slug.en}`} target="_blank">
-                                                <Eye className="mr-2 h-4 w-4" />
-                                                Ver
-                                            </Link>
-                                        </Button>
-                                    </div>
-                                </TableCell>
+                                <ImageWithSkeleton
+                                    src={post.mainImage}
+                                    alt={post.title.en}
+                                    width={64}
+                                    height={64}
+                                    className="rounded-md object-cover aspect-square"
+                                />
+                            </TableCell>
+                            <TableCell className="font-medium">{post.title.en}</TableCell>
+                            <TableCell>
+                                <Badge variant={post.published ? 'default' : 'secondary'}>
+                                    {post.published ? 'Publicado' : 'Borrador'}
+                                </Badge>
+                            </TableCell>
+                            <TableCell>{format(new Date(post.publishedAt), "PPP")}</TableCell>
+                            <TableCell>
+                                <div className="flex gap-2">
+                                    <Button asChild variant="outline" size="sm">
+                                        <Link href={`${pathname}/${post.id}/edit`}>
+                                            <Edit className="mr-2 h-4 w-4" />
+                                            Editar
+                                        </Link>
+                                    </Button>
+                                    <Button asChild variant="ghost" size="sm" disabled={!post.published}>
+                                        <Link href={`/${lang}/blog/${post.slug.en}`} target="_blank">
+                                            <Eye className="mr-2 h-4 w-4" />
+                                            Ver
+                                        </Link>
+                                    </Button>
+                                </div>
+                            </TableCell>
                         </TableRow>
 
                     )

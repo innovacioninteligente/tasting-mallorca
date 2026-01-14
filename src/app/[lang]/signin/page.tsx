@@ -16,7 +16,7 @@ import { signInWithEmailAndPassword } from 'firebase/auth';
 import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { useRouter, usePathname } from 'next/navigation';
-import Image from 'next/image';
+import { ImageWithSkeleton } from '@/components/ui/image-with-skeleton';
 
 const formSchema = z.object({
   email: z.string().email({ message: 'Please enter a valid email address.' }),
@@ -67,13 +67,13 @@ export default function SignInPage() {
         <CardHeader className="text-center">
           <div className="flex justify-center items-center gap-0 mb-2">
             <div className="relative h-12 w-12">
-                <Image
-                    src="https://firebasestorage.googleapis.com/v0/b/tasting-mallorca.firebasestorage.app/o/web%2Fbranding%2FICONO-AZUL.png?alt=media&token=5f6b7c16-5a14-4d45-bbdb-f3a70138e8b7"
-                    alt="Tasting Mallorca Logo"
-                    fill
-                    className="object-contain"
-                    sizes="48px"
-                />
+              <ImageWithSkeleton
+                src="https://firebasestorage.googleapis.com/v0/b/tasting-mallorca.firebasestorage.app/o/web%2Fbranding%2FICONO-AZUL.png?alt=media&token=5f6b7c16-5a14-4d45-bbdb-f3a70138e8b7"
+                alt="Tasting Mallorca Logo"
+                fill
+                className="object-contain"
+                sizes="48px"
+              />
             </div>
             <span className="text-2xl font-bold text-foreground">Tasting Mallorca</span>
           </div>
@@ -133,4 +133,3 @@ export default function SignInPage() {
   );
 }
 
-    

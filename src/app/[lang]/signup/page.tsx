@@ -16,7 +16,7 @@ import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { useRouter, usePathname } from 'next/navigation';
 import { createUserAction } from '@/app/server-actions/users/createUserAction';
-import Image from 'next/image';
+import { ImageWithSkeleton } from '@/components/ui/image-with-skeleton';
 
 const formSchema = z.object({
   name: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
@@ -61,12 +61,12 @@ export default function SignUpPage() {
       if (result.error) {
         throw new Error(result.error);
       }
-      
+
       toast({
         title: 'Account created!',
         description: "You've been successfully signed up.",
       });
-      
+
       // Force a token refresh to get custom claims on the client
       await user.getIdToken(true);
 
@@ -88,17 +88,17 @@ export default function SignUpPage() {
     <div className="bg-background text-foreground min-h-screen flex items-center justify-center py-12">
       <Card className="w-full max-w-md mx-4 shadow-2xl border-primary/20">
         <CardHeader className="text-center">
-           <div className="flex justify-center items-center gap-0 mb-2">
+          <div className="flex justify-center items-center gap-0 mb-2">
             <div className="relative h-12 w-12">
-                <Image
-                    src="https://firebasestorage.googleapis.com/v0/b/tasting-mallorca.firebasestorage.app/o/web%2Fbranding%2FICONO-AZUL.png?alt=media&token=5f6b7c16-5a14-4d45-bbdb-f3a70138e8b7"
-                    alt="Tasting Mallorca Logo"
-                    fill
-                    className="object-contain"
-                    sizes="48px"
-                />
+              <ImageWithSkeleton
+                src="https://firebasestorage.googleapis.com/v0/b/tasting-mallorca.firebasestorage.app/o/web%2Fbranding%2FICONO-AZUL.png?alt=media&token=5f6b7c16-5a14-4d45-bbdb-f3a70138e8b7"
+                alt="Tasting Mallorca Logo"
+                fill
+                className="object-contain"
+                sizes="48px"
+              />
             </div>
-             <span className="text-2xl font-bold text-foreground">Tasting Mallorca</span>
+            <span className="text-2xl font-bold text-foreground">Tasting Mallorca</span>
           </div>
           <CardTitle className="text-3xl font-extrabold text-primary">Crea tu Cuenta</CardTitle>
           <CardDescription className="text-lg pt-1">Únete para gestionar tus aventuras en Mallorca.</CardDescription>
@@ -106,7 +106,7 @@ export default function SignUpPage() {
         <CardContent className="p-6 md:p-8 space-y-6">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-               <FormField
+              <FormField
                 control={form.control}
                 name="name"
                 render={({ field }) => (
@@ -164,4 +164,3 @@ export default function SignUpPage() {
   );
 }
 
-    

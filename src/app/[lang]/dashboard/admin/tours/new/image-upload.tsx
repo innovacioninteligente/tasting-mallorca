@@ -2,7 +2,7 @@
 'use client';
 
 import { UploadCloud, X } from 'lucide-react';
-import Image from 'next/image';
+import { ImageWithSkeleton } from '@/components/ui/image-with-skeleton';
 import { useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { Button } from '@/components/ui/button';
@@ -13,7 +13,7 @@ interface ImageUploadProps {
   onRemove: (file: any) => void;
   value: (File | string)[];
   multiple?: boolean;
-  onServerImageDelete?: (imageUrl: string) => void; 
+  onServerImageDelete?: (imageUrl: string) => void;
 }
 
 export function ImageUpload({
@@ -27,18 +27,18 @@ export function ImageUpload({
   const onDrop = useCallback((acceptedFiles: File[]) => {
     const newFiles = multiple ? [...value, ...acceptedFiles] : acceptedFiles;
     if (multiple) {
-        onChange(newFiles);
+      onChange(newFiles);
     } else {
-        onChange(acceptedFiles[0]);
+      onChange(acceptedFiles[0]);
     }
   }, [onChange, multiple, value]);
 
   const handleRemove = (file: File | string, e: React.MouseEvent) => {
     e.stopPropagation();
     if (typeof file === 'string' && onServerImageDelete) {
-        onServerImageDelete(file);
+      onServerImageDelete(file);
     } else {
-        onRemove(file);
+      onRemove(file);
     }
   };
 
@@ -87,23 +87,23 @@ export function ImageUpload({
 
       {filesToDisplay && filesToDisplay.length > 0 && (
         <div className={cn(
-            "mt-4 grid gap-4",
-            multiple ? "grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5" : "max-w-xs"
+          "mt-4 grid gap-4",
+          multiple ? "grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5" : "max-w-xs"
         )}>
           {filesToDisplay.map((file, i) => {
             if (!file) return null;
             const previewUrl = getPreviewUrl(file);
             return (
               <div key={i} className="relative aspect-square overflow-hidden rounded-md">
-                <Image
+                <ImageWithSkeleton
                   src={previewUrl}
                   alt={`Preview ${i}`}
                   fill
                   className="object-cover"
-                  onLoad={() => {
-                      if (file instanceof File) {
-                          URL.revokeObjectURL(previewUrl);
-                      }
+                  onImageLoad={() => {
+                    if (file instanceof File) {
+                      URL.revokeObjectURL(previewUrl);
+                    }
                   }}
                 />
                 <div className="absolute right-1 top-1">
