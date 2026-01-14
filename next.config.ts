@@ -2,13 +2,13 @@
 
 const cspHeader = `
     default-src 'self';
-    script-src 'self' 'unsafe-inline' 'unsafe-eval' https://apis.google.com https://www.googletagmanager.com https://js.stripe.com https://m.stripe.network https://www.google.com https://www.gstatic.com https://maps.googleapis.com;
+    script-src 'self' 'unsafe-inline' 'unsafe-eval' https://apis.google.com https://www.googletagmanager.com https://js.stripe.com https://m.stripe.network https://www.google.com https://www.gstatic.com https://maps.googleapis.com https://connect.facebook.net https://googleads.g.doubleclick.net;
     style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
-    img-src 'self' blob: data: https://firebasestorage.googleapis.com https://images.unsplash.com https://picsum.photos https://placehold.co https://*.stripe.com https://www.google.com https://maps.googleapis.com https://maps.gstatic.com;
+    img-src 'self' blob: data: https://firebasestorage.googleapis.com https://images.unsplash.com https://picsum.photos https://placehold.co https://*.stripe.com https://www.google.com https://maps.googleapis.com https://maps.gstatic.com https://facebook.com https://googleads.g.doubleclick.net;
     font-src 'self' data: https://fonts.gstatic.com;
-    connect-src 'self' https://firebasestorage.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://www.googleapis.com https://api.stripe.com https://maps.googleapis.com https://m.stripe.network https://firestore.googleapis.com;
+    connect-src 'self' https://firebasestorage.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://www.googleapis.com https://api.stripe.com https://maps.googleapis.com https://m.stripe.network https://firestore.googleapis.com https://www.google.com https://www.google-analytics.com https://stats.g.doubleclick.net;
     media-src 'self' https://firebasestorage.googleapis.com;
-    frame-src 'self' https://js.stripe.com https://hooks.stripe.com https://www.google.com https://amparo-aesthetics.firebaseapp.com;
+    frame-src 'self' https://js.stripe.com https://hooks.stripe.com https://www.google.com https://amparo-aesthetics.firebaseapp.com https://www.googletagmanager.com;
     object-src 'none';
     base-uri 'self';
     form-action 'self';

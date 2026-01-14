@@ -1,7 +1,7 @@
 
 'use client';
 
-import Image from 'next/image';
+import { ImageWithSkeleton } from '@/components/ui/image-with-skeleton';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Heart, ArrowRight, ImageIcon } from 'lucide-react';
@@ -36,7 +36,7 @@ export function TourCard({ tour, lang }: TourCardProps) {
                 <div className="relative aspect-[4/3] bg-secondary overflow-hidden">
                     {tour.mainImage ? (
                         <>
-                            <Image
+                            <ImageWithSkeleton
                                 src={tour.mainImage}
                                 alt={title}
                                 fill
