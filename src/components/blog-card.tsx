@@ -34,6 +34,7 @@ export function BlogCard({ post, lang }: BlogCardProps) {
                             fill
                             className="object-cover transition-transform duration-300 group-hover:scale-105"
                             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                            unoptimized
                         />
                     ) : (
                         <ImageIcon className="w-16 h-16 text-muted" />
@@ -47,7 +48,7 @@ export function BlogCard({ post, lang }: BlogCardProps) {
                     <h3 className="text-xl font-bold mb-2">{title}</h3>
                     <p className="text-muted-foreground text-sm mb-4 flex-grow">{summary}</p>
                     <div className="flex justify-between items-center mt-auto">
-                       <span className="text-primary font-semibold text-sm">Leer más</span>
+                        <span className="text-primary font-semibold text-sm">Leer más</span>
                         <div className="rounded-full bg-primary/10 text-primary h-10 w-10 flex items-center justify-center group-hover:bg-primary/20">
                             <ArrowRight className="h-5 w-5" />
                         </div>

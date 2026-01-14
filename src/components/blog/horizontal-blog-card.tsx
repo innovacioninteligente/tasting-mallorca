@@ -32,6 +32,7 @@ export function HorizontalBlogCard({ post, lang }: HorizontalBlogCardProps) {
                             fill
                             className="object-cover transition-transform duration-300 group-hover:scale-105"
                             sizes="(max-width: 1023px) 40vw, 20vw"
+                            unoptimized
                         />
                     ) : (
                         <ImageIcon className="w-10 h-10 text-muted" />
