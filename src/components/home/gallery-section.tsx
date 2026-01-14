@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/carousel";
 import { Button } from '../ui/button';
 import Link from 'next/link';
+import { Skeleton } from '@/components/ui/skeleton';
 import { type getDictionary } from '@/dictionaries/get-dictionary';
 import { SectionBadge } from '@/components/ui/section-badge';
 
@@ -36,6 +37,26 @@ const galleryImages = [
     { src: 'https://firebasestorage.googleapis.com/v0/b/amparo-aesthetics.firebasestorage.app/o/tasting-mallorca%2Fimages%2FDSC07715-Mejorado-NR.jpg?alt=media&token=9c653a7e-ed1d-41e9-8bf6-19f5b554d1b4', hint: 'happy man beach', className: 'col-span-1 md:col-span-2' },
     { src: 'https://firebasestorage.googleapis.com/v0/b/amparo-aesthetics.firebasestorage.app/o/tasting-mallorca%2Fimages%2FDSC07651-Mejorado-NR.jpg?alt=media&token=e14dbbb0-7221-4bc4-b47a-8b01915e16b1', hint: 'woman travel backpack', className: 'col-span-1' },
 ];
+
+const GalleryGridItem = ({ img, index, onClick }: { img: typeof galleryImages[0], index: number, onClick: () => void }) => {
+    const [isLoading, setIsLoading] = useState(true);
+    return (
+        <div className={`relative rounded-xl overflow-hidden group cursor-pointer ${img.className}`} onClick={onClick}>
+            {isLoading && <Skeleton className="absolute inset-0 w-full h-full" />}
+            <Image
+                src={img.src}
+                alt={`Gallery image ${index + 1}`}
+                fill
+                className={`object-cover w-full h-full transition-transform duration-300 group-hover:scale-105 ${isLoading ? 'opacity-0' : 'opacity-100'}`}
+                data-ai-hint={img.hint}
+                sizes="(max-width: 768px) 50vw, (max-width: 1200px) 25vw, 20vw"
+                unoptimized
+                onLoad={() => setIsLoading(false)}
+            />
+            <div className="absolute inset-0 bg-black/10 transition-colors group-hover:bg-black/20"></div>
+        </div>
+    );
+};
 
 
 export function GallerySection({ dictionary }: GallerySectionProps) {
@@ -63,18 +84,7 @@ export function GallerySection({ dictionary }: GallerySectionProps) {
             <div className="w-full px-4 md:px-0 md:w-[80vw] mx-auto">
                 <div className="grid grid-cols-2 md:grid-cols-4 auto-rows-[250px] gap-2 md:gap-4">
                     {galleryImages.map((img, index) => (
-                        <div key={index} className={`relative rounded-xl overflow-hidden group cursor-pointer ${img.className}`} onClick={() => openLightbox(index)}>
-                            <Image
-                                src={img.src}
-                                alt={`Gallery image ${index + 1}`}
-                                fill
-                                className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-105"
-                                data-ai-hint={img.hint}
-                                sizes="(max-width: 768px) 50vw, (max-width: 1200px) 25vw, 20vw"
-                                unoptimized
-                            />
-                            <div className="absolute inset-0 bg-black/10 transition-colors group-hover:bg-black/20"></div>
-                        </div>
+                        <GalleryGridItem key={index} img={img} index={index} onClick={() => openLightbox(index)} />
                     ))}
                     <div className="col-span-2 md:col-span-2 p-8 rounded-xl bg-secondary flex flex-col items-center justify-center text-center">
                         <h3 className="text-3xl font-extrabold text-foreground">{dictionary.ctaTitle}</h3>
@@ -110,6 +120,7 @@ export function GallerySection({ dictionary }: GallerySectionProps) {
                                             fill
                                             className="object-contain"
                                             sizes="100vw"
+                                            unoptimized
                                         />
                                     </div>
                                 </CarouselItem>

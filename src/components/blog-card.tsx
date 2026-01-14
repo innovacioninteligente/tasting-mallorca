@@ -1,6 +1,7 @@
 
 'use client';
 
+import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
@@ -8,6 +9,7 @@ import { ArrowRight, Calendar, ImageIcon } from 'lucide-react';
 import { BlogPost } from '@/backend/blog/domain/blog.model';
 import { Locale } from '@/dictionaries/config';
 import { format } from 'date-fns';
+import { Skeleton } from '@/components/ui/skeleton';
 
 interface BlogCardProps {
     post: BlogPost;
@@ -18,6 +20,7 @@ export function BlogCard({ post, lang }: BlogCardProps) {
     const slug = post.slug[lang] || post.slug.en;
     const title = post.title[lang] || post.title.en;
     const summary = post.summary[lang] || post.summary.en;
+    const [isLoading, setIsLoading] = useState(true);
 
     return (
         <Link
@@ -28,14 +31,18 @@ export function BlogCard({ post, lang }: BlogCardProps) {
             <div className="bg-card rounded-2xl overflow-hidden shadow-lg h-full flex flex-col cursor-pointer">
                 <div className="relative h-64 bg-secondary flex items-center justify-center">
                     {post.mainImage ? (
-                        <Image
-                            src={post.mainImage}
-                            alt={title}
-                            fill
-                            className="object-cover transition-transform duration-300 group-hover:scale-105"
-                            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                            unoptimized
-                        />
+                        <>
+                            {isLoading && <Skeleton className="w-full h-full absolute inset-0" />}
+                            <Image
+                                src={post.mainImage}
+                                alt={title}
+                                fill
+                                className={`object-cover transition-transform duration-300 group-hover:scale-105 ${isLoading ? 'opacity-0' : 'opacity-100'}`}
+                                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                                unoptimized
+                                onLoad={() => setIsLoading(false)}
+                            />
+                        </>
                     ) : (
                         <ImageIcon className="w-16 h-16 text-muted" />
                     )}

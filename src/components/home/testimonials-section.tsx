@@ -5,8 +5,9 @@ import { SectionBadge } from '@/components/ui/section-badge';
 import Image from 'next/image';
 import { Carousel, CarouselContent, CarouselItem } from '@/components/ui/carousel';
 import Autoplay from "embla-carousel-autoplay";
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { Quote, Star, MessageCircleHeart } from 'lucide-react';
+import { Skeleton } from '@/components/ui/skeleton';
 import { type getDictionary } from '@/dictionaries/get-dictionary';
 
 type TestimonialsSectionProps = {
@@ -88,6 +89,24 @@ const testimonials = [
   },
 ];
 
+const TestimonialImage = ({ src, alt, dataAiHint }: { src: string, alt: string, dataAiHint: string }) => {
+  const [isLoading, setIsLoading] = useState(true);
+  return (
+    <>
+      {isLoading && <Skeleton className="absolute inset-0 w-full h-full" />}
+      <Image
+        src={src}
+        alt={alt}
+        fill
+        className={`object-cover transition-opacity duration-300 ${isLoading ? 'opacity-0' : 'opacity-100'}`}
+        data-ai-hint={dataAiHint}
+        unoptimized
+        onLoad={() => setIsLoading(false)}
+      />
+    </>
+  );
+};
+
 export function TestimonialsSection({ dictionary }: TestimonialsSectionProps) {
   const autoplayPlugin = useRef(Autoplay({ delay: 5000, stopOnInteraction: true }));
 
@@ -108,16 +127,16 @@ export function TestimonialsSection({ dictionary }: TestimonialsSectionProps) {
           {/* Image collage */}
           <div className="relative h-[500px] hidden md:block">
             <div className="absolute w-[45%] h-[55%] top-0 left-10 overflow-hidden rounded-[4rem] transform rotate-[-15deg]">
-              <Image src="https://firebasestorage.googleapis.com/v0/b/tasting-mallorca.firebasestorage.app/o/web%2Fimages%2Fmedium-shot-smiley-people-hugging.jpg?alt=media&token=bb3ba8f4-6d36-4a99-adb2-174e805509b9" alt="Happy tourist" fill className="object-cover" data-ai-hint="happy people" />
+              <TestimonialImage src="https://firebasestorage.googleapis.com/v0/b/tasting-mallorca.firebasestorage.app/o/web%2Fimages%2Fmedium-shot-smiley-people-hugging.jpg?alt=media&token=bb3ba8f4-6d36-4a99-adb2-174e805509b9" alt="Happy tourist" dataAiHint="happy people" />
             </div>
             <div className="absolute w-[35%] h-[40%] top-5 right-5 overflow-hidden rounded-[3rem] transform rotate-[10deg]">
-              <Image src="https://firebasestorage.googleapis.com/v0/b/tasting-mallorca.firebasestorage.app/o/web%2Fimages%2F034.PNG?alt=media&token=1571c577-5efd-4437-b7ee-48837385ad3d" alt="Smiling customer" fill className="object-cover" data-ai-hint="smiling person" />
+              <TestimonialImage src="https://firebasestorage.googleapis.com/v0/b/tasting-mallorca.firebasestorage.app/o/web%2Fimages%2F034.PNG?alt=media&token=1571c577-5efd-4437-b7ee-48837385ad3d" alt="Smiling customer" dataAiHint="smiling person" />
             </div>
             <div className="absolute w-[30%] h-[35%] bottom-10 left-0 overflow-hidden rounded-[3rem] transform rotate-[5deg]">
-              <Image src="https://firebasestorage.googleapis.com/v0/b/tasting-mallorca.firebasestorage.app/o/web%2Fimages%2Fhappy-senior-couple-taking-selfie-with-vintage-camera.jpg?alt=media&token=d29a831a-d0fe-4ddf-8ff8-b9adce5e8d09" alt="Another smiling customer" fill className="object-cover" data-ai-hint="senior couple" />
+              <TestimonialImage src="https://firebasestorage.googleapis.com/v0/b/tasting-mallorca.firebasestorage.app/o/web%2Fimages%2Fhappy-senior-couple-taking-selfie-with-vintage-camera.jpg?alt=media&token=d29a831a-d0fe-4ddf-8ff8-b9adce5e8d09" alt="Another smiling customer" dataAiHint="senior couple" />
             </div>
             <div className="absolute w-[40%] h-[45%] bottom-0 right-[-1rem] overflow-hidden rounded-[4rem] transform rotate-[-5deg]">
-              <Image src="https://firebasestorage.googleapis.com/v0/b/tasting-mallorca.firebasestorage.app/o/web%2Fimages%2Fmedium-shot-woman-with-sunglasses-hat.jpg?alt=media&token=3dce95d5-47ff-4c48-ba13-3b355a2cc1b6" alt="Joyful traveler" fill className="object-cover" data-ai-hint="woman sunglasses" />
+              <TestimonialImage src="https://firebasestorage.googleapis.com/v0/b/tasting-mallorca.firebasestorage.app/o/web%2Fimages%2Fmedium-shot-woman-with-sunglasses-hat.jpg?alt=media&token=3dce95d5-47ff-4c48-ba13-3b355a2cc1b6" alt="Joyful traveler" dataAiHint="woman sunglasses" />
             </div>
           </div>
 

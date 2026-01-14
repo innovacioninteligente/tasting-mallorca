@@ -1,12 +1,14 @@
 
 'use client';
 
+import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowRight, Calendar, ImageIcon } from 'lucide-react';
 import { BlogPost } from '@/backend/blog/domain/blog.model';
 import { Locale } from '@/dictionaries/config';
 import { format } from 'date-fns';
+import { Skeleton } from '@/components/ui/skeleton';
 
 interface HorizontalBlogCardProps {
     post: BlogPost;
@@ -16,6 +18,7 @@ interface HorizontalBlogCardProps {
 export function HorizontalBlogCard({ post, lang }: HorizontalBlogCardProps) {
     const slug = post.slug[lang] || post.slug.en;
     const title = post.title[lang] || post.title.en;
+    const [isLoading, setIsLoading] = useState(true);
 
     return (
         <Link
@@ -26,14 +29,18 @@ export function HorizontalBlogCard({ post, lang }: HorizontalBlogCardProps) {
             <div className="flex h-full">
                 <div className="relative w-2/5 flex-shrink-0 bg-secondary flex items-center justify-center">
                     {post.mainImage ? (
-                        <Image
-                            src={post.mainImage}
-                            alt={title}
-                            fill
-                            className="object-cover transition-transform duration-300 group-hover:scale-105"
-                            sizes="(max-width: 1023px) 40vw, 20vw"
-                            unoptimized
-                        />
+                        <>
+                            {isLoading && <Skeleton className="w-full h-full absolute inset-0" />}
+                            <Image
+                                src={post.mainImage}
+                                alt={title}
+                                fill
+                                className={`object-cover transition-transform duration-300 group-hover:scale-105 ${isLoading ? 'opacity-0' : 'opacity-100'}`}
+                                sizes="(max-width: 1023px) 40vw, 20vw"
+                                unoptimized
+                                onLoad={() => setIsLoading(false)}
+                            />
+                        </>
                     ) : (
                         <ImageIcon className="w-10 h-10 text-muted" />
                     )}

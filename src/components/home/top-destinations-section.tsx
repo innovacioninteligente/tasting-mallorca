@@ -21,6 +21,7 @@ import {
     CarouselNext,
     CarouselPrevious,
 } from "@/components/ui/carousel";
+import { Skeleton } from '@/components/ui/skeleton';
 
 type TopDestinationsProps = {
     dictionary: Awaited<ReturnType<typeof getDictionary>>['destinations'];
@@ -65,6 +66,40 @@ const destinations = [
     },
 ];
 
+const DestinationGridItem = ({ dest, index, onClick }: { dest: typeof destinations[0], index: number, onClick: () => void }) => {
+    const [isLoading, setIsLoading] = useState(true);
+    return (
+        <div
+            className={`relative rounded-2xl overflow-hidden group h-full cursor-pointer ${dest.className}`}
+            onClick={onClick}
+        >
+            {isLoading && <Skeleton className="absolute inset-0 w-full h-full" />}
+            <Image
+                src={dest.image}
+                alt={dest.name}
+                fill
+                className={`object-cover transition-transform duration-300 group-hover:scale-105 ${isLoading ? 'opacity-0' : 'opacity-100'}`}
+                data-ai-hint={dest.imageHint}
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                unoptimized
+                onLoad={() => setIsLoading(false)}
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+
+            {/* Glassmorphism Title Card */}
+            <div className="absolute bottom-0 left-0 right-0 p-4">
+                <div className="bg-white/20 backdrop-blur-md border border-white/20 rounded-xl p-4 shadow-lg">
+                    <h3 className="text-xl font-bold text-white text-center">{dest.name}</h3>
+                </div>
+            </div>
+
+            <div className="absolute top-4 right-4 h-12 w-12 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center transform transition-transform duration-300 group-hover:rotate-45 group-hover:bg-primary">
+                <ArrowUpRight className="h-6 w-6 text-white" />
+            </div>
+        </div>
+    );
+};
+
 export function TopDestinationsSection({ dictionary }: TopDestinationsProps) {
     const mainDestinations = destinations.slice(0, 6);
     const [isLightboxOpen, setIsLightboxOpen] = useState(false);
@@ -90,33 +125,7 @@ export function TopDestinationsSection({ dictionary }: TopDestinationsProps) {
             <div className="w-full px-4 md:px-0 md:w-[80vw] mx-auto">
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 auto-rows-[350px] gap-4">
                     {mainDestinations.map((dest, index) => (
-                        <div
-                            key={dest.name}
-                            className={`relative rounded-2xl overflow-hidden group h-full cursor-pointer ${dest.className}`}
-                            onClick={() => openLightbox(index)}
-                        >
-                            <Image
-                                src={dest.image}
-                                alt={dest.name}
-                                fill
-                                className="object-cover transition-transform duration-300 group-hover:scale-105"
-                                data-ai-hint={dest.imageHint}
-                                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                                unoptimized
-                            />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-
-                            {/* Glassmorphism Title Card */}
-                            <div className="absolute bottom-0 left-0 right-0 p-4">
-                                <div className="bg-white/20 backdrop-blur-md border border-white/20 rounded-xl p-4 shadow-lg">
-                                    <h3 className="text-xl font-bold text-white text-center">{dest.name}</h3>
-                                </div>
-                            </div>
-
-                            <div className="absolute top-4 right-4 h-12 w-12 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center transform transition-transform duration-300 group-hover:rotate-45 group-hover:bg-primary">
-                                <ArrowUpRight className="h-6 w-6 text-white" />
-                            </div>
-                        </div>
+                        <DestinationGridItem key={dest.name} dest={dest} index={index} onClick={() => openLightbox(index)} />
                     ))}
                     <div className="p-8 rounded-xl bg-secondary flex flex-col items-center justify-center text-center lg:col-span-3">
                         <h3 className="text-3xl font-extrabold text-foreground">{dictionary.ctaTitle}</h3>
@@ -152,6 +161,7 @@ export function TopDestinationsSection({ dictionary }: TopDestinationsProps) {
                                             fill
                                             className="object-contain"
                                             sizes="100vw"
+                                            unoptimized
                                         />
                                     </div>
                                     <h3 className="text-2xl font-bold text-foreground mt-4">{dest.name}</h3>
