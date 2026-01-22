@@ -77,6 +77,8 @@ interface TourBookingSectionProps {
         fullNamePlaceholder?: string;
         emailPlaceholder?: string;
         phonePlaceholder?: string;
+        specialOffer?: string;
+        off?: string;
     };
     tour: Tour;
     lang: string;
@@ -381,7 +383,17 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
     }, [adults, children, infants, date, language, paymentOption, selectedHotel, bookingCacheKey]);
 
     const totalParticipants = adults + children + infants;
-    const totalPrice = (tour.price * adults) + (tour.childPrice * children);
+
+    // Apply promotion if active
+    const adultPrice = tour.hasPromotion && tour.promotionPercentage > 0
+        ? Math.round(tour.price * (1 - tour.promotionPercentage / 100))
+        : tour.price;
+
+    const childPrice = tour.hasPromotion && tour.promotionPercentage > 0
+        ? Math.round(tour.childPrice * (1 - tour.promotionPercentage / 100))
+        : tour.childPrice;
+
+    const totalPrice = (adultPrice * adults) + (childPrice * children);
     const depositPrice = tour.allowDeposit && tour.depositPrice ? tour.depositPrice * (adults + children) : 0;
 
     const amountToPay = paymentOption === 'deposit' ? depositPrice : totalPrice;
@@ -579,6 +591,41 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
     }).join(` ${dictionary.and} `);
 
 
+    const CustomDayContent = (props: any) => {
+        const { date: dayDate, activeModifiers } = props;
+        const isDisabled = isDateDisabled(dayDate);
+        const isSelected = activeModifiers.selected;
+
+        // Price logic (simplified for display)
+        const displayPrice = tour.hasPromotion && tour.promotionPercentage > 0
+            ? Math.round(tour.price * (1 - tour.promotionPercentage / 100))
+            : tour.price;
+
+        return (
+            <div className={cn(
+                "flex flex-col items-center justify-center h-full w-full py-1 rounded-md transition-all",
+                isSelected && "bg-green-600 shadow-md",
+                !isSelected && !isDisabled && "hover:bg-accent/20"
+            )}>
+                <span className={cn(
+                    "text-sm font-medium",
+                    isSelected ? "text-white" : "text-foreground",
+                    isDisabled && "text-muted-foreground opacity-50"
+                )}>
+                    {format(dayDate, 'd')}
+                </span>
+                {!isDisabled && (
+                    <span className={cn(
+                        "text-[10px] font-bold mt-0.5",
+                        isSelected ? "text-white" : "text-green-600"
+                    )}>
+                        €{displayPrice}
+                    </span>
+                )}
+            </div>
+        );
+    };
+
     const DatePickerContent = () => (
         <Calendar
             mode="single"
@@ -587,12 +634,38 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
                 setDate(selectedDate);
                 if (isMobile) setIsCalendarSheetOpen(false);
             }}
-            disabled={isDateDisabled}
+            disabled={[
+                { before: new Date() },
+                isDateDisabled
+            ]}
+            fromDate={new Date()}
             initialFocus={!isMobile}
+            className="p-4"
             classNames={{
-                day: "text-base h-11 w-11",
-                head_cell: "text-base w-11",
-                nav_button: "h-9 w-9"
+                months: "flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0",
+                month: "space-y-6 w-full",
+                caption: "flex justify-center pt-1 relative items-center mb-4",
+                caption_label: "text-lg font-bold text-foreground",
+                nav: "space-x-1 flex items-center bg-secondary/30 rounded-full p-1",
+                nav_button: "h-8 w-8 hover:bg-white hover:shadow-sm rounded-full transition-all",
+                table: "w-full border-collapse space-y-1",
+                head_row: "flex justify-between w-full mb-2",
+                head_cell: "text-muted-foreground w-12 font-medium text-xs uppercase tracking-wider text-center",
+                row: "flex w-full mt-2 justify-between",
+                cell: "h-14 w-12 text-center p-0 relative [&:has([aria-selected])]:bg-transparent focus-within:relative focus-within:z-20",
+                day: cn(
+                    "h-14 w-12 p-0 font-normal aria-selected:opacity-100 hover:bg-transparent focus:bg-transparent active:bg-transparent ring-0 outline-none border-none",
+                ),
+                day_selected:
+                    "bg-green-600 text-white hover:bg-green-700 focus:bg-green-700 shadow-md rounded-md",
+                day_today: "bg-accent/10 text-accent-foreground font-semibold border border-accent/20 rounded-md",
+                day_outside: "text-muted-foreground opacity-30",
+                day_disabled: "text-muted-foreground opacity-30 bg-transparent",
+                day_range_middle: "aria-selected:bg-accent aria-selected:text-accent-foreground",
+                day_hidden: "invisible",
+            }}
+            components={{
+                DayContent: CustomDayContent
             }}
         />
     );
@@ -607,11 +680,34 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
             transition={{ duration: 0.3 }}
             className="space-y-6"
         >
+            {tour.hasPromotion && tour.promotionPercentage > 0 && (
+                <div className="bg-primary/10 -mx-6 -mt-6 mb-6 p-4 flex items-center justify-between border-b border-primary/10">
+                    <span className="font-semibold text-primary flex items-center gap-2">
+                        <span className="flex h-2 w-2 rounded-full bg-primary animate-pulse"></span>
+                        {dictionary.specialOffer || 'Special Offer'}
+                    </span>
+                    <span className="bg-primary text-primary-foreground text-xs font-bold px-2 py-1 rounded-full">
+                        -{tour.promotionPercentage}% {dictionary.off || 'OFF'}
+                    </span>
+                </div>
+            )}
+
             <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                     <span className="text-lg font-semibold">{dictionary.priceLabel}</span>
                 </div>
-                <span className="text-3xl font-extrabold text-primary">€{tour.price}</span>
+                <div className="flex flex-col items-end">
+                    {tour.hasPromotion && tour.promotionPercentage > 0 ? (
+                        <>
+                            <span className="text-sm text-muted-foreground line-through">€{tour.price}</span>
+                            <span className="text-3xl font-extrabold text-primary">
+                                €{Math.round(tour.price * (1 - tour.promotionPercentage / 100))}
+                            </span>
+                        </>
+                    ) : (
+                        <span className="text-3xl font-extrabold text-primary">€{tour.price}</span>
+                    )}
+                </div>
             </div>
 
             <div className="space-y-4">

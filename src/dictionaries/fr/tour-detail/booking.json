@@ -33,5 +33,7 @@
     "to": "au",
     "and": "et",
     "depositReminder": "Rappel : le solde est à régler le jour de l’excursion – paiement en espèces apprécié.",
-    "regionMismatchWarning": "Note : L'hôtel sélectionné est dans une région différente. Nous avons suggéré le point de rencontre le plus proche pour cette excursion."
+    "regionMismatchWarning": "Note : L'hôtel sélectionné est dans une région différente. Nous avons suggéré le point de rencontre le plus proche pour cette excursion.",
+    "specialOffer": "Offre Spéciale",
+    "off": "DE RÉDUCTION"
 }

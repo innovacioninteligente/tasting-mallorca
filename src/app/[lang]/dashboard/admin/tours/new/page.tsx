@@ -82,8 +82,11 @@ export default function NewTourPage() {
         published: false,
         allowDeposit: false,
         depositPrice: 0,
+        hasPromotion: false,
+        promotionPercentage: 0,
         itinerary: [],
         galleryImages: [],
+        video: {}, // Initialize as empty object or with default keys if needed
         mainImage: undefined,
         availabilityPeriods: [],
     };
@@ -92,7 +95,7 @@ export default function NewTourPage() {
         resolver: zodResolver(CreateTourInputSchema),
         defaultValues,
     });
-    
+
     const { clearPersistedData } = useFormPersistence(formPersistenceKey, form, defaultValues);
 
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -141,26 +144,26 @@ export default function NewTourPage() {
             if (tabWithError) {
                 setActiveTab(tabWithError);
                 setErrorTab(tabWithError);
-                setTimeout(() => setErrorTab(null), 500); 
+                setTimeout(() => setErrorTab(null), 500);
             }
         }
     };
 
     const onSubmit = async (data: TourFormValues) => {
         setIsSubmitting(true);
-    
+
         try {
             const tourId = data.id || crypto.randomUUID();
-    
+
             let mainImageUrl = data.mainImage;
             if (data.mainImage instanceof File) {
                 setUploadMessage('Uploading main image...');
                 mainImageUrl = await uploadFile(data.mainImage, tourId);
             }
-    
+
             let galleryImageUrls: string[] = [];
             const newGalleryFiles = (data.galleryImages as any[])?.filter(img => img instanceof File) || [];
-            
+
             if (newGalleryFiles.length > 0) {
                 const uploadedUrls: string[] = [];
                 for (let i = 0; i < newGalleryFiles.length; i++) {
@@ -170,36 +173,50 @@ export default function NewTourPage() {
                 }
                 galleryImageUrls = uploadedUrls;
             }
-    
+
+            // Handle Video Uploads
+            const videoUrls: { [key: string]: string | undefined } = { ...data.video };
+            const languages = ['en', 'de', 'fr', 'nl'];
+
+            for (const lang of languages) {
+                const videoFile = data.video?.[lang];
+                if (videoFile instanceof File) {
+                    setUploadMessage(`Uploading ${lang.toUpperCase()} video...`);
+                    const url = await uploadFile(videoFile, tourId);
+                    videoUrls[lang] = url;
+                }
+            }
+
             setUploadMessage('Saving tour data...');
             setUploadProgress(100);
-    
+
             const tourData = {
                 ...data,
                 id: tourId,
                 mainImage: mainImageUrl,
                 galleryImages: galleryImageUrls,
+                video: videoUrls,
                 availabilityPeriods: data.availabilityPeriods?.map(p => ({
                     ...p,
                     startDate: p.startDate.toISOString().split('T')[0],
                     endDate: p.endDate.toISOString().split('T')[0]
                 }))
             };
-            
+
             const result = await createTour(tourData);
-    
+
             if (result.error) throw new Error(result.error);
-            
+
             clearPersistedData();
-            
+
             const newPath = `${basePath}/${tourId}/edit`;
             router.replace(newPath, { scroll: false });
-    
+
             toast({
                 title: "Tour Created!",
                 description: `The tour "${data.title.en}" has been created successfully.`,
             });
-    
+
         } catch (error: any) {
             console.error("Error creating tour:", error);
             toast({
@@ -211,12 +228,12 @@ export default function NewTourPage() {
             setIsSubmitting(false);
         }
     };
-    
+
     const handleTranslate = async () => {
         setIsTranslating(true);
         try {
             const currentData = form.getValues();
-            
+
             const translationInput: TranslateTourInput = {
                 title: currentData.title.en,
                 slug: currentData.slug.en,
@@ -241,7 +258,7 @@ export default function NewTourPage() {
                     title: currentData.pickupPoint.title.en,
                     description: currentData.pickupPoint.description.en,
                 },
-                 itinerary: currentData.itinerary?.map(item => ({
+                itinerary: currentData.itinerary?.map(item => ({
                     id: item.id,
                     type: item.type,
                     title: { en: item.title.en },
@@ -253,7 +270,7 @@ export default function NewTourPage() {
 
             if (result.error) throw new Error(result.error);
             if (!result.data) throw new Error("No translation data returned.");
-            
+
             const translatedData = result.data as TranslateTourOutput;
             const updatedData = mergeWith(cloneDeep(currentData), translatedData);
             form.reset(updatedData);
@@ -263,7 +280,7 @@ export default function NewTourPage() {
                 description: "The tour content has been translated automatically.",
             });
 
-        } catch(error: any) {
+        } catch (error: any) {
             console.error("Translation failed:", error);
             const errorMessage = error.message || "An unexpected issue occurred during translation.";
 
@@ -280,7 +297,7 @@ export default function NewTourPage() {
 
     return (
         <AdminRouteGuard>
-             <FormProvider {...form}>
+            <FormProvider {...form}>
                 <div className="flex flex-col h-full">
                     {isSubmitting && <UploadProgressDialog progress={uploadProgress} message={uploadMessage} />}
                     <TourFormHeader

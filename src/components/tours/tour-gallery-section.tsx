@@ -2,7 +2,7 @@
 'use client';
 
 import Image from 'next/image';
-import { ImageIcon, X } from 'lucide-react';
+import { ImageIcon, X, Play } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
     Carousel,
@@ -43,9 +43,10 @@ const GalleryImage = ({ src, alt, className, sizes, priority = false, style, onC
 
 interface TourGallerySectionProps {
     images: (string | undefined | null)[];
+    video?: string | undefined | null;
 }
 
-export function TourGallerySection({ images: rawImages }: TourGallerySectionProps) {
+export function TourGallerySection({ images: rawImages, video }: TourGallerySectionProps) {
     const autoplayPlugin = useRef(Autoplay({ delay: 5000, stopOnInteraction: true }));
     const [isLightboxOpen, setIsLightboxOpen] = useState(false);
     const [selectedImageIndex, setSelectedImageIndex] = useState(0);
@@ -108,6 +109,13 @@ export function TourGallerySection({ images: rawImages }: TourGallerySectionProp
                         priority
                         style={{ viewTransitionName: `tour-image-main` } as React.CSSProperties}
                     />
+                    {video && (
+                        <div className="absolute inset-0 flex items-center justify-center bg-black/10 hover:bg-black/20 transition-colors group">
+                            <div className="w-16 h-16 rounded-full bg-white/90 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                                <Play className="w-8 h-8 text-primary ml-1" />
+                            </div>
+                        </div>
+                    )}
                 </div>
 
                 {/* Smaller Images */}
@@ -142,6 +150,19 @@ export function TourGallerySection({ images: rawImages }: TourGallerySectionProp
                         className="w-full h-full max-w-7xl"
                     >
                         <CarouselContent className="h-full">
+                            {video && (
+                                <CarouselItem className="flex items-center justify-center p-4">
+                                    <div className="relative w-full h-[90vh] bg-black rounded-lg overflow-hidden flex items-center justify-center">
+                                        <video
+                                            src={video}
+                                            controls
+                                            className="w-full h-full max-h-[90vh] object-contain"
+                                            playsInline
+                                            autoPlay
+                                        />
+                                    </div>
+                                </CarouselItem>
+                            )}
                             {images.map((img, index) => (
                                 <CarouselItem key={index} className="flex items-center justify-center p-4">
                                     <div className="relative w-full h-[90vh]">

@@ -131,7 +131,7 @@ export default function TourPageClient({ tour, dictionary, lang, hotels, meeting
   return (
     <div className="bg-background relative">
       <TourHeaderSection tour={tourHeaderProps} dictionary={dictionary.tourDetail.header} />
-      <TourGallerySection images={allImages} />
+      <TourGallerySection images={allImages} video={tour.video?.[lang] || tour.video?.en} />
 
       <main className="w-full xl:w-[90vw] 2xl:w-[80vw] mx-auto px-4 py-8 md:py-16 grid grid-cols-1 lg:grid-cols-5 gap-12">
         <div className="lg:col-span-3 space-y-12">

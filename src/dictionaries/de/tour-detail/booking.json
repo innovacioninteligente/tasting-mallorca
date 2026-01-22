@@ -33,5 +33,7 @@
     "to": "bis",
     "and": "und",
     "depositReminder": "Hinweis: Der Restbetrag ist am Tag der Tour zu zahlen – Barzahlung wird bevorzugt.",
-    "regionMismatchWarning": "Hinweis: Das ausgewählte Hotel befindet sich in einer anderen Region. Wir haben den nächstgelegenen Treffpunkt für diese Tour vorgeschlagen."
+    "regionMismatchWarning": "Hinweis: Das ausgewählte Hotel befindet sich in einer anderen Region. Wir haben den nächstgelegenen Treffpunkt für diese Tour vorgeschlagen.",
+    "specialOffer": "Sonderangebot",
+    "off": "RABATT"
 }

@@ -6,12 +6,13 @@ import { getDictionary } from '@/dictionaries/get-dictionary';
 import { Locale } from '@/dictionaries/config';
 
 interface PageProps {
-  params: {
+  params: Promise<{
     lang: Locale;
-  };
+  }>;
 }
 
-export async function generateMetadata({ params: { lang } }: PageProps): Promise<Metadata> {
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { lang } = await params;
   const dictionary = await getDictionary(lang);
   const { title, subtitle } = dictionary.about.header;
   const imageUrl = "https://firebasestorage.googleapis.com/v0/b/tasting-mallorca.firebasestorage.app/o/web%2Fimages%2F036.PNG?alt=media&token=00e634e2-716f-495d-807e-5c15dfe2ea09";
@@ -44,7 +45,8 @@ export async function generateMetadata({ params: { lang } }: PageProps): Promise
 }
 
 
-export default async function AboutPage({ params: { lang } }: PageProps) {
+export default async function AboutPage({ params }: PageProps) {
+  const { lang } = await params;
   const dictionary = await getDictionary(lang);
   const t = dictionary.about;
 

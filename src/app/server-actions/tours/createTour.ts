@@ -6,54 +6,55 @@ import { createTour as createTourUseCase } from '@/backend/tours/application/cre
 import { FirestoreTourRepository } from '@/backend/tours/infrastructure/firestore-tour.repository';
 import { Tour, CreateTourInput } from '@/backend/tours/domain/tour.model';
 import { z } from 'zod';
+import { revalidatePath } from 'next/cache';
 
 const multilingualStringSchema = z.object({
-    en: z.string().min(1, { message: "English text is required." }),
-    de: z.string().optional(),
-    fr: z.string().optional(),
-    nl: z.string().optional(),
+  en: z.string().min(1, { message: "English text is required." }),
+  de: z.string().optional(),
+  fr: z.string().optional(),
+  nl: z.string().optional(),
 });
 
 const multilingualOptionalStringSchema = z.object({
-    en: z.string().optional(),
-    de: z.string().optional(),
-    fr: z.string().optional(),
-    nl: z.string().optional(),
+  en: z.string().optional(),
+  de: z.string().optional(),
+  fr: z.string().optional(),
+  nl: z.string().optional(),
 }).optional();
 
 const pickupPointSchema = z.object({
-    title: multilingualStringSchema,
-    description: multilingualStringSchema,
+  title: multilingualStringSchema,
+  description: multilingualStringSchema,
 });
 
 const detailsSchema = z.object({
-    highlights: multilingualOptionalStringSchema,
-    fullDescription: multilingualOptionalStringSchema,
-    included: multilingualOptionalStringSchema,
-    notIncluded: multilingualOptionalStringSchema,
-    notSuitableFor: multilingualOptionalStringSchema,
-    whatToBring: multilingualOptionalStringSchema,
-    beforeYouGo: multilingualOptionalStringSchema,
+  highlights: multilingualOptionalStringSchema,
+  fullDescription: multilingualOptionalStringSchema,
+  included: multilingualOptionalStringSchema,
+  notIncluded: multilingualOptionalStringSchema,
+  notSuitableFor: multilingualOptionalStringSchema,
+  whatToBring: multilingualOptionalStringSchema,
+  beforeYouGo: multilingualOptionalStringSchema,
 }).optional();
 
 const itineraryItemSchema = z.object({
-    id: z.string(),
-    type: z.enum(["stop", "travel"]),
-    icon: z.string(),
-    duration: z.string().min(1, "Duration is required."),
-    title: multilingualStringSchema,
-    activities: z.object({
-        en: z.array(z.string()).optional(),
-        de: z.array(z.string()).optional(),
-        fr: z.array(z.string()).optional(),
-        nl: z.array(z.string()).optional(),
-    }),
+  id: z.string(),
+  type: z.enum(["stop", "travel"]),
+  icon: z.string(),
+  duration: z.string().min(1, "Duration is required."),
+  title: multilingualStringSchema,
+  activities: z.object({
+    en: z.array(z.string()).optional(),
+    de: z.array(z.string()).optional(),
+    fr: z.array(z.string()).optional(),
+    nl: z.array(z.string()).optional(),
+  }),
 });
 
 const availabilityPeriodSchema = z.object({
-    startDate: z.string(),
-    endDate: z.string(),
-    activeDays: z.array(z.string()),
+  startDate: z.string(),
+  endDate: z.string(),
+  activeDays: z.array(z.string()),
 });
 
 const baseActionInputSchema = z.object({
@@ -80,26 +81,28 @@ const baseActionInputSchema = z.object({
   galleryImages: z.any().optional(),
   allowDeposit: z.boolean().default(false),
   depositPrice: z.coerce.number().optional(),
+  hasPromotion: z.boolean().default(false),
+  promotionPercentage: z.coerce.number().min(0).max(100).default(0),
   availabilityPeriods: z.array(availabilityPeriodSchema).optional(),
   itinerary: z.array(itineraryItemSchema).optional(),
 });
 
 const actionInputSchema = baseActionInputSchema.refine(data => {
-    if (data.allowDeposit) {
-        return data.depositPrice !== undefined && data.depositPrice > 0;
-    }
-    return true;
+  if (data.allowDeposit) {
+    return data.depositPrice !== undefined && data.depositPrice > 0;
+  }
+  return true;
 }, {
-    message: "Deposit price is required if deposits are allowed.",
-    path: ["depositPrice"],
+  message: "Deposit price is required if deposits are allowed.",
+  path: ["depositPrice"],
 }).refine(data => {
-    if (data.allowDeposit && data.depositPrice) {
-        return data.depositPrice < data.price;
-    }
-    return true;
+  if (data.allowDeposit && data.depositPrice) {
+    return data.depositPrice < data.price;
+  }
+  return true;
 }, {
-    message: "Deposit cannot be greater than or equal to the total price.",
-    path: ["depositPrice"],
+  message: "Deposit cannot be greater than or equal to the total price.",
+  path: ["depositPrice"],
 });
 
 
@@ -113,19 +116,24 @@ export const createTour = createSafeAction(
   ): Promise<{ data?: { tourId: string }; error?: string }> => {
     try {
       const tourRepository = new FirestoreTourRepository();
-      
+
       const newTour: Tour = {
         ...tourData,
         price: Number(tourData.price),
         childPrice: tourData.childPrice ? Number(tourData.childPrice) : 0,
         durationHours: Number(tourData.durationHours),
         depositPrice: tourData.allowDeposit ? Number(tourData.depositPrice) : 0,
+        hasPromotion: tourData.hasPromotion,
+        promotionPercentage: tourData.hasPromotion ? Number(tourData.promotionPercentage) : 0,
         itinerary: tourData.itinerary || [],
         availabilityPeriods: tourData.availabilityPeriods || [],
         galleryImages: tourData.galleryImages || [],
+        video: tourData.video || {},
       };
 
       await createTourUseCase(tourRepository, newTour);
+
+      revalidatePath('/[lang]', 'layout'); // Update everything to be safe (lists, featured, etc)
 
       return { data: { tourId: newTour.id } };
     } catch (error: any) {

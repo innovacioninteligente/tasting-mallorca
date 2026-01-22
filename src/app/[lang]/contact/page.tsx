@@ -8,48 +8,50 @@ import { getDictionary } from '@/dictionaries/get-dictionary';
 import { Locale } from '@/dictionaries/config';
 
 interface PageProps {
-  params: {
+  params: Promise<{
     lang: Locale;
+  }>;
+}
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { lang } = await params;
+  const dictionary = await getDictionary(lang);
+  const { title, description } = dictionary.contact.page;
+  const imageUrl = "https://firebasestorage.googleapis.com/v0/b/tasting-mallorca.firebasestorage.app/o/web%2Fimages%2F036.PNG?alt=media&token=00e634e2-716f-495d-807e-5c15dfe2ea09";
+
+
+  return {
+    title: `${title} | Tasting Mallorca`,
+    description: description,
+    openGraph: {
+      title: `${title} | Tasting Mallorca`,
+      description: description,
+      images: [
+        {
+          url: imageUrl,
+          width: 1200,
+          height: 630,
+          alt: title,
+        },
+      ],
+      locale: lang,
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${title} | Tasting Mallorca`,
+      description: description,
+      images: [imageUrl],
+    },
   };
 }
 
-export async function generateMetadata({ params: { lang } }: PageProps): Promise<Metadata> {
-    const dictionary = await getDictionary(lang);
-    const { title, description } = dictionary.contact.page;
-    const imageUrl = "https://firebasestorage.googleapis.com/v0/b/tasting-mallorca.firebasestorage.app/o/web%2Fimages%2F036.PNG?alt=media&token=00e634e2-716f-495d-807e-5c15dfe2ea09";
 
-
-    return {
-        title: `${title} | Tasting Mallorca`,
-        description: description,
-         openGraph: {
-            title: `${title} | Tasting Mallorca`,
-            description: description,
-            images: [
-                {
-                    url: imageUrl,
-                    width: 1200,
-                    height: 630,
-                    alt: title,
-                },
-            ],
-            locale: lang,
-            type: 'website',
-        },
-        twitter: {
-            card: 'summary_large_image',
-            title: `${title} | Tasting Mallorca`,
-            description: description,
-            images: [imageUrl],
-        },
-    };
-}
-
-
-export default async function ContactPage({ params: { lang } }: PageProps) {
+export default async function ContactPage({ params }: PageProps) {
+  const { lang } = await params;
   const dictionary = await getDictionary(lang);
   const t = dictionary.contact;
-  
+
   return (
     <div className="bg-background text-foreground">
       <div className="container mx-auto px-4 py-16 w-full md:w-[80vw]">
@@ -86,7 +88,7 @@ export default async function ContactPage({ params: { lang } }: PageProps) {
 
           {/* Contact Actions */}
           <div className="space-y-8">
-             <h2 className="text-3xl font-bold mb-6">{t.otherMethods.title}</h2>
+            <h2 className="text-3xl font-bold mb-6">{t.otherMethods.title}</h2>
             <a href="mailto:info@tastingmallorca.com" className="block">
               <div className="bg-card p-6 rounded-2xl shadow-lg border border-border/50 flex items-center gap-6 hover:border-primary transition-colors">
                 <div className="bg-primary/10 text-primary h-16 w-16 rounded-full flex items-center justify-center flex-shrink-0">

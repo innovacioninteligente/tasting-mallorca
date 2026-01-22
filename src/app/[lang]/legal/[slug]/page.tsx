@@ -4,10 +4,10 @@ import { getDictionary } from '@/dictionaries/get-dictionary';
 import { Locale } from '@/dictionaries/config';
 
 interface PageProps {
-  params: {
-    lang: Locale;
-    slug: 'privacy-policy' | 'cookie-policy' | 'terms-of-service';
-  };
+    params: Promise<{
+        lang: Locale;
+        slug: 'privacy-policy' | 'cookie-policy' | 'terms-of-service';
+    }>;
 }
 
 // This component is to avoid TypeScript errors on the content type
@@ -26,7 +26,8 @@ const ContentSection = ({ title, content }: { title: string; content: string | s
     );
 };
 
-export async function generateMetadata({ params: { lang, slug } }: PageProps): Promise<Metadata> {
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+    const { lang, slug } = await params;
     const dictionary = await getDictionary(lang);
     let pageData;
 
@@ -50,7 +51,8 @@ export async function generateMetadata({ params: { lang, slug } }: PageProps): P
     };
 }
 
-export default async function LegalPage({ params: { lang, slug } }: PageProps) {
+export default async function LegalPage({ params }: PageProps) {
+    const { lang, slug } = await params;
     const dictionary = await getDictionary(lang);
     let pageData;
 
@@ -73,7 +75,7 @@ export default async function LegalPage({ params: { lang, slug } }: PageProps) {
             <div className="container mx-auto px-4 py-16 prose prose-lg dark:prose-invert max-w-4xl">
                 <h1 className="text-4xl font-extrabold mb-6">{pageData.title}</h1>
                 <p className="text-muted-foreground text-sm mb-8">Last updated: {pageData.lastUpdated}</p>
-                
+
                 {Object.entries(pageData.sections).map(([key, section]) => (
                     <ContentSection key={key} title={section.title} content={section.content} />
                 ))}

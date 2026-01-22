@@ -48,6 +48,11 @@ export function TourCard({ tour, lang }: TourCardProps) {
                             <Button size="icon" variant="secondary" className="absolute top-4 right-4 rounded-full h-8 w-8 bg-white/90 backdrop-blur-md text-foreground shadow-sm hover:bg-white transition-colors" aria-label="Add to favorites">
                                 <Heart className="h-4 w-4" />
                             </Button>
+                            {tour.hasPromotion && tour.promotionPercentage > 0 && (
+                                <div className="absolute top-4 left-4 bg-primary text-primary-foreground text-xs font-bold px-2 py-1 rounded-full shadow-md">
+                                    -{tour.promotionPercentage}%
+                                </div>
+                            )}
                         </>
                     ) : (
                         <div className="flex items-center justify-center w-full h-full text-muted-foreground/20">
@@ -61,7 +66,18 @@ export function TourCard({ tour, lang }: TourCardProps) {
                     <div className="flex justify-between items-end mt-auto pt-4 border-t border-border/50">
                         <div className="flex flex-col">
                             <span className="text-xs text-muted-foreground font-medium uppercase tracking-wider">{fromLabel[lang] || 'From'}</span>
-                            <span className="text-xl font-extrabold text-foreground">€{tour.price}</span>
+                            <div className="flex items-baseline gap-2">
+                                {tour.hasPromotion && tour.promotionPercentage > 0 ? (
+                                    <>
+                                        <span className="text-sm text-muted-foreground line-through">€{tour.price}</span>
+                                        <span className="text-xl font-extrabold text-primary">
+                                            €{Math.round(tour.price * (1 - tour.promotionPercentage / 100))}
+                                        </span>
+                                    </>
+                                ) : (
+                                    <span className="text-xl font-extrabold text-foreground">€{tour.price}</span>
+                                )}
+                            </div>
                         </div>
                         <div className="rounded-full bg-primary text-primary-foreground h-9 w-9 flex items-center justify-center shadow-md transform transition-transform group-hover:scale-110 group-active:scale-95">
                             <ArrowRight className="h-4 w-4" />

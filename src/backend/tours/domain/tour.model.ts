@@ -37,6 +37,7 @@ export interface Tour {
   mainImage: string;
   galleryImages: string[];
   durationHours: number;
+  video?: { [key: string]: string };
   overview: { [key: string]: string };
   generalInfo: {
     cancellationPolicy: { [key: string]: string };
@@ -56,6 +57,8 @@ export interface Tour {
   isFeatured: boolean;
   allowDeposit: boolean;
   depositPrice: number;
+  hasPromotion: boolean;
+  promotionPercentage: number;
   published: boolean;
 }
 
@@ -71,6 +74,13 @@ const multilingualOptionalStringSchema = z.object({
   de: z.string().optional(),
   fr: z.string().optional(),
   nl: z.string().optional(),
+}).optional();
+
+const multilingualAnySchema = z.object({
+  en: z.any().optional(),
+  de: z.any().optional(),
+  fr: z.any().optional(),
+  nl: z.any().optional(),
 }).optional();
 
 const availabilityPeriodSchema = z.object({
@@ -133,8 +143,11 @@ const baseTourSchema = z.object({
   galleryImages: z.any().optional(),
   allowDeposit: z.boolean().default(false),
   depositPrice: z.coerce.number({ invalid_type_error: "Price must be a number" }).optional(),
+  hasPromotion: z.boolean().default(false),
+  promotionPercentage: z.coerce.number().min(0).max(100).default(0),
   availabilityPeriods: z.array(availabilityPeriodSchema).min(1, "At least one availability period is required.").optional(),
   itinerary: z.array(itineraryItemSchema).optional(),
+  video: multilingualAnySchema,
 });
 
 export const CreateTourInputSchema = baseTourSchema
@@ -159,6 +172,15 @@ export const CreateTourInputSchema = baseTourSchema
   }, {
     message: "Deposit cannot be greater than or equal to the total price.",
     path: ["depositPrice"],
+  })
+  .refine(data => {
+    if (data.hasPromotion) {
+      return data.promotionPercentage > 0;
+    }
+    return true;
+  }, {
+    message: "Promotion percentage must be greater than 0 if promotion is active.",
+    path: ["promotionPercentage"],
   });
 
 export const UpdateTourInputSchema = baseTourSchema.partial().extend({

@@ -19,14 +19,14 @@ import { cloneDeep, mergeWith } from "lodash";
 import { TranslateTourInput, TranslateTourOutput } from "@/ai/flows/translate-tour-flow";
 import { translateTourAction } from "@/app/server-actions/tours/translateTourAction";
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { deleteTourImage } from "@/app/server-actions/tours/deleteTourImage";
 import { Loader2 } from "lucide-react";
@@ -74,7 +74,7 @@ export function EditTourClientPage({ initialData, lang }: EditTourClientPageProp
     const [isDeletingImage, setIsDeletingImage] = useState(false);
 
     const formPersistenceKey = `tour-form-edit-${initialData.id}`;
-    
+
     const parsedInitialData = {
         ...initialData,
         availabilityPeriods: initialData.availabilityPeriods?.map(p => ({
@@ -85,7 +85,7 @@ export function EditTourClientPage({ initialData, lang }: EditTourClientPageProp
         itinerary: initialData.itinerary?.map(item => ({
             ...item,
             title: { ...defaultMultilingual, ...item.title },
-            activities: { 
+            activities: {
                 en: item.activities?.en || [],
                 de: item.activities?.de || [],
                 fr: item.activities?.fr || [],
@@ -93,7 +93,7 @@ export function EditTourClientPage({ initialData, lang }: EditTourClientPageProp
             }
         })) || []
     };
-    
+
     const defaultValues: TourFormValues = {
         id: initialData.id || '',
         title: { ...defaultMultilingual },
@@ -127,9 +127,12 @@ export function EditTourClientPage({ initialData, lang }: EditTourClientPageProp
         published: false,
         allowDeposit: false,
         depositPrice: 0,
+        hasPromotion: false,
+        promotionPercentage: 0,
         itinerary: [],
         galleryImages: [],
         mainImage: undefined,
+        video: {},
         availabilityPeriods: [],
     };
     const mergedData = mergeWith(cloneDeep(defaultValues), parsedInitialData, (objValue, srcValue) => {
@@ -147,28 +150,28 @@ export function EditTourClientPage({ initialData, lang }: EditTourClientPageProp
     const { clearPersistedData } = useFormPersistence(formPersistenceKey, form, mergedData);
 
     const uploadFile = (file: File, tourId: string): Promise<string> => {
-      return new Promise((resolve, reject) => {
-          const { app } = initializeFirebase();
-          const storage = getStorage(app);
-          const fileName = `tours/${tourId}/${Date.now()}-${file.name}`;
-          const fileRef = storageRef(storage, fileName);
-          const uploadTask = uploadBytesResumable(fileRef, file);
+        return new Promise((resolve, reject) => {
+            const { app } = initializeFirebase();
+            const storage = getStorage(app);
+            const fileName = `tours/${tourId}/${Date.now()}-${file.name}`;
+            const fileRef = storageRef(storage, fileName);
+            const uploadTask = uploadBytesResumable(fileRef, file);
 
-          uploadTask.on(
-              'state_changed',
-              (snapshot) => {
-                  const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                  setUploadProgress(progress);
-              },
-              (error) => {
-                  console.error("Upload failed:", error);
-                  reject(error);
-              },
-              () => {
-                  getDownloadURL(uploadTask.snapshot.ref).then(resolve);
-              }
-          );
-      });
+            uploadTask.on(
+                'state_changed',
+                (snapshot) => {
+                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                    setUploadProgress(progress);
+                },
+                (error) => {
+                    console.error("Upload failed:", error);
+                    reject(error);
+                },
+                () => {
+                    getDownloadURL(uploadTask.snapshot.ref).then(resolve);
+                }
+            );
+        });
     };
 
     const handleInvalidSubmit = (errors: FieldErrors<TourFormValues>) => {
@@ -183,27 +186,27 @@ export function EditTourClientPage({ initialData, lang }: EditTourClientPageProp
             if (tabWithError) {
                 setActiveTab(tabWithError);
                 setErrorTab(tabWithError);
-                setTimeout(() => setErrorTab(null), 500); 
+                setTimeout(() => setErrorTab(null), 500);
             }
         }
     }
 
     const onSubmit = async (data: TourFormValues) => {
         setIsSubmitting(true);
-    
+
         try {
             let tourId = data.id;
-    
+
             let mainImageUrl = data.mainImage;
             if (data.mainImage instanceof File) {
                 setUploadMessage('Uploading main image...');
                 mainImageUrl = await uploadFile(data.mainImage, tourId!);
             }
-    
+
             let galleryImageUrls: string[] = [];
             const existingGalleryUrls = (data.galleryImages as any[])?.filter(img => typeof img === 'string') || [];
             const newGalleryFiles = (data.galleryImages as any[])?.filter(img => img instanceof File) || [];
-            
+
             if (newGalleryFiles.length > 0) {
                 const uploadedUrls: string[] = [];
                 for (let i = 0; i < newGalleryFiles.length; i++) {
@@ -215,28 +218,45 @@ export function EditTourClientPage({ initialData, lang }: EditTourClientPageProp
             } else {
                 galleryImageUrls = existingGalleryUrls;
             }
-    
+
+            // Handle Video Uploads
+            const videoUrls: { [key: string]: string | undefined } = { ...data.video };
+            const languages = ['en', 'de', 'fr', 'nl'];
+            let hasVideoUpdates = false;
+
+            for (const lang of languages) {
+                const videoFile = data.video?.[lang];
+                if (videoFile instanceof File) {
+                    setUploadMessage(`Uploading ${lang.toUpperCase()} video...`);
+                    const url = await uploadFile(videoFile, tourId!);
+                    videoUrls[lang] = url;
+                    hasVideoUpdates = true;
+                }
+            }
+
             setUploadMessage('Saving tour data...');
             setUploadProgress(100);
-    
+
             const tourData = {
                 ...data,
                 mainImage: mainImageUrl,
+                mainImage: mainImageUrl,
                 galleryImages: galleryImageUrls,
+                video: videoUrls,
             };
-            
+
             const result = await updateTour({ ...tourData, id: tourId });
-    
+
             if (result.error) throw new Error(result.error);
 
             clearPersistedData();
             form.reset(tourData, { keepDirty: false });
-    
+
             toast({
                 title: "Tour Saved!",
                 description: `The tour "${data.title.en}" has been saved successfully.`,
             });
-    
+
         } catch (error: any) {
             console.error("Error saving tour:", error);
             toast({
@@ -248,12 +268,12 @@ export function EditTourClientPage({ initialData, lang }: EditTourClientPageProp
             setIsSubmitting(false);
         }
     };
-    
+
     const handleTranslate = async () => {
         setIsTranslating(true);
         try {
             const currentData = form.getValues();
-            
+
             const translationInput: TranslateTourInput = {
                 title: currentData.title.en,
                 slug: currentData.slug.en,
@@ -300,7 +320,7 @@ export function EditTourClientPage({ initialData, lang }: EditTourClientPageProp
                 description: "The tour content has been translated automatically.",
             });
 
-        } catch(error: any) {
+        } catch (error: any) {
             console.error("Translation failed:", error);
             toast({
                 variant: "destructive",
@@ -311,7 +331,7 @@ export function EditTourClientPage({ initialData, lang }: EditTourClientPageProp
             setIsTranslating(false);
         }
     }
-    
+
     const handleServerImageDelete = (imageUrl: string) => {
         setImageToDelete(imageUrl);
         setIsDeleteAlertOpen(true);
@@ -322,7 +342,7 @@ export function EditTourClientPage({ initialData, lang }: EditTourClientPageProp
 
         setIsDeletingImage(true);
         const result = await deleteTourImage({ tourId: initialData.id, imageUrl: imageToDelete });
-        
+
         setIsDeletingImage(false);
         setIsDeleteAlertOpen(false);
 
@@ -347,7 +367,7 @@ export function EditTourClientPage({ initialData, lang }: EditTourClientPageProp
         }
         setImageToDelete(null);
     };
-    
+
     const basePath = `/${lang}/dashboard/admin/tours`;
 
     return (
@@ -362,17 +382,17 @@ export function EditTourClientPage({ initialData, lang }: EditTourClientPageProp
                     basePath={basePath}
                 />
                 <main className="flex-grow overflow-y-scroll px-4 pt-4 md:px-8 lg:px-10">
-                   <form
+                    <form
                         id="tour-form"
                         onSubmit={form.handleSubmit(onSubmit, handleInvalidSubmit)}
                         className="space-y-8"
                     >
-                       <TourForm
-                         initialData={initialData}
-                         onServerImageDelete={handleServerImageDelete}
-                         activeTab={activeTab}
-                         onTabChange={setActiveTab}
-                         errorTab={errorTab}
+                        <TourForm
+                            initialData={initialData}
+                            onServerImageDelete={handleServerImageDelete}
+                            activeTab={activeTab}
+                            onTabChange={setActiveTab}
+                            errorTab={errorTab}
                         />
                     </form>
                 </main>

@@ -344,7 +344,7 @@ export default async function BookingSuccessPage({ searchParams, params }: { sea
 
 
                             <Button asChild size="lg" className="w-full font-bold text-lg mt-6">
-                                <Link href={`/ ${lang} `}>
+                                <Link href={`/${lang} `}>
                                     <Home className="mr-2 h-5 w-5" />
                                     {t.goToMainPage}
                                 </Link>

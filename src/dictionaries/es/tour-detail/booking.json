@@ -37,5 +37,7 @@
     "regionMismatchTitle": "Zona diferente",
     "fullNamePlaceholder": "Juan Pérez",
     "emailPlaceholder": "juan@ejemplo.com",
-    "phonePlaceholder": "+34 600 000 000"
+    "phonePlaceholder": "+34 600 000 000",
+    "specialOffer": "Oferta Especial",
+    "off": "DTO."
 }

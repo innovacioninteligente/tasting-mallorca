@@ -37,5 +37,7 @@
     "regionMismatchTitle": "Zone Mismatch",
     "fullNamePlaceholder": "John Doe",
     "emailPlaceholder": "john@example.com",
-    "phonePlaceholder": "+1 234 567 890"
+    "phonePlaceholder": "+1 234 567 890",
+    "specialOffer": "Special Offer",
+    "off": "OFF"
 }
