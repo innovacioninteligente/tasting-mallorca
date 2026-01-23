@@ -1,14 +1,15 @@
 
 
+
 const cspHeader = `
     default-src 'self';
-    script-src 'self' 'unsafe-inline' 'unsafe-eval' https://apis.google.com https://www.googletagmanager.com https://js.stripe.com https://m.stripe.network https://www.google.com https://www.gstatic.com https://maps.googleapis.com https://connect.facebook.net https://googleads.g.doubleclick.net;
+    script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.googletagmanager.com https://*.google-analytics.com https://connect.facebook.net https://www.googleadservices.com https://googleads.g.doubleclick.net https://apis.google.com https://www.google.com https://www.gstatic.com https://maps.googleapis.com https://js.stripe.com https://m.stripe.network;
     style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
-    img-src 'self' blob: data: https://firebasestorage.googleapis.com https://images.unsplash.com https://picsum.photos https://placehold.co https://*.stripe.com https://www.google.com https://maps.googleapis.com https://maps.gstatic.com https://facebook.com https://www.facebook.com https://googleads.g.doubleclick.net;
+    img-src 'self' blob: data: https://*.google-analytics.com https://*.googletagmanager.com https://*.google.com https://*.google.es https://www.googleadservices.com https://www.facebook.com https://connect.facebook.net https://googleads.g.doubleclick.net https://firebasestorage.googleapis.com https://images.unsplash.com https://picsum.photos https://placehold.co https://*.stripe.com https://maps.googleapis.com https://maps.gstatic.com;
     font-src 'self' data: https://fonts.gstatic.com;
-    connect-src 'self' https://firebasestorage.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://www.googleapis.com https://api.stripe.com https://maps.googleapis.com https://m.stripe.network https://firestore.googleapis.com https://www.google.com https://www.google-analytics.com https://stats.g.doubleclick.net;
+    connect-src 'self' https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://www.facebook.com https://stats.g.doubleclick.net https://firebasestorage.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://www.googleapis.com https://api.stripe.com https://maps.googleapis.com https://m.stripe.network https://firestore.googleapis.com https://www.google.com;
     media-src 'self' https://firebasestorage.googleapis.com;
-    frame-src 'self' https://js.stripe.com https://hooks.stripe.com https://www.google.com https://amparo-aesthetics.firebaseapp.com https://tasting-mallorca.firebaseapp.com https://www.googletagmanager.com;
+    frame-src 'self' https://*.googletagmanager.com https://www.facebook.com https://googleads.g.doubleclick.net https://js.stripe.com https://hooks.stripe.com https://www.google.com https://amparo-aesthetics.firebaseapp.com https://tasting-mallorca.firebaseapp.com;
     object-src 'none';
     base-uri 'self';
     form-action 'self';
