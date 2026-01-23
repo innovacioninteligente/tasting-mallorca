@@ -681,12 +681,12 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
             className="space-y-6"
         >
             {tour.hasPromotion && tour.promotionPercentage > 0 && (
-                <div className="bg-primary/10 -mx-6 -mt-6 mb-6 p-4 flex items-center justify-between border-b border-primary/10">
-                    <span className="font-semibold text-primary flex items-center gap-2">
-                        <span className="flex h-2 w-2 rounded-full bg-primary animate-pulse"></span>
+                <div className="bg-green-50 -mx-6 -mt-6 mb-6 p-4 flex items-center justify-between border-b border-green-100">
+                    <span className="font-semibold text-green-700 flex items-center gap-2">
+                        <span className="flex h-2 w-2 rounded-full bg-green-600 animate-pulse"></span>
                         {dictionary.specialOffer || 'Special Offer'}
                     </span>
-                    <span className="bg-primary text-primary-foreground text-xs font-bold px-2 py-1 rounded-full">
+                    <span className="bg-accent text-accent-foreground text-xs font-bold px-2 py-1 rounded-full">
                         -{tour.promotionPercentage}% {dictionary.off || 'OFF'}
                     </span>
                 </div>
@@ -1202,7 +1202,16 @@ export function TourBookingSection({ dictionary, tour, lang, hotels, meetingPoin
                 <div className="flex items-center justify-between gap-4">
                     <div>
                         <p className="text-sm text-muted-foreground">{dictionary.priceLabel}</p>
-                        <p className="text-2xl font-extrabold text-primary">€{tour.price.toFixed(2)}</p>
+                        <div className="flex items-center gap-2">
+                            {tour.hasPromotion && tour.promotionPercentage > 0 ? (
+                                <>
+                                    <p className="text-sm text-muted-foreground line-through">€{tour.price.toFixed(2)}</p>
+                                    <p className="text-2xl font-extrabold text-primary">€{adultPrice.toFixed(2)}</p>
+                                </>
+                            ) : (
+                                <p className="text-2xl font-extrabold text-primary">€{tour.price.toFixed(2)}</p>
+                            )}
+                        </div>
                     </div>
                     <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
                         <SheetTrigger asChild>

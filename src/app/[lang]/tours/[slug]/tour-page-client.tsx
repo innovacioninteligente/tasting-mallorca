@@ -165,7 +165,7 @@ export default function TourPageClient({ tour, dictionary, lang, hotels, meeting
               hotels={hotels || []}
               meetingPoints={meetingPoints || []}
             />
-            <TrustSignals />
+            <TrustSignals dictionary={dictionary.tourDetail.header} />
           </div>
         </aside>
 

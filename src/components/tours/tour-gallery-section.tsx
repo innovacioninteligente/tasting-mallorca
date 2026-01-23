@@ -79,6 +79,18 @@ export function TourGallerySection({ images: rawImages, video }: TourGallerySect
                     onMouseLeave={autoplayPlugin.current.reset}
                 >
                     <CarouselContent>
+                        {video && (
+                            <CarouselItem key="video">
+                                <div className="aspect-video relative rounded-lg overflow-hidden bg-black">
+                                    <video
+                                        src={video}
+                                        controls
+                                        className="w-full h-full object-contain"
+                                        playsInline
+                                    />
+                                </div>
+                            </CarouselItem>
+                        )}
                         {images.map((image, index) => (
                             <CarouselItem key={index}>
                                 <div className="aspect-video relative rounded-lg overflow-hidden">
