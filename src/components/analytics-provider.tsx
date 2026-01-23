@@ -65,7 +65,7 @@ export function AnalyticsProvider() {
     }, [pathname, consent]);
 
 
-    // 3. Manual Script Injection (Meta, GTM, Ads)
+    // Manual Script Injection (GTM only)
     useEffect(() => {
         if (!consent) return;
 
@@ -80,7 +80,7 @@ export function AnalyticsProvider() {
             document.head.appendChild(script);
         };
 
-        // GTM Base
+        // GTM Base Container
         const GTM_ID = process.env.NEXT_PUBLIC_GTM_ID;
         if (GTM_ID) {
             injectScript('gtm-base', null, `
@@ -92,7 +92,7 @@ export function AnalyticsProvider() {
            `);
         }
 
-        // Default Consent (Denied)
+        // Initialize dataLayer with default consent (denied)
         if (typeof window.dataLayer === 'undefined') {
             window.dataLayer = [];
             window.dataLayer.push(['consent', 'default', {
@@ -103,42 +103,17 @@ export function AnalyticsProvider() {
             }]);
         }
 
-        // Update Consent based on State
+        // Update consent based on user preferences
         if (consent.analytics) {
             window.dataLayer.push(['consent', 'update', { 'analytics_storage': 'granted' }]);
         }
+
         if (consent.marketing) {
             window.dataLayer.push(['consent', 'update', {
                 'ad_storage': 'granted',
                 'ad_user_data': 'granted',
                 'ad_personalization': 'granted'
             }]);
-
-            // Google Ads Tag
-            injectScript('google-ads-script', 'https://www.googletagmanager.com/gtag/js?id=AW-17852397239', null);
-            injectScript('google-ads-config', null, `
-                 window.dataLayer = window.dataLayer || [];
-                 function gtag(){dataLayer.push(arguments);}
-                 gtag('js', new Date());
-                 gtag('config', 'AW-17852397239');
-             `);
-        }
-
-        // Meta Pixel (Marketing)
-        const PIXEL_ID = process.env.NEXT_PUBLIC_FACEBOOK_PIXEL_ID;
-        if (consent.marketing && PIXEL_ID) {
-            injectScript('fb-pixel', null, `
-                !function(f,b,e,v,n,t,s)
-                {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-                n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-                if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-                n.queue=[];t=b.createElement(e);t.async=!0;
-                t.src=v;s=b.getElementsByTagName(e)[0];
-                s.parentNode.insertBefore(t,s)}(window, document,'script',
-                'https://connect.facebook.net/en_US/fbevents.js');
-                fbq('init', '${PIXEL_ID}');
-                fbq('track', 'PageView');
-            `);
         }
 
     }, [consent]);
@@ -147,5 +122,5 @@ export function AnalyticsProvider() {
         return null;
     }
 
-    return null; // Render nothing, scripts are injected manually
+    return null;
 }

@@ -17,13 +17,6 @@ interface BookingSuccessTrackerProps {
     lang: string;
 }
 
-// Google Ads Conversion Labels by Language
-const GOOGLE_ADS_LABELS: Record<string, string> = {
-    de: 'AW-17852397239/5VzgCKH00dwbELft18BC', // German
-    en: 'AW-17852397239/5VzgCKH00dwbELft18BC', // English
-    default: 'AW-17852397239/5VzgCKH00dwbELft18BC'
-};
-
 export function BookingSuccessTracker({
     transactionId,
     value,
@@ -37,7 +30,7 @@ export function BookingSuccessTracker({
     useEffect(() => {
         if (firedRef.current) return;
 
-        // 1. GTM Purchase Event (Generic)
+        // 1. GTM Purchase Event (El único disparador Client-Side necesario)
         if (typeof window !== 'undefined' && window.dataLayer) {
             window.dataLayer.push({
                 event: 'purchase',
@@ -47,36 +40,17 @@ export function BookingSuccessTracker({
                     currency: currency,
                     items: items,
                     user_data: {
-                        email: user_data?.email_hashed,
-                        phone: user_data?.phone_hashed
+                        // Enviamos los datos hasheados para GTM (Enhanced Conversions)
+                        email_hashed: user_data?.email_hashed,
+                        phone_hashed: user_data?.phone_hashed
                     }
                 }
             });
 
-            // 2. Google Ads Conversion Event (Language Optimized)
-            const conversionLabel = GOOGLE_ADS_LABELS[lang] || GOOGLE_ADS_LABELS.default;
-            const gtag = (window as any).gtag || function () { (window.dataLayer || []).push(arguments); };
-
-            gtag('event', 'conversion', {
-                'send_to': conversionLabel,
-                'value': value,
-                'currency': currency,
-                'transaction_id': transactionId
-            });
-
-            // 3. Meta Pixel (Client-side)
-            const fbq = (window as any).fbq;
-            if (fbq) {
-                fbq('track', 'Purchase', {
-                    value: value,
-                    currency: currency,
-                    content_ids: items.map(i => i.item_id),
-                    content_type: 'product',
-                    num_items: items.length
-                }, { eventID: transactionId }); // Deduplication key
-            }
-
-            // 4. Meta CAPI (Server-side)
+            // 2. Meta CAPI (Server-side)
+            // MANTENEMOS ESTO: Es robusto y funciona en paralelo al navegador.
+            // La clave "transactionId" servirá para que Facebook elimine duplicados
+            // si configuramos el Pixel en GTM con el mismo ID.
             sendMetaEvent(
                 'Purchase',
                 transactionId, // Deduplication key
@@ -92,7 +66,7 @@ export function BookingSuccessTracker({
                 }
             );
 
-            console.log('Events fired (GTM, Ads, Meta):', { transactionId, value, lang, conversionLabel });
+            console.log('Events pushed to DataLayer & CAPI sent:', { transactionId, value });
             firedRef.current = true;
         }
     }, [transactionId, value, currency, items, user_data, lang]);
