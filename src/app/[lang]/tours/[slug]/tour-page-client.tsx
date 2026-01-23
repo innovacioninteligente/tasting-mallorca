@@ -19,6 +19,7 @@ import { DictionaryType } from '@/dictionaries/get-dictionary';
 import { VisualItinerary } from '@/components/tours/visual-itinerary';
 import { TrustSignals } from '@/components/tours/trust-signals';
 import { sendMetaEvent } from '@/app/server-actions/analytics/sendMetaEvent';
+import { motion, AnimatePresence } from 'framer-motion';
 
 
 type TourPageProps = {
@@ -37,6 +38,17 @@ export default function TourPageClient({ tour, dictionary, lang, hotels, meeting
   const { setAlternateLinks } = useAlternateLinks();
   const bookingRef = useRef<HTMLElement>(null);
   const viewContentFired = useRef(false);
+  const [isScrolled, setIsScrolled] = React.useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      // Show sticky banner after scrolling 100px
+      setIsScrolled(window.scrollY > 100);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   useEffect(() => {
     if (tour) {
@@ -131,6 +143,66 @@ export default function TourPageClient({ tour, dictionary, lang, hotels, meeting
   return (
     <div className="bg-background relative">
       <TourHeaderSection tour={tourHeaderProps} dictionary={dictionary.tourDetail.header} />
+
+      {/* Sticky Animated Promotion Banner - Mobile Only */}
+      <AnimatePresence>
+        {tour.hasPromotion && tour.promotionPercentage > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{
+              opacity: isScrolled ? 1 : 1,
+              y: isScrolled ? 0 : 0,
+              position: isScrolled ? 'fixed' : 'relative',
+              top: isScrolled ? 88 : 'auto',
+              zIndex: isScrolled ? 40 : 'auto',
+              boxShadow: isScrolled ? '0 4px 6px -1px rgba(0, 0, 0, 0.1)' : 'none'
+            }}
+            transition={{
+              duration: 0.3,
+              ease: 'easeInOut'
+            }}
+            className="lg:hidden bg-gradient-to-r from-green-50 to-emerald-50 w-full border-y border-green-200"
+          >
+            <motion.div
+              className="w-full py-3 px-4 flex items-center justify-between"
+              animate={{
+                scale: isScrolled ? [1, 1.02, 1] : 1
+              }}
+              transition={{
+                duration: 0.5,
+                repeat: isScrolled ? Infinity : 0,
+                repeatDelay: 3
+              }}
+            >
+              <div className="flex items-center gap-2">
+                <motion.span
+                  className="flex h-2.5 w-2.5 rounded-full bg-green-600"
+                  animate={{
+                    scale: [1, 1.3, 1],
+                    opacity: [1, 0.8, 1]
+                  }}
+                  transition={{
+                    duration: 2,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                  }}
+                />
+                <span className="font-bold text-green-700 text-sm">
+                  {dictionary.tourDetail.booking.specialOffer || 'Special Offer'}
+                </span>
+              </div>
+              <motion.span
+                className="bg-gradient-to-r from-amber-400 to-yellow-500 text-amber-950 text-xs font-bold px-4 py-1.5 rounded-full shadow-lg"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                -{tour.promotionPercentage}% {dictionary.tourDetail.booking.off || 'OFF'}
+              </motion.span>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <TourGallerySection images={allImages} video={tour.video?.[lang] || tour.video?.en} />
 
       <main className="w-full xl:w-[90vw] 2xl:w-[80vw] mx-auto px-4 py-8 md:py-16 grid grid-cols-1 lg:grid-cols-5 gap-12">
