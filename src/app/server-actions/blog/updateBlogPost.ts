@@ -1,6 +1,8 @@
 
 'use server';
 
+import { revalidatePath } from 'next/cache';
+
 import { createSafeAction } from '@/app/server-actions/lib/safe-action';
 import { updateBlogPost as updateBlogPostUseCase } from '@/backend/blog/application/updateBlogPost';
 import { FirestoreBlogRepository } from '@/backend/blog/infrastructure/firestore-blog.repository';
@@ -18,15 +20,19 @@ export const updateBlogPost = createSafeAction(
       const blogRepository = new FirestoreBlogRepository();
 
       if (!postData.id) {
-          throw new Error("Post ID is required for updating.");
+        throw new Error("Post ID is required for updating.");
       }
 
-      const postToUpdate = { 
+      const postToUpdate = {
         ...postData,
         publishedAt: postData.publishedAt ? new Date(postData.publishedAt) : undefined,
       };
-      
+
       await updateBlogPostUseCase(blogRepository, postToUpdate);
+
+      revalidatePath('/[lang]/blog/[slug]', 'page');
+      revalidatePath('/[lang]/blog', 'page');
+      revalidatePath('/[lang]', 'page');
 
       return { data: { success: true } };
     } catch (error: any) {

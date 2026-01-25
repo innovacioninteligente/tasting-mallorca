@@ -16,10 +16,10 @@ export interface BlogPost {
 
 
 const multilingualStringSchema = z.object({
-    en: z.string().min(1, { message: "English text is required." }),
-    de: z.string().optional(),
-    fr: z.string().optional(),
-    nl: z.string().optional(),
+  en: z.string().min(1, { message: "English text is required." }),
+  de: z.string().optional(),
+  fr: z.string().optional(),
+  nl: z.string().optional(),
 });
 
 export const CreateBlogPostInputSchema = z.object({
@@ -31,7 +31,7 @@ export const CreateBlogPostInputSchema = z.object({
   author: z.string().min(1, "Author is required."),
   isFeatured: z.boolean().default(false),
   published: z.boolean().default(false),
-  mainImage: z.any().refine(val => val, "Main image is required."),
+  mainImage: z.string().min(1, "Main image is required."),
   publishedAt: z.date({ required_error: "Publication date is required." }),
 });
 

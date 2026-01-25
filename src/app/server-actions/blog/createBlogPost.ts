@@ -1,6 +1,8 @@
 
 'use server';
 
+import { revalidatePath } from 'next/cache';
+
 import { createSafeAction } from '@/app/server-actions/lib/safe-action';
 import { createBlogPost as createBlogPostUseCase } from '@/backend/blog/application/createBlogPost';
 import { FirestoreBlogRepository } from '@/backend/blog/infrastructure/firestore-blog.repository';
@@ -15,7 +17,7 @@ export const createBlogPost = createSafeAction(
   ): Promise<{ data?: { postId: string }; error?: string }> => {
     try {
       const blogRepository = new FirestoreBlogRepository();
-      
+
       const newPost: BlogPost = {
         ...postData,
         id: postData.id || crypto.randomUUID(),
@@ -23,6 +25,9 @@ export const createBlogPost = createSafeAction(
       };
 
       await createBlogPostUseCase(blogRepository, newPost);
+
+      revalidatePath('/[lang]/blog', 'page');
+      revalidatePath('/[lang]', 'page');
 
       return { data: { postId: newPost.id } };
     } catch (error: any) {
