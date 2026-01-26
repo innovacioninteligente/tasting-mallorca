@@ -27,7 +27,7 @@ export class FirestoreBlogRepository implements BlogRepository {
   async findBySlug(slug: string, lang: string): Promise<BlogPost | null> {
     const snapshot = await this.collection.where(`slug.${lang}`, '==', slug).limit(1).get();
     if (snapshot.empty) {
-        return null;
+      return null;
     }
     return this.toDomain(snapshot.docs[0]);
   }
@@ -44,5 +44,9 @@ export class FirestoreBlogRepository implements BlogRepository {
   async update(post: Partial<BlogPost> & { id: string }): Promise<void> {
     const { id, ...postData } = post;
     await this.collection.doc(id).update(postData);
+  }
+
+  async delete(id: string): Promise<void> {
+    await this.collection.doc(id).delete();
   }
 }

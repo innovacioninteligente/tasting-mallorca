@@ -1,6 +1,4 @@
 
-'use server';
-
 import { AdminRouteGuard } from "@/components/auth/admin-route-guard";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";

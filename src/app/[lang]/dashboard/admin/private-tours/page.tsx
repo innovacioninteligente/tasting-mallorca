@@ -1,4 +1,3 @@
-'use server';
 
 import { AdminRouteGuard } from "@/components/auth/admin-route-guard";
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
@@ -10,7 +9,7 @@ async function getPrivateTourRequests() {
     try {
         const repository = new FirestorePrivateTourRequestRepository();
         const requests = await findAllPrivateTourRequests(repository);
-        
+
         // Serialize data for client component
         const serializedRequests = requests.map(request => ({
             ...request,
@@ -27,7 +26,7 @@ async function getPrivateTourRequests() {
 
 export default async function PrivateToursAdminPage() {
     const result = await getPrivateTourRequests();
-    
+
     return (
         <AdminRouteGuard>
             <div className="flex justify-between items-center mb-6">

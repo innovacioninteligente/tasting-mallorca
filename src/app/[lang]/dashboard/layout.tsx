@@ -19,22 +19,23 @@ export default function DashboardLayout({
   const isFormPage = pathname.includes('/tours/new') || (pathname.includes('/tours/') && pathname.includes('/edit')) || pathname.includes('/blog/new') || (pathname.includes('/blog/') && pathname.includes('/edit'));
 
   return (
-      <RouteGuard>
-        <DashboardLayoutProvider value={{ isMobileMenuOpen, setIsMobileMenuOpen }}>
-          <div className="flex h-screen max-h-screen overflow-hidden bg-secondary/50">
-            <DashboardSidebar isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen} />
-            
-            <div className="flex flex-1 flex-col overflow-hidden">
-                <DashboardHeader />
-                <div className={cn(
-                    "flex-1 overflow-y-auto",
-                    !isFormPage && "p-4 md:p-8 lg:p-10"
-                )}>
-                  {children}
-                </div>
+    <RouteGuard>
+      <DashboardLayoutProvider value={{ isMobileMenuOpen, setIsMobileMenuOpen }}>
+        <div className="flex h-screen max-h-screen overflow-hidden bg-secondary/50">
+          <DashboardSidebar isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen} />
+
+          <div className="flex flex-1 flex-col overflow-hidden">
+            <DashboardHeader />
+            <div className={cn(
+              "flex-1",
+              !isFormPage && "overflow-y-auto p-4 md:p-8 lg:p-10",
+              isFormPage && "overflow-hidden"
+            )}>
+              {children}
             </div>
           </div>
-        </DashboardLayoutProvider>
-      </RouteGuard>
+        </div>
+      </DashboardLayoutProvider>
+    </RouteGuard>
   );
 }

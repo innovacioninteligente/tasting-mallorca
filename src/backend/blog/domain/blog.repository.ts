@@ -7,4 +7,5 @@ export interface BlogRepository {
   findAll(): Promise<BlogPost[]>;
   save(post: BlogPost): Promise<void>;
   update(post: Partial<BlogPost> & { id: string }): Promise<void>;
+  delete(id: string): Promise<void>;
 }

@@ -1,6 +1,4 @@
 
-'use server';
-
 import { AdminRouteGuard } from "@/components/auth/admin-route-guard";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
@@ -11,10 +9,11 @@ import { findAllBlogPosts } from "@/app/server-actions/blog/findBlogPosts";
 import { BlogPost } from "@/backend/blog/domain/blog.model";
 import { CreateWithAiButton } from "./create-with-ai-button";
 
-export default async function BlogManagementPage({ params }: { params: { lang: string }}) {
-    const createPostLink = `/${params.lang}/dashboard/admin/blog/new`;
+export default async function BlogManagementPage({ params }: { params: Promise<{ lang: string }> }) {
+    const { lang } = await params;
+    const createPostLink = `/${lang}/dashboard/admin/blog/new`;
     const result = await findAllBlogPosts({});
-    
+
     return (
         <AdminRouteGuard>
             <div className="flex justify-between items-center mb-6">
@@ -25,7 +24,7 @@ export default async function BlogManagementPage({ params }: { params: { lang: s
                     </p>
                 </div>
                 <div className="flex items-center gap-2">
-                    <CreateWithAiButton lang={params.lang} />
+                    <CreateWithAiButton lang={lang} />
                     <Button asChild>
                         <Link href={createPostLink}>
                             <PlusCircle className="mr-2 h-4 w-4" />
@@ -37,12 +36,12 @@ export default async function BlogManagementPage({ params }: { params: { lang: s
             <Card>
                 <CardHeader>
                     <CardTitle>Posts Existentes</CardTitle>
-                     <CardDescription>
+                    <CardDescription>
                         Aquí puedes ver y gestionar todos los posts del blog.
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <BlogPostList posts={result.data as BlogPost[]} error={result.error} lang={params.lang} />
+                    <BlogPostList posts={result.data as BlogPost[]} error={result.error} lang={lang} />
                 </CardContent>
             </Card>
         </AdminRouteGuard>

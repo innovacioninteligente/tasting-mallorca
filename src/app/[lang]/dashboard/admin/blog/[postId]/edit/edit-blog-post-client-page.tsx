@@ -22,36 +22,36 @@ import { translateBlogPostAction } from "@/app/server-actions/blog/translateBlog
 import type { TranslateBlogPostInput } from '@/ai/flows/translate-blog-post-flow';
 
 const formSchema = z.object({
-  id: z.string().optional(),
-  title: z.object({
-    en: z.string().min(1, "English title is required."),
-    de: z.string().optional(),
-    fr: z.string().optional(),
-    nl: z.string().optional(),
-  }),
-  slug: z.object({
-    en: z.string().min(1, "English slug is required."),
-    de: z.string().optional(),
-    fr: z.string().optional(),
-    nl: z.string().optional(),
-  }),
-  summary: z.object({
-    en: z.string().min(1, "English summary is required."),
-    de: z.string().optional(),
-    fr: z.string().optional(),
-    nl: z.string().optional(),
-  }),
-  content: z.object({
-    en: z.string().min(1, "English content is required."),
-    de: z.string().optional(),
-    fr: z.string().optional(),
-    nl: z.string().optional(),
-  }),
-  author: z.string().min(1, "Author is required."),
-  isFeatured: z.boolean().default(false),
-  published: z.boolean().default(false),
-  mainImage: z.any().refine(val => val, "Main image is required."),
-  publishedAt: z.date({ required_error: "Publication date is required." }),
+    id: z.string().optional(),
+    title: z.object({
+        en: z.string().min(1, "English title is required."),
+        de: z.string().optional(),
+        fr: z.string().optional(),
+        nl: z.string().optional(),
+    }),
+    slug: z.object({
+        en: z.string().min(1, "English slug is required."),
+        de: z.string().optional(),
+        fr: z.string().optional(),
+        nl: z.string().optional(),
+    }),
+    summary: z.object({
+        en: z.string().min(1, "English summary is required."),
+        de: z.string().optional(),
+        fr: z.string().optional(),
+        nl: z.string().optional(),
+    }),
+    content: z.object({
+        en: z.string().min(1, "English content is required."),
+        de: z.string().optional(),
+        fr: z.string().optional(),
+        nl: z.string().optional(),
+    }),
+    author: z.string().min(1, "Author is required."),
+    isFeatured: z.boolean().default(false),
+    published: z.boolean().default(false),
+    mainImage: z.any().refine(val => val, "Main image is required."),
+    publishedAt: z.date({ required_error: "Publication date is required." }),
 });
 
 type BlogFormValues = z.infer<typeof formSchema>;
@@ -89,7 +89,7 @@ export function EditBlogPostClientPage({ initialData, lang }: EditBlogPostClient
     const [uploadMessage, setUploadMessage] = useState('Starting...');
 
     const formPersistenceKey = `blog-form-edit-${initialData.id}`;
-    
+
     const defaultValues: BlogFormValues = useMemo(() => ({
         title: { ...defaultMultilingual },
         slug: { ...defaultMultilingual },
@@ -106,7 +106,7 @@ export function EditBlogPostClientPage({ initialData, lang }: EditBlogPostClient
         resolver: zodResolver(formSchema),
         defaultValues,
     });
-    
+
     const { clearPersistedData } = useFormPersistence(formPersistenceKey, form, defaultValues);
 
     useEffect(() => {
@@ -125,20 +125,20 @@ export function EditBlogPostClientPage({ initialData, lang }: EditBlogPostClient
 
 
     const uploadFile = (file: File, postId: string): Promise<string> => {
-      return new Promise((resolve, reject) => {
-          const { app } = initializeFirebase();
-          const storage = getStorage(app);
-          const fileName = `blog/${postId}/${Date.now()}-${file.name}`;
-          const fileRef = storageRef(storage, fileName);
-          const uploadTask = uploadBytesResumable(fileRef, file);
+        return new Promise((resolve, reject) => {
+            const { app } = initializeFirebase();
+            const storage = getStorage(app);
+            const fileName = `blog/${postId}/${Date.now()}-${file.name}`;
+            const fileRef = storageRef(storage, fileName);
+            const uploadTask = uploadBytesResumable(fileRef, file);
 
-          uploadTask.on(
-              'state_changed',
-              (snapshot) => setUploadProgress((snapshot.bytesTransferred / snapshot.totalBytes) * 100),
-              (error) => { console.error("Upload failed:", error); reject(error); },
-              () => getDownloadURL(uploadTask.snapshot.ref).then(resolve)
-          );
-      });
+            uploadTask.on(
+                'state_changed',
+                (snapshot) => setUploadProgress((snapshot.bytesTransferred / snapshot.totalBytes) * 100),
+                (error) => { console.error("Upload failed:", error); reject(error); },
+                () => getDownloadURL(uploadTask.snapshot.ref).then(resolve)
+            );
+        });
     };
 
     const handleInvalidSubmit = (errors: FieldErrors) => {
@@ -161,28 +161,28 @@ export function EditBlogPostClientPage({ initialData, lang }: EditBlogPostClient
                 setUploadMessage('Uploading main image...');
                 mainImageUrl = await uploadFile(data.mainImage, postId);
             }
-    
+
             setUploadMessage('Saving post data...');
             setUploadProgress(100);
-    
+
             const postData = {
                 ...data,
                 id: postId,
                 mainImage: mainImageUrl, // Ensure new URL is included
                 publishedAt: data.publishedAt,
             };
-            
+
             const result = await updateBlogPost(postData as any);
-    
+
             if (result.error) throw new Error(result.error);
 
             clearPersistedData();
-            
+
             toast({
                 title: "Post Updated!",
                 description: `The post "${data.title.en}" has been saved successfully.`,
             });
-    
+
         } catch (error: any) {
             console.error("Error saving post:", error);
             toast({
@@ -194,12 +194,12 @@ export function EditBlogPostClientPage({ initialData, lang }: EditBlogPostClient
             setIsSubmitting(false);
         }
     };
-    
+
     const handleTranslate = async () => {
         setIsTranslating(true);
         try {
             const currentData = form.getValues();
-            
+
             const translationInput: TranslateBlogPostInput = {
                 title: currentData.title.en,
                 slug: currentData.slug.en,
@@ -223,7 +223,7 @@ export function EditBlogPostClientPage({ initialData, lang }: EditBlogPostClient
                 description: "The blog post content has been translated automatically.",
             });
 
-        } catch(error: any) {
+        } catch (error: any) {
             console.error("Translation failed:", error);
             toast({
                 variant: "destructive",
@@ -234,9 +234,9 @@ export function EditBlogPostClientPage({ initialData, lang }: EditBlogPostClient
             setIsTranslating(false);
         }
     }
-    
+
     const basePath = `/${lang}/dashboard/admin/blog`;
-    
+
     return (
         <FormProvider {...form}>
             <div className="flex flex-col h-full">
@@ -248,7 +248,7 @@ export function EditBlogPostClientPage({ initialData, lang }: EditBlogPostClient
                     isEditing={!!initialData}
                     basePath={basePath}
                 />
-                <main className="flex-grow overflow-y-scroll px-4 pt-4 md:px-8 lg:px-10">
+                <main className="flex-grow overflow-y-auto px-4 pt-4 md:px-8 lg:px-10">
                     <form
                         id="blog-form"
                         onSubmit={form.handleSubmit(onSubmit, handleInvalidSubmit)}

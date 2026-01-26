@@ -1,4 +1,5 @@
 
+
 import { findAllBlogPosts } from "@/app/server-actions/blog/findBlogPosts";
 import { BlogCard } from "@/components/blog-card";
 import { BlogPost } from "@/backend/blog/domain/blog.model";
@@ -6,6 +7,9 @@ import { Locale } from "@/dictionaries/config";
 import { Newspaper } from "lucide-react";
 import { Metadata } from 'next';
 import { getDictionary } from '@/dictionaries/get-dictionary';
+
+// ISR: Revalidate every 60 seconds
+export const revalidate = 60;
 
 interface PageProps {
     params: Promise<{

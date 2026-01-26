@@ -1,6 +1,4 @@
 
-'use server';
-
 import { Suspense } from 'react';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
@@ -18,14 +16,22 @@ type BlogPostParams = {
   lang: Locale;
 };
 
+// ISR: Revalidate every 5 minutes
+export const revalidate = 300;
+
+// Allow rendering of blog posts not in generateStaticParams
+export const dynamicParams = true;
+
 export async function generateStaticParams(): Promise<BlogPostParams[]> {
+  // Only pre-render featured posts at build time for performance
+  // Non-featured posts will be rendered on-demand
   const result = await findAllBlogPosts({});
   if (!result.data) {
     return [];
   }
 
   const paths = result.data
-    .filter((post: BlogPost) => post.published)
+    .filter((post: BlogPost) => post.published && post.isFeatured)
     .flatMap((post: BlogPost) =>
       Object.entries(post.slug)
         .filter(([_, slugValue]) => slugValue)

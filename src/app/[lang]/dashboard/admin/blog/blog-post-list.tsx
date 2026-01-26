@@ -5,11 +5,25 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { BlogPost } from "@/backend/blog/domain/blog.model";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Edit, Eye } from "lucide-react";
+import { Edit, Eye, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ImageWithSkeleton } from "@/components/ui/image-with-skeleton";
 import { format } from "date-fns";
+import { useTransition } from "react";
+import { deleteBlogPost } from "@/app/server-actions/blog/deleteBlogPost";
+import { useToast } from "@/hooks/use-toast";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 interface BlogPostListProps {
     posts?: BlogPost[];
@@ -19,6 +33,27 @@ interface BlogPostListProps {
 
 export function BlogPostList({ posts, error, lang }: BlogPostListProps) {
     const pathname = usePathname();
+    const [isPending, startTransition] = useTransition();
+    const { toast } = useToast();
+
+    const handleDelete = (post: BlogPost) => {
+        startTransition(async () => {
+            const result = await deleteBlogPost({ id: post.id, slug: post.slug });
+            if (result.error) {
+                toast({
+                    title: "Error",
+                    description: result.error,
+                    variant: "destructive",
+                });
+            } else {
+                toast({
+                    title: "Éxito",
+                    description: "La entrada del blog se ha eliminado correctamente.",
+                });
+                window.location.reload();
+            }
+        });
+    };
 
     if (error) {
         return <p className="text-destructive text-center py-12">Error: {error}</p>;
@@ -84,6 +119,28 @@ export function BlogPostList({ posts, error, lang }: BlogPostListProps) {
                                             Ver
                                         </Link>
                                     </Button>
+                                    <AlertDialog>
+                                        <AlertDialogTrigger asChild>
+                                            <Button variant="destructive" size="sm" disabled={isPending}>
+                                                <Trash2 className="mr-2 h-4 w-4" />
+                                                Eliminar
+                                            </Button>
+                                        </AlertDialogTrigger>
+                                        <AlertDialogContent>
+                                            <AlertDialogHeader>
+                                                <AlertDialogTitle>¿Estás seguro?</AlertDialogTitle>
+                                                <AlertDialogDescription>
+                                                    Esto eliminará permanentemente "{post.title.en}". Esta acción no se puede deshacer.
+                                                </AlertDialogDescription>
+                                            </AlertDialogHeader>
+                                            <AlertDialogFooter>
+                                                <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                                                <AlertDialogAction onClick={() => handleDelete(post)}>
+                                                    Eliminar
+                                                </AlertDialogAction>
+                                            </AlertDialogFooter>
+                                        </AlertDialogContent>
+                                    </AlertDialog>
                                 </div>
                             </TableCell>
                         </TableRow>

@@ -30,9 +30,19 @@ export const updateBlogPost = createSafeAction(
 
       await updateBlogPostUseCase(blogRepository, postToUpdate);
 
+      // Revalidate pattern-based paths
       revalidatePath('/[lang]/blog/[slug]', 'page');
       revalidatePath('/[lang]/blog', 'page');
       revalidatePath('/[lang]', 'page');
+
+      // Revalidate specific language paths if slug is available
+      if (postToUpdate.slug) {
+        Object.entries(postToUpdate.slug).forEach(([lang, slug]) => {
+          if (slug) {
+            revalidatePath(`/${lang}/blog/${slug}`, 'page');
+          }
+        });
+      }
 
       return { data: { success: true } };
     } catch (error: any) {

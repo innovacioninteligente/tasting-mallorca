@@ -1,6 +1,4 @@
 
-'use server';
-
 import { AdminRouteGuard } from "@/components/auth/admin-route-guard";
 import { findTourById as findTourByIdAction } from "@/app/server-actions/tours/findTours";
 import { notFound } from "next/navigation";
